@@ -52,3 +52,18 @@ get_proposition <- function(id_prop){
 
 }
 
+# Get all the voting whose a proposition went through
+# id_prop: Proposition ID
+# Return: Dataframe containing info about all the voting
+get_proposition_voting <- function(id_prop){
+
+  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, "/votacoes", sep="")
+
+  prop <- GET(full_link)
+  r <- content(prop, as="text")
+  prop_json <- jsonlite::fromJSON(r)
+  prop_dataframe <- prop_json$dados
+
+  return(prop_dataframe)
+
+}
