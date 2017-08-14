@@ -1,4 +1,5 @@
 # This function returns all the propositions available on Camara's site
+# Return: Dataframe containing all the propositions info.
 get_all_propositions <- function(){
 
   propositions <- GET("https://dadosabertos.camara.leg.br/api/v2/proposicoes?ordem=ASC&ordenarPor=id&itens=100")
@@ -38,7 +39,7 @@ get_all_propositions <- function(){
 
 # Get details about a proposition
 # id_prop: Proposition ID
-# Return: Dataframe containing info about the proposition
+# Return: List containing info about the proposition
 get_proposition <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
@@ -46,9 +47,9 @@ get_proposition <- function(id_prop){
   prop <- GET(full_link)
   r <- content(prop, as="text")
   prop_json <- jsonlite::fromJSON(r)
-  prop_dataframe <- prop_json$dados
+  prop_list <- prop_json$dados
 
-  return(prop_dataframe)
+  return(prop_list)
 
 }
 
