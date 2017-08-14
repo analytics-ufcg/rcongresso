@@ -35,3 +35,20 @@ get_all_propositions <- function(){
   return(propositions_dataframe)
 
 }
+
+# Get details about a proposition
+# id_prop: Proposition ID
+# Return: Dataframe containing info about the proposition
+get_proposition <- function(id_prop){
+
+  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
+
+  prop <- GET(full_link)
+  r <- content(prop, as="text")
+  prop_json <- jsonlite::fromJSON(r)
+  prop_dataframe <- prop_json$dados
+
+  return(prop_dataframe)
+
+}
+
