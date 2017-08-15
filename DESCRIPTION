@@ -1,4 +1,4 @@
-Package: RCongresso
+Package: rcongresso
 Type: Package
 Title: Implementação de funções que permitem análise dos dados abertos advindos do congresso
 Version: 0.1.0

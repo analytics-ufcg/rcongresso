@@ -12,5 +12,5 @@ install.packages('devtools')
 devtools::install_github('analytics-ufcg/rcongresso')
 
 # Carrega o pacote
-library(RCongresso)
+library(rcongresso)
 ```
