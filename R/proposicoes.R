@@ -69,3 +69,11 @@ get_proposition_id <- function(type_prop, prop_number, year){
 
   return(prop_json$dados$id)
 }
+
+get_propositions_types <- function(){
+  prop_types_link <- "https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao"
+
+  prop_types <- .get_json(prop_types_link)
+
+  return(prop_types$dados)
+}
