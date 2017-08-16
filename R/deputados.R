@@ -6,12 +6,9 @@ get_deputy <- function(dep_id){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/deputados/", dep_id, sep="")
 
-  dep <- httr::GET(full_link)
-  r <- httr::content(dep, as="text")
-  dep_json <- jsonlite::fromJSON(r)
-  dep_list <- dep_json$dados
+  dep_json <- .get_json(full_link)
 
-  return(dep_list)
+  return(dep_json$dados)
 
 }
 
@@ -24,11 +21,8 @@ get_deputy_expenses <- function(dep_id) {
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/deputados/", dep_id, "/despesas?ordem=ASC&ordenarPor=numAno", sep="")
 
-  dep <- httr::GET(full_link)
-  r <- httr::content(dep, as="text")
-  dep_json <- jsonlite::fromJSON(r)
-  dep_dataframe <- dep_json$dados
+  dep_json <- .get_json(full_link)
 
-  return(dep_dataframe)
+  return(dep_json$dados)
 
 }

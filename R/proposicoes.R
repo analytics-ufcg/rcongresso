@@ -2,9 +2,8 @@
 # Return: Dataframe containing all the propositions info.
 get_all_propositions <- function(){
 
-  propositions <- httr::GET("https://dadosabertos.camara.leg.br/api/v2/proposicoes?ordem=ASC&ordenarPor=id&itens=100")
-  raise <- httr::content(propositions, as="text")
-  propositions_json <- jsonlite::fromJSON(raise)
+  all_props_link <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes?ordem=ASC&ordenarPor=id&itens=100"
+  propositions_json <- .get_json(all_props_link)
   propositions_dataframe <- propositions_json$dados
 
   next_page <- propositions_json$links$href[2]
@@ -15,9 +14,7 @@ get_all_propositions <- function(){
   # Loop to get all the available propositions. It will take longer than 15 minutes to get all of
   # them. Nowdays, the site has more than 6K pages to go through (14/08/2017).
   while(TRUE){
-    p <- httr::GET(next_page)
-    r <- httr::content(p, as="text")
-    p_json <- jsonlite::fromJSON(r)
+    p_json <- .get_json(next_page)
     p_dataframe <- p_json$dados
 
     propositions_dataframe <- rbind(propositions_dataframe, p_dataframe)
@@ -44,12 +41,9 @@ get_proposition_by_id <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
 
-  prop <- httr::GET(full_link)
-  r <- httr::content(prop, as="text")
-  prop_json <- jsonlite::fromJSON(r)
-  prop_list <- prop_json$dados
+  prop_json <- .get_json(full_link)
 
-  return(prop_list)
+  return(prop_json$dados)
 
 }
 
@@ -60,36 +54,18 @@ get_proposition_voting <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, "/votacoes", sep="")
 
-  prop <- httr::GET(full_link)
-  r <- httr::content(prop, as="text")
-  prop_json <- jsonlite::fromJSON(r)
-  prop_dataframe <- prop_json$dados
+  voting_json <- .get_json(full_link)
 
-  return(prop_dataframe)
+  return(voting_json$dados)
 
 }
 
 get_proposition_id <- function(type_prop, prop_number, year){
-  type_prop <- 'PEC'
-  prop_number <- 171
-  year <- 1993
+
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=", type_prop, "&numero=", prop_number, "&ano=", year,"&ordem=ASC&ordenarPor=id", sep="")
+
   print(full_link)
+  prop_json <- .get_json(full_link)
 
-  prop <- httr::GET(full_link)
-  r <- httr::content(prop, as="text")
-  prop_json <- jsonlite::fromJSON(r)
-  prop_dataframe <- prop_json$dados
-
-  return(prop_dataframe$id)
-}
-
-.get_from_json <- function(full_link){
-
-  prop <- httr::GET(full_link)
-  r <- httr::content(prop, as="text")
-  prop_json <- jsonlite::fromJSON(r)
-  prop_dataframe <- prop_json$dados
-
-  return(prop_dataframe)
+  return(prop_json$dados$id)
 }

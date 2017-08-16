@@ -5,12 +5,9 @@ get_voting <- function(id_vot){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_vot, sep="")
 
-  voting <- httr::GET(full_link)
-  r <- httr::content(voting, as="text")
-  voting_json <- jsonlite::fromJSON(r)
-  voting_list <- voting_json$dados
+  voting_json <- .get_json(full_link)
 
-  return(voting_list)
+  return(voting_json$dados)
 }
 
 # Gets votes of every deputy about a voting
@@ -20,12 +17,9 @@ get_voters <- function(id_vot){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_vot, "/votos?itens=513", sep="")
 
-  voters <- httr::GET(full_link)
-  r <- httr::content(voters, as="text")
-  voters_json <- jsonlite::fromJSON(r)
-  voters_dataframe <- voters_json$dados
+  voters <- .get_json(full_link)
 
-  return(voters_dataframe)
+  return(voters$dados)
 }
 
 
