@@ -40,7 +40,7 @@ get_all_propositions <- function(){
 # Get details about a proposition
 # id_prop: Proposition ID
 # Return: List containing info about the proposition
-get_proposition <- function(id_prop){
+get_proposition_by_id <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
 
@@ -67,4 +67,29 @@ get_proposition_voting <- function(id_prop){
 
   return(prop_dataframe)
 
+}
+
+get_proposition_id <- function(type_prop, prop_number, year){
+  type_prop <- 'PEC'
+  prop_number <- 171
+  year <- 1993
+  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=", type_prop, "&numero=", prop_number, "&ano=", year,"&ordem=ASC&ordenarPor=id", sep="")
+  print(full_link)
+
+  prop <- httr::GET(full_link)
+  r <- httr::content(prop, as="text")
+  prop_json <- jsonlite::fromJSON(r)
+  prop_dataframe <- prop_json$dados
+
+  return(prop_dataframe$id)
+}
+
+.get_from_json <- function(full_link){
+
+  prop <- httr::GET(full_link)
+  r <- httr::content(prop, as="text")
+  prop_json <- jsonlite::fromJSON(r)
+  prop_dataframe <- prop_json$dados
+
+  return(prop_dataframe)
 }
