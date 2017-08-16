@@ -1,23 +1,23 @@
-# This function returns all the propositions available on Camara's site
-# Return: Dataframe containing all the propositions info.
-get_all_propositions <- function(){
+# Função que retorna todas as proposições disponíveis na base de dados da Câmara dos Deputados
+# Return: Dataframe contendo todas as informações das proposições.
+fetch_proposicoes <- function(){
 
-  all_props_link <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes?ordem=ASC&ordenarPor=id&itens=100"
-  propositions_json <- .get_json(all_props_link)
-  propositions_dataframe <- propositions_json$dados
+  props_link <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes?ordem=ASC&ordenarPor=id&itens=100"
+  props_json <- .get_json(props_link)
+  props_dataframe <- props_json$dados
 
-  next_page <- propositions_json$links$href[2]
-  self_page <- propositions_json$links$href[3]
-  first_page <- propositions_json$links$href[3]
-  last_page <- propositions_json$links$href[4]
+  next_page <- props_json$links$href[2]
+  self_page <- props_json$links$href[3]
+  first_page <- props_json$links$href[3]
+  last_page <- props_json$links$href[4]
 
-  # Loop to get all the available propositions. It will take longer than 15 minutes to get all of
-  # them. Nowdays, the site has more than 6K pages to go through (14/08/2017).
+  # Loop para pegar todas as proposições disponíveis no site. Uma requisição pega apenas 100 itens por vez,
+  # então percorremos as próximas páginas até a última e pegamos todas as proposições.
   while(TRUE){
     p_json <- .get_json(next_page)
     p_dataframe <- p_json$dados
 
-    propositions_dataframe <- rbind(propositions_dataframe, p_dataframe)
+    props_dataframe <- rbind(props_dataframe, p_dataframe)
 
     self_page <- next_page
     next_page <- p_json$links$href[2]
@@ -30,14 +30,14 @@ get_all_propositions <- function(){
 
   }
 
-  return(propositions_dataframe)
+  return(props_dataframe)
 
 }
 
-# Get details about a proposition
-# id_prop: Proposition ID
-# Return: List containing info about the proposition
-get_proposition_by_id <- function(id_prop){
+# Recupera uma proposição contendo detalhes adicionais.
+# id_prop: ID da proposição.
+# Return: Lista contendo informações sobre a proposição.
+fetch_proposicao_por_id <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
 
@@ -47,10 +47,10 @@ get_proposition_by_id <- function(id_prop){
 
 }
 
-# Get all the votings whose a proposition went through
-# id_prop: Proposition ID
-# Return: Dataframe containing info about all the voting
-get_proposition_votings <- function(id_prop){
+# Recupera todas as votações por quais uma proposição já passou.
+# id_prop: ID da proposição.
+# Return: Dataframe contendo as várias votações pelas quais uma proposição passou.
+fetch_votacoes_proposicao <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, "/votacoes", sep="")
 
@@ -60,7 +60,7 @@ get_proposition_votings <- function(id_prop){
 
 }
 
-get_proposition_id <- function(type_prop, prop_number, year){
+fetch_id_proposicao <- function(type_prop, prop_number, year){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=", type_prop, "&numero=", prop_number, "&ano=", year,"&ordem=ASC&ordenarPor=id", sep="")
 
@@ -70,7 +70,7 @@ get_proposition_id <- function(type_prop, prop_number, year){
   return(prop_json$dados$id)
 }
 
-get_propositions_types <- function(){
+fetch_tipo_proposicao <- function(){
   prop_types_link <- "https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao"
 
   prop_types <- .get_json(prop_types_link)

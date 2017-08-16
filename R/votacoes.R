@@ -1,25 +1,25 @@
-# Gets details about a voting
-# id_vot: Voting's ID
-# Return: List containing the details about the voting, including the results by party.
-get_voting <- function(id_vot){
+# Recupera detalhes sobre uma votação específica pelo seu ID.
+# id_vot: ID da votação.
+# Return: Lista contendo os detalhes de uma votação, incluindo o posicionamento de cada partido.
+fetch_votacao <- function(id_vot){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_vot, sep="")
 
-  voting_json <- .get_json(full_link)
+  votacao_json <- .get_json(full_link)
 
-  return(voting_json$dados)
+  return(votacao_json$dados)
 }
 
-# Gets votes of every deputy about a voting
-# id_vot: Voting's ID
-# Return: Dataframe containing the data/vote of every deputy.
-get_voters <- function(id_vot){
+# Recupera os votantes referentes àquela votação específica
+# id_vot: ID da votação.
+# Return: Dataframe contendo o posicionamento de cada deputado, além de informações sobre estes.
+fetch_votantes <- function(id_vot){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_vot, "/votos?itens=513", sep="")
 
-  voters <- .get_json(full_link)
+  votantes <- .get_json(full_link)
 
-  return(voters$dados)
+  return(votantes$dados)
 }
 
 
