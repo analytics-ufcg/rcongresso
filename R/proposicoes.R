@@ -47,10 +47,10 @@ get_proposition_by_id <- function(id_prop){
 
 }
 
-# Get all the voting whose a proposition went through
+# Get all the votings whose a proposition went through
 # id_prop: Proposition ID
 # Return: Dataframe containing info about all the voting
-get_proposition_voting <- function(id_prop){
+get_proposition_votings <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, "/votacoes", sep="")
 
