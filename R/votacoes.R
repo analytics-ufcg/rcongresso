@@ -15,11 +15,23 @@ fetch_votacao <- function(id_vot){
 # Return: Dataframe contendo o posicionamento de cada deputado, além de informações sobre estes.
 fetch_votantes <- function(id_vot){
 
-  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_vot, "/votos?itens=513", sep="")
+  id_vot <- 7252
+  votantes_dataframe <- data.frame()
 
-  votantes <- .get_json(full_link)
+  for(i in 1:5){
 
-  return(votantes$dados)
+    full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_vot, "/votos?pagina=", i,"&itens=513", sep="")
+
+    print(full_link)
+
+    v <- .get_json(full_link)
+    v_df <- v$dados
+
+    votantes_dataframe <- rbind(votantes_dataframe, v_df)
+
+  }
+
+  return(votantes_dataframe)
 }
 
 

@@ -20,10 +20,10 @@ constroi_dataframe <- function(proposicao, votacao, votantes) {
 
   # Quero gerar um for para pegar as colunas a partir de uma lista ao invés de fazer dessa forma.
   # A variável de controle do for seria o parametro votantes$...
-  dataframe_final <- rbind(dataframe_final, data.frame(votantes$parlamentar$nome))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar$id))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar$siglaPartido))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar$siglaUf))
+  dataframe_final <- rbind(dataframe_final, data.frame(votantes$parlamentar.nome))
+  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar.id))
+  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar.siglaPartido))
+  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar.siglaUf))
   dataframe_final <- cbind(dataframe_final, data.frame(votantes$voto))
 
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$numero))
