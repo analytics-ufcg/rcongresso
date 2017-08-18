@@ -13,3 +13,6 @@ LazyData: true
 Imports: httr,
     jsonlite,
     magrittr
+Suggests: testthat,
+    compare
+RoxygenNote: 6.0.1
