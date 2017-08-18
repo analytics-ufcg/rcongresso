@@ -70,7 +70,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
   return(prop_json$dados$id)
 }
 
-fetch_tipo_proposicao <- function(){
+fetch_tipos_proposicao <- function(){
   prop_types_link <- "https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao"
 
   prop_types <- .get_json(prop_types_link)
