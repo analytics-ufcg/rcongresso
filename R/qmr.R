@@ -13,7 +13,7 @@
 # Para facilitar vou escolhar a opção 1 e testar a construção do dataframe. Depois eu posso mudar.
 constroi_dataframe <- function(proposicao, votacao, votantes) {
 
-  prop_types <- rcongresso::fetch_tipo_proposicao()
+  prop_types <- rcongresso::fetch_tipos_proposicao()
   p <- prop_types %>% filter(prop_types$id==proposicao$idTipo)
 
   dataframe_final <- data.frame()
@@ -31,6 +31,16 @@ constroi_dataframe <- function(proposicao, votacao, votantes) {
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ementa))
 
   dataframe_final <- cbind(dataframe_final, data.frame(votacao$dataHoraFim))
+
+  # Select da orientacao_governo da votação
+  orientacoes <- votacao$orientacoes
+  orientacao_governo <- orientacoes[orientacoes$nomeBancada=="GOV.",]$voto
+
+  dataframe_final <- cbind(dataframe_final, data.frame(orientacao_governo))
+
+  # Faz um select da linha onde o nome da bancada seja PT aí é só pegar o voto
+  # do partido a partir dessa linha selecionada.
+  # orientacoes[orientacoes$nomeBancada=="PT",]
 
   # Antes de retornar o dataframe seria bom renomear as colunas. Eu vou fazer isso após conseguir
   # pegar todos os dados que são necessários. Ainda quero confirmar se peguei tudo mesmo.
