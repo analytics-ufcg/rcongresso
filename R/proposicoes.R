@@ -37,7 +37,7 @@ fetch_proposicoes <- function(){
 # Recupera uma proposição contendo detalhes adicionais.
 # id_prop: ID da proposição.
 # Return: Lista contendo informações sobre a proposição.
-fetch_proposicao_por_id <- function(id_prop){
+fetch_proposicao <- function(id_prop){
 
   full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
 
@@ -50,9 +50,9 @@ fetch_proposicao_por_id <- function(id_prop){
 # Recupera todas as votações por quais uma proposição já passou.
 # id_prop: ID da proposição.
 # Return: Dataframe contendo as várias votações pelas quais uma proposição passou.
-fetch_votacoes_proposicao <- function(id_prop){
+fetch_votacoes <- function(proposicao){
 
-  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, "/votacoes", sep="")
+  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", proposicao, "/votacoes", sep="")
 
   voting_json <- .get_json(full_link)
 
@@ -60,9 +60,9 @@ fetch_votacoes_proposicao <- function(id_prop){
 
 }
 
-fetch_id_proposicao <- function(type_prop, prop_number, year){
+fetch_id_proposicao <- function(tipo, numero, ano){
 
-  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=", type_prop, "&numero=", prop_number, "&ano=", year,"&ordem=ASC&ordenarPor=id", sep="")
+  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id", sep="")
 
   print(full_link)
   prop_json <- .get_json(full_link)
