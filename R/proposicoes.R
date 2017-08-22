@@ -8,7 +8,7 @@
 #' @export
 fetch_proposicoes <- function(){
 
-  props_link <- "https://dadosabertos.camara.leg.br/api/v2/proposicoes?ordem=ASC&ordenarPor=id&itens=100"
+  props_link <- paste(.API_LINK, "proposicoes?ordem=ASC&ordenarPor=id&itens=100", sep="")
   props_json <- .get_json(props_link)
   props_dataframe <- props_json$dados
 
@@ -52,7 +52,7 @@ fetch_proposicoes <- function(){
 #' @export
 fetch_proposicao <- function(id_prop){
 
-  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, sep="")
+  full_link <- paste(.API_LINK, "proposicoes/", id_prop, sep="")
 
   prop_json <- .get_json(full_link)
 
@@ -72,7 +72,7 @@ fetch_proposicao <- function(id_prop){
 #' @export
 fetch_votacoes <- function(id_prop){
 
-  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes/", id_prop, "/votacoes", sep="")
+  full_link <- paste(.API_LINK, "proposicoes/", id_prop, "/votacoes", sep="")
 
   voting_json <- .get_json(full_link)
 
@@ -95,7 +95,7 @@ fetch_votacoes <- function(id_prop){
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
 
-  full_link <- paste("https://dadosabertos.camara.leg.br/api/v2/proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id", sep="")
+  full_link <- paste(.API_LINK, "proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id", sep="")
 
   print(full_link)
   prop_json <- .get_json(full_link)
@@ -112,7 +112,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 fetch_tipos_proposicao <- function(){
-  prop_types_link <- "https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao"
+  prop_types_link <- paste(.API_LINK, "referencias/tiposProposicao", sep="")
 
   prop_types <- .get_json(prop_types_link)
 
