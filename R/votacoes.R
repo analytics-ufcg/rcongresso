@@ -10,7 +10,7 @@
 #' @export
 fetch_votacao <- function(id_votacao){
 
-  full_link <- paste(.API_LINK, "votacoes/", id_votacao, sep="")
+  full_link <- paste0(.API_LINK, "votacoes/", id_votacao)
 
   votacao_json <- .get_json(full_link)
 
@@ -32,7 +32,7 @@ fetch_votos <- function(id_votacao){
 
   for(i in 1:5){
 
-    full_link <- paste(.API_LINK, "votacoes/", id_votacao, "/votos?pagina=", i,"&itens=513", sep="")
+    full_link <- paste0(.API_LINK, "votacoes/", id_votacao, "/votos?pagina=", i,"&itens=513")
 
     print(full_link)
 
