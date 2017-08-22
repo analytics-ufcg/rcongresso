@@ -15,7 +15,6 @@ fetch_votacao <- function(votacao){
 # Return: Dataframe contendo o posicionamento de cada deputado, além de informações sobre estes.
 fetch_votos <- function(votacao){
 
-  id_vot <- 7252
   votantes_dataframe <- data.frame()
 
   for(i in 1:5){
