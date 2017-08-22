@@ -11,7 +11,25 @@
 # Temos que lidar com o caso que há mais de uma votação no mesmo dia e o parse da data.)
 
 # Para facilitar vou escolhar a opção 1 e testar a construção do dataframe. Depois eu posso mudar.
-constroi_dataframe <- function(proposicao, votacao, votantes) {
+
+#' Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"
+#'
+#' @param proposicao Uma proposição especifica recuperada pelo método fetch_proposicao()
+#' @param votacao Uma votação específica recuperada pelo método fetch_votacao()
+#' @param votos Os votos referentes a esta votação em questão
+#'
+#' @return Dataframe contendo 10 colunas com as informações: Nome do parlamentar, ID do parlamentar,
+#'    sigla do partido, sigla da uf, voto, número da proposição, ano, ementa, horário da votação e
+#'    orientação do governo
+#'
+#' @examples
+#' pec241 <- fecth_proposicao(2088351)
+#' votacao_segundoturno_pec241 <- fetch_votacao(7252)
+#' votos_segundoturno_pec241 <- fetch_votos(7252)
+#' dataframe_pec241 <- constroi_dataframe(pec241, votacao_segundoturno_pec241, votos_segundoturno_pec241)
+#'
+#' @export
+constroi_dataframe <- function(proposicao, votacao, votos) {
 
   prop_types <- rcongresso::fetch_tipos_proposicao()
   p <- prop_types %>% filter(prop_types$id==proposicao$idTipo)
@@ -20,11 +38,11 @@ constroi_dataframe <- function(proposicao, votacao, votantes) {
 
   # Quero gerar um for para pegar as colunas a partir de uma lista ao invés de fazer dessa forma.
   # A variável de controle do for seria o parametro votantes$...
-  dataframe_final <- rbind(dataframe_final, data.frame(votantes$parlamentar.nome))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar.id))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar.siglaPartido))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$parlamentar.siglaUf))
-  dataframe_final <- cbind(dataframe_final, data.frame(votantes$voto))
+  dataframe_final <- rbind(dataframe_final, data.frame(votos$parlamentar.nome))
+  dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.id))
+  dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.siglaPartido))
+  dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.siglaUf))
+  dataframe_final <- cbind(dataframe_final, data.frame(votos$voto))
 
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$numero))
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ano))
