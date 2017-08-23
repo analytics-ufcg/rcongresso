@@ -32,7 +32,7 @@
 constroi_dataframe <- function(proposicao, votacao, votos) {
 
   prop_types <- rcongresso::fetch_tipos_proposicao()
-  p <- prop_types %>% filter(prop_types$id==proposicao$idTipo)
+  p <- prop_types %>% dplyr::filter(prop_types$id==proposicao$idTipo)
 
   dataframe_final <- data.frame()
 

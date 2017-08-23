@@ -12,7 +12,8 @@ Encoding: UTF-8
 LazyData: true
 Imports: httr,
     jsonlite,
-    magrittr
+    magrittr,
+    dplyr
 Suggests: testthat,
     compare
 RoxygenNote: 6.0.1
