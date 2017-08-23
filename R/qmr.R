@@ -44,6 +44,7 @@ constroi_dataframe <- function(proposicao, votacao, votos) {
   dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.siglaUf))
   dataframe_final <- cbind(dataframe_final, data.frame(votos$voto))
 
+  dataframe_final <- cbind(dataframe_final, data.frame(p$sigla))
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$numero))
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ano))
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ementa))
