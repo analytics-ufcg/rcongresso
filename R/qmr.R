@@ -31,7 +31,7 @@
 #' @export
 constroi_dataframe <- function(proposicao, votacao, votos) {
 
-  prop_types <- rcongresso::fetch_tipos_proposicao()
+  prop_types <- fetch_tipos_proposicao()
   p <- prop_types %>% dplyr::filter(prop_types$id==proposicao$idTipo)
 
   dataframe_final <- data.frame()
@@ -49,6 +49,7 @@ constroi_dataframe <- function(proposicao, votacao, votos) {
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ano))
   dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ementa))
 
+  dataframe_final <- cbind(dataframe_final, data.frame(votacao$dataHoraInicio))
   dataframe_final <- cbind(dataframe_final, data.frame(votacao$dataHoraFim))
 
   # Select da orientacao_governo da votação
