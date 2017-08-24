@@ -54,9 +54,12 @@ constroi_dataframe <- function(proposicao, votacao, votos) {
 
   # Select da orientacao_governo da votação
   orientacoes <- votacao$orientacoes
-  orientacao_governo <- orientacoes[orientacoes$nomeBancada=="GOV.",]$voto
 
-  dataframe_final <- cbind(dataframe_final, data.frame(orientacao_governo))
+  orientacao_governo <- orientacoes %>%
+    dplyr::filter(nomeBancada=="GOV.") %>%
+    dplyr::select(voto)
+
+  dataframe_final <- cbind(dataframe_final, orientacao_governo)
 
   # Faz um select da linha onde o nome da bancada seja PT aí é só pegar o voto
   # do partido a partir dessa linha selecionada.
