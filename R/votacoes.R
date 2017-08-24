@@ -28,20 +28,9 @@ fetch_votacao <- function(id_votacao){
 #' @export
 fetch_votos <- function(id_votacao){
 
-  votantes_dataframe <- data.frame()
-
-  for(i in 1:5){
-
-    full_link <- paste0(.API_LINK, "votacoes/", id_votacao, "/votos?pagina=", i,"&itens=513")
-
-    print(full_link)
-
-    v <- .get_json(full_link)
-    v_df <- v$dados
-
-    votantes_dataframe <- rbind(votantes_dataframe, v_df)
-
-  }
+  votantes_dataframe <- tibble::tibble(link = paste0("https://dadosabertos.camara.leg.br/api/v2/votacoes/", id_votacao, "/votos?pagina=", 1:5,"&itens=513")) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(.get_json(link) %>% dplyr::select(dados))
 
   return(votantes_dataframe)
 }
