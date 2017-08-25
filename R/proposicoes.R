@@ -2,9 +2,6 @@
 #'
 #' @return Dataframe contendo todas as informações das proposições
 #'
-#' @examples
-#' proposicoes <- fetch_proposicoes()
-#'
 #' @export
 fetch_proposicoes <- function(){
 

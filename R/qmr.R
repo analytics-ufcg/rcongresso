@@ -23,7 +23,7 @@
 #'    orientação do governo
 #'
 #' @examples
-#' pec241 <- fecth_proposicao(2088351)
+#' pec241 <- fetch_proposicao(2088351)
 #' votacao_segundoturno_pec241 <- fetch_votacao(7252)
 #' votos_segundoturno_pec241 <- fetch_votos(7252)
 #' dataframe_pec241 <- constroi_dataframe(pec241, votacao_segundoturno_pec241, votos_segundoturno_pec241)
