@@ -12,7 +12,3 @@ Dataframe contendo todas as informações das proposições
 \description{
 Recupera da API todas as proposições disponíveis na base de dados da Câmara dos Deputados.
 }
-\examples{
-proposicoes <- fetch_proposicoes()
-
-}
