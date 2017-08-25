@@ -28,8 +28,6 @@ fetch_proposicoes <- function(){
     self_page <- next_page
     next_page <- p_json$links$href[2]
 
-    print(self_page)
-
     if(next_page == first_page) {
       break;
     }
@@ -97,7 +95,6 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 
   full_link <- paste0(.API_LINK, "proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id")
 
-  print(full_link)
   prop_json <- .get_json(full_link)
 
   return(prop_json$dados$id)
