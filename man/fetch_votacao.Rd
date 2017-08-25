@@ -4,10 +4,10 @@
 \alias{fetch_votacao}
 \title{Recupera da API detalhes sobre uma votação específica.}
 \usage{
-fetch_votacao(votacao)
+fetch_votacao(id_votacao)
 }
 \arguments{
-\item{id_vot}{ID da votação}
+\item{id_votacao}{ID da votação}
 }
 \value{
 Lista contendo os detalhes de uma votação, incluindo o posicionamento de cada bancada

@@ -16,6 +16,6 @@ Lista contendo informações sobre a proposição
 Recupera da API uma proposição contendo detalhes adicionais.
 }
 \examples{
-pec241 <- fecth_proposicao(2088351)
+pec241 <- fetch_proposicao(2088351)
 
 }

@@ -47,7 +47,7 @@ fetch_proposicoes <- function(){
 #' @return Lista contendo informações sobre a proposição
 #'
 #' @examples
-#' pec241 <- fecth_proposicao(2088351)
+#' pec241 <- fetch_proposicao(2088351)
 #'
 #' @export
 fetch_proposicao <- function(id_prop){
