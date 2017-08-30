@@ -47,9 +47,9 @@ fetch_proposicoes <- function(){
 #' @export
 fetch_proposicao <- function(id_prop){
 
-  full_link <- paste0(.API_LINK, "proposicoes/", id_prop)
+  path <- paste0("proposicoes/", id_prop)
 
-  prop_json <- .get_json(full_link)
+  prop_json <- .get_json(path)
 
   return(prop_json$dados)
 
@@ -67,9 +67,9 @@ fetch_proposicao <- function(id_prop){
 #' @export
 fetch_votacoes <- function(id_prop){
 
-  full_link <- paste0(.API_LINK, "proposicoes/", id_prop, "/votacoes")
+  path <- paste0("proposicoes/", id_prop, "/votacoes")
 
-  voting_json <- .get_json(full_link)
+  voting_json <- .get_json(path)
 
   return(voting_json$dados)
 
@@ -90,9 +90,9 @@ fetch_votacoes <- function(id_prop){
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
 
-  full_link <- paste0(.API_LINK, "proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id")
+  path <- paste0("proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id")
 
-  prop_json <- .get_json(full_link)
+  prop_json <- .get_json(path)
 
   return(prop_json$dados$id)
 }
@@ -106,9 +106,9 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 fetch_tipos_proposicao <- function(){
-  prop_types_link <- paste0(.API_LINK, "referencias/tiposProposicao")
+  path <- paste0("referencias/tiposProposicao")
 
-  prop_types <- .get_json(prop_types_link)
+  prop_types <- .get_json(path)
 
   return(prop_types$dados)
 }
