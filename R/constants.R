@@ -1,2 +1,11 @@
-.API_LINK <- "https://dadosabertos.camara.leg.br/api/v2/"
+# Link default da API
+.API_LINK <- "https://dadosabertos.camara.leg.br"
+
+# Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
+
+# Paths
+.PROPOSICOES_PATH <- "/api/v2/proposicoes"
+.VOTACOES_PATH <- "/api/v2/votacoes"
+.DEPUTADOS_PATH <- "/api/v2/deputados"
+.TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
