@@ -26,6 +26,8 @@
 
   resp <- httr::GET(api_url, httr::accept_json())
 
+  httr::stop_for_status(resp)
+
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
