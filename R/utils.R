@@ -11,7 +11,7 @@
 .get_json <- function(response){
 
   r <- httr::content(response, as="text")
-  r_json <- jsonlite::fromJSON(r, flatten = T, simplifyVector = FALSE)
+  r_json <- jsonlite::fromJSON(r, flatten = T)
 
   return(r_json)
 }
@@ -20,9 +20,9 @@
 # separação e utilizar o 'modify_url' lidar com essa parte ao invés de usar um paste0. Ao invés de chamar o .get_json()
 # nos métodos principais, estes devem chamar essa função e essa deve chamar o .get_json() ou podemos unificar as duas
 # funções.
-.congresso_api <- function(query){
+.congresso_api <- function(path=NULL, query=NULL){
 
-  api_url <- httr::modify_url(.API_LINK, query = query)
+  api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
   resp <- httr::GET(api_url, httr::accept_json())
 
@@ -33,5 +33,4 @@
   resp_json <- .get_json(resp)
 
   return(resp_json)
-
 }
