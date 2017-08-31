@@ -10,9 +10,9 @@
 #' @export
 fetch_proposicao <- function(id_prop){
 
-  path <- paste0("proposicoes/", id_prop)
+  path <- paste0(.PROPOSICOES_PATH, "/", id_prop)
 
-  prop_json <- .get_json(path)
+  prop_json <- .congresso_api(path)
 
   return(prop_json$dados)
 
@@ -30,9 +30,9 @@ fetch_proposicao <- function(id_prop){
 #' @export
 fetch_votacoes <- function(id_prop){
 
-  path <- paste0("proposicoes/", id_prop, "/votacoes")
+  path <- paste0(.PROPOSICOES_PATH, "/", id_prop, "/votacoes")
 
-  voting_json <- .get_json(path)
+  voting_json <- .congresso_api(path)
 
   return(voting_json$dados)
 
@@ -53,11 +53,11 @@ fetch_votacoes <- function(id_prop){
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
 
-  path <- paste0("proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id")
+  query <- list(siglaTipo=tipo, numero=numero, ano=ano, ordem="ASC", ordenarPor="id")
 
-  prop_json <- .get_json(path)
+  prop_object <- .congresso_api(.PROPOSICOES_PATH, query)
 
-  return(prop_json$dados$id)
+  return(prop_object$dados$id)
 }
 
 #' Recupera da API os tipos de proposição disponíveis.
@@ -69,9 +69,8 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 fetch_tipos_proposicao <- function(){
-  path <- paste0("referencias/tiposProposicao")
 
-  prop_types <- .get_json(path)
+  prop_types <- .congresso_api(.TIPOS_PROPOSICOES_PATH)
 
   return(prop_types$dados)
 }
