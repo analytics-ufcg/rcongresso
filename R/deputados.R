@@ -10,9 +10,9 @@
 #' @export
 fetch_deputado <- function(dep_id){
 
-  full_link <- paste0(.API_LINK, "deputados/", dep_id)
+  path <- paste0(.DEPUTADOS_PATH, "/", dep_id)
 
-  dep_json <- .get_json(full_link)
+  dep_json <- .congresso_api(path)
 
   return(dep_json$dados)
 
@@ -30,9 +30,10 @@ fetch_deputado <- function(dep_id){
 #' @export
 fetch_despesas_deputado <- function(dep_id) {
 
-  full_link <- paste0(.API_LINK, "deputados/", dep_id, "/despesas?ordem=ASC&ordenarPor=numAno")
+  path <- paste0(.DEPUTADOS_PATH, "/", dep_id, "/despesas")
+  query <- list(ordem="ASC", ordenarPor="numAno")
 
-  dep_json <- .get_json(full_link)
+  dep_json <- .congresso_api(path, query)
 
   return(dep_json$dados)
 
