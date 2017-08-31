@@ -39,4 +39,12 @@ ids_votacoes_pec241 <- votacoes_pec_241$id
 r <- compare::compareEqual(ids, ids_votacoes_pec241)
 test_that("IDs Votacoes PEC241", {expect_true(r$result)})
 
+# Verifica se a pesquisa retorna uma lista de proposições vazias, significando que nenhum resultado foi encontrado
+# para essa busca.
+proposicao_inexistente <- fetch_id_proposicao(tipo = "AAA", numero = 55, ano = 1870)
+test_that("GET ID de proposição inexistente", {expect_equal(proposicao_inexistente, NULL)})
+
+# Verifica se essa consulta gera um erro porque é um "acesso direto" à proposição, então já que o ID é incorreto,
+# então o erro 404 deve ser gerado.
+test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao(id = 506))})
 
