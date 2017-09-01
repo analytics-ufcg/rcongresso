@@ -8,11 +8,32 @@
 #' pec241_json <- .get_json("https://dadosabertos.camara.leg.br/api/v2/proposicoes/2088351")
 #'
 #' @export
-.get_json <- function(full_link){
+.get_json <- function(response){
 
-  prop <- httr::GET(full_link)
-  r <- httr::content(prop, as="text")
-  prop_json <- jsonlite::fromJSON(r, flatten = T)
+  r <- httr::content(response, as="text")
+  r_json <- jsonlite::fromJSON(r, flatten = T)
 
-  return(prop_json)
+  return(r_json)
+}
+
+# Esse método deve receber a query, os parâmetros e o path separadamente, pelo que entendi. É uma boa prática fazer essa
+# separação e utilizar o 'modify_url' lidar com essa parte ao invés de usar um paste0. Ao invés de chamar o .get_json()
+# nos métodos principais, estes devem chamar essa função e essa deve chamar o .get_json() ou podemos unificar as duas
+# funções.
+.congresso_api <- function(path=NULL, query=NULL){
+
+  ua <- httr::user_agent(.RCONGRESSO_LINK)
+  api_url <- httr::modify_url(.API_LINK, path = path, query = query)
+
+  resp <- httr::GET(api_url, ua, httr::accept_json())
+
+  httr::stop_for_status(resp)
+
+  if (httr::http_type(resp) != "application/json") {
+    stop(.ERRO_RETORNO_JSON, call. = FALSE)
+  }
+
+  resp_json <- .get_json(resp)
+
+  return(resp_json)
 }

@@ -10,9 +10,9 @@
 #' @export
 fetch_votacao <- function(id_votacao){
 
-  full_link <- paste0(.API_LINK, "votacoes/", id_votacao)
+  path <- paste0(.VOTACOES_PATH, "/", id_votacao)
 
-  votacao_json <- .get_json(full_link)
+  votacao_json <- .congresso_api(path)
 
   return(votacao_json$dados)
 }
@@ -28,9 +28,12 @@ fetch_votacao <- function(id_votacao){
 #' @export
 fetch_votos <- function(id_votacao){
 
-  votantes_dataframe <- tibble::tibble(link = paste0(.API_LINK, "votacoes/", id_votacao, "/votos?pagina=", 1:5,"&itens=513")) %>%
+  path <- paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")
+  querys <- tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513"))
+
+  votantes_dataframe <- queries %>%
     dplyr::rowwise() %>%
-    dplyr::do(.get_json(.$link)[[1]] %>% as.data.frame())
+    dplyr::do(.congresso_api(path, .$query)$dados)
 
   return(votantes_dataframe)
 }

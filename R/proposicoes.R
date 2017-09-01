@@ -1,40 +1,3 @@
-#' Recupera da API todas as proposições disponíveis na base de dados da Câmara dos Deputados.
-#'
-#' @return Dataframe contendo todas as informações das proposições
-#'
-#' @export
-fetch_proposicoes <- function(){
-
-  props_link <- paste0(.API_LINK, "proposicoes?ordem=ASC&ordenarPor=id&itens=100")
-  props_json <- .get_json(props_link)
-  props_dataframe <- props_json$dados
-
-  next_page <- props_json$links$href[2]
-  self_page <- props_json$links$href[3]
-  first_page <- props_json$links$href[3]
-  last_page <- props_json$links$href[4]
-
-  # Loop para pegar todas as proposições disponíveis no site. Uma requisição pega apenas 100 itens por vez,
-  # então percorremos as próximas páginas até a última e pegamos todas as proposições.
-  while(TRUE){
-    p_json <- .get_json(next_page)
-    p_dataframe <- p_json$dados
-
-    props_dataframe <- rbind(props_dataframe, p_dataframe)
-
-    self_page <- next_page
-    next_page <- p_json$links$href[2]
-
-    if(next_page == first_page) {
-      break;
-    }
-
-  }
-
-  return(props_dataframe)
-
-}
-
 #' Recupera da API uma proposição contendo detalhes adicionais.
 #'
 #' @param id_prop ID da proposição
@@ -47,9 +10,9 @@ fetch_proposicoes <- function(){
 #' @export
 fetch_proposicao <- function(id_prop){
 
-  full_link <- paste0(.API_LINK, "proposicoes/", id_prop)
+  path <- paste0(.PROPOSICOES_PATH, "/", id_prop)
 
-  prop_json <- .get_json(full_link)
+  prop_json <- .congresso_api(path)
 
   return(prop_json$dados)
 
@@ -67,9 +30,9 @@ fetch_proposicao <- function(id_prop){
 #' @export
 fetch_votacoes <- function(id_prop){
 
-  full_link <- paste0(.API_LINK, "proposicoes/", id_prop, "/votacoes")
+  path <- paste0(.PROPOSICOES_PATH, "/", id_prop, "/votacoes")
 
-  voting_json <- .get_json(full_link)
+  voting_json <- .congresso_api(path)
 
   return(voting_json$dados)
 
@@ -90,11 +53,11 @@ fetch_votacoes <- function(id_prop){
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
 
-  full_link <- paste0(.API_LINK, "proposicoes?siglaTipo=", tipo, "&numero=", numero, "&ano=", ano,"&ordem=ASC&ordenarPor=id")
+  query <- list(siglaTipo=tipo, numero=numero, ano=ano, ordem="ASC", ordenarPor="id")
 
-  prop_json <- .get_json(full_link)
+  prop_object <- .congresso_api(.PROPOSICOES_PATH, query)
 
-  return(prop_json$dados$id)
+  return(prop_object$dados$id)
 }
 
 #' Recupera da API os tipos de proposição disponíveis.
@@ -106,9 +69,8 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 fetch_tipos_proposicao <- function(){
-  prop_types_link <- paste0(.API_LINK, "referencias/tiposProposicao")
 
-  prop_types <- .get_json(prop_types_link)
+  prop_types <- .congresso_api(.TIPOS_PROPOSICOES_PATH)
 
   return(prop_types$dados)
 }
