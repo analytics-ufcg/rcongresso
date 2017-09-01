@@ -16,10 +16,12 @@
   return(r_json)
 }
 
-# Esse método deve receber a query, os parâmetros e o path separadamente, pelo que entendi. É uma boa prática fazer essa
-# separação e utilizar o 'modify_url' lidar com essa parte ao invés de usar um paste0. Ao invés de chamar o .get_json()
-# nos métodos principais, estes devem chamar essa função e essa deve chamar o .get_json() ou podemos unificar as duas
-# funções.
+#' Função principal do wrapper da API que é responśavel pelos GETs e separação dos paths e queries de consulta.
+#'
+#' @param path Caminho de acesso do objeto
+#' @param query Lista de parâmetros que se quer utilizar para realizar a consulta
+#'
+#' @export
 .congresso_api <- function(path=NULL, query=NULL){
 
   ua <- httr::user_agent(.RCONGRESSO_LINK)
