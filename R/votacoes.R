@@ -31,7 +31,7 @@ fetch_votos <- function(id_votacao){
   path <- paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")
   querys <- tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513"))
 
-  votantes_dataframe <- querys %>%
+  votantes_dataframe <- queries %>%
     dplyr::rowwise() %>%
     dplyr::do(.congresso_api(path, .$query)$dados)
 
