@@ -22,9 +22,10 @@
 # funções.
 .congresso_api <- function(path=NULL, query=NULL){
 
+  ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
-  resp <- httr::GET(api_url, httr::accept_json())
+  resp <- httr::GET(api_url, ua, httr::accept_json())
 
   httr::stop_for_status(resp)
 

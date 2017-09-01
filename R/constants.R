@@ -9,3 +9,6 @@
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
+
+# Link do repositório do rcongresso
+.RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
