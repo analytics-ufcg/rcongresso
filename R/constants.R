@@ -12,3 +12,6 @@
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
+
+# Regex Pattern
+.REGEX_PATTERN <- '([[(?=.*PtdoB).*$]]|([[:upper:]]+[[:lower:]]))'
