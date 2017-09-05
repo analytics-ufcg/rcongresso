@@ -1,17 +1,3 @@
-# Dúvida: Quais deverão ser os parâmetros dessa função?
-# 1: Três parâmetros: Uma proposição, um 'objeto' votação e um 'objeto' votantes (Dessa maneira, a responsabilidade de fazer
-# um get desses três 'objetos' é responsabilidade de quem vai chamar a função)
-# 2: Quatro parâmetros: O tipo da proposição, o número da proposição e o ano da proposição e o ID
-# da votação que eu quero (Dessa maneira, o método faria uma busca automática pela proposição e
-# o ID da votação seria responsabilidade de quem está chamando o método, o que não faz muito sentido
-# porque se ele tem o ID da votação ele deverá ter o ID da proposição também e não facilita muito.)
-# 3: Quatro parâmetros: O tipo da proposição, o número da proposição e o ano da proposição e
-# a data da votação (Acho que essa seria a maneira ideal e mais amigável para o usuário. Ele passa
-# os dados referentes à proposição a à votação e aí tem tudo junto daquela votação especificamente.
-# Temos que lidar com o caso que há mais de uma votação no mesmo dia e o parse da data.)
-
-# Para facilitar vou escolhar a opção 1 e testar a construção do dataframe. Depois eu posso mudar.
-
 #' Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"
 #'
 #' @param proposicao Uma proposição especifica recuperada pelo método fetch_proposicao()
@@ -61,12 +47,18 @@ constroi_dataframe <- function(proposicao, votacao, votos) {
 
   dataframe_final <- cbind(dataframe_final, orientacao_governo)
 
-  # Faz um select da linha onde o nome da bancada seja PT aí é só pegar o voto
-  # do partido a partir dessa linha selecionada.
-  # orientacoes[orientacoes$nomeBancada=="PT",]
+  # Deixando os nomes dos partidos maiúsculo facilita o join futuramente
+  dataframe_final$votos.parlamentar.siglaPartido <- toupper(dataframe_final$votos.parlamentar.siglaPartido)
 
-  # Antes de retornar o dataframe seria bom renomear as colunas. Eu vou fazer isso após conseguir
-  # pegar todos os dados que são necessários. Ainda quero confirmar se peguei tudo mesmo.
+  orientacao_partidos <- .get_votos_partidos(votacao)
+
+  dataframe_final <- dplyr::left_join(dataframe_final, orientacao_partidos, by=c("votos.parlamentar.siglaPartido" = "partido"))
+
+  colnames(dataframe_final) <- c("nome_parl","id_parl","siglaPartido", "siglaUF", "voto_parl",
+                                 "sigla_prop","num_prop","ano_prop","ementa_prop","horaInicio_votacao","horaFim_votacao",
+                                 "orientacao_governo","bancada_associada","orientacao_partido"
+                                 )
+
 return(dataframe_final)
 
 }
