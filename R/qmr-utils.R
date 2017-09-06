@@ -17,6 +17,7 @@
   partidos_df <- data.frame()
   for(bancada in pos_bancadas$nomeBancada){
     split_partidos <- gsub('([[(?=.*PtdoB).*$]]|([[:upper:]]+[[:lower:]]))', ' \\1', bancada)
+    split_partidos <- gsub('Repr[.]*', ' \\1', split_partidos)
     vetor_partidos <- unlist(strsplit(split_partidos, split=" "))
     tmp <- data.frame(partido=vetor_partidos)
     tmp$bancada_associada <- bancada
