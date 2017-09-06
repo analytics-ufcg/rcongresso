@@ -1,0 +1,29 @@
+---
+title: "Pegando dados do congresso para alimentar o 'Quem me Representa?'"
+author: "Paulo Vinícius Soares"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introdução
+Este pacote é baseado na nova API REST da Câmara dos Deputados. A API fornece funções para pegar muitas informações interessantes para os analistas de dados. A intenção desse pacote é ser um *wrapper* retornando *dataframes* prontos facilitando a vida dos usuários.
+
+# Divisão das funções
+O pacote conta, atualmente, com funções relacionadas à proposições, votações e deputados.
+
+# Gerando o dataframe base
+Para gerar o dataframe, precisamos entender um pouco como se dá a organização da câmara ao gerar as proposições e como estas informações estão organizadas na base de dados.
+
+## Pegando uma proposição da base de dados
+Para recuperar uma proposição você precisa de três informações: O **tipo da proposição** (i.e., PEC, PL, PLP), o **número da proposição** e o **ano** em que esta foi proposta. Com essas três informações em mãos podemos recuperar o **ID da proposição** da base de dados e, consequentemente, a proposição.    
+
+Vamos utilizar como exemplo a *PL 4302/1998*, o projeto de lei da terceirização. Já temos as informações necessárias para recuperar o ID desta, então fazemos uma chamada à função `fetch_id_proposicao()`.
+
+```{r}
+pl4302_id <- fetch_id_proposicao(tipo="PL")
+```
+

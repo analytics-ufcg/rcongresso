@@ -16,5 +16,8 @@ Imports: httr,
     dplyr,
     tibble
 Suggests: testthat,
-    compare
+    compare,
+    knitr,
+    rmarkdown
 RoxygenNote: 6.0.1
+VignetteBuilder: knitr
