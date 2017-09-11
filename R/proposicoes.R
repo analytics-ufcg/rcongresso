@@ -28,14 +28,12 @@ fetch_proposicao <- function(id_prop){
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #'
 #' @export
-fetch_votacoes <- function(id_prop){
+fetch_votacoes <- function(id_props){
 
-  path <- paste0(.PROPOSICOES_PATH, "/", id_prop, "/votacoes")
+  votacoes <- id_props %>% dplyr::do(path=paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
+    dplyr::do(.congresso_api(.$path)[[1]])
 
-  voting_json <- .congresso_api(path)
-
-  return(voting_json$dados)
-
+  return(votacoes)
 }
 
 #' Recupera da API o ID da preposição de acordo com o tipo, número da proposição e ano que
