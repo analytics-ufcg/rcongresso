@@ -14,7 +14,11 @@ fetch_votacao <- function(id_votacao){
 
   votacao_json <- .congresso_api(path)
 
-  return(votacao_json$dados)
+  votacao_json$dados %>%
+    unlist() %>%
+    as.list() %>%
+    as.data.frame() %>%
+    return()
 }
 
 #' Recupera os votos referentes àquela votação específica.
