@@ -1,6 +1,6 @@
 # rcongresso
 
-https://travis-ci.org/analytics-ufcg/rcongresso.svg?branch=master
+[![Build Status](https:///travis-ci.org/analytics-ufcg/rcongresso.svg?branch=master)](https://travis-ci.org/analytics-ufcg/rcongresso)
 
 Pacote R para acessar dados do congresso nacional. Tudo baseado na API RESTful criada em 2017 (https://dadosabertos.camara.leg.br/) e como uma tidy tool que interaja bem com o tidyverse.
 
