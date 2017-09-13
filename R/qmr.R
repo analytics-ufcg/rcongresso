@@ -98,9 +98,12 @@ get_all_votacoes <- function(ids_proposicoes) {
 # Recebe um dataframe de votações e seleciona a última de acordo com o maior ID
 ultima_votacao <- function(votacoes) {
 
-  ultimas_votacoes <- votacoes %>% dplyr::group_by(uriProposicaoPrincipal) %>%
-    dplyr::select(id) %>% dplyr::group_by(max(id)) %>%
-    dplyr::select(`max(id)`) %>% unique()
+  ultimas_votacoes <- votacoes %>%
+    dplyr::group_by(uriProposicaoPrincipal) %>%
+    dplyr::filter(id == max(id)) %>%
+    unique() %>%
+    ungroup() %>%
+    select(id, uriProposicaoPrincipal)
 
   return(ultimas_votacoes)
 
