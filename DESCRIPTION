@@ -14,7 +14,8 @@ Imports: httr,
     jsonlite,
     magrittr,
     dplyr,
-    tibble
+    tibble,
+    tidyr
 Suggests: testthat,
     compare
 RoxygenNote: 6.0.1
