@@ -4,10 +4,8 @@
   pos_bancadas <- votacao$orientacoes %>%
     dplyr::mutate(bancada_associada=nomeBancada) %>%
     dplyr::select(partido=nomeBancada, orientacao_partido=voto, bancada_associada) %>%
-    tidyr::separate_rows(partido, sep='(?=[A-Z][^A-Z])')
-
-  # Queria colocar isso no pipe, mas ainda não consegui usar a sintaxe correta.
-  pos_bancadas$partido <- toupper(pos_bancadas$partido)
+    tidyr::separate_rows(partido, sep='(?=[A-Z][^A-Z])') %>%
+    dplyr::mutate(partido = toupper(partido))
 
   return(pos_bancadas)
 }
