@@ -20,6 +20,24 @@ fetch_votacao <- function(id_votacao){
     return()
 }
 
+#' Recupera da API as orientações das bancadas em uma determinada votação.
+#'
+#' @param id_votacao ID da votação
+#'
+#' @return Dataframe contendo as orientações das bancadas na votação especificada
+#'
+#' @examples
+#' orientacoesbancada_segundoturno_pec241 <- fetch_orientacoes(7252)
+#'
+#' @export
+fetch_orientacoes <- function(id_votacao){
+  path <- paste0(.VOTACOES_PATH, "/", id_votacao)
+  votacao_json <- .congresso_api(path)
+
+  votacao_json$dados$orientacoes %>%
+    return()
+}
+
 #' Recupera os votos referentes àquela votação específica.
 #' @param id_votacao ID da votação
 #'
