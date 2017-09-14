@@ -9,14 +9,12 @@
 #'
 #' @export
 fetch_proposicao <- function(id_props){
-  tibble(id = id_props) %>%
+  tibble::tibble(id = id_props) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
       .congresso_api(.$path)$dados %>%
-        unlist() %>%
-        as.list() %>%
-        as.data.frame()
+        .remove_lists_and_nulls()
       ) %>%
     return()
 }
@@ -32,7 +30,7 @@ fetch_proposicao <- function(id_props){
 #'
 #' @export
 fetch_votacoes <- function(id_props){
-  tibble(id = id_props) %>%
+  tibble::tibble(id = id_props) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(.congresso_api(.$path)[[1]]) %>%
