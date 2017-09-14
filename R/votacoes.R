@@ -2,22 +2,21 @@
 #'
 #' @param id_votacao ID da votação
 #'
-#' @return Lista contendo os detalhes de uma votação, incluindo o posicionamento de cada bancada
+#' @return Dataframe contendo os detalhes de uma votação, incluindo título, a hora de início da votação,
+#' hora de término da votação, placar e sua aprovação.
 #'
 #' @examples
 #' votacao_segundoturno_pec241 <- fetch_votacao(7252)
 #'
 #' @export
 fetch_votacao <- function(id_votacao){
-
-  path <- paste0(.VOTACOES_PATH, "/", id_votacao)
-
-  votacao_json <- .congresso_api(path)
-
-  votacao_json$dados %>%
-    unlist() %>%
-    as.list() %>%
-    as.data.frame() %>%
+  tibble::tibble(id = id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados %>%
+        .remove_lists_and_nulls()
+    ) %>%
     return()
 }
 
