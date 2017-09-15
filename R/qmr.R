@@ -11,56 +11,29 @@
 #' @examples
 #' pec241 <- fetch_proposicao(2088351)
 #' votacao_segundoturno_pec241 <- fetch_votacao(7252)
-#' votos_segundoturno_pec241 <- fetch_votos(7252)
-#' dataframe_pec241 <- constroi_dataframe(pec241, votacao_segundoturno_pec241, votos_segundoturno_pec241)
+#' dataframe_pec241 <- constroi_dataframe(pec241, votacao_segundoturno_pec241)
 #'
 #' @export
-constroi_dataframe <- function(proposicao, votacao, votos) {
+constroi_dataframe <- function(proposicao, votacao) {
+  colnames(proposicao)[1] <- "id_proposicao"
+  colnames(proposicao)[2] <- "uri_proposicao"
 
-  prop_types <- fetch_tipos_proposicao()
-  p <- prop_types %>% dplyr::filter(prop_types$id==proposicao$idTipo)
+  colnames(votacao)[1] <- "id_votacao"
+  colnames(votacao)[2] <- "uri_votacao"
 
-  dataframe_final <- data.frame()
+  votos <- votacao %>%
+    dplyr::rowwise() %>%
+    dplyr::do(fetch_votos(.$id_votacao))
 
-  # Quero gerar um for para pegar as colunas a partir de uma lista ao invés de fazer dessa forma.
-  # A variável de controle do for seria o parametro votantes$...
-  dataframe_final <- rbind(dataframe_final, data.frame(votos$parlamentar.nome))
-  dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.id))
-  dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.siglaPartido))
-  dataframe_final <- cbind(dataframe_final, data.frame(votos$parlamentar.siglaUf))
-  dataframe_final <- cbind(dataframe_final, data.frame(votos$voto))
+  pos_bancadas <- votacao %>%
+    dplyr::rowwise() %>%
+    dplyr::do(get_votos_partidos(.$id_votacao))
 
-  dataframe_final <- cbind(dataframe_final, data.frame(p$sigla))
-  dataframe_final <- cbind(dataframe_final, data.frame(proposicao$numero))
-  dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ano))
-  dataframe_final <- cbind(dataframe_final, data.frame(proposicao$ementa))
-
-  dataframe_final <- cbind(dataframe_final, data.frame(votacao$dataHoraInicio))
-  dataframe_final <- cbind(dataframe_final, data.frame(votacao$dataHoraFim))
-
-  # Select da orientacao_governo da votação
-  orientacoes <- votacao$orientacoes
-
-  orientacao_governo <- orientacoes %>%
-    dplyr::filter(nomeBancada=="GOV.") %>%
-    dplyr::select(voto)
-
-  dataframe_final <- cbind(dataframe_final, orientacao_governo)
-
-  # Deixando os nomes dos partidos maiúsculo facilita o join futuramente
-  dataframe_final$votos.parlamentar.siglaPartido <- toupper(dataframe_final$votos.parlamentar.siglaPartido)
-
-  orientacao_partidos <- .get_votos_partidos(votacao)
-
-  dataframe_final <- dplyr::left_join(dataframe_final, orientacao_partidos, by=c("votos.parlamentar.siglaPartido" = "partido"))
-
-  colnames(dataframe_final) <- c("nome_parl","id_parl","siglaPartido", "siglaUF", "voto_parl",
-                                 "sigla_prop","num_prop","ano_prop","ementa_prop","horaInicio_votacao","horaFim_votacao",
-                                 "orientacao_governo","bancada_associada","orientacao_partido"
-                                 )
-
-return(dataframe_final)
-
+  votos %>%
+    dplyr::left_join(votacao, by="id_votacao") %>%
+    dplyr::left_join(proposicao, by=c("uriProposicaoPrincipal" = "uri_proposicao")) %>%
+    dplyr::left_join(pos_bancadas, by=c("parlamentar.siglaPartido" = "partido", "id_votacao")) %>%
+    return()
 }
 
 #' Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"
@@ -102,8 +75,8 @@ ultima_votacao <- function(votacoes) {
     dplyr::group_by(uriProposicaoPrincipal) %>%
     dplyr::filter(id == max(id)) %>%
     unique() %>%
-    ungroup() %>%
-    select(id, uriProposicaoPrincipal)
+    dplyr::ungroup() %>%
+    dplyr::select(id, uriProposicaoPrincipal)
 
   return(ultimas_votacoes)
 
