@@ -2,8 +2,12 @@ Package: rcongresso
 Type: Package
 Title: API da câmara para R no tidyverse
 Version: 0.1.0
-Author: Paulo Vinícius Soares
-Maintainer: Paulo Vinícius Soares <paulo.soares@ccc.ufcg.edu.br>
+Authors@R: c(
+    person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
+    person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut", "cre")),
+    person("Laboratório Analytics (UFCG)", role = c("cph", "fnd"))
+    )
+BugReports: https://github.com/analytics-ufcg/rcongresso/issues
 Description: Funções tidy para manipular dados abertos da API do congresso nacional. 
     Proposições, votações e dados sobre os deputados e partidos em data frames.
 License: MIT + LICENSE
