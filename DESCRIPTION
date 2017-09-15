@@ -1,12 +1,11 @@
 Package: rcongresso
 Type: Package
-Title: Implementação de funções que permitem análise dos dados abertos advindos do congresso
+Title: API da câmara para R no tidyverse
 Version: 0.1.0
 Author: Paulo Vinícius Soares
 Maintainer: Paulo Vinícius Soares <paulo.soares@ccc.ufcg.edu.br>
-Description: Recupera, a partir da API da Câmara dos Deputados, as votações
-    ocorridas na Câmara sob certos critérios. Além disso, os deputados e seus respectivos
-    votos, além dos partidos envolvidos na votação.
+Description: Funções tidy para manipular dados abertos da API do congresso nacional. 
+    Proposições, votações e dados sobre os deputados e partidos em data frames.
 License: MIT + LICENSE
 Encoding: UTF-8
 LazyData: true
