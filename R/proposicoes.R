@@ -73,3 +73,11 @@ fetch_tipos_proposicao <- function(){
 
   return(prop_types$dados)
 }
+
+fetch_tipo_proposicao <- function(id_tipo_prop){
+  fetch_tipos_proposicao() %>%
+  dplyr::filter(id_tipo_prop == .$id) %>%
+    dplyr::select(sigla) %>%
+    return()
+
+}
