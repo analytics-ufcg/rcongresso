@@ -17,7 +17,7 @@ ids_proposicoes <- read_csv(arquivo_proposicoes) %>%
   do(tibble(id = fetch_id_proposicao(.$tipo, .$numero, .$ano)))
 
 votacoes_relevantes <- ids_proposicoes %>%
-  fetch_votacoes(id) %>%
+  fetch_votacoes() %>%
   group_by(proposicao) %>%
   ultima_votacao()
 
