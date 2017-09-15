@@ -3,8 +3,14 @@ sudo: false
 cache:
   packages: true
 
+addons:
+  apt:
+    packages:
+      - libxml2-dev
+
 r_packages:
   - covr
+  - readr
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
