@@ -4,7 +4,7 @@ Title: API da câmara para R no tidyverse
 Version: 0.1.0
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
-    person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut", "cre")),
+    person("Nazareno", "Andrade", "nazareno@computacao.ufcg.edu.br", c("aut", "cre")),
     person("Laboratório Analytics (UFCG)", role = c("cph", "fnd"))
     )
 BugReports: https://github.com/analytics-ufcg/rcongresso/issues
