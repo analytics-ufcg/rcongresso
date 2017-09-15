@@ -69,7 +69,9 @@ Podemos ver, a partir dessa variável acessando o *dataframe* **orientacoes**, a
 
 ```{r}
 # Talvez valha a pena transformar isso em uma função separada porque sempre acessamos esse Dataframe.
-votacao_aprovacao_terceirizacao$orientacoes %>% select(nomeBancada, voto) %>% datatable()
+fetch_orientacoes(id_votacao=7431) %>% 
+  select(nomeBancada, voto) %>% 
+  datatable()
 ```
 
 ## Pegando os votos dos deputados
@@ -87,7 +89,7 @@ votos_aprovacao_terceirizacao %>% select(parlamentar.id, parlamentar.nome, parla
 Com a votação de todos os deputados em mãos, informações sobre a votação e a proposição já estamos prontos para construir o nosso dataframe final. Para tal, fazemos uma chamada à função `constroi_dataframe()`. A seguir temos o exemplo do dataframe.
 
 ```{r}
-dataframe_pl4302 <- constroi_dataframe(proposicao=pl4302, votacao=votacao_aprovacao_terceirizacao, votos=votos_aprovacao_terceirizacao)
+dataframe_pl4302 <- constroi_dataframe(proposicao=pl4302, votacao=votacao_aprovacao_terceirizacao)
 dataframe_pl4302 %>% datatable()
 ```
 
