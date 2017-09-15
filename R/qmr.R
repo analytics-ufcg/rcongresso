@@ -35,17 +35,3 @@ constroi_dataframe <- function(proposicao, votacao) {
     dplyr::left_join(pos_bancadas, by=c("parlamentar.siglaPartido" = "partido", "id_votacao")) %>%
     return()
 }
-
-# Recebe um dataframe de votações e seleciona a última de acordo com o maior ID
-ultima_votacao <- function(votacoes) {
-
-  ultimas_votacoes <- votacoes %>%
-    dplyr::group_by(uriProposicaoPrincipal) %>%
-    dplyr::filter(id == max(id)) %>%
-    unique() %>%
-    dplyr::ungroup() %>%
-    dplyr::select(id, uriProposicaoPrincipal)
-
-  return(ultimas_votacoes)
-
-}

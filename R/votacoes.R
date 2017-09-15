@@ -62,3 +62,29 @@ fetch_votos <- function(id_votacao){
   return(votantes_dataframe)
 }
 
+# Recebe um dataframe de votações e seleciona a última de acordo com o maior ID
+ultima_votacao <- function(votacoes) {
+
+  ultimas_votacoes <- votacoes %>%
+    dplyr::group_by(uriProposicaoPrincipal) %>%
+    dplyr::filter(id == max(id)) %>%
+    unique() %>%
+    dplyr::ungroup() %>%
+    dplyr::select(id, uriProposicaoPrincipal)
+
+  return(ultimas_votacoes)
+
+}
+
+# regex quebra para casos de GOV. e PCdoB.
+get_votos_partidos <- function(votacao) {
+
+  pos_bancadas <- fetch_orientacoes(votacao) %>%
+    dplyr::mutate(bancada_associada=nomeBancada) %>%
+    dplyr::select(partido=nomeBancada, orientacao_partido=voto, bancada_associada, id_votacao) %>%
+    tidyr::separate_rows(partido, sep='(?=[A-Z][^A-Z])') %>%
+    dplyr::mutate(partido = toupper(partido))
+
+  return(pos_bancadas)
+}
+
