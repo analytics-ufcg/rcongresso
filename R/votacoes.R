@@ -35,6 +35,7 @@ fetch_orientacoes <- function(id_votacao){
   votacao_json <- .congresso_api(path)
 
   votacao_json$dados$orientacoes %>%
+    dplyr::mutate(id_votacao) %>%
     return()
 }
 
@@ -48,18 +49,16 @@ fetch_orientacoes <- function(id_votacao){
 #'
 #' @export
 fetch_votos <- function(id_votacao){
-  tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(".VOTACOES_PATH", "/", .$id, "/votos")) %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513")) %>%
-        dplyr::rowwise() %>%
-        dplyr::do(
-          # Aqui ele perde a referência para o path e só pega o query :/
-          .congresso_api(.$path, .$query)
-        )
-    ) %>%
-    return()
-}
+  path <- paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")
+  queries <- tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513"))
 
+  votantes_dataframe <- queries %>%
+    dplyr::rowwise() %>%
+    dplyr::do(.congresso_api(path, .$query)$dados)
+
+  votantes_dataframe <- votantes_dataframe %>%
+    dplyr::mutate(id_votacao)
+
+  return(votantes_dataframe)
+}
 
