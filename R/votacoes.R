@@ -2,19 +2,40 @@
 #'
 #' @param id_votacao ID da votação
 #'
-#' @return Lista contendo os detalhes de uma votação, incluindo o posicionamento de cada bancada
+#' @return Dataframe contendo os detalhes de uma votação, incluindo título, a hora de início da votação,
+#' hora de término da votação, placar e sua aprovação.
 #'
 #' @examples
 #' votacao_segundoturno_pec241 <- fetch_votacao(7252)
 #'
 #' @export
 fetch_votacao <- function(id_votacao){
+  tibble::tibble(id = id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados %>%
+        .remove_lists_and_nulls()
+    ) %>%
+    return()
+}
 
+#' Recupera da API as orientações das bancadas em uma determinada votação.
+#'
+#' @param id_votacao ID da votação
+#'
+#' @return Dataframe contendo as orientações das bancadas na votação especificada
+#'
+#' @examples
+#' orientacoesbancada_segundoturno_pec241 <- fetch_orientacoes(7252)
+#'
+#' @export
+fetch_orientacoes <- function(id_votacao){
   path <- paste0(.VOTACOES_PATH, "/", id_votacao)
-
   votacao_json <- .congresso_api(path)
 
-  return(votacao_json$dados)
+  votacao_json$dados$orientacoes %>%
+    return()
 }
 
 #' Recupera os votos referentes àquela votação específica.
@@ -27,15 +48,18 @@ fetch_votacao <- function(id_votacao){
 #'
 #' @export
 fetch_votos <- function(id_votacao){
-
-  path <- paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")
-  queries <- tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513"))
-
-  votantes_dataframe <- queries %>%
+  tibble::tibble(id = id_votacao) %>%
+    dplyr::mutate(path = paste0(".VOTACOES_PATH", "/", .$id, "/votos")) %>%
     dplyr::rowwise() %>%
-    dplyr::do(.congresso_api(path, .$query)$dados)
-
-  return(votantes_dataframe)
+    dplyr::do(
+      tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513")) %>%
+        dplyr::rowwise() %>%
+        dplyr::do(
+          # Aqui ele perde a referência para o path e só pega o query :/
+          .congresso_api(.$path, .$query)
+        )
+    ) %>%
+    return()
 }
 
 

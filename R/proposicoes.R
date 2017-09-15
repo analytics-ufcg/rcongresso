@@ -8,14 +8,15 @@
 #' pec241 <- fetch_proposicao(2088351)
 #'
 #' @export
-fetch_proposicao <- function(id_prop){
-
-  path <- paste0(.PROPOSICOES_PATH, "/", id_prop)
-
-  prop_json <- .congresso_api(path)
-
-  return(prop_json$dados)
-
+fetch_proposicao <- function(id_props){
+  tibble::tibble(id = id_props) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados %>%
+        .remove_lists_and_nulls()
+      ) %>%
+    return()
 }
 
 #' Recupera da API todas as votações pelas quais uma proposição já passou.
@@ -28,14 +29,12 @@ fetch_proposicao <- function(id_prop){
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #'
 #' @export
-fetch_votacoes <- function(id_prop){
-
-  path <- paste0(.PROPOSICOES_PATH, "/", id_prop, "/votacoes")
-
-  voting_json <- .congresso_api(path)
-
-  return(voting_json$dados)
-
+fetch_votacoes <- function(id_props){
+  tibble::tibble(id = id_props) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(.congresso_api(.$path)[[1]]) %>%
+    return()
 }
 
 #' Recupera da API o ID da preposição de acordo com o tipo, número da proposição e ano que

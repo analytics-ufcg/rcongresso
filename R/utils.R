@@ -39,3 +39,9 @@
 
   return(resp_json)
 }
+
+.remove_lists_and_nulls <- function(x){
+  x <- x[-which(sapply(x, is.list))]
+  x <- x[-which(sapply(x, is.null))]
+  tibble::as.tibble(x)
+}

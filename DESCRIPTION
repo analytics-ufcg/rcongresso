@@ -14,7 +14,8 @@ Imports: httr,
     jsonlite,
     magrittr,
     dplyr,
-    tibble
+    tibble,
+    tidyr
 Suggests: testthat,
     compare,
     knitr,

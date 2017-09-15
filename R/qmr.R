@@ -1,17 +1,3 @@
-# Dúvida: Quais deverão ser os parâmetros dessa função?
-# 1: Três parâmetros: Uma proposição, um 'objeto' votação e um 'objeto' votantes (Dessa maneira, a responsabilidade de fazer
-# um get desses três 'objetos' é responsabilidade de quem vai chamar a função)
-# 2: Quatro parâmetros: O tipo da proposição, o número da proposição e o ano da proposição e o ID
-# da votação que eu quero (Dessa maneira, o método faria uma busca automática pela proposição e
-# o ID da votação seria responsabilidade de quem está chamando o método, o que não faz muito sentido
-# porque se ele tem o ID da votação ele deverá ter o ID da proposição também e não facilita muito.)
-# 3: Quatro parâmetros: O tipo da proposição, o número da proposição e o ano da proposição e
-# a data da votação (Acho que essa seria a maneira ideal e mais amigável para o usuário. Ele passa
-# os dados referentes à proposição a à votação e aí tem tudo junto daquela votação especificamente.
-# Temos que lidar com o caso que há mais de uma votação no mesmo dia e o parse da data.)
-
-# Para facilitar vou escolhar a opção 1 e testar a construção do dataframe. Depois eu posso mudar.
-
 #' Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"
 #'
 #' @param proposicao Uma proposição especifica recuperada pelo método fetch_proposicao()
@@ -61,12 +47,64 @@ constroi_dataframe <- function(proposicao, votacao, votos) {
 
   dataframe_final <- cbind(dataframe_final, orientacao_governo)
 
-  # Faz um select da linha onde o nome da bancada seja PT aí é só pegar o voto
-  # do partido a partir dessa linha selecionada.
-  # orientacoes[orientacoes$nomeBancada=="PT",]
+  # Deixando os nomes dos partidos maiúsculo facilita o join futuramente
+  dataframe_final$votos.parlamentar.siglaPartido <- toupper(dataframe_final$votos.parlamentar.siglaPartido)
 
-  # Antes de retornar o dataframe seria bom renomear as colunas. Eu vou fazer isso após conseguir
-  # pegar todos os dados que são necessários. Ainda quero confirmar se peguei tudo mesmo.
+  orientacao_partidos <- .get_votos_partidos(votacao)
+
+  dataframe_final <- dplyr::left_join(dataframe_final, orientacao_partidos, by=c("votos.parlamentar.siglaPartido" = "partido"))
+
+  colnames(dataframe_final) <- c("nome_parl","id_parl","siglaPartido", "siglaUF", "voto_parl",
+                                 "sigla_prop","num_prop","ano_prop","ementa_prop","horaInicio_votacao","horaFim_votacao",
+                                 "orientacao_governo","bancada_associada","orientacao_partido"
+                                 )
+
 return(dataframe_final)
+
+}
+
+#' Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"
+#' com várias proposições.
+#'
+#' @param proposicoes Uma lista de IDs das proposições previamente escolhidas pelo usuário
+#'
+#' @return Dataframe contendo 12 colunas com as informações: Nome do parlamentar, ID do parlamentar,
+#'    sigla do partido, sigla da uf, voto, sigla da proposição, número da proposição, ano, ementa, horário do início da votação, horário do fim
+#'    da votação e orientação do governo. A votação de cada proposição é a mais recente (a última ocorrida na câmara).
+#'
+#' @export
+get_all_votacoes <- function(ids_proposicoes) {
+
+  dataframe_votos <- data.frame()
+
+  for(id_prop in ids_proposicoes){
+
+    print(id_prop)
+
+    prop <- fetch_proposicao(id_prop)
+    id_votacao <- fetch_votacoes(id_prop) %>% dplyr::select(id) %>% max() # Pega a última votação com base no ID (ids maiores são mais recentes)
+
+    votacao <- fetch_votacao(id_votacao)
+    votos <- fetch_votos(id_votacao)
+
+    dataframe_votos <- dataframe_votos %>% rbind(constroi_dataframe(prop, votacao, votos))
+
+  }
+
+  return(dataframe_votos)
+
+}
+
+# Recebe um dataframe de votações e seleciona a última de acordo com o maior ID
+ultima_votacao <- function(votacoes) {
+
+  ultimas_votacoes <- votacoes %>%
+    dplyr::group_by(uriProposicaoPrincipal) %>%
+    dplyr::filter(id == max(id)) %>%
+    unique() %>%
+    ungroup() %>%
+    select(id, uriProposicaoPrincipal)
+
+  return(ultimas_votacoes)
 
 }
