@@ -19,6 +19,7 @@ Imports: httr,
 Suggests: testthat,
     compare,
     knitr,
-    rmarkdown
+    rmarkdown,
+    DT
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
