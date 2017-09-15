@@ -4,7 +4,7 @@
 \alias{fetch_votacoes}
 \title{Recupera da API todas as votações pelas quais uma proposição já passou.}
 \usage{
-fetch_votacoes(id_prop)
+fetch_votacoes(id_props)
 }
 \arguments{
 \item{id_prop}{ID da proposição}

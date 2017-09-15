@@ -4,7 +4,7 @@
 \alias{constroi_dataframe}
 \title{Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"}
 \usage{
-constroi_dataframe(proposicao, votacao, votos)
+constroi_dataframe(proposicao, votacao)
 }
 \arguments{
 \item{proposicao}{Uma proposição especifica recuperada pelo método fetch_proposicao()}
@@ -24,7 +24,6 @@ Função que constroi o dataframe modelo utilizado para as análises realizadas 
 \examples{
 pec241 <- fetch_proposicao(2088351)
 votacao_segundoturno_pec241 <- fetch_votacao(7252)
-votos_segundoturno_pec241 <- fetch_votos(7252)
-dataframe_pec241 <- constroi_dataframe(pec241, votacao_segundoturno_pec241, votos_segundoturno_pec241)
+dataframe_pec241 <- constroi_dataframe(pec241, votacao_segundoturno_pec241)
 
 }

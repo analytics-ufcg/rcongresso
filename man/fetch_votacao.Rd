@@ -10,7 +10,8 @@ fetch_votacao(id_votacao)
 \item{id_votacao}{ID da votação}
 }
 \value{
-Lista contendo os detalhes de uma votação, incluindo o posicionamento de cada bancada
+Dataframe contendo os detalhes de uma votação, incluindo título, a hora de início da votação,
+hora de término da votação, placar e sua aprovação.
 }
 \description{
 Recupera da API detalhes sobre uma votação específica.

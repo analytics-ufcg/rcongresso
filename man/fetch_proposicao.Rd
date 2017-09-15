@@ -4,7 +4,7 @@
 \alias{fetch_proposicao}
 \title{Recupera da API uma proposição contendo detalhes adicionais.}
 \usage{
-fetch_proposicao(id_prop)
+fetch_proposicao(id_props)
 }
 \arguments{
 \item{id_prop}{ID da proposição}
