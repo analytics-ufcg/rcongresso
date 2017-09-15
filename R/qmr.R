@@ -21,9 +21,21 @@ constroi_dataframe <- function(proposicao, votacao) {
   colnames(votacao)[1] <- "id_votacao"
   colnames(votacao)[2] <- "uri_votacao"
 
+  proposicao <- proposicao %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(tipo_prop = as.character(fetch_tipo_proposicao(idTipo)))
+
   votos <- votacao %>%
     dplyr::rowwise() %>%
     dplyr::do(fetch_votos(.$id_votacao))
+
+  orientacao_governo <- votacao %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      fetch_orientacoes(.$id_votacao) %>%
+        dplyr::filter(nomeBancada=="GOV.") %>%
+        dplyr::select(orientacao_governo = voto, id_votacao)
+      )
 
   pos_bancadas <- votacao %>%
     dplyr::rowwise() %>%
@@ -33,5 +45,6 @@ constroi_dataframe <- function(proposicao, votacao) {
     dplyr::left_join(votacao, by="id_votacao") %>%
     dplyr::left_join(proposicao, by=c("uriProposicaoPrincipal" = "uri_proposicao")) %>%
     dplyr::left_join(pos_bancadas, by=c("parlamentar.siglaPartido" = "partido", "id_votacao")) %>%
+    dplyr::left_join(orientacao_governo, by="id_votacao") %>%
     return()
 }
