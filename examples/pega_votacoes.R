@@ -3,15 +3,15 @@ library(dplyr)
 library(readr)
 library(rcongresso)
 
-# args = commandArgs(trailingOnly = TRUE)
-# if (length(args) != 1) {
-#   stop(
-#     "Uso: pega_votacoes.R <arquivo_de_proposicoes>"
-#   )
-# }
-#
-# arquivo_proposicoes = args[1]
-arquivo_proposicoes = "arquivo_proposicoes.txt"
+args = commandArgs(trailingOnly = TRUE)
+if (length(args) != 1) {
+  stop(
+    "Uso: pega_votacoes.R <arquivo_de_proposicoes>"
+  )
+}
+
+arquivo_proposicoes = args[1]
+#arquivo_proposicoes = "arquivo_proposicoes.txt"
 
 ids_proposicoes <- arquivo_proposicoes  %>%
   read_csv(col_types = cols(
