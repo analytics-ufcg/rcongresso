@@ -1,12 +1,10 @@
 #' Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"
 #'
-#' @param proposicao Uma proposição especifica recuperada pelo método fetch_proposicao()
-#' @param votacao Uma votação específica recuperada pelo método fetch_votacao()
-#' @param votos Os votos referentes a esta votação em questão
+#' @param proposicao Um dataframe contendo proposições recuperado pelo método fetch_proposicao()
+#' @param votacao Uma dataframe contendo votações recuperado pelo método fetch_votacao()
 #'
-#' @return Dataframe contendo 10 colunas com as informações: Nome do parlamentar, ID do parlamentar,
-#'    sigla do partido, sigla da uf, voto, número da proposição, ano, ementa, horário da votação e
-#'    orientação do governo
+#' @return Dataframe contendo o resultado do join desses dataframes com os votos ocorridos nas votações
+#' passadas como parâmetro.
 #'
 #' @examples
 #' pec241 <- fetch_proposicao(2088351)

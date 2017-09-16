@@ -7,16 +7,13 @@
 constroi_dataframe(proposicao, votacao)
 }
 \arguments{
-\item{proposicao}{Uma proposição especifica recuperada pelo método fetch_proposicao()}
+\item{proposicao}{Um dataframe contendo proposições recuperado pelo método fetch_proposicao()}
 
-\item{votacao}{Uma votação específica recuperada pelo método fetch_votacao()}
-
-\item{votos}{Os votos referentes a esta votação em questão}
+\item{votacao}{Uma dataframe contendo votações recuperado pelo método fetch_votacao()}
 }
 \value{
-Dataframe contendo 10 colunas com as informações: Nome do parlamentar, ID do parlamentar,
-   sigla do partido, sigla da uf, voto, número da proposição, ano, ementa, horário da votação e
-   orientação do governo
+Dataframe contendo o resultado do join desses dataframes com os votos ocorridos nas votações
+passadas como parâmetro.
 }
 \description{
 Função que constroi o dataframe modelo utilizado para as análises realizadas pela plataforma "Quem me representa?"

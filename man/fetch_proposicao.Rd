@@ -4,13 +4,13 @@
 \alias{fetch_proposicao}
 \title{Recupera da API uma proposição contendo detalhes adicionais.}
 \usage{
-fetch_proposicao(id_props)
+fetch_proposicao(id_prop)
 }
 \arguments{
 \item{id_prop}{ID da proposição}
 }
 \value{
-Lista contendo informações sobre a proposição
+Dataframe contendo informações sobre a proposição
 }
 \description{
 Recupera da API uma proposição contendo detalhes adicionais.

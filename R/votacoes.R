@@ -62,7 +62,17 @@ fetch_votos <- function(id_votacao){
   return(votantes_dataframe)
 }
 
-# Recebe um dataframe de votações e seleciona a última de acordo com o maior ID
+#' Recebe um dataframe de votações e seleciona a última votação de cada proposição.
+#'
+#' @param votacoes Dataframe contendo as votações a serem filtradas
+#'
+#' @return Dataframe contendo apenas as últimas votações relacionadas às proposições
+#'
+#' @examples
+#' votacoes_pec241 <- fetch_votacoes(2088351)
+#' ultima_votacao <- ultima_votacao(votacoes_pec241)
+#'
+#' @export
 ultima_votacao <- function(votacoes) {
 
   ultimas_votacoes <- votacoes %>%
@@ -76,6 +86,14 @@ ultima_votacao <- function(votacoes) {
 
 }
 
+#' Dada uma votação, retorna o posicionamento de cada partido naquela votação.
+#'
+#' @param votacao Dataframe contendo informações sobre a votação
+#'
+#' @examples
+#' pos_partidos <- get_votos_partidos(7252)
+#'
+#' @export
 # regex quebra para casos de GOV. e PCdoB.
 get_votos_partidos <- function(votacao) {
 

@@ -2,14 +2,14 @@
 #'
 #' @param id_prop ID da proposição
 #'
-#' @return Lista contendo informações sobre a proposição
+#' @return Dataframe contendo informações sobre a proposição
 #'
 #' @examples
 #' pec241 <- fetch_proposicao(2088351)
 #'
 #' @export
-fetch_proposicao <- function(id_props){
-  tibble::tibble(id = id_props) %>%
+fetch_proposicao <- function(id_prop){
+  tibble::tibble(id = id_prop) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
@@ -29,8 +29,8 @@ fetch_proposicao <- function(id_props){
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #'
 #' @export
-fetch_votacoes <- function(id_props){
-  tibble::tibble(id = id_props) %>%
+fetch_votacoes <- function(id_prop){
+  tibble::tibble(id = id_prop) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(.congresso_api(.$path)[[1]]) %>%
@@ -74,6 +74,16 @@ fetch_tipos_proposicao <- function(){
   return(prop_types$dados)
 }
 
+#' Dado um ID do tipo de proposição, retorna seu tipo.
+#'
+#' @param id_tipo_prop ID do tipo da proposição
+#'
+#' @return Dataframe contendo o tipo da proposição
+#'
+#' @examples
+#' tipo_prop129 <- fetch_tipo_proposicao(129)
+#'
+#' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
   fetch_tipos_proposicao() %>%
   dplyr::filter(id_tipo_prop == .$id) %>%
