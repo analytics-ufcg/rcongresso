@@ -10,7 +10,7 @@ Authors@R: c(
 BugReports: https://github.com/analytics-ufcg/rcongresso/issues
 Description: Funções tidy para manipular dados abertos da API do congresso nacional. 
     Proposições, votações e dados sobre os deputados e partidos em data frames.
-License: MIT + LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: httr,
