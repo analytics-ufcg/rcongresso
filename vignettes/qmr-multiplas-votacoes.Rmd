@@ -1,0 +1,40 @@
+---
+title: "Construindo o dataframe do QMR a partir de um arquivo contendo múltiplas votações"
+author: "Paulo Vinícius Soares"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Construindo o dataframe do QMR a partir de um arquivo contendo múltiplas votações}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introdução
+Construir um *dataframe* selecionando manualmente cada votação é cansativo e requer muito tempo, de forma que podemos automatizar esse processo e construir um *dataframe* a partir de um arquivo contendo as informações necessárias para obter os **ids das proposições**.  
+
+Caso você não tenha lido o outro *vignette* sobre a [construção de um *dataframe* a partir de uma votação](qmr-uma-votacao.html), eu recomendo que você o faça para compreender melhor a maneira como os dados estão organizados.    
+
+
+# Montando o arquivo de entrada
+Três informações são necessárias para obter os **ids das proposições**: **tipo**, **número** e **ano** da proposição. Dessa maneira, o arquivo deve seguir o formato:
+
+```
+tipo, numero, ano
+"A",1234,1992
+"B",4321,2002
+[...]
+[...]
+"Z",9999,2017
+```
+
+# Utilizando o script
+O *script* para execução pode ser encontrado no diretório */examples* do pacote, cujo nome é **pega_votacoes.R**.  
+Para executar o *script* basta digitar em um terminal *linux* o seguinte comando:
+```
+./pega_votacoes.R <arquivo> >> <arquivo_saida>
+```
+
+O *script* retorna o dataframe final contendo 34 colunas com informações resultantes dos joins entre as proposições, votações e votos. O usuário deve adaptar o *script* fazendo *select* das variáveis que lhe interessa.
+
+
+
