@@ -18,5 +18,6 @@ Uma vignette de exemplo do uso:
 
 ```R
 library(rcongresso)
+devtools::build_vignettes()
 vignette("qmr-uma-votacao", package="rcongresso")
 ```
