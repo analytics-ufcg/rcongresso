@@ -18,5 +18,5 @@ Uma vignette de exemplo do uso:
 
 ```R
 library(rcongresso)
-vignette("quem-me-representa", package="rcongresso")
+vignette("qmr-uma-votacao", package="rcongresso")
 ```

@@ -1,10 +1,10 @@
 ---
-title: "Pegando dados do congresso para alimentar o 'Quem me Representa?'"
+title: "Construindo o dataframe do QMR a partir de uma votação"
 author: "Paulo Vinícius Soares"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Construindo o dataframe do QMR a partir de uma votação}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -38,20 +38,37 @@ Com o ID da proposição em mãos, podemos recuperar a proposição em si conten
 pl4302 <- fetch_proposicao(id_prop=pl4302_id)
 ```
 
+Essas são as informações que dispomos sobre a proposição:
+```{r}
+colnames(pl4302)
+```
+
 Um resumo das informações referentes à proposição podem ser vistas abaixo:
 ```{r}
-data.frame(head(pl4302)) %>% kable()
+pl4302 %>% 
+  select(id, uri, numero, ano, ementa, dataApresentacao) %>%
+  kable()
 ```
 
 ## Selecionando a votação desejada
 
 Com o ID da proposição, além da proposição em si, podemos recuperar **todas as votações pelas quais aquela proposição já passou**. Fazemos isso com uma chamada à função `fetch_votacoes()`   
 
-Sabendo o ID referente à nossa *PL 4302/1998*, temos abaixo um resumo do *dataframe* retornado.
-
 ```{r}
 votacoes_pl4302 <- fetch_votacoes(id_prop=pl4302_id)
-votacoes_pl4302 %>% select(id, titulo, placarSim, placarNao, placarAbstencao) %>% kable()
+```
+
+Essas são todas as informações que dispomos sobre as votações retornadas:
+```{r}
+colnames(votacoes_pl4302)
+```
+
+Temos abaixo um resumo do *dataframe* retornado:
+
+```{r}
+votacoes_pl4302 %>% 
+  select(id, titulo, placarSim, placarNao, placarAbstencao) %>% 
+  kable()
 ```
 
 Com essas informações em mãos podemos escolher uma votação para analisarmos melhor. Escolhemos a votação pelo seu ID. Fazemos isso com uma chamada à função `fetch_votacao()`  
@@ -59,16 +76,23 @@ Vamos escolher a votação cujo título é "SUBSTITUTIVO DO SENADO FEDERAL" e te
 
 ```{r}
 votacao_aprovacao_terceirizacao <- fetch_votacao(id_votacao=7431)
+```
 
+Essas são todas as informações que dispomos sobre a votação:
+```{r}
+colnames(votacao_aprovacao_terceirizacao)
+```
+
+Temos abaixo um resumo do *dataframe* retornado:
+```{r}
 data.frame(id=votacao_aprovacao_terceirizacao$id, titulo=votacao_aprovacao_terceirizacao$titulo, 
            dataHoraInicio=votacao_aprovacao_terceirizacao$dataHoraInicio, dataHoraFim=votacao_aprovacao_terceirizacao$dataHoraFim) %>%
   kable()
 ```
 
-Podemos ver, a partir dessa variável acessando o *dataframe* **orientacoes**, a orientação das bancadas. Essa informação é crucial para construir o dataframe final.
+Podemos ver, a partir dessa variável acessando o *dataframe* **orientacoes**, a orientação das bancadas. Essa informação é crucial para construir o dataframe final. Para isso utilizamos a função `fetch_orientacoes()`
 
 ```{r}
-# Talvez valha a pena transformar isso em uma função separada porque sempre acessamos esse Dataframe.
 fetch_orientacoes(id_votacao=7431) %>% 
   select(nomeBancada, voto) %>% 
   datatable()
@@ -80,17 +104,47 @@ Com o ID da votação, além da votação em si, podemos recuperar todas os **vo
 
 ```{r}
 votos_aprovacao_terceirizacao <- fetch_votos(id_votacao=7431)
+```
 
-votos_aprovacao_terceirizacao %>% select(parlamentar.id, parlamentar.nome, parlamentar.siglaPartido, voto) %>% datatable()
+Essas são todas as informações que dispomos sobre os votos:
+```{r}
+colnames(votacao_aprovacao_terceirizacao)
+```
+
+Temos abaixo um resumo do *dataframe* retornado:
+```{r}
+votos_aprovacao_terceirizacao %>% 
+  select(parlamentar.id, parlamentar.nome, parlamentar.siglaPartido, voto) %>% 
+  datatable()
 ```
 
 ## Gerando o dataframe base
 
-Com a votação de todos os deputados em mãos, informações sobre a votação e a proposição já estamos prontos para construir o nosso dataframe final. Para tal, fazemos uma chamada à função `constroi_dataframe()`. A seguir temos o exemplo do dataframe.
+Com as informações sobre a votação e a proposição já estamos prontos para construir o nosso dataframe final. Para tal, fazemos uma chamada à função `constroi_dataframe()`. A seguir temos o exemplo do dataframe. Os votos dos deputados são selecionados pela função com base na votação passada.
 
 ```{r}
 dataframe_pl4302 <- constroi_dataframe(proposicao=pl4302, votacao=votacao_aprovacao_terceirizacao)
-dataframe_pl4302 %>% datatable()
+```
+
+Essas são todas as informações que dispomos sobre o dataframe final:
+```{r}
+colnames(dataframe_pl4302)
+```
+
+Temos abaixo um resumo do *dataframe* retornado:
+```{r}
+dataframe_pl4302 %>%
+  select(
+    voto, 
+    dep_id=parlamentar.id, 
+    partido=parlamentar.siglaPartido,
+    tipo_prop,
+    numero,
+    ano,
+    orient_part=orientacao_partido,
+    orient_gov=orientacao_governo
+    ) %>%
+  datatable()
 ```
 
 
