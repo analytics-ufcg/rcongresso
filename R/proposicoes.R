@@ -67,7 +67,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #' tipos_proposicao <- fetch_tipos_proposicao()
 #'
 #' @export
-fetch_tipos_proposicao <- function(){
+.fetch_tipos_proposicao <- function(){
 
   prop_types <- .congresso_api(.TIPOS_PROPOSICOES_PATH)
 
@@ -85,7 +85,7 @@ fetch_tipos_proposicao <- function(){
 #'
 #' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
-  fetch_tipos_proposicao() %>%
+  .fetch_tipos_proposicao() %>%
   dplyr::filter(id_tipo_prop == .$id) %>%
     dplyr::select(sigla) %>%
     return()
