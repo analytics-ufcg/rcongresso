@@ -23,9 +23,7 @@ constroi_dataframe <- function(proposicao, votacao) {
     dplyr::rowwise() %>%
     dplyr::mutate(tipo_prop = as.character(fetch_tipo_proposicao(idTipo)))
 
-  votos <- votacao %>%
-    dplyr::rowwise() %>%
-    dplyr::do(fetch_votos(.$id_votacao))
+  votos <- fetch_votos(votacao$id_votacao)
 
   orientacao_governo <- votacao %>%
     dplyr::rowwise() %>%
