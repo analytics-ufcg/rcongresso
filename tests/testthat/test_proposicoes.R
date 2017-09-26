@@ -14,6 +14,7 @@ test_that("ID PEC22", {expect_equal(pec_22_id, 500843)})
 # Existe um idTipo que identifica os tipos de proposição em tramitação/votação na
 #    Câmara. Nesse caso, 136 é PEC.
 pec_241 <- fetch_proposicao(pec_241_id)
+test_that("Dataframe de proposição", {expect_true(is.data.frame(pec_241))})
 test_that("Tipo PEC241=='PEC'", {expect_equal(pec_241$idTipo, 136)})
 test_that("Numero PEC241", {expect_equal(pec_241$numero, 241)})
 test_that("Ano PEC241", {expect_equal(pec_241$ano, 2016)})
@@ -47,4 +48,8 @@ test_that("GET ID de proposição inexistente", {expect_equal(proposicao_inexist
 # Verifica se essa consulta gera um erro porque é um "acesso direto" à proposição, então já que o ID é incorreto,
 # então o erro 404 deve ser gerado.
 test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao(id = 506))})
+
+# Testa tipos de proposições
+r <- compare::compareEqual(fetch_tipo_proposicao(139)$sigla, "PL")
+test_that("Tipo de proposição", {expect_true(r$result)})
 
