@@ -12,10 +12,9 @@ fetch_deputado <- function(dep_id){
 
   path <- paste0(.DEPUTADOS_PATH, "/", dep_id)
 
-  dep_json <- .congresso_api(path)
-
-  return(dep_json$dados)
-
+  .congresso_api(path)$dados %>%
+    .remove_lists_and_nulls() %>%
+    return()
 }
 
 #' Recupera todos os gastos da cota parlamentar, dos últimos seis meses, um deputado específico.
