@@ -21,6 +21,7 @@ Imports: httr,
     tidyr
 Suggests: testthat,
     compare,
+    readr,
     knitr,
     rmarkdown,
     DT

@@ -49,15 +49,19 @@ fetch_orientacoes <- function(id_votacao){
 #'
 #' @export
 fetch_votos <- function(id_votacao){
-  path <- paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")
-  queries <- tibble::tibble(query = paste0("pagina=", 1:5,"&itens=513"))
+  queries = tibble::tibble(id_votacao = id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(tibble::tibble(id_votacao = .$id_votacao,
+              path = .$path,
+              query = paste0("pagina=", 1:5,"&itens=513"))) %>%
+    dplyr::ungroup()
 
   votantes_dataframe <- queries %>%
-    dplyr::rowwise() %>%
-    dplyr::do(.congresso_api(path, .$query)$dados)
-
-  votantes_dataframe <- votantes_dataframe %>%
-    dplyr::mutate(id_votacao)
+    dplyr::group_by(id_votacao, path, query) %>%
+    dplyr::do(.congresso_api(.$path, .$query)$dados) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-path, -query)
 
   return(votantes_dataframe)
 }
