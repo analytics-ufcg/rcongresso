@@ -58,12 +58,15 @@ fetch_votos <- function(id_votacao){
     dplyr::rowwise() %>%
     dplyr::do(tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
-              query = paste0("pagina=", 1:5,"&itens=513"))) %>%
+              query = paste0("pagina=", 1:5,"&itens=100"))) %>%
     dplyr::ungroup()
 
   votantes_dataframe <- queries %>%
     dplyr::group_by(id_votacao, path, query) %>%
-    dplyr::do(.congresso_api(.$path, .$query)$dados) %>%
+    dplyr::do(
+      .congresso_api(.$path, .$query)$dados %>%
+        .empty_list_to_dataframe()
+      ) %>%
     dplyr::ungroup() %>%
     dplyr::select(-path, -query)
 
