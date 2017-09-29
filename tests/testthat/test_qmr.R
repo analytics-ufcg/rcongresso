@@ -25,6 +25,8 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(dataframe_pec241))
 })
 
+# Alguns dataframes podem conter 36 colunas. Uma coluna chamada uriAutores pode aparecer em determinadas proposições
+# ou votações e no join elas entram no dataframe.
 test_that("Dimensoes do dataframe",{
   expect_equal(dim(dataframe_pec241), c(478, 35))
 })
