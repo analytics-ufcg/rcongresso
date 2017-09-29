@@ -53,3 +53,10 @@
 
   tibble::as.tibble(x)
 }
+
+.empty_list_to_dataframe <- function(lista) {
+  if(is.list(lista) && !length(lista)){
+    as.data.frame(lista) %>%
+      return()
+  } else return(lista)
+}
