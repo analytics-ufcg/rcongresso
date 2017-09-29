@@ -9,6 +9,9 @@ get_votos_partidos(votacao)
 \arguments{
 \item{votacao}{Dataframe contendo informações sobre a votação}
 }
+\value{
+Dataframe contendo o posicionamento de cada partido naquela votação
+}
 \description{
 Dada uma votação, retorna o posicionamento de cada partido naquela votação.
 }

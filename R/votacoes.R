@@ -94,6 +94,8 @@ ultima_votacao <- function(votacoes) {
 #'
 #' @param votacao Dataframe contendo informações sobre a votação
 #'
+#' @return Dataframe contendo o posicionamento de cada partido naquela votação
+#'
 #' @examples
 #' pos_partidos <- get_votos_partidos(7252)
 #'
@@ -108,5 +110,29 @@ get_votos_partidos <- function(votacao) {
     dplyr::mutate(partido = toupper(partido))
 
   return(pos_bancadas)
+}
+
+#' Dado o id da votação, retorna a proposição associada àquela votação.
+#'
+#' @param id_votacao ID da votação
+#'
+#' @return Dataframe contendo informações sobre a proposição relacionada à votação
+#'
+#' @examples
+#' pec241 <- fetch_proposicao_from_votacao(7252)
+#'
+#' @export
+fetch_proposicao_from_votacao <- function(id_votacao) {
+  tibble::tibble(id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
+    dplyr::group_by(id_votacao) %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados$proposicao %>%
+        .remove_lists_and_nulls()
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(id_proposicao=.$id) %>%
+    dplyr::select(-id) %>%
+    return()
 }
 
