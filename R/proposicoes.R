@@ -93,3 +93,25 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
     return()
 
 }
+
+#' Recupera da API o status da proposição passada, incluindo sequência, órgão,
+#' informações sobre a tramitação e data/hora da proposição.
+#'
+#' @param id_prop ID da proposição
+#'
+#' @return Dataframe contendo informações sobre o status da proposição
+#'
+#' @examples
+#' pec241_status <- fetch_status_proposicao(2088351)
+#'
+#' @export
+fetch_status_proposicao <- function(id_prop){
+  tibble::tibble(id = id_prop) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
+    dplyr::group_by(id) %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados$statusProposicao %>%
+        .remove_lists_and_nulls()
+    ) %>%
+    return()
+}
