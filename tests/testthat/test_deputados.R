@@ -1,12 +1,5 @@
 # Testa erros
-# Devido à nova forma de acesso aos deputados, ao acessar um deputado inexistente, não há lançamento
-# de erros, só o retorno de um dataframe vazio. O correto seria retornar um erro.
-# test_that("GET deputado inexistente", {expect_error(fetch_deputado(22))})
-
-test_that("GET deputado inexistente", {
-  a <- fetch_deputado(22)
-  expect_true(!length(a))
-})
+test_that("GET deputado inexistente", {expect_error(fetch_deputado(22))})
 
 # Setup
 NOME_ESPERADO <- "ABEL SALVADOR MESQUITA JUNIOR"
@@ -24,7 +17,7 @@ colnames_abel_mesquita_info <- c("id","uri","nome","siglaPartido","uriPartido","
 colnames_abel_mesquita_gastos <- c("ano","mes","tipoDespesa","idDocumento","tipoDocumento", "idTipoDocumento",
                                    "dataDocumento","numDocumento","valorDocumento",
                                    "urlDocumento","nomeFornecedor","cnpjCpfFornecedor",
-                                   "valorLiquido","valorGlosa","numRessarcimento","idLote","parcela")
+                                   "valorLiquido","valorGlosa","numRessarcimento","idLote","parcela", "idDep")
 
 # tipos_abel_mesquita_info <- c("integer","character","character","character",
 #                               "character","character","character","character",
@@ -33,7 +26,8 @@ colnames_abel_mesquita_gastos <- c("ano","mes","tipoDespesa","idDocumento","tipo
 tipos_abel_mesquita_info <- c("integer","character","character","character",
                               "character","character","integer","character")
 
-tipos_abel_mesquita_gastos <- rep("character", 17)
+tipos_abel_mesquita_gastos <- rep("character", 17) %>%
+  append("numeric", 17)
 
 names(tipos_abel_mesquita_info) <- colnames_abel_mesquita_info
 names(tipos_abel_mesquita_gastos) <- colnames_abel_mesquita_gastos
@@ -47,7 +41,7 @@ test_that("Is dataframe", {
 test_that("Dimensoes do dataframe",{
   # expect_equal(dim(abel_mesquita_info), c(1, 9))
   expect_equal(dim(abel_mesquita_info), c(1, 8))
-  expect_equal(ncol(abel_mesquita_gastos), 17)
+  expect_equal(ncol(abel_mesquita_gastos), 18)
 })
 
 test_that("Atributos do dataframe",{
