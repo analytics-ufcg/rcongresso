@@ -1,6 +1,6 @@
 # Testa erros
 test_that("GET votação inexistente", {expect_error(fetch_votacao(1325))})
-test_that("GET votos de uma votação inexistente", {expect_error(fetch_votos(1325))})
+test_that("GET votos de uma votação inexistente", {expect_true(nrow(fetch_votos(1325)) == 0)})
 
 # Setup
 votos_pec241 <- fetch_votos(7252)
