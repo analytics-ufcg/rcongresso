@@ -10,10 +10,9 @@
 #' @export
 fetch_deputado <- function(dep_id){
 
-  path <- paste0(.DEPUTADOS_PATH, "/", dep_id)
+  path <- paste0(.DEPUTADOS_PATH, "?id=", dep_id)
 
   .congresso_api(path)$dados %>%
-    .remove_lists_and_nulls() %>%
     return()
 }
 
