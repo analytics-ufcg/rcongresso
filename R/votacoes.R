@@ -31,11 +31,15 @@ fetch_votacao <- function(id_votacao){
 #'
 #' @export
 fetch_orientacoes <- function(id_votacao){
-  path <- paste0(.VOTACOES_PATH, "/", id_votacao)
-  votacao_json <- .congresso_api(path)
-
-  votacao_json$dados$orientacoes %>%
-    dplyr::mutate(id_votacao) %>%
+  tibble::tibble(id = id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
+    dplyr::group_by(id) %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados$orientacoes
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(id_votacao=.$id) %>%
+    dplyr::select(-id) %>%
     return()
 }
 
