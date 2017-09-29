@@ -9,10 +9,12 @@
 #'
 #' @export
 fetch_deputado <- function(dep_id){
-
-  path <- paste0(.DEPUTADOS_PATH, "?id=", dep_id)
-
-  .congresso_api(path)$dados %>%
+  tibble::tibble(id = dep_id) %>%
+    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "?id=", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados
+    ) %>%
     return()
 }
 
@@ -27,12 +29,16 @@ fetch_deputado <- function(dep_id){
 #'
 #' @export
 fetch_despesas_deputado <- function(dep_id) {
-
-  path <- paste0(.DEPUTADOS_PATH, "/", dep_id, "/despesas")
   query <- list(ordem="ASC", ordenarPor="numAno")
 
-  dep_json <- .congresso_api(path, query)
-
-  return(dep_json$dados)
-
+  tibble::tibble(id = dep_id) %>%
+    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id, "/despesas")) %>%
+    dplyr::group_by(id, path) %>%
+    dplyr::do(
+      .congresso_api(.$path, query)$dados
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(idDep=.$id) %>%
+    dplyr::select(-path, -id) %>%
+    return()
 }
