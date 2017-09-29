@@ -41,7 +41,15 @@
 }
 
 .remove_lists_and_nulls <- function(x){
-  x <- x[-which(sapply(x, is.list))]
-  x <- x[-which(sapply(x, is.null))]
+  arr_null <- which(sapply(x, is.null))
+  if(length(arr_null)){
+    x <- x[-arr_null]
+  }
+
+  arr_lists <- which(sapply(x, is.list))
+  if(length(arr_lists)){
+    x <- x[-arr_lists]
+  }
+
   tibble::as.tibble(x)
 }
