@@ -9,14 +9,14 @@ colnames_dataframe_pec241 <- c("id_votacao","voto","parlamentar.id","parlamentar
                                "uri_votacao","titulo","uriEvento","uriProposicaoPrincipal","tipoVotacao",
                                "placarSim","placarNao","placarAbstencao","dataHoraInicio","dataHoraFim",
                                "id_proposicao","siglaTipo","idTipo","numero","ano","ementa","dataApresentacao",
-                               "tipoAutor","idTipoAutor","descricaoTipo","keywords","tipo_prop",
+                               "tipoAutor","idTipoAutor","descricaoTipo","keywords",
                                "orientacao_partido","bancada_associada","orientacao_governo")
 
 tipos_dataframe_pec241 <- c("integer","character","integer","character","character","character","character",
                             "character","integer","character","character","character","character","character",
                             "character","integer","integer","integer","character","character","integer",
                             "character","integer","integer","integer","character","character","character",
-                            "integer","character","character","character","character","character","character")
+                            "integer","character","character","character","character","character")
 
 names(tipos_dataframe_pec241) <- colnames_dataframe_pec241
 
@@ -28,7 +28,7 @@ test_that("Is dataframe", {
 # Alguns dataframes podem conter 36 colunas. Uma coluna chamada uriAutores pode aparecer em determinadas proposições
 # ou votações e no join elas entram no dataframe.
 test_that("Dimensoes do dataframe",{
-  expect_equal(dim(dataframe_pec241), c(478, 35))
+  expect_equal(dim(dataframe_pec241), c(478, 34))
 })
 
 test_that("Atributos do dataframe",{
