@@ -11,7 +11,7 @@
 #' @export
 fetch_votacao <- function(id_votacao){
   tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
       .congresso_api(.$path)$dados %>%
@@ -31,8 +31,9 @@ fetch_votacao <- function(id_votacao){
 #'
 #' @export
 fetch_orientacoes <- function(id_votacao){
+  id <- NULL
   tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id)) %>%
     dplyr::group_by(id) %>%
     dplyr::do(
       .congresso_api(.$path)$dados$orientacoes
@@ -53,8 +54,9 @@ fetch_orientacoes <- function(id_votacao){
 #'
 #' @export
 fetch_votos <- function(id_votacao){
+  path <- query <- NULL
   queries = tibble::tibble(id_votacao = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id_votacao, "/votos")) %>%
     dplyr::rowwise() %>%
     dplyr::do(tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
@@ -85,7 +87,7 @@ fetch_votos <- function(id_votacao){
 #'
 #' @export
 ultima_votacao <- function(votacoes) {
-
+  uriProposicaoPrincipal <- id <- NULL
   ultimas_votacoes <- votacoes %>%
     dplyr::group_by(uriProposicaoPrincipal) %>%
     dplyr::filter(id == max(id)) %>%
@@ -109,12 +111,12 @@ ultima_votacao <- function(votacoes) {
 #' @export
 # regex quebra para casos de GOV. e PCdoB.
 get_votos_partidos <- function(votacao) {
-
+  nomeBancada <- voto <- bancada_associada <- id_votacao <- partido <- NULL
   pos_bancadas <- fetch_orientacoes(votacao) %>%
     dplyr::mutate(bancada_associada=nomeBancada) %>%
     dplyr::select(partido=nomeBancada, orientacao_partido=voto, bancada_associada, id_votacao) %>%
     tidyr::separate_rows(partido, sep='(?=[A-Z][^A-Z])') %>%
-    dplyr::mutate(partido = toupper(partido))
+    dplyr::mutate(partido = toupper(.$partido))
 
   return(pos_bancadas)
 }
@@ -130,8 +132,9 @@ get_votos_partidos <- function(votacao) {
 #'
 #' @export
 fetch_proposicao_from_votacao <- function(id_votacao) {
+  id <- NULL
   tibble::tibble(id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
       .congresso_api(.$path)$dados$proposicao %>%
