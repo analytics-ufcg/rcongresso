@@ -10,10 +10,11 @@
 #' @export
 fetch_deputado <- function(dep_id){
   tibble::tibble(id = dep_id) %>%
-    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "?id=", id)) %>%
+    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)$dados
+      .congresso_api(.$path)$dados %>%
+        .remove_lists_and_nulls()
     ) %>%
     return()
 }
