@@ -9,6 +9,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, warning=FALSE, message=FALSE}
+library(dplyr)
+library(readr)
+library(rcongresso)
+library(magrittr)
+library(knitr)
+```
+
 # Introdução
 Construir um *dataframe* selecionando manualmente cada votação é cansativo e requer muito tempo, de forma que podemos automatizar esse processo e construir um *dataframe* a partir de um arquivo contendo as informações necessárias para obter os **ids das proposições**.  
 
@@ -27,14 +35,78 @@ tipo, numero, ano
 "Z",9999,2017
 ```
 
-# Utilizando o script
-O *script* para execução pode ser encontrado no diretório */examples* do pacote, cujo nome é **pega_votacoes.R**.  
-Para executar o *script* basta digitar em um terminal *linux* o seguinte comando:
-```
-./pega_votacoes.R <arquivo> >> <arquivo_saida>
+# Utilizando o script  
+
+O *script* para execução pode ser encontrado abaixo, junto com um exemplo de utilização. As votações selecionadas foram as últimas ocorridas na câmara referentes a cada proposição.Além disso, este retorna um *dataframe* contendo 36 colunas com informações resultantes dos joins entre as proposições, votações e votos. O usuário deve adaptar o *script* fazendo *select* das variáveis que lhe interessa.
+
+## R
+
+```{r}
+arquivo_proposicoes <- system.file("extdata", "arquivo_proposicoes.txt", package = "rcongresso")
+
+ids_proposicoes <- arquivo_proposicoes  %>%
+  read_csv(col_types = cols(
+    tipo = col_character(),
+    numero = col_integer(),
+    ano = col_integer()
+  )) %>%
+  rowwise() %>%
+  do(tibble(id = fetch_id_proposicao(.$tipo, .$numero, .$ano)))
+
+proposicoes <- fetch_proposicao(ids_proposicoes$id)
+
+ultimas_votacoes <- fetch_votacoes(ids_proposicoes$id) %>%
+  ultima_votacao()
+
+votacoes_relevantes <- fetch_votacao(ultimas_votacoes$id)
+
+constroi_dataframe(proposicoes, votacoes_relevantes)
 ```
 
-O *script* retorna o dataframe final contendo 34 colunas com informações resultantes dos joins entre as proposições, votações e votos. O usuário deve adaptar o *script* fazendo *select* das variáveis que lhe interessa.
+## Bash
+
+Também é possível utilizar um *script bash* que seja executado a partir da linha de comando de um terminal linux. O uso segue o seguinte formato:
+
+```
+./pega_votacoes.R <arquivo_de_proposicoes>
+```
+
+```
+#!/usr/bin/env Rscript
+library(dplyr)
+library(readr)
+library(rcongresso)
+
+args = commandArgs(trailingOnly = TRUE)
+if (length(args) != 1) {
+  stop(
+    "Uso: pega_votacoes.R <arquivo_de_proposicoes>"
+  )
+}
+
+arquivo_proposicoes <- args[1]
+
+ids_proposicoes <- arquivo_proposicoes  %>%
+  read_csv(col_types = cols(
+    tipo = col_character(),
+    numero = col_integer(),
+    ano = col_integer()
+  )) %>%
+  rowwise() %>%
+  do(tibble(id = fetch_id_proposicao(.$tipo, .$numero, .$ano)))
+
+
+proposicoes <- fetch_proposicao(ids_proposicoes$id)
+
+ultimas_votacoes <- fetch_votacoes(ids_proposicoes$id) %>%
+  ultima_votacao()
+
+votacoes_relevantes <- fetch_votacao(ultimas_votacoes$id)
+
+constroi_dataframe(proposicoes, votacoes_relevantes) %>%
+  format_csv() %>%
+  writeLines(stdout())
+```
 
 
 
