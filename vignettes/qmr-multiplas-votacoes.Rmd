@@ -12,6 +12,7 @@ vignette: >
 ```{r, warning=FALSE, message=FALSE}
 library(dplyr)
 library(readr)
+library(DT)
 library(rcongresso)
 library(magrittr)
 library(knitr)
@@ -60,8 +61,26 @@ ultimas_votacoes <- fetch_votacoes(ids_proposicoes$id) %>%
 
 votacoes_relevantes <- fetch_votacao(ultimas_votacoes$id)
 
-constroi_dataframe(proposicoes, votacoes_relevantes)
+votacoes <- constroi_dataframe(proposicoes, votacoes_relevantes)
 ```
+
+O exemplo do dataframe abaixo, com apenas algumas colunas selecionadas.
+
+```{r}
+votacoes %>%
+  select(
+    voto,
+    nome=parlamentar.nome,
+    partido=parlamentar.siglaPartido,
+    siglaTipo,
+    numero,
+    ano,
+    orient_part=orientacao_partido,
+    orient_gov=orientacao_governo
+    ) %>%
+  datatable()
+```
+
 
 ## Bash
 
@@ -70,7 +89,7 @@ Também é possível utilizar um *script bash* que seja executado a partir da li
 ```
 ./pega_votacoes.R <arquivo_de_proposicoes>
 ```
-
+O script *pega_votacoes.R* abaixo:
 ```
 #!/usr/bin/env Rscript
 library(dplyr)
@@ -108,5 +127,5 @@ constroi_dataframe(proposicoes, votacoes_relevantes) %>%
   writeLines(stdout())
 ```
 
-
+O resultado será impresso na saída padrão do terminal, que é o próprio console.
 

@@ -138,7 +138,7 @@ dataframe_pl4302 %>%
     voto, 
     dep_id=parlamentar.id, 
     partido=parlamentar.siglaPartido,
-    tipo_prop,
+    siglaTipo,
     numero,
     ano,
     orient_part=orientacao_partido,
