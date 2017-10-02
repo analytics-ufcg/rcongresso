@@ -51,12 +51,16 @@ fetch_votacoes <- function(id_prop){
 #'
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
-
-  query <- list(siglaTipo=tipo, numero=numero, ano=ano, ordem="ASC", ordenarPor="id")
-
-  prop_object <- .congresso_api(.PROPOSICOES_PATH, query)
-
-  return(prop_object$dados$id)
+  tibble::tibble(tipo, numero, ano) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.PROPOSICOES_PATH,
+                     list(siglaTipo=.$tipo, numero=.$numero, ano=.$ano, ordem="ASC", ordenarPor="id"))$dados$id %>%
+        .to_tibble()
+    ) %>%
+    unlist() %>%
+    as.vector() %>%
+    return()
 }
 
 #' Recupera da API os tipos de proposição disponíveis.

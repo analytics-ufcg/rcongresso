@@ -62,3 +62,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(".")
       return()
   } else return(lista)
 }
+
+.to_tibble <- function(num) {
+  if(is.null(num)) tibble::tibble()
+  else tibble::tibble(num)
+}
