@@ -37,7 +37,7 @@ fetch_votacoes <- function(id_prop){
     return()
 }
 
-#' Recupera da API o ID da preposição de acordo com o tipo, número da proposição e ano que
+#' Recupera da API o ID da proposição de acordo com o tipo, número da proposição e ano que
 #' esta foi feita.
 #'
 #' @param tipo Tipo da proposição (i.e., PEC, PL, PDC)
