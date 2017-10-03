@@ -53,8 +53,7 @@ votos = proposicoes %>%
   mutate(votos = map(id_votacao, ~ fetch_votos(.))) %>%
   unnest(votos)
 
-head(votos) %>% 
-  datatable()
+glimpse(votos)
 ```
 
 ##  Vendo os votos
