@@ -16,6 +16,7 @@ fetch_proposicao <- function(id_prop){
       .congresso_api(.$path)$dados %>%
         .remove_lists_and_nulls()
       ) %>%
+    dplyr::ungroup() %>%
     return()
 }
 
@@ -34,6 +35,7 @@ fetch_votacoes <- function(id_prop){
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(.congresso_api(.$path)[[1]]) %>%
+    dplyr::ungroup() %>%
     return()
 }
 
@@ -113,5 +115,6 @@ fetch_status_proposicao <- function(id_prop){
       .congresso_api(.$path)$dados$statusProposicao %>%
         .remove_lists_and_nulls()
     ) %>%
+    dplyr::ungroup() %>%
     return()
 }

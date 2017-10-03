@@ -16,6 +16,7 @@ fetch_deputado <- function(dep_id){
       .congresso_api(.$path)$dados %>%
         .remove_lists_and_nulls()
     ) %>%
+    dplyr::ungroup() %>%
     return()
 }
 

@@ -17,6 +17,7 @@ fetch_votacao <- function(id_votacao){
       .congresso_api(.$path)$dados %>%
         .remove_lists_and_nulls()
     ) %>%
+    dplyr::ungroup() %>%
     return()
 }
 
