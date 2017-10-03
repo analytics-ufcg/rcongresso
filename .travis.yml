@@ -11,6 +11,7 @@ addons:
 r_packages:
   - covr
   - readr
+  - ggplot2
 
 after_success:
   - Rscript -e 'library(covr); codecov()'
