@@ -9,8 +9,9 @@
 #'
 #' @export
 fetch_proposicao <- function(id_prop){
+  id <- NULL
   tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id)) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
       .congresso_api(.$path)$dados %>%
@@ -30,8 +31,9 @@ fetch_proposicao <- function(id_prop){
 #'
 #' @export
 fetch_votacoes <- function(id_prop){
+  id <- NULL
   tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(.congresso_api(.$path)[[1]]) %>%
     return()
@@ -112,7 +114,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 fetch_status_proposicao <- function(id_prop){
   id <- NULL
   tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id)) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::group_by(id) %>%
     dplyr::do(
       .congresso_api(.$path)$dados$statusProposicao %>%

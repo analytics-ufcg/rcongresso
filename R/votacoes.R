@@ -10,8 +10,9 @@
 #'
 #' @export
 fetch_votacao <- function(id_votacao){
+  id <- NULL
   tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id)) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
       .congresso_api(.$path)$dados %>%
@@ -33,13 +34,13 @@ fetch_votacao <- function(id_votacao){
 fetch_orientacoes <- function(id_votacao){
   id <- NULL
   tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id)) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
     dplyr::group_by(id) %>%
     dplyr::do(
       .congresso_api(.$path)$dados$orientacoes
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(id_votacao=.$id) %>%
+    dplyr::mutate(id_votacao=id) %>%
     dplyr::select(-id) %>%
     return()
 }
@@ -56,7 +57,7 @@ fetch_orientacoes <- function(id_votacao){
 fetch_votos <- function(id_votacao){
   path <- query <- NULL
   queries = tibble::tibble(id_votacao = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id_votacao, "/votos")) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")) %>%
     dplyr::rowwise() %>%
     dplyr::do(tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
@@ -134,14 +135,14 @@ get_votos_partidos <- function(votacao) {
 fetch_proposicao_from_votacao <- function(id_votacao) {
   id <- NULL
   tibble::tibble(id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", .$id_votacao)) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
       .congresso_api(.$path)$dados$proposicao %>%
         .remove_lists_and_nulls()
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(id_proposicao=.$id) %>%
+    dplyr::mutate(id_proposicao=id) %>%
     dplyr::select(-id) %>%
     return()
 }
