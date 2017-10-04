@@ -19,9 +19,7 @@ constroi_dataframe <- function(proposicao, votacao) {
   colnames(votacao)[1] <- "id_votacao"
   colnames(votacao)[2] <- "uri_votacao"
 
-  proposicao <- proposicao %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(tipo_prop = as.character(fetch_tipo_proposicao(idTipo)$sigla))
+  voto <- id_votacao <- NULL
 
   votos <- fetch_votos(votacao$id_votacao)
 
@@ -29,7 +27,7 @@ constroi_dataframe <- function(proposicao, votacao) {
     dplyr::rowwise() %>%
     dplyr::do(
       fetch_orientacoes(.$id_votacao) %>%
-        dplyr::filter(nomeBancada=="GOV.") %>%
+        dplyr::filter(.$nomeBancada=="GOV.") %>%
         dplyr::select(orientacao_governo = voto, id_votacao)
       )
 

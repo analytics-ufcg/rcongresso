@@ -18,7 +18,8 @@ Imports: httr,
     magrittr,
     dplyr,
     tibble,
-    tidyr
+    tidyr,
+    utils
 Suggests: testthat,
     compare,
     readr,

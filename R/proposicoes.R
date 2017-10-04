@@ -9,6 +9,7 @@
 #'
 #' @export
 fetch_proposicao <- function(id_prop){
+  id <- NULL
   tibble::tibble(id = id_prop) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
@@ -31,8 +32,9 @@ fetch_proposicao <- function(id_prop){
 #'
 #' @export
 fetch_votacoes <- function(id_prop){
+  id <- NULL
   tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", .$id, "/votacoes")) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(.congresso_api(.$path)[[1]]) %>%
     dplyr::ungroup() %>%
@@ -53,12 +55,16 @@ fetch_votacoes <- function(id_prop){
 #'
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
-
-  query <- list(siglaTipo=tipo, numero=numero, ano=ano, ordem="ASC", ordenarPor="id")
-
-  prop_object <- .congresso_api(.PROPOSICOES_PATH, query)
-
-  return(prop_object$dados$id)
+  tibble::tibble(tipo, numero, ano) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.PROPOSICOES_PATH,
+                     list(siglaTipo=.$tipo, numero=.$numero, ano=.$ano, ordem="ASC", ordenarPor="id"))$dados$id %>%
+        .to_tibble()
+    ) %>%
+    unlist() %>%
+    as.vector() %>%
+    return()
 }
 
 #' Recupera da API os tipos de proposição disponíveis.
@@ -108,6 +114,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 #'
 #' @export
 fetch_status_proposicao <- function(id_prop){
+  id <- NULL
   tibble::tibble(id = id_prop) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::group_by(id) %>%

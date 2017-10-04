@@ -1,3 +1,5 @@
+if(getRversion() >= "2.15.1")  utils::globalVariables(".")
+
 #' Função que recupera um json a partir de um link que use o protocolo REST, desde que esse permita a conversão.
 #'
 #' @param full_link Link para a solicitação GET
@@ -59,4 +61,9 @@
     as.data.frame(lista) %>%
       return()
   } else return(lista)
+}
+
+.to_tibble <- function(num) {
+  if(is.null(num)) tibble::tibble()
+  else tibble::tibble(num)
 }
