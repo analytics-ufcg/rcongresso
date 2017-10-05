@@ -25,6 +25,8 @@ Suggests: testthat,
     readr,
     knitr,
     rmarkdown,
-    DT
+    DT,
+    ggplot2,
+    purrr
 RoxygenNote: 6.0.1
 VignetteBuilder: knitr
