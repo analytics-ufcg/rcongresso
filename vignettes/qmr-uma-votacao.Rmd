@@ -1,10 +1,10 @@
 ---
-title: "Construindo o dataframe do QMR a partir de uma votação"
+title: "Introdução ao rcongresso"
 author: "Paulo Vinícius Soares"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Construindo o dataframe do QMR a partir de uma votação}
+  %\VignetteIndexEntry{Introdução ao rcongresso}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -22,7 +22,7 @@ library(knitr)
 Este pacote é baseado na nova [API REST](https://dadosabertos.camara.leg.br/swagger/api.html) da Câmara dos Deputados. A API fornece funções para pegar muitas informações interessantes para os analistas de dados. A intenção desse pacote é ser um *wrapper* retornando *dataframes* prontos facilitando a vida dos usuários.
 
 # Compreendendo a organização das funções e dos dados
-Para gerar o *dataframe*, precisamos entender um pouco como se dá a organização da câmara ao gerar as proposições e como estas informações estão organizadas na base de dados.
+Antes de tudo, precisamos entender um pouco como se dá a organização da câmara ao gerar as proposições e como estas informações estão organizadas na base de dados. Além disso, podemos obter mais infomações sobre um deputado especificamente.
 
 ## Pegando uma proposição da base de dados
 Para recuperar uma proposição você precisa de três informações: O **tipo da proposição** (i.e., PEC, PL, PLP), o **número da proposição** e o **ano** em que esta foi proposta. Com essas três informações em mãos podemos recuperar o **ID da proposição** da base de dados e, consequentemente, a proposição.    
@@ -118,37 +118,17 @@ votos_aprovacao_terceirizacao %>%
   datatable()
 ```
 
-## Gerando o dataframe base
+## Recuperando informações sobre um deputado
 
-Com as informações sobre a votação e a proposição já estamos prontos para construir o nosso dataframe final. Para tal, fazemos uma chamada à função `constroi_dataframe()`. A seguir temos o exemplo do dataframe. Os votos dos deputados são selecionados pela função com base na votação passada.
+Se quisermos obter mais informações sobre um deputado, podemos fazê-lo pelo seu ID. Fazemos isso utilizando a função `fetch_deputado()`.  
+Podemos recuperar mais informações sobre o deputado Abel Mesquita, cujo id é 178957. Abaixo temos um exemplo do dataframe retornado:
+
 
 ```{r}
-dataframe_pl4302 <- constroi_dataframe(proposicao=pl4302, votacao=votacao_aprovacao_terceirizacao)
+fetch_deputado(178957) %>%
+  select(-uri) %>%
+  kable()
 ```
-
-Essas são todas as informações que dispomos sobre o dataframe final:
-```{r}
-colnames(dataframe_pl4302)
-```
-
-Temos abaixo um resumo do *dataframe* retornado:
-```{r}
-dataframe_pl4302 %>%
-  select(
-    voto, 
-    dep_id=parlamentar.id, 
-    partido=parlamentar.siglaPartido,
-    siglaTipo,
-    numero,
-    ano,
-    orient_part=orientacao_partido,
-    orient_gov=orientacao_governo
-    ) %>%
-  datatable()
-```
-
-
-
 
 
 
