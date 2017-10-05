@@ -2,7 +2,7 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_id_proposicao}
 \alias{fetch_id_proposicao}
-\title{Recupera da API o ID da preposição de acordo com o tipo, número da proposição e ano que
+\title{Recupera da API o ID da proposição de acordo com o tipo, número da proposição e ano que
 esta foi feita.}
 \usage{
 fetch_id_proposicao(tipo, numero, ano)
@@ -18,7 +18,7 @@ fetch_id_proposicao(tipo, numero, ano)
 ID da proposição
 }
 \description{
-Recupera da API o ID da preposição de acordo com o tipo, número da proposição e ano que
+Recupera da API o ID da proposição de acordo com o tipo, número da proposição e ano que
 esta foi feita.
 }
 \examples{
