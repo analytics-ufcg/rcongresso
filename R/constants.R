@@ -14,4 +14,4 @@
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
 
 # Regex Pattern
-.REGEX_PATTERN <- '([[(?=.*PtdoB).*$]]|([[:upper:]]+[[:lower:]]))'
+.REGEX_PATTERN <- "(?=[A-Z][^A-Z])"

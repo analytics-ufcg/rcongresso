@@ -1,5 +1,7 @@
 # Testa erros
-test_that("GET deputado inexistente", {expect_error(fetch_deputado(22))})
+test_that("GET deputado inexistente", {
+  expect_error(fetch_deputado(22))
+})
 
 # Setup
 NOME_ESPERADO <- "ABEL SALVADOR MESQUITA JUNIOR"

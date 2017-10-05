@@ -59,7 +59,8 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     dplyr::rowwise() %>%
     dplyr::do(
       .congresso_api(.PROPOSICOES_PATH,
-                     list(siglaTipo=.$tipo, numero=.$numero, ano=.$ano, ordem="ASC", ordenarPor="id"))$dados$id %>%
+                     list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
+                          ordem = "ASC", ordenarPor = "id"))$dados$id %>%
         .to_tibble()
     ) %>%
     unlist() %>%
@@ -97,7 +98,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
     dplyr::mutate(id = as.numeric(.$id))
 
   tibble::tibble(id = id_tipo_prop) %>%
-    dplyr::left_join(prop_types, by="id") %>%
+    dplyr::left_join(prop_types, by = "id") %>%
     return()
 
 }

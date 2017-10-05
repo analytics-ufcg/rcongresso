@@ -33,7 +33,7 @@ fetch_deputado <- function(dep_id){
 #' @export
 fetch_despesas_deputado <- function(dep_id) {
   id <- path <- NULL
-  query <- list(ordem="ASC", ordenarPor="numAno")
+  query <- list(ordem = "ASC", ordenarPor = "numAno")
 
   tibble::tibble(id = dep_id) %>%
     dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id, "/despesas")) %>%
@@ -42,7 +42,7 @@ fetch_despesas_deputado <- function(dep_id) {
       .congresso_api(.$path, query)$dados
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(idDep=.$id) %>%
+    dplyr::mutate(idDep = .$id) %>%
     dplyr::select(-path, -id) %>%
     return()
 }

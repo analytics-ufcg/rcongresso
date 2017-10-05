@@ -1,4 +1,4 @@
-if(getRversion() >= "2.15.1")  utils::globalVariables(".")
+if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 #' Função que recupera um json a partir de um link que use o protocolo REST, desde que esse permita a conversão.
 #'
@@ -12,7 +12,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .get_json <- function(response){
 
-  r <- httr::content(response, as="text")
+  r <- httr::content(response, as = "text")
   r_json <- jsonlite::fromJSON(r, flatten = T)
 
   return(r_json)
@@ -44,12 +44,12 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 .remove_lists_and_nulls <- function(x){
   arr_null <- which(sapply(x, is.null))
-  if(length(arr_null)){
+  if (length(arr_null)){
     x <- x[-arr_null]
   }
 
   arr_lists <- which(sapply(x, is.list))
-  if(length(arr_lists)){
+  if (length(arr_lists)){
     x <- x[-arr_lists]
   }
 
@@ -57,13 +57,13 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .empty_list_to_dataframe <- function(lista) {
-  if(is.list(lista) && !length(lista)){
+  if (is.list(lista) && !length(lista)){
     as.data.frame(lista) %>%
       return()
   } else return(lista)
 }
 
 .to_tibble <- function(num) {
-  if(is.null(num)) tibble::tibble()
+  if (is.null(num)) tibble::tibble()
   else tibble::tibble(num)
 }

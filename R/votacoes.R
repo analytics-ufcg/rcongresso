@@ -41,7 +41,7 @@ fetch_orientacoes <- function(id_votacao){
       .congresso_api(.$path)$dados$orientacoes
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(id_votacao=id) %>%
+    dplyr::mutate(id_votacao = id) %>%
     dplyr::select(-id) %>%
     return()
 }
@@ -57,12 +57,12 @@ fetch_orientacoes <- function(id_votacao){
 #' @export
 fetch_votos <- function(id_votacao){
   path <- query <- NULL
-  queries = tibble::tibble(id_votacao = id_votacao) %>%
+  queries <- tibble::tibble(id_votacao = id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")) %>%
     dplyr::rowwise() %>%
     dplyr::do(tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
-              query = paste0("pagina=", 1:5,"&itens=100"))) %>%
+              query = paste0("pagina=", 1:5, "&itens=100"))) %>%
     dplyr::ungroup()
 
   votantes_dataframe <- queries %>%
@@ -115,9 +115,10 @@ ultima_votacao <- function(votacoes) {
 get_votos_partidos <- function(votacao) {
   nomeBancada <- voto <- bancada_associada <- id_votacao <- partido <- NULL
   pos_bancadas <- fetch_orientacoes(votacao) %>%
-    dplyr::mutate(bancada_associada=nomeBancada) %>%
-    dplyr::select(partido=nomeBancada, orientacao_partido=voto, bancada_associada, id_votacao) %>%
-    tidyr::separate_rows(partido, sep='(?=[A-Z][^A-Z])') %>%
+    dplyr::mutate(bancada_associada = nomeBancada) %>%
+    dplyr::select(partido = nomeBancada, orientacao_partido = voto,
+                  bancada_associada, id_votacao) %>%
+    tidyr::separate_rows(partido, sep = .REGEX_PATTERN) %>%
     dplyr::mutate(partido = toupper(.$partido))
 
   return(pos_bancadas)
@@ -143,8 +144,7 @@ fetch_proposicao_from_votacao <- function(id_votacao) {
         .remove_lists_and_nulls()
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(id_proposicao=id) %>%
+    dplyr::mutate(id_proposicao = id) %>%
     dplyr::select(-id) %>%
     return()
 }
-
