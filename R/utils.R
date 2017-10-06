@@ -1,10 +1,10 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
-#' Função que recupera um json a partir de um link que use o protocolo REST, desde que esse permita a conversão.
+#' Recovers a json from a URL using HTTP.
 #'
-#' @param full_link Link para a solicitação GET
+#' @param full_link URL admitting GET HTTP requests.
 #'
-#' @return Json contendo as informações requeridas
+#' @return the json.
 #'
 #' @examples
 #' pec241_json <- .get_json("https://dadosabertos.camara.leg.br/api/v2/proposicoes/2088351")
@@ -18,10 +18,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   return(r_json)
 }
 
-#' Função principal do wrapper da API que é responśavel pelos GETs e separação dos paths e queries de consulta.
+#' Wraps an access to the congress API given a reletive path and query arguments.
 #'
-#' @param path Caminho de acesso do objeto
-#' @param query Lista de parâmetros que se quer utilizar para realizar a consulta
+#' @param path URL relative to the API base URL
+#' @param query Query parameters
 #'
 #' @export
 .congresso_api <- function(path=NULL, query=NULL){

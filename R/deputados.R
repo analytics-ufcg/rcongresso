@@ -21,7 +21,8 @@ fetch_deputado <- function(dep_id){
     return()
 }
 
-#' Fetch expenditures from deputy with his/her parlamentary quota in the last six months.
+#' Fetches expenditures from deputy with his/her parlamentary quota in
+#' the last six months.
 #'
 #' @param dep_id deputy's ID.
 #

@@ -6,7 +6,7 @@
 #'  start voting time, finish voting time, result and approval.
 #'
 #' @examples
-#' votacao_segundoturno_pec241 <- fetch_votacao(7252)
+#' segundoturno_pec241 <- fetch_votacao(7252)
 #'
 #' @export
 fetch_votacao <- function(id_votacao){
@@ -25,12 +25,12 @@ fetch_votacao <- function(id_votacao){
 #' Fetch how the groups and parties in the chamber of deputies
 #' instructed their members to vote on a given voting.
 #'
-#' @param id_votacao Voting's ID.
+#' @param id_votacao Voting ID.
 #'
 #' @return Dataframe containing the parties and their votes
 #'
 #' @examples
-#' orientacoesbancada_segundoturno_pec241 <- fetch_orientacoes(7252)
+#' orientacoes_pec241 <- fetch_orientacoes(7252)
 #'
 #' @export
 fetch_orientacoes <- function(id_votacao){
@@ -47,13 +47,13 @@ fetch_orientacoes <- function(id_votacao){
     return()
 }
 
-#' Fetches the votes from a voting.
+#' Fetches individual votes from a voting.
 #' @param id_votacao ID da votação
 #'
-#' @return Dataframe containing all the deputy's vote on this voting.
+#' @return Dataframe containing votes for each deputy on this voting.
 #'
 #' @examples
-#' votos_segundoturno_pec241 <- fetch_votos(7252)
+#' votos_pec241 <- fetch_votos(7252)
 #'
 #' @export
 fetch_votos <- function(id_votacao){
@@ -78,7 +78,7 @@ fetch_votos <- function(id_votacao){
   return(votantes_dataframe)
 }
 
-#' Selects the last voting among all the votings given.
+#' Filters only the last voting from each proposition in the dataframe.
 #'
 #' @param votacoes Dataframe containing all the votings related to a proposition.
 #'
@@ -103,12 +103,12 @@ ultima_votacao <- function(votacoes) {
 
 }
 
-#' Fetch how only the parties in the chamber of deputies
+#' Fetch how parties in the chamber of deputies
 #' instructed their members to vote on a given voting.
 #'
-#' @param votacao Dataframe contendo informações sobre a votação
+#' @param votacao Voting id
 #'
-#' @return Dataframe contendo o posicionamento de cada partido naquela votação
+#' @return Dataframe with each party's orientation for its deputies.
 #'
 #' @examples
 #' pos_partidos <- get_votos_partidos(7252)
@@ -131,7 +131,7 @@ get_votos_partidos <- function(votacao) {
 #'
 #' @param id_votacao Voting's ID.
 #'
-#' @return A proposition in dataframe format
+#' @return Dataframe containing proposition details
 #'
 #' @examples
 #' pec241 <- fetch_proposicao_from_votacao(7252)
