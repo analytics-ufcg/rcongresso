@@ -1,6 +1,6 @@
 Package: rcongresso
 Type: Package
-Title: Brazil Deputy's chamber API for R on tidyverse
+Title: Wraps the API for the Brazilian Chamber of Deputies. Tidy. 
 Version: 0.1.0
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
@@ -8,9 +8,9 @@ Authors@R: c(
     person("Laboratório Analytics (UFCG)", role = c("cph", "fnd"))
     )
 BugReports: https://github.com/analytics-ufcg/rcongresso/issues
-Description: Tidy functions to manipulate open data from Brazil's national congress API.
-  Propositions, votings deputy's and parties data in data frames.
-License: LGPL-3 + file LICENSE
+Description: Tidy functions to fetch and manipulate open data from the Brazilian national congress API.
+  Propositions, votings, deputies and parties data in data frames.
+License: LGPL-3
 Encoding: UTF-8
 LazyData: true
 Imports: httr,
