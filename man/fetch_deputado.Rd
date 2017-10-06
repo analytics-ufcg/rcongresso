@@ -2,18 +2,18 @@
 % Please edit documentation in R/deputados.R
 \name{fetch_deputado}
 \alias{fetch_deputado}
-\title{Recupera da API os detalhes de um deputado.}
+\title{Retrieves details about a deputy.}
 \usage{
 fetch_deputado(dep_id)
 }
 \arguments{
-\item{dep_id}{ID do Deputado}
+\item{dep_id}{deputy's ID.}
 }
 \value{
-Lista contendo detalhes sobre o deputado.
+Dataframe containing details about the deputy.
 }
 \description{
-Recupera da API os detalhes de um deputado.
+Retrieves details about a deputy.
 }
 \examples{
 abel_mesquita_info <- fetch_deputado(178957)

@@ -2,18 +2,18 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_proposicao_from_votacao}
 \alias{fetch_proposicao_from_votacao}
-\title{Dado o id da votação, retorna a proposição associada àquela votação.}
+\title{Finds the id of the proposition to which a given voting refers.}
 \usage{
 fetch_proposicao_from_votacao(id_votacao)
 }
 \arguments{
-\item{id_votacao}{ID da votação}
+\item{id_votacao}{Voting's ID.}
 }
 \value{
-Dataframe contendo informações sobre a proposição relacionada à votação
+A proposition in dataframe format
 }
 \description{
-Dado o id da votação, retorna a proposição associada àquela votação.
+Finds the id of the proposition to which a given voting refers.
 }
 \examples{
 pec241 <- fetch_proposicao_from_votacao(7252)

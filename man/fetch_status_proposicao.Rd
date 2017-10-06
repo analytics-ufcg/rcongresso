@@ -2,20 +2,20 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_status_proposicao}
 \alias{fetch_status_proposicao}
-\title{Recupera da API o status da proposição passada, incluindo sequência, órgão,
-informações sobre a tramitação e data/hora da proposição.}
+\title{Recovers the proposition status including: sequence, organ
+and date info about its processing in the parlament.}
 \usage{
 fetch_status_proposicao(id_prop)
 }
 \arguments{
-\item{id_prop}{ID da proposição}
+\item{id_prop}{Proposition's ID}
 }
 \value{
-Dataframe contendo informações sobre o status da proposição
+Dataframe containing the proposition's status
 }
 \description{
-Recupera da API o status da proposição passada, incluindo sequência, órgão,
-informações sobre a tramitação e data/hora da proposição.
+Recovers the proposition status including: sequence, organ
+and date info about its processing in the parlament.
 }
 \examples{
 pec241_status <- fetch_status_proposicao(2088351)

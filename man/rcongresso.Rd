@@ -4,10 +4,12 @@
 \name{rcongresso}
 \alias{rcongresso}
 \alias{rcongresso-package}
-\title{rcongresso: Pacote R para acessar dados do congresso nacional.}
+\title{rcongresso: R Package to access Brazil's national congress data based on the RESTful API.}
 \description{
-O pacote dá acesso à várias funções que são divididas em categorias: Proposições, deputados e votações.
-Veja mais detalhes nas funções ou consultando o site da câmara na referência abaixo.
+The package gives access to many functions which are divided by categories: Propositions, deputys and votings.
+}
+\details{
+See more on references.
 }
 \references{
 \url{https://dadosabertos.camara.leg.br/swagger/api.html}

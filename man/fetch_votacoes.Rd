@@ -2,18 +2,18 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_votacoes}
 \alias{fetch_votacoes}
-\title{Recupera da API todas as votações pelas quais uma proposição já passou.}
+\title{Fetches all the votings which a proposition went through.}
 \usage{
 fetch_votacoes(id_prop)
 }
 \arguments{
-\item{id_prop}{ID da proposição}
+\item{id_prop}{Proposition's ID}
 }
 \value{
-Dataframe contendo as várias votações pelas quais uma proposição passou.
+Dataframe containing all the votings.
 }
 \description{
-Recupera da API todas as votações pelas quais uma proposição já passou.
+Fetches all the votings which a proposition went through.
 }
 \examples{
 votacoes_pec241 <- fetch_votacoes(2088351)

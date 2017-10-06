@@ -2,18 +2,18 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_tipo_proposicao}
 \alias{fetch_tipo_proposicao}
-\title{Dado um ID do tipo de proposição, retorna seu tipo.}
+\title{Fetches the type of the proposition from its id.}
 \usage{
 fetch_tipo_proposicao(id_tipo_prop)
 }
 \arguments{
-\item{id_tipo_prop}{ID do tipo da proposição}
+\item{id_tipo_prop}{Proposition's type ID}
 }
 \value{
-Dataframe contendo o tipo da proposição
+Dataframe containing the proposition's type info.
 }
 \description{
-Dado um ID do tipo de proposição, retorna seu tipo.
+Fetches the type of the proposition from its id.
 }
 \examples{
 tipo_prop129 <- fetch_tipo_proposicao(129)

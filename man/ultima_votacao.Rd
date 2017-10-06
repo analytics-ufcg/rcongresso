@@ -2,18 +2,18 @@
 % Please edit documentation in R/votacoes.R
 \name{ultima_votacao}
 \alias{ultima_votacao}
-\title{Recebe um dataframe de votações e seleciona a última votação de cada proposição.}
+\title{Selects the last voting among all the votings given.}
 \usage{
 ultima_votacao(votacoes)
 }
 \arguments{
-\item{votacoes}{Dataframe contendo as votações a serem filtradas}
+\item{votacoes}{Dataframe containing all the votings related to a proposition.}
 }
 \value{
-Dataframe contendo apenas as últimas votações relacionadas às proposições
+Dataframe containing only the last voting related to a proposition.
 }
 \description{
-Recebe um dataframe de votações e seleciona a última votação de cada proposição.
+Selects the last voting among all the votings given.
 }
 \examples{
 votacoes_pec241 <- fetch_votacoes(2088351)

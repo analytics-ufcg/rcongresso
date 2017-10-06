@@ -2,19 +2,19 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_votacao}
 \alias{fetch_votacao}
-\title{Recupera da API detalhes sobre uma votação específica.}
+\title{Fetches details about a voting.}
 \usage{
 fetch_votacao(id_votacao)
 }
 \arguments{
-\item{id_votacao}{ID da votação}
+\item{id_votacao}{Voting's ID}
 }
 \value{
-Dataframe contendo os detalhes de uma votação, incluindo título, a hora de início da votação,
-hora de término da votação, placar e sua aprovação.
+Dataframe containing details about a voting, including tittle,
+ start voting time, finish voting time, result and approval.
 }
 \description{
-Recupera da API detalhes sobre uma votação específica.
+Fetches details about a voting.
 }
 \examples{
 votacao_segundoturno_pec241 <- fetch_votacao(7252)

@@ -1,7 +1,8 @@
-#' rcongresso: Pacote R para acessar dados do congresso nacional.
+#' rcongresso: R Package to access Brazil's national congress data based on the RESTful API.
 #'
-#' O pacote dá acesso à várias funções que são divididas em categorias: Proposições, deputados e votações.
-#' Veja mais detalhes nas funções ou consultando o site da câmara na referência abaixo.
+#' The package gives access to many functions which are divided by categories: Propositions, deputys and votings.
+#'
+#' See more on references.
 #'
 #' @docType package
 #' @name rcongresso

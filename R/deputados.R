@@ -1,8 +1,8 @@
-#' Recupera da API os detalhes de um deputado.
+#' Retrieves details about a deputy.
 #'
-#' @param dep_id ID do Deputado
+#' @param dep_id deputy's ID.
 #'
-#' @return Lista contendo detalhes sobre o deputado.
+#' @return Dataframe containing details about the deputy.
 #'
 #' @examples
 #' abel_mesquita_info <- fetch_deputado(178957)
@@ -21,11 +21,11 @@ fetch_deputado <- function(dep_id){
     return()
 }
 
-#' Recupera todos os gastos da cota parlamentar, dos últimos seis meses, um deputado específico.
+#' Fetch expenditures from deputy with his/her parlamentary quota in the last six months.
 #'
-#' @param dep_id ID do deputado
-#'
-#' @return Dataframe contendo detalhes sobre os gastos do deputado
+#' @param dep_id deputy's ID.
+#
+#' @return Dataframe containing details about the deputy's expenditures.
 #'
 #' @examples
 #' gastos_abel_mesquita <- fetch_despesas_deputado(178957)

@@ -2,18 +2,18 @@
 % Please edit documentation in R/deputados.R
 \name{fetch_despesas_deputado}
 \alias{fetch_despesas_deputado}
-\title{Recupera todos os gastos da cota parlamentar, dos últimos seis meses, um deputado específico.}
+\title{Fetch expenditures from deputy with his/her parlamentary quota in the last six months.}
 \usage{
 fetch_despesas_deputado(dep_id)
 }
 \arguments{
-\item{dep_id}{ID do deputado}
+\item{dep_id}{deputy's ID.}
 }
 \value{
-Dataframe contendo detalhes sobre os gastos do deputado
+Dataframe containing details about the deputy's expenditures.
 }
 \description{
-Recupera todos os gastos da cota parlamentar, dos últimos seis meses, um deputado específico.
+Fetch expenditures from deputy with his/her parlamentary quota in the last six months.
 }
 \examples{
 gastos_abel_mesquita <- fetch_despesas_deputado(178957)

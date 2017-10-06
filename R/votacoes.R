@@ -1,9 +1,9 @@
-#' Recupera da API detalhes sobre uma votação específica.
+#' Fetches details about a voting.
 #'
-#' @param id_votacao ID da votação
+#' @param id_votacao Voting's ID
 #'
-#' @return Dataframe contendo os detalhes de uma votação, incluindo título, a hora de início da votação,
-#' hora de término da votação, placar e sua aprovação.
+#' @return Dataframe containing details about a voting, including tittle,
+#'  start voting time, finish voting time, result and approval.
 #'
 #' @examples
 #' votacao_segundoturno_pec241 <- fetch_votacao(7252)
@@ -22,11 +22,12 @@ fetch_votacao <- function(id_votacao){
     return()
 }
 
-#' Recupera da API as orientações das bancadas em uma determinada votação.
+#' Fetch how the groups and parties in the chamber of deputies
+#' instructed their members to vote on a given voting.
 #'
-#' @param id_votacao ID da votação
+#' @param id_votacao Voting's ID.
 #'
-#' @return Dataframe contendo as orientações das bancadas na votação especificada
+#' @return Dataframe containing the parties and their votes
 #'
 #' @examples
 #' orientacoesbancada_segundoturno_pec241 <- fetch_orientacoes(7252)
@@ -46,10 +47,10 @@ fetch_orientacoes <- function(id_votacao){
     return()
 }
 
-#' Recupera os votos referentes àquela votação específica.
+#' Fetches the votes from a voting.
 #' @param id_votacao ID da votação
 #'
-#' @return Dataframe contendo o posicionamento de cada deputado, além de informações sobre estes.
+#' @return Dataframe containing all the deputy's vote on this voting.
 #'
 #' @examples
 #' votos_segundoturno_pec241 <- fetch_votos(7252)
@@ -77,11 +78,12 @@ fetch_votos <- function(id_votacao){
   return(votantes_dataframe)
 }
 
-#' Recebe um dataframe de votações e seleciona a última votação de cada proposição.
+#' Selects the last voting among all the votings given.
 #'
-#' @param votacoes Dataframe contendo as votações a serem filtradas
+#' @param votacoes Dataframe containing all the votings related to a proposition.
 #'
-#' @return Dataframe contendo apenas as últimas votações relacionadas às proposições
+#' @return Dataframe containing only the last voting related to a proposition.
+#'
 #'
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
@@ -101,7 +103,8 @@ ultima_votacao <- function(votacoes) {
 
 }
 
-#' Dada uma votação, retorna o posicionamento de cada partido naquela votação.
+#' Fetch how only the parties in the chamber of deputies
+#' instructed their members to vote on a given voting.
 #'
 #' @param votacao Dataframe contendo informações sobre a votação
 #'
@@ -124,11 +127,11 @@ get_votos_partidos <- function(votacao) {
   return(pos_bancadas)
 }
 
-#' Dado o id da votação, retorna a proposição associada àquela votação.
+#' Finds the id of the proposition to which a given voting refers.
 #'
-#' @param id_votacao ID da votação
+#' @param id_votacao Voting's ID.
 #'
-#' @return Dataframe contendo informações sobre a proposição relacionada à votação
+#' @return A proposition in dataframe format
 #'
 #' @examples
 #' pec241 <- fetch_proposicao_from_votacao(7252)

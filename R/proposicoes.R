@@ -1,8 +1,8 @@
-#' Recupera da API uma proposição contendo detalhes adicionais.
+#' Fetches details from a proposition.
 #'
-#' @param id_prop ID da proposição
+#' @param id_prop Proposition's ID
 #'
-#' @return Dataframe contendo informações sobre a proposição
+#' @return Dataframe containing information about the proposition.
 #'
 #' @examples
 #' pec241 <- fetch_proposicao(2088351)
@@ -21,11 +21,11 @@ fetch_proposicao <- function(id_prop){
     return()
 }
 
-#' Recupera da API todas as votações pelas quais uma proposição já passou.
+#' Fetches all the votings which a proposition went through.
 #'
-#' @param id_prop ID da proposição
+#' @param id_prop Proposition's ID
 #'
-#' @return Dataframe contendo as várias votações pelas quais uma proposição passou.
+#' @return Dataframe containing all the votings.
 #'
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
@@ -41,14 +41,13 @@ fetch_votacoes <- function(id_prop){
     return()
 }
 
-#' Recupera da API o ID da proposição de acordo com o tipo, número da proposição e ano que
-#' esta foi feita.
+#' Retrieves the proposition ID from its type, number and year.
 #'
-#' @param tipo Tipo da proposição (i.e., PEC, PL, PDC)
-#' @param numero Número da proposição
-#' @param ano Ano da proposição
+#' @param tipo Proposition type (i.e., PEC, PL, PDC)
+#' @param numero Proposition number
+#' @param ano Proposition year
 #'
-#' @return ID da proposição
+#' @return Proposition's ID.
 #'
 #' @examples
 #' pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
@@ -68,9 +67,9 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     return()
 }
 
-#' Recupera da API os tipos de proposição disponíveis.
+#' Fetches all the proposition types.
 #'
-#' @return Tipos de proposição
+#' @return Proposition types
 #'
 #' @examples
 #' tipos_proposicao <- fetch_tipos_proposicao()
@@ -83,11 +82,11 @@ fetch_id_proposicao <- function(tipo, numero, ano){
   return(prop_types$dados)
 }
 
-#' Dado um ID do tipo de proposição, retorna seu tipo.
+#' Fetches the type of the proposition from its id.
 #'
-#' @param id_tipo_prop ID do tipo da proposição
+#' @param id_tipo_prop Proposition's type ID
 #'
-#' @return Dataframe contendo o tipo da proposição
+#' @return Dataframe containing the proposition's type info.
 #'
 #' @examples
 #' tipo_prop129 <- fetch_tipo_proposicao(129)
@@ -103,12 +102,12 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 
 }
 
-#' Recupera da API o status da proposição passada, incluindo sequência, órgão,
-#' informações sobre a tramitação e data/hora da proposição.
+#' Recovers the proposition status including: sequence, organ
+#' and date info about its processing in the parlament.
 #'
-#' @param id_prop ID da proposição
+#' @param id_prop Proposition's ID
 #'
-#' @return Dataframe contendo informações sobre o status da proposição
+#' @return Dataframe containing the proposition's status
 #'
 #' @examples
 #' pec241_status <- fetch_status_proposicao(2088351)

@@ -2,24 +2,22 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_id_proposicao}
 \alias{fetch_id_proposicao}
-\title{Recupera da API o ID da proposição de acordo com o tipo, número da proposição e ano que
-esta foi feita.}
+\title{Retrieves the proposition ID from its type, number and year.}
 \usage{
 fetch_id_proposicao(tipo, numero, ano)
 }
 \arguments{
-\item{tipo}{Tipo da proposição (i.e., PEC, PL, PDC)}
+\item{tipo}{Proposition type (i.e., PEC, PL, PDC)}
 
-\item{numero}{Número da proposição}
+\item{numero}{Proposition number}
 
-\item{ano}{Ano da proposição}
+\item{ano}{Proposition year}
 }
 \value{
-ID da proposição
+Proposition's ID.
 }
 \description{
-Recupera da API o ID da proposição de acordo com o tipo, número da proposição e ano que
-esta foi feita.
+Retrieves the proposition ID from its type, number and year.
 }
 \examples{
 pec241_id <- fetch_id_proposicao("PEC", 241, 2016)

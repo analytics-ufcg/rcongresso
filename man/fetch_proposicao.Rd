@@ -2,18 +2,18 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_proposicao}
 \alias{fetch_proposicao}
-\title{Recupera da API uma proposição contendo detalhes adicionais.}
+\title{Fetches details from a proposition.}
 \usage{
 fetch_proposicao(id_prop)
 }
 \arguments{
-\item{id_prop}{ID da proposição}
+\item{id_prop}{Proposition's ID}
 }
 \value{
-Dataframe contendo informações sobre a proposição
+Dataframe containing information about the proposition.
 }
 \description{
-Recupera da API uma proposição contendo detalhes adicionais.
+Fetches details from a proposition.
 }
 \examples{
 pec241 <- fetch_proposicao(2088351)

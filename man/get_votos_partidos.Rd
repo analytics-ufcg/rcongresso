@@ -2,7 +2,8 @@
 % Please edit documentation in R/votacoes.R
 \name{get_votos_partidos}
 \alias{get_votos_partidos}
-\title{Dada uma votação, retorna o posicionamento de cada partido naquela votação.}
+\title{Fetch how only the parties in the chamber of deputies
+instructed their members to vote on a given voting.}
 \usage{
 get_votos_partidos(votacao)
 }
@@ -13,7 +14,8 @@ get_votos_partidos(votacao)
 Dataframe contendo o posicionamento de cada partido naquela votação
 }
 \description{
-Dada uma votação, retorna o posicionamento de cada partido naquela votação.
+Fetch how only the parties in the chamber of deputies
+instructed their members to vote on a given voting.
 }
 \examples{
 pos_partidos <- get_votos_partidos(7252)

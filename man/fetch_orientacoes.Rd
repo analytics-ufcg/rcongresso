@@ -2,18 +2,20 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_orientacoes}
 \alias{fetch_orientacoes}
-\title{Recupera da API as orientações das bancadas em uma determinada votação.}
+\title{Fetch how the groups and parties in the chamber of deputies
+instructed their members to vote on a given voting.}
 \usage{
 fetch_orientacoes(id_votacao)
 }
 \arguments{
-\item{id_votacao}{ID da votação}
+\item{id_votacao}{Voting's ID.}
 }
 \value{
-Dataframe contendo as orientações das bancadas na votação especificada
+Dataframe containing the parties and their votes
 }
 \description{
-Recupera da API as orientações das bancadas em uma determinada votação.
+Fetch how the groups and parties in the chamber of deputies
+instructed their members to vote on a given voting.
 }
 \examples{
 orientacoesbancada_segundoturno_pec241 <- fetch_orientacoes(7252)
