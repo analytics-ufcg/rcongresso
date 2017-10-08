@@ -7,9 +7,9 @@ Authors@R: c(
     person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut")),
     person("Laboratório Analytics (UFCG)", role = c("cph", "fnd"))
     )
+URL: https://github.com/analytics-ufcg/rcongresso
 BugReports: https://github.com/analytics-ufcg/rcongresso/issues
-Description: Tidy functions to fetch and manipulate open data from the Brazilian national congress API.
-  Propositions, votings, deputies and parties data in data frames.
+Description: Provides propositions, votings, deputies and parties data in data frames.
 License: LGPL-3
 Encoding: UTF-8
 LazyData: true
