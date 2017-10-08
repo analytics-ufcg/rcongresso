@@ -1,6 +1,6 @@
 Package: rcongresso
 Type: Package
-Title: Wraps the API for the Brazilian Chamber of Deputies. Tidy 
+Title: Wraps the API for the Brazilian Chamber of Deputies 
 Version: 0.1.0
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
