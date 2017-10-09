@@ -2,7 +2,7 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_votos}
 \alias{fetch_votos}
-\title{Fetches the votes from a voting.}
+\title{Fetches individual votes from a voting.}
 \usage{
 fetch_votos(id_votacao)
 }
@@ -10,12 +10,12 @@ fetch_votos(id_votacao)
 \item{id_votacao}{ID da votação}
 }
 \value{
-Dataframe containing all the deputy's vote on this voting.
+Dataframe containing votes for each deputy on this voting.
 }
 \description{
-Fetches the votes from a voting.
+Fetches individual votes from a voting.
 }
 \examples{
-votos_segundoturno_pec241 <- fetch_votos(7252)
+votos_pec241 <- fetch_votos(7252)
 
 }

@@ -10,7 +10,7 @@ fetch_proposicao_from_votacao(id_votacao)
 \item{id_votacao}{Voting's ID.}
 }
 \value{
-A proposition in dataframe format
+Dataframe containing proposition details
 }
 \description{
 Finds the id of the proposition to which a given voting refers.

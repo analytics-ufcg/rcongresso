@@ -17,6 +17,6 @@ Dataframe containing details about a voting, including tittle,
 Fetches details about a voting.
 }
 \examples{
-votacao_segundoturno_pec241 <- fetch_votacao(7252)
+segundoturno_pec241 <- fetch_votacao(7252)
 
 }

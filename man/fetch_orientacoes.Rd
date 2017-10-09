@@ -8,7 +8,7 @@ instructed their members to vote on a given voting.}
 fetch_orientacoes(id_votacao)
 }
 \arguments{
-\item{id_votacao}{Voting's ID.}
+\item{id_votacao}{Voting ID.}
 }
 \value{
 Dataframe containing the parties and their votes
@@ -18,6 +18,6 @@ Fetch how the groups and parties in the chamber of deputies
 instructed their members to vote on a given voting.
 }
 \examples{
-orientacoesbancada_segundoturno_pec241 <- fetch_orientacoes(7252)
+orientacoes_pec241 <- fetch_orientacoes(7252)
 
 }

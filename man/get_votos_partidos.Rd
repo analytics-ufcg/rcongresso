@@ -2,19 +2,19 @@
 % Please edit documentation in R/votacoes.R
 \name{get_votos_partidos}
 \alias{get_votos_partidos}
-\title{Fetch how only the parties in the chamber of deputies
+\title{Fetch how parties in the chamber of deputies
 instructed their members to vote on a given voting.}
 \usage{
 get_votos_partidos(votacao)
 }
 \arguments{
-\item{votacao}{Dataframe contendo informações sobre a votação}
+\item{votacao}{Voting id}
 }
 \value{
-Dataframe contendo o posicionamento de cada partido naquela votação
+Dataframe with each party's orientation for its deputies.
 }
 \description{
-Fetch how only the parties in the chamber of deputies
+Fetch how parties in the chamber of deputies
 instructed their members to vote on a given voting.
 }
 \examples{

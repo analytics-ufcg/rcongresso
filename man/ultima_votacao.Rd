@@ -2,7 +2,7 @@
 % Please edit documentation in R/votacoes.R
 \name{ultima_votacao}
 \alias{ultima_votacao}
-\title{Selects the last voting among all the votings given.}
+\title{Filters only the last voting from each proposition in the dataframe.}
 \usage{
 ultima_votacao(votacoes)
 }
@@ -13,7 +13,7 @@ ultima_votacao(votacoes)
 Dataframe containing only the last voting related to a proposition.
 }
 \description{
-Selects the last voting among all the votings given.
+Filters only the last voting from each proposition in the dataframe.
 }
 \examples{
 votacoes_pec241 <- fetch_votacoes(2088351)

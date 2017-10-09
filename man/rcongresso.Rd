@@ -4,9 +4,9 @@
 \name{rcongresso}
 \alias{rcongresso}
 \alias{rcongresso-package}
-\title{rcongresso: R Package to access Brazil's national congress data based on the RESTful API.}
+\title{rcongresso: R Package to access Brazil's national congress data based on its RESTful API.}
 \description{
-The package gives access to many functions which are divided by categories: Propositions, deputys and votings.
+The package wraps API endpoints for propositions, deputies, votings and votes.
 }
 \details{
 See more on references.
