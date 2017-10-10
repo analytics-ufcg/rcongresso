@@ -77,21 +77,24 @@
 
 <p>Pacote R para acessar dados do congresso nacional baseado na API RESTful criada em 2017 (<a href="https://dadosabertos.camara.leg.br/" class="uri">https://dadosabertos.camara.leg.br/</a>) e como uma tidy tool que interaja bem com o tidyverse.</p>
 <p>Para instalar:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Caso você não possua o devtools</span>
-<span class="co"># install.packages('devtools')</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Instale a partir do repositório CRAN:</span>
+<span class="kw">install.packages</span>(<span class="st">"rcongresso"</span>)
 
-<span class="co"># Instala o pacote a partir do github</span>
+<span class="co"># Ou, alternativamente, você pode instalar a versão de desenvolvedor do GitHub:</span>
+<span class="co"># install.packages('devtools')</span>
 devtools::<span class="kw">install_github</span>(<span class="st">'analytics-ufcg/rcongresso'</span>)</code></pre></div>
 <p>Uma vignette de exemplo do uso:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rcongresso)
 devtools::<span class="kw">build_vignettes</span>()
-<span class="kw">vignette</span>(<span class="st">"qmr-uma-votacao"</span>, <span class="dt">package=</span><span class="st">"rcongresso"</span>)</code></pre></div>
+<span class="kw">vignette</span>(<span class="st">"introducao-rcongresso"</span>, <span class="dt">package=</span><span class="st">"rcongresso"</span>)</code></pre></div>
 </div>
   </div>
 
   <div class="col-md-3" id="sidebar">
     <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cran.r-project.org/package=rcongresso">https://​cran.r-project.org/​package=rcongresso</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/analytics-ufcg/rcongresso">https://​github.com/​analytics-ufcg/​rcongresso</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/analytics-ufcg/rcongresso/issues">https://​github.com/​analytics-ufcg/​rcongresso/​issues</a>
@@ -109,6 +112,7 @@ devtools::<span class="kw">build_vignettes</span>()
 <ul class="list-unstyled">
 <li><a href="https://travis-ci.org/analytics-ufcg/rcongresso"><img src="https://travis-ci.org/analytics-ufcg/rcongresso.svg?branch=master" alt="Build Status"></a></li>
 <li><a href="https://codecov.io/gh/analytics-ufcg/rcongresso"><img src="https://codecov.io/gh/analytics-ufcg/rcongresso/branch/master/graph/badge.svg" alt="codecov"></a></li>
+<li><a href="http://cran.r-project.org/package=rcongresso"><img src="http://www.r-pkg.org/badges/version/rcongresso" alt="CRAN_Status_Badge"></a></li>
 </ul>
 </div>
 </div>
