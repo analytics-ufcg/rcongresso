@@ -12,7 +12,7 @@ Para instalar:
 # Instale a partir do repositório CRAN:
 install.packages("rcongresso")
 
-# Ou, alternativamente, você pode instalar a versão de desenvolver do GitHub:
+# Ou, alternativamente, você pode instalar a versão de desenvolvedor do GitHub:
 # install.packages('devtools')
 devtools::install_github('analytics-ufcg/rcongresso')
 ```
