@@ -9,10 +9,11 @@ Pacote R para acessar dados do congresso nacional baseado na API RESTful criada 
 Para instalar:
 
 ```R
-# Caso você não possua o devtools
-# install.packages('devtools')
+# Instale a partir do repositório CRAN:
+install.packages("rcongresso")
 
-# Instala o pacote a partir do github
+# Ou, alternativamente, você pode instalar a versão de desenvolver do GitHub:
+# install.packages('devtools')
 devtools::install_github('analytics-ufcg/rcongresso')
 ```
 
@@ -21,5 +22,5 @@ Uma vignette de exemplo do uso:
 ```R
 library(rcongresso)
 devtools::build_vignettes()
-vignette("qmr-uma-votacao", package="rcongresso")
+vignette("introducao-rcongresso", package="rcongresso")
 ```
