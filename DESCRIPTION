@@ -1,7 +1,7 @@
 Package: rcongresso
 Type: Package
 Title: Wraps the API for the Brazilian Chamber of Deputies 
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
     person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut")),
@@ -9,7 +9,8 @@ Authors@R: c(
     )
 URL: https://github.com/analytics-ufcg/rcongresso
 BugReports: https://github.com/analytics-ufcg/rcongresso/issues
-Description: Provides propositions, votings, deputies and parties data in data frames.
+Description: Provides propositions, votings, deputies and parties data from 
+    Brazilian Chamber of Deputies <https://dadosabertos.camara.leg.br/> in data frames.
 License: LGPL-3
 Encoding: UTF-8
 LazyData: true
