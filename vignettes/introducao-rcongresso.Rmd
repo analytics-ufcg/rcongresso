@@ -18,79 +18,54 @@ library(knitr)
 ```
 
 
-# Introdução
-Este pacote é baseado na nova [API REST](https://dadosabertos.camara.leg.br/swagger/api.html) da Câmara dos Deputados. A API fornece funções para pegar muitas informações interessantes para os analistas de dados. A intenção desse pacote é ser um *wrapper* retornando *dataframes* prontos facilitando a vida dos usuários.
+O RCongresso é um wrapper para [a nova API RESTful](https://dadosabertos.camara.leg.br/swagger/api.html) da Câmara dos Deputados. 
 
-# Compreendendo a organização das funções e dos dados
-Antes de tudo, precisamos entender um pouco como se dá a organização da câmara ao gerar as proposições e como estas informações estão organizadas na base de dados. Além disso, podemos obter mais infomações sobre um deputado especificamente.
+Na versão atual, podemos recuperar dados sobre proposições específicas, votações, votos dos deputados, orientações dos partidos e dados sobre os deputados. 
 
-## Pegando uma proposição da base de dados
-Para recuperar uma proposição você precisa de três informações: O **tipo da proposição** (i.e., PEC, PL, PLP), o **número da proposição** e o **ano** em que esta foi proposta. Com essas três informações em mãos podemos recuperar o **ID da proposição** da base de dados e, consequentemente, a proposição.    
+## Uma proposição
+Para recuperar uma proposição você precisa de três informações: O **tipo da proposição** (i.e., PEC, PL, PLP), o **número da proposição** e o **ano** em que esta foi proposta. Com isso você pode recuperar o **ID da proposição** na API e o conteúdo da proposição em si.    
 
-Vamos utilizar como exemplo a *PL 4302/1998*, o projeto de lei da terceirização. Já temos as informações necessárias para recuperar o ID desta, então fazemos uma chamada à função `fetch_id_proposicao()`.
+Por exemplo, para a *PL 4302/1998*, o projeto de lei da terceirização: 
 
 ```{r}
 pl4302_id <- fetch_id_proposicao(tipo="PL", numero=4302, ano=1998)
 ```
 
-Com o ID da proposição em mãos, podemos recuperar a proposição em si contendo as informações relevantes sobre esta. Fazemos isso com uma chamada à função `fetch_proposicao()`
+Com o ID da proposição, recuperamos a proposição em si: 
+
 ```{r}
 pl4302 <- fetch_proposicao(id_prop=pl4302_id)
+glimpse(pl4302)
 ```
 
-Essas são as informações que dispomos sobre a proposição:
-```{r}
-colnames(pl4302)
-```
+Ou:
 
-Um resumo das informações referentes à proposição podem ser vistas abaixo:
 ```{r}
 pl4302 %>% 
   select(id, uri, numero, ano, ementa, dataApresentacao) %>%
   kable()
 ```
 
-## Selecionando a votação desejada
+## Votações
 
-Com o ID da proposição, além da proposição em si, podemos recuperar **todas as votações pelas quais aquela proposição já passou**. Fazemos isso com uma chamada à função `fetch_votacoes()`   
+Com o ID da proposição você pode recuperar **todas as votações pelas quais aquela proposição já passou**: 
 
 ```{r}
 votacoes_pl4302 <- fetch_votacoes(id_prop=pl4302_id)
-```
 
-Essas são todas as informações que dispomos sobre as votações retornadas:
-```{r}
-colnames(votacoes_pl4302)
-```
-
-Temos abaixo um resumo do *dataframe* retornado:
-
-```{r}
 votacoes_pl4302 %>% 
   select(id, titulo, placarSim, placarNao, placarAbstencao) %>% 
   kable()
 ```
 
-Com essas informações em mãos podemos escolher uma votação para analisarmos melhor. Escolhemos a votação pelo seu ID. Fazemos isso com uma chamada à função `fetch_votacao()`  
-Vamos escolher a votação cujo título é "SUBSTITUTIVO DO SENADO FEDERAL" e tem ID=7431.
+Para focar em uma votação usamos seu ID:
 
 ```{r}
-votacao_aprovacao_terceirizacao <- fetch_votacao(id_votacao=7431)
+fetch_votacao(id_votacao=7431) %>% 
+  glimpse()
 ```
 
-Essas são todas as informações que dispomos sobre a votação:
-```{r}
-colnames(votacao_aprovacao_terceirizacao)
-```
-
-Temos abaixo um resumo do *dataframe* retornado:
-```{r}
-data.frame(id=votacao_aprovacao_terceirizacao$id, titulo=votacao_aprovacao_terceirizacao$titulo, 
-           dataHoraInicio=votacao_aprovacao_terceirizacao$dataHoraInicio, dataHoraFim=votacao_aprovacao_terceirizacao$dataHoraFim) %>%
-  kable()
-```
-
-Podemos ver, a partir dessa variável acessando o *dataframe* **orientacoes**, a orientação das bancadas. Essa informação é crucial para construir o dataframe final. Para isso utilizamos a função `fetch_orientacoes()`
+Cada votação tem registrada também as orientações das bancadas: 
 
 ```{r}
 fetch_orientacoes(id_votacao=7431) %>% 
@@ -98,31 +73,22 @@ fetch_orientacoes(id_votacao=7431) %>%
   datatable()
 ```
 
-## Pegando os votos dos deputados
+## Votos dos deputados
 
-Com o ID da votação, além da votação em si, podemos recuperar todas os **votos dos deputados que participaram daquela votação**. Fazemos isso utilizando a função `fetch_votos()`.
+Podemos recuperar todas os **votos dos deputados que participaram daquela votação**:
 
 ```{r}
-votos_aprovacao_terceirizacao <- fetch_votos(id_votacao=7431)
-```
-
-Essas são todas as informações que dispomos sobre os votos:
-```{r}
-colnames(votacao_aprovacao_terceirizacao)
-```
-
-Temos abaixo um resumo do *dataframe* retornado:
-```{r}
-votos_aprovacao_terceirizacao %>% 
-  select(parlamentar.id, parlamentar.nome, parlamentar.siglaPartido, voto) %>% 
+fetch_votos(id_votacao=7431) %>% 
+  select(parlamentar.id, 
+         parlamentar.nome, 
+         parlamentar.siglaPartido, 
+         voto) %>% 
   datatable()
 ```
 
-## Recuperando informações sobre um deputado
+## Informações sobre um deputado
 
-Se quisermos obter mais informações sobre um deputado, podemos fazê-lo pelo seu ID. Fazemos isso utilizando a função `fetch_deputado()`.  
-Podemos recuperar mais informações sobre o deputado Abel Mesquita, cujo id é 178957. Abaixo temos um exemplo do dataframe retornado:
-
+Se quisermos obter mais informações sobre um deputado, podemos fazê-lo pelo seu ID. Por exemplo, sobre o deputado Abel Mesquita, cujo id é 178957, até agora recuperamos o seguinte:
 
 ```{r}
 fetch_deputado(178957) %>%
