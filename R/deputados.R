@@ -17,8 +17,7 @@ fetch_deputado <- function(dep_id){
       .congresso_api(.$path)$dados %>%
         .remove_lists_and_nulls()
     ) %>%
-    dplyr::ungroup() %>%
-    return()
+    dplyr::ungroup()
 }
 
 #' Fetches expenditures from deputy with his/her parlamentary quota in
@@ -44,6 +43,5 @@ fetch_despesas_deputado <- function(dep_id) {
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(idDep = .$id) %>%
-    dplyr::select(-path, -id) %>%
-    return()
+    dplyr::select(-path, -id)
 }

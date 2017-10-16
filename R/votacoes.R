@@ -18,8 +18,7 @@ fetch_votacao <- function(id_votacao){
       .congresso_api(.$path)$dados %>%
         .remove_lists_and_nulls()
     ) %>%
-    dplyr::ungroup() %>%
-    return()
+    dplyr::ungroup()
 }
 
 #' Fetch how the groups and parties in the chamber of deputies
@@ -43,8 +42,7 @@ fetch_orientacoes <- function(id_votacao){
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(id_votacao = id) %>%
-    dplyr::select(-id) %>%
-    return()
+    dplyr::select(-id)
 }
 
 #' Fetches individual votes from a voting.
@@ -61,21 +59,21 @@ fetch_votos <- function(id_votacao){
   queries <- tibble::tibble(id_votacao = id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")) %>%
     dplyr::rowwise() %>%
-    dplyr::do(tibble::tibble(id_votacao = .$id_votacao,
+    dplyr::do(
+      tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
-              query = paste0("pagina=", 1:5, "&itens=100"))) %>%
+              query = paste0("pagina=", 1:5, "&itens=100"))
+    ) %>%
     dplyr::ungroup()
 
-  votantes_dataframe <- queries %>%
+  queries %>%
     dplyr::group_by(id_votacao, path, query) %>%
     dplyr::do(
       .congresso_api(.$path, .$query)$dados %>%
         .empty_list_to_dataframe()
-      ) %>%
+    ) %>%
     dplyr::ungroup() %>%
     dplyr::select(-path, -query)
-
-  return(votantes_dataframe)
 }
 
 #' Filters only the last voting from each proposition in the dataframe.
@@ -92,15 +90,13 @@ fetch_votos <- function(id_votacao){
 #' @export
 ultima_votacao <- function(votacoes) {
   uriProposicaoPrincipal <- id <- NULL
-  ultimas_votacoes <- votacoes %>%
+
+  votacoes %>%
     dplyr::group_by(uriProposicaoPrincipal) %>%
     dplyr::filter(id == max(id)) %>%
     unique() %>%
     dplyr::ungroup() %>%
     dplyr::select(id, uriProposicaoPrincipal)
-
-  return(ultimas_votacoes)
-
 }
 
 #' Fetch how parties in the chamber of deputies
@@ -117,14 +113,13 @@ ultima_votacao <- function(votacoes) {
 # regex quebra para casos de GOV. e PCdoB.
 get_votos_partidos <- function(votacao) {
   nomeBancada <- voto <- bancada_associada <- id_votacao <- partido <- NULL
-  pos_bancadas <- fetch_orientacoes(votacao) %>%
+
+  fetch_orientacoes(votacao) %>%
     dplyr::mutate(bancada_associada = nomeBancada) %>%
     dplyr::select(partido = nomeBancada, orientacao_partido = voto,
                   bancada_associada, id_votacao) %>%
     tidyr::separate_rows(partido, sep = .REGEX_PATTERN) %>%
     dplyr::mutate(partido = toupper(.$partido))
-
-  return(pos_bancadas)
 }
 
 #' Finds the id of the proposition to which a given voting refers.
@@ -139,6 +134,7 @@ get_votos_partidos <- function(votacao) {
 #' @export
 fetch_proposicao_from_votacao <- function(id_votacao) {
   id <- NULL
+
   tibble::tibble(id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
@@ -148,6 +144,5 @@ fetch_proposicao_from_votacao <- function(id_votacao) {
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(id_proposicao = id) %>%
-    dplyr::select(-id) %>%
-    return()
+    dplyr::select(-id)
 }

@@ -16,9 +16,8 @@ fetch_proposicao <- function(id_prop){
     dplyr::do(
       .congresso_api(.$path)$dados %>%
         .remove_lists_and_nulls()
-      ) %>%
-    dplyr::ungroup() %>%
-    return()
+    ) %>%
+    dplyr::ungroup()
 }
 
 #' Fetches all the votings which a proposition went through.
@@ -36,9 +35,10 @@ fetch_votacoes <- function(id_prop){
   tibble::tibble(id = id_prop) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
-    dplyr::do(.congresso_api(.$path)[[1]]) %>%
-    dplyr::ungroup() %>%
-    return()
+    dplyr::do(
+      .congresso_api(.$path)[[1]]
+    ) %>%
+    dplyr::ungroup()
 }
 
 #' Retrieves the proposition ID from its type, number and year.
@@ -63,8 +63,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
         .to_tibble()
     ) %>%
     unlist() %>%
-    as.vector() %>%
-    return()
+    as.vector()
 }
 
 #' Fetches all the proposition types.
@@ -76,10 +75,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 .fetch_tipos_proposicao <- function(){
-
-  prop_types <- .congresso_api(.TIPOS_PROPOSICOES_PATH)
-
-  return(prop_types$dados)
+  .congresso_api(.TIPOS_PROPOSICOES_PATH)$dados
 }
 
 #' Fetches the type of the proposition from its id.
@@ -97,9 +93,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
     dplyr::mutate(id = as.numeric(.$id))
 
   tibble::tibble(id = id_tipo_prop) %>%
-    dplyr::left_join(prop_types, by = "id") %>%
-    return()
-
+    dplyr::left_join(prop_types, by = "id")
 }
 
 #' Recovers the proposition status including: sequence, organ
@@ -122,6 +116,5 @@ fetch_status_proposicao <- function(id_prop){
       .congresso_api(.$path)$dados$statusProposicao %>%
         .remove_lists_and_nulls()
     ) %>%
-    dplyr::ungroup() %>%
-    return()
+    dplyr::ungroup()
 }

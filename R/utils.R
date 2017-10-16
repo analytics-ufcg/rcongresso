@@ -11,11 +11,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #'
 #' @export
 .get_json <- function(response){
-
-  r <- httr::content(response, as = "text")
-  r_json <- jsonlite::fromJSON(r, flatten = T)
-
-  return(r_json)
+  httr::content(response, as = "text") %>%
+    jsonlite::fromJSON(flatten = T)
 }
 
 #' Wraps an access to the congress API given a reletive path and query arguments.
@@ -37,9 +34,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
 
-  resp_json <- .get_json(resp)
-
-  return(resp_json)
+  .get_json(resp)
 }
 
 .remove_lists_and_nulls <- function(x){
@@ -58,8 +53,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 .empty_list_to_dataframe <- function(lista) {
   if (is.list(lista) && !length(lista)){
-    as.data.frame(lista) %>%
-      return()
+    as.data.frame(lista)
   } else return(lista)
 }
 
