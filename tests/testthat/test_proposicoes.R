@@ -9,13 +9,13 @@ pec_241 <- fetch_proposicao(pec_241_id)
 status_pec241 <- fetch_status_proposicao(pec_241_id)
 
 colnames_pec241 <- c("id","uri","siglaTipo","idTipo","numero","ano","ementa",
-                     "dataApresentacao","tipoAutor","idTipoAutor","descricaoTipo","keywords")
+                     "dataApresentacao","tipoAutor","idTipoAutor","descricaoTipo","keywords", "urlInteiroTeor")
 
 colnames_status_pec241 <- c("id","dataHora","sequencia","siglaOrgao","uriOrgao","regime","descricaoTramitacao",
                             "idTipoTramitacao","descricaoSituacao","idSituacao","despacho","url")
 
 tipos_pec241 <- c("integer","character","character","integer","integer","integer","character",
-                  "character","character","integer","character","character")
+                  "character","character","integer","character","character","character")
 
 tipos_status_pec241 <- c("integer","character","integer","character","character","character","character",
                          "character","character","integer","character","character")
@@ -30,7 +30,7 @@ test_that("Is dataframe", {
 })
 
 test_that("Dimensoes do dataframe",{
-  expect_equal(dim(pec_241), c(1, 12))
+  expect_equal(dim(pec_241), c(1, 13))
   expect_equal(dim(status_pec241), c(1, 12))
 })
 
