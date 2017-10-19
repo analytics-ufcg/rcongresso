@@ -8,9 +8,13 @@
 #' pec241 <- fetch_proposicao(2088351)
 #'
 #' @export
-fetch_proposicao <- function(id_prop){
-  id <- NULL
-  tibble::tibble(id = id_prop) %>%
+fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL, siglaPartidoAutor = NULL,
+                             numero = NULL, ano = NULL, dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
+                             dataInicio = NULL, dataFim = NULL, idAutor = NULL, autor = NULL, codPartido = NULL,
+                             pagina = NULL, itens = NULL){
+
+  tibble::tibble(id, siglaUfAutor, siglaTipo, siglaPartidoAutor, numero, ano, dataApresentacaoInicio,
+                 dataApresentacaoFim, dataInicio, dataFim, idAutor, autor, codPartido, pagina, itens) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
