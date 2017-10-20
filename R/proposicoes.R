@@ -1,26 +1,46 @@
-#' Fetches details from a proposition.
+#' Fetches information about law's projects, resolutions, provisional measures,
+#' law amendments, opinions and all the other propositions types on the
+#' Deputies' Chamber.
+#' Several parameters can be used to select and filter the final result. By default, the function
+#' returns all the proposition which were presented or had some situation change in the last
+#' 15 days.
 #'
-#' @param id_prop Proposition's ID
+#' @param id Proposition's ID
+#' @param siglaUfAutor State's abbreviation of the proposition's author
+#' @param siglaTipo Proposition type (i.e., PEC, PL, PDC)
+#' @param siglaPartidoAutor Party's abbreviation of the proposition's author
+#' @param numero Proposition number
+#' @param ano Proposition year
+#' @param dataApresentacaoInicio
+#' @param dataApresentacaoFim
+#' @param dataInicio
+#' @param dataFim
+#' @param idAutor Author's ID
+#' @param autor Author's name
+#' @param codPartido Party code
+#' @param pagina Page number
+#' @param itens Items quantity by request
 #'
 #' @return Dataframe containing information about the proposition.
 #'
 #' @examples
-#' pec241 <- fetch_proposicao(2088351)
+#' pec241 <- fetch_proposicao(id = 2088351)
+#' pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
 #'
 #' @export
-fetch_proposicao <- function(id = list(), siglaUfAutor = character(1), siglaTipo = list(), siglaPartidoAutor = list(),
-                             numero = list(), ano = list(), dataApresentacaoInicio = list(), dataApresentacaoFim = list(),
-                             dataInicio = list(), dataFim = list(), idAutor = list(), autor = list(), codPartido = list(),
-                             pagina = list(), itens = list()){
+fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
+                             siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
+                             dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
+                             dataInicio = NULL, dataFim = NULL, idAutor = NULL,
+                             autor = NULL, codPartido = NULL, pagina = NULL, itens = NULL){
 
-  tibble::tibble(id, siglaUfAutor)
-    # dplyr::mutate(query = list(id, siglaUfAutor, siglaTipo))
-    # dplyr::rowwise() %>%
-    # dplyr::do(
-    #   .congresso_api(.PROPOSICOES_PATH, .$query)$dados %>%
-    #     .remove_lists_and_nulls()
-    # ) %>%
-    # dplyr::ungroup()
+  .verifica_parametros_entrada(as.list(environment(), all=TRUE)) %>%
+    tibble::as.tibble() %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
+        .remove_lists_and_nulls()
+    )
 }
 
 #' Fetches all the votings which a proposition went through.
