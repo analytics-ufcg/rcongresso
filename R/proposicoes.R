@@ -8,20 +8,19 @@
 #' pec241 <- fetch_proposicao(2088351)
 #'
 #' @export
-fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL, siglaPartidoAutor = NULL,
-                             numero = NULL, ano = NULL, dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
-                             dataInicio = NULL, dataFim = NULL, idAutor = NULL, autor = NULL, codPartido = NULL,
-                             pagina = NULL, itens = NULL){
+fetch_proposicao <- function(id = list(), siglaUfAutor = character(1), siglaTipo = list(), siglaPartidoAutor = list(),
+                             numero = list(), ano = list(), dataApresentacaoInicio = list(), dataApresentacaoFim = list(),
+                             dataInicio = list(), dataFim = list(), idAutor = list(), autor = list(), codPartido = list(),
+                             pagina = list(), itens = list()){
 
-  tibble::tibble(id, siglaUfAutor, siglaTipo, siglaPartidoAutor, numero, ano, dataApresentacaoInicio,
-                 dataApresentacaoFim, dataInicio, dataFim, idAutor, autor, codPartido, pagina, itens) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      .congresso_api(.$path)$dados %>%
-        .remove_lists_and_nulls()
-    ) %>%
-    dplyr::ungroup()
+  tibble::tibble(id, siglaUfAutor)
+    # dplyr::mutate(query = list(id, siglaUfAutor, siglaTipo))
+    # dplyr::rowwise() %>%
+    # dplyr::do(
+    #   .congresso_api(.PROPOSICOES_PATH, .$query)$dados %>%
+    #     .remove_lists_and_nulls()
+    # ) %>%
+    # dplyr::ungroup()
 }
 
 #' Fetches all the votings which a proposition went through.
