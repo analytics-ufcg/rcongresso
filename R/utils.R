@@ -61,3 +61,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   if (is.null(num)) tibble::tibble()
   else tibble::tibble(num)
 }
+
+#' Verifies from the input if all the parameters are available and handles correctly
+#' about the transformation into a valid URL query.
+.verifica_parametros_entrada <- function(parametros) {
+  is_missing <- which(sapply(parametros, is.null))
+  parametros[-is_missing]
+}
