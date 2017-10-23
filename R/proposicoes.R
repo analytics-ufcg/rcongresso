@@ -11,9 +11,9 @@
 #' @param siglaPartidoAutor Party's abbreviation of the proposition's author
 #' @param numero Proposition number
 #' @param ano Proposition year
-#' @param dataApresentacaoInicio
+#' @param dataApresentacaoInicio (Retorna todas as proposições que foram apresentadas no range dessas duas variáveis)
 #' @param dataApresentacaoFim
-#' @param dataInicio
+#' @param dataInicio (Tentando descobrir do que se trata)
 #' @param dataFim
 #' @param idAutor Author's ID
 #' @param autor Author's name
@@ -87,6 +87,27 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     ) %>%
     unlist() %>%
     as.vector()
+}
+
+#' Fetches details from a proposition.
+#'
+#' @param id Proposition's ID
+#'
+#' @return Dataframe containing information about the proposition.
+#'
+#' @examples
+#' pec241 <- fetch_proposicao_por_id(2088351)
+#'
+#' @export
+fetch_proposicao_por_id <- function(id){
+  tibble::tibble(id) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados %>%
+        .remove_lists_and_nulls()
+    ) %>%
+    dplyr::ungroup()
 }
 
 #' Fetches all the proposition types.
