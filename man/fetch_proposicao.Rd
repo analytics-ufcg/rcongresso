@@ -28,9 +28,13 @@ fetch_proposicao(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 
 \item{ano}{Proposition year}
 
-\item{dataApresentacaoInicio}{(Retorna todas as proposições que foram apresentadas no range dessas duas variáveis)}
+\item{dataApresentacaoInicio}{Proposition's presentation starting date}
 
-\item{dataInicio}{(Tentando descobrir do que se trata)}
+\item{dataApresentacaoFim}{Proposition's presentation end date}
+
+\item{dataInicio}{Proposition's processing starting date}
+
+\item{dataFim}{Proposition's processing end date}
 
 \item{idAutor}{Author's ID}
 
