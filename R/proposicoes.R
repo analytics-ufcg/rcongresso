@@ -11,10 +11,10 @@
 #' @param siglaPartidoAutor Party's abbreviation of the proposition's author
 #' @param numero Proposition number
 #' @param ano Proposition year
-#' @param dataApresentacaoInicio (Retorna todas as proposições que foram apresentadas no range dessas duas variáveis)
-#' @param dataApresentacaoFim
-#' @param dataInicio (Tentando descobrir do que se trata)
-#' @param dataFim
+#' @param dataApresentacaoInicio Proposition's presentation starting date
+#' @param dataApresentacaoFim Proposition's presentation end date
+#' @param dataInicio Proposition's processing starting date
+#' @param dataFim Proposition's processing end date
 #' @param idAutor Author's ID
 #' @param autor Author's name
 #' @param codPartido Party code
