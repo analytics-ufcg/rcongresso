@@ -1,6 +1,6 @@
 # Testa erros
-# proposicao_inexistente <- fetch_id_proposicao(tipo = "AAA", numero = 55, ano = 1870)
-# test_that("GET ID de proposição inexistente", {expect_equal(proposicao_inexistente, NULL)})
+proposicao_inexistente <- fetch_id_proposicao(tipo = "AAA", numero = 55, ano = 1870)
+test_that("GET ID de proposição inexistente", {expect_equal(proposicao_inexistente, NULL)})
 test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao(id = 506))})
 
 # Setup
@@ -30,6 +30,9 @@ names(tipos_status_pec241) <- colnames_status_pec241
 names(tipos_pec241_por_id) <- colnames_pec241_por_id
 
 # Testes
+
+test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
+
 test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(status_pec241))
