@@ -33,7 +33,7 @@ pl4302_id <- fetch_proposicao(siglaTipo = "PL", numero = 4302, ano = 1998)$id
 Com o ID da proposição, recuperamos a proposição em si: 
 
 ```{r}
-pl4302 <- fetch_proposicao_por_id(id = pl4302_id)
+pl4302 <- fetch_proposicao(id = pl4302_id)
 glimpse(pl4302)
 ```
 
