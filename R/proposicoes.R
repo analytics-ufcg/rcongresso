@@ -34,8 +34,14 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              dataInicio = NULL, dataFim = NULL, idAutor = NULL,
                              autor = NULL, codPartido = NULL, pagina = NULL, itens = NULL){
 
-  if(missing(id)) .fetch_using_queries(as.list(environment(), all=TRUE))
-  else .fetch_using_id(id)
+  parametros <- as.list(environment(), all=TRUE)
+
+  if(!length(.verifica_parametros_entrada(parametros)))
+    .congresso_api(.PROPOSICOES_PATH)$dados
+  else if(is.null(id))
+    .fetch_using_queries(parametros)
+  else
+    .fetch_using_id(id)
 }
 
 #' Fetches a proposition using a list of queries
