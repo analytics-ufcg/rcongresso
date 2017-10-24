@@ -6,7 +6,7 @@ test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao(
 # Setup
 pec_241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
 pec_241_id <- pec_241$id
-pec_241_por_id <- fetch_proposicao_por_id(pec_241_id)
+pec_241_por_id <- fetch_proposicao(pec_241_id)
 status_pec241 <- fetch_status_proposicao(pec_241_id)
 
 colnames_pec241 <- c("id","uri","siglaTipo","idTipo","numero","ano","ementa")
