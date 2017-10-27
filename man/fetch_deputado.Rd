@@ -2,20 +2,19 @@
 % Please edit documentation in R/deputados.R
 \name{fetch_deputado}
 \alias{fetch_deputado}
-\title{Retrieves details about a deputy.}
+\title{Retrieves details about a deputy}
 \usage{
 fetch_deputado(dep_id)
 }
 \arguments{
-\item{dep_id}{deputy's ID.}
+\item{dep_id}{deputy's ID}
 }
 \value{
 Dataframe containing details about the deputy.
 }
 \description{
-Retrieves details about a deputy.
+ID, name, birth date, birth city among other informations are returned.
 }
 \examples{
 abel_mesquita_info <- fetch_deputado(178957)
-
 }

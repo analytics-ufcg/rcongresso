@@ -2,16 +2,15 @@
 % Please edit documentation in R/deputados.R
 \name{fetch_despesas_deputado}
 \alias{fetch_despesas_deputado}
-\title{Fetches expenditures from deputy with his/her parlamentary quota in
-the last six months.}
+\title{Fetches expenditures from deputy using its id.}
 \usage{
 fetch_despesas_deputado(dep_id)
 }
 \arguments{
-\item{dep_id}{deputy's ID.}
+\item{dep_id}{deputy's ID}
 }
 \value{
-Dataframe containing details about the deputy's expenditures.
+Dataframe containing details about the deputy's expenditures
 }
 \description{
 Fetches expenditures from deputy with his/her parlamentary quota in
@@ -19,5 +18,4 @@ the last six months.
 }
 \examples{
 gastos_abel_mesquita <- fetch_despesas_deputado(178957)
-
 }

@@ -1,12 +1,10 @@
-#' Retrieves details about a deputy.
-#'
-#' @param dep_id deputy's ID.
-#'
+#' @title Retrieves details about a deputy
+#' @description ID, name, birth date, birth city among other informations are returned.
+#' @param dep_id deputy's ID
 #' @return Dataframe containing details about the deputy.
-#'
 #' @examples
 #' abel_mesquita_info <- fetch_deputado(178957)
-#'
+#' @rdname fetch_deputado
 #' @export
 fetch_deputado <- function(dep_id){
   id <- NULL
@@ -20,16 +18,14 @@ fetch_deputado <- function(dep_id){
     dplyr::ungroup()
 }
 
-#' Fetches expenditures from deputy with his/her parlamentary quota in
+#' @title Fetches expenditures from deputy using its id.
+#' @description Fetches expenditures from deputy with his/her parlamentary quota in
 #' the last six months.
-#'
-#' @param dep_id deputy's ID.
-#
-#' @return Dataframe containing details about the deputy's expenditures.
-#'
+#' @param dep_id deputy's ID
+#' @return Dataframe containing details about the deputy's expenditures
 #' @examples
 #' gastos_abel_mesquita <- fetch_despesas_deputado(178957)
-#'
+#' @rdname fetch_despesas_deputado
 #' @export
 fetch_despesas_deputado <- function(dep_id) {
   id <- path <- NULL
