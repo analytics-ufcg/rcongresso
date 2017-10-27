@@ -75,7 +75,7 @@
       <h1>Usando purrr + rcongresso para analisar votações</h1>
                         <h4 class="author">Nazareno</h4>
             
-            <h4 class="date">2017-10-16</h4>
+            <h4 class="date">2017-10-27</h4>
           </div>
 
     
@@ -181,7 +181,7 @@
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(dados_parlamentar)
 
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(deputados)</code></pre></div>
-<pre><code>## Observations: 583
+<pre><code>## Observations: 567
 ## Variables: 13
 ## $ parlamentar.id      &lt;int&gt; 178864, 178914, 178890, 178968, 133374, 17...
 ## $ id                  &lt;int&gt; 178864, 178914, 178890, 178968, 133374, 17...
@@ -194,7 +194,7 @@
 ## $ municipioNascimento &lt;chr&gt; "Solonópole", "Juazeiro", "Itapagipe", "Ar...
 ## $ escolaridade        &lt;chr&gt; "Ensino Médio", "Superior", "Doutorado", "...
 ## $ urlWebsite          &lt;chr&gt; NA, NA, NA, NA, NA, NA, "www.aeltonfreitas...
-## $ redeSocial          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, "http://www.tw...
+## $ redeSocial          &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...
 ## $ dataFalecimento     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA...</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos %&gt;%<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(deputados, <span class="dt">by =</span> <span class="st">"parlamentar.id"</span>) %&gt;%<span class="st"> </span>

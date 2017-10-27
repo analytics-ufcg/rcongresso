@@ -4,17 +4,22 @@ test_that("GET ID de proposição inexistente", {expect_equal(proposicao_inexist
 test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao(id = 506))})
 
 # Setup
-pec_241_id <- fetch_id_proposicao(tipo = "PEC", numero = 241, ano = 2016)
-pec_241 <- fetch_proposicao(pec_241_id)
+pec_241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
+pec_241_id <- pec_241$id
+pec_241_por_id <- fetch_proposicao(pec_241_id)
 status_pec241 <- fetch_status_proposicao(pec_241_id)
 
-colnames_pec241 <- c("id","uri","siglaTipo","idTipo","numero","ano","ementa",
-                     "dataApresentacao","tipoAutor","idTipoAutor","descricaoTipo","keywords", "urlInteiroTeor")
+colnames_pec241 <- c("id","uri","siglaTipo","idTipo","numero","ano","ementa")
+
+colnames_pec241_por_id <- c("id","uri","siglaTipo","idTipo","numero","ano","ementa",
+                            "dataApresentacao","tipoAutor","idTipoAutor","descricaoTipo","keywords", "urlInteiroTeor")
 
 colnames_status_pec241 <- c("id","dataHora","sequencia","siglaOrgao","uriOrgao","regime","descricaoTramitacao",
                             "idTipoTramitacao","descricaoSituacao","idSituacao","despacho","url")
 
-tipos_pec241 <- c("integer","character","character","integer","integer","integer","character",
+tipos_pec241 <- c("integer","character","character","integer","integer","integer","character")
+
+tipos_pec241_por_id <- c("integer","character","character","integer","integer","integer","character",
                   "character","character","integer","character","character","character")
 
 tipos_status_pec241 <- c("integer","character","integer","character","character","character","character",
@@ -22,25 +27,33 @@ tipos_status_pec241 <- c("integer","character","integer","character","character"
 
 names(tipos_pec241) <- colnames_pec241
 names(tipos_status_pec241) <- colnames_status_pec241
+names(tipos_pec241_por_id) <- colnames_pec241_por_id
 
 # Testes
+
+test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
+
 test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(status_pec241))
+  expect_true(is.data.frame(pec_241_por_id))
 })
 
 test_that("Dimensoes do dataframe",{
-  expect_equal(dim(pec_241), c(1, 13))
+  expect_equal(dim(pec_241), c(1, 7))
+  expect_equal(dim(pec_241_por_id), c(1, 13))
   expect_equal(dim(status_pec241), c(1, 12))
 })
 
 test_that("Atributos do dataframe",{
   expect_equal(attributes(pec_241)$names, colnames_pec241)
+  expect_equal(attributes(pec_241_por_id)$names, colnames_pec241_por_id)
   expect_equal(attributes(status_pec241)$names, colnames_status_pec241)
 })
 
 test_that("Campos do dataframe",{
   expect_equal(sapply(pec_241, class), tipos_pec241)
+  expect_equal(sapply(pec_241_por_id, class), tipos_pec241_por_id)
   expect_equal(sapply(status_pec241, class), tipos_status_pec241)
 })
 

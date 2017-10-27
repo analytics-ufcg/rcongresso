@@ -1,16 +1,81 @@
-#' Fetches details from a proposition.
+#' Fetches information about law's projects, resolutions, provisional measures,
+#' law amendments, opinions and all the other propositions types on the
+#' Deputies' Chamber.
+#' Several parameters can be used to select and filter the final result. By default, the function
+#' returns all the proposition which were presented or had some situation change in the last
+#' 15 days.
 #'
-#' @param id_prop Proposition's ID
+#' @param id Proposition's ID
+#' @param siglaUfAutor State's abbreviation of the proposition's author
+#' @param siglaTipo Proposition type (i.e., PEC, PL, PDC)
+#' @param siglaPartidoAutor Party's abbreviation of the proposition's author
+#' @param numero Proposition number
+#' @param ano Proposition year
+#' @param dataApresentacaoInicio Proposition's presentation starting date
+#' @param dataApresentacaoFim Proposition's presentation end date
+#' @param dataInicio Proposition's processing starting date
+#' @param dataFim Proposition's processing end date
+#' @param idAutor Author's ID
+#' @param autor Author's name
+#' @param codPartido Party code
+#' @param pagina Page number
+#' @param itens Items quantity by request
 #'
 #' @return Dataframe containing information about the proposition.
 #'
 #' @examples
-#' pec241 <- fetch_proposicao(2088351)
+#' pec241 <- fetch_proposicao(id = 2088351)
+#' pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
 #'
 #' @export
-fetch_proposicao <- function(id_prop){
-  id <- NULL
-  tibble::tibble(id = id_prop) %>%
+fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
+                             siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
+                             dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
+                             dataInicio = NULL, dataFim = NULL, idAutor = NULL,
+                             autor = NULL, codPartido = NULL, pagina = NULL, itens = NULL){
+
+  parametros <- as.list(environment(), all=TRUE)
+
+  if(!length(.verifica_parametros_entrada(parametros)))
+    .congresso_api(.PROPOSICOES_PATH)$dados
+  else if(is.null(id))
+    .fetch_using_queries(parametros)
+  else
+    .fetch_using_id(id)
+}
+
+#' Fetches a proposition using a list of queries
+#'
+#' @param parametros queries used on the search
+#'
+#' @return Dataframe containing information about the proposition.
+#'
+#' @examples
+#' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
+#'
+#' @export
+.fetch_using_queries <- function(parametros){
+  .verifica_parametros_entrada(parametros) %>%
+    tibble::as.tibble() %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
+        .remove_lists_and_nulls()
+    )
+}
+
+#' Fetches details from a proposition.
+#'
+#' @param id Proposition's ID
+#'
+#' @return Dataframe containing information about the proposition.
+#'
+#' @examples
+#' pec241 <- .fetch_using_id(2088351)
+#'
+#' @export
+.fetch_using_id <- function(id){
+  tibble::tibble(id) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
