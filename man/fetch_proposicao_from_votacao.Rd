@@ -12,6 +12,9 @@ fetch_proposicao_from_votacao(id_votacao)
 \value{
 Dataframe containing proposition details
 }
+\description{
+Finds the id of the proposition to which a given voting refers.
+}
 \examples{
 pec241 <- fetch_proposicao_from_votacao(7252)
 }

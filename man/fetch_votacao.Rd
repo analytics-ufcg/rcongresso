@@ -13,6 +13,9 @@ fetch_votacao(id_votacao)
 Dataframe containing details about a voting, including tittle,
  start voting time, finish voting time, result and approval
 }
+\description{
+Fetches details about a voting.
+}
 \examples{
 segundoturno_pec241 <- fetch_votacao(7252)
 }

@@ -1,4 +1,5 @@
 #' @title Fetches details about a voting
+#' @description Fetches details about a voting.
 #' @param id_votacao Voting's ID
 #' @return Dataframe containing details about a voting, including tittle,
 #'  start voting time, finish voting time, result and approval
@@ -120,6 +121,7 @@ get_votos_partidos <- function(votacao) {
 }
 
 #' @title Finds the id of the proposition to which a given voting refers
+#' @description Finds the id of the proposition to which a given voting refers.
 #' @param id_votacao Voting's ID
 #' @return Dataframe containing proposition details
 #' @examples
