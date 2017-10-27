@@ -17,9 +17,11 @@ fetch_id_proposicao(tipo, numero, ano)
 Proposition's ID.
 }
 \description{
-Retrieves the proposition ID from its type, number and year.
+The function can be used to fetch a vector of ids as well, in case of many propositions.
 }
 \examples{
 pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_id_proposicao}}
 }

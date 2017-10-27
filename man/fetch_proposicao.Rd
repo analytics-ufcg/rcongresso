@@ -2,12 +2,7 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_proposicao}
 \alias{fetch_proposicao}
-\title{Fetches information about law's projects, resolutions, provisional measures,
-law amendments, opinions and all the other propositions types on the
-Deputies' Chamber.
-Several parameters can be used to select and filter the final result. By default, the function
-returns all the proposition which were presented or had some situation change in the last
-15 days.}
+\title{Fetches proposition from API using a query}
 \usage{
 fetch_proposicao(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
@@ -57,8 +52,14 @@ Several parameters can be used to select and filter the final result. By default
 returns all the proposition which were presented or had some situation change in the last
 15 days.
 }
+\details{
+Using the `fetch_proposicao()` function with an ID returns more information than using `tipo`, `numero` and `ano`.
+So, it is preferable to use the proposition's ID.
+}
 \examples{
 pec241 <- fetch_proposicao(id = 2088351)
 pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
 }

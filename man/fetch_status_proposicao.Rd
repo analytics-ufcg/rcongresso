@@ -2,8 +2,7 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_status_proposicao}
 \alias{fetch_status_proposicao}
-\title{Recovers the proposition status including: sequence, organ
-and date info about its processing in the parlament.}
+\title{Recovers the proposition status in the parlament}
 \usage{
 fetch_status_proposicao(id_prop)
 }
@@ -19,5 +18,7 @@ and date info about its processing in the parlament.
 }
 \examples{
 pec241_status <- fetch_status_proposicao(2088351)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
 }

@@ -1,10 +1,10 @@
-#' Fetches information about law's projects, resolutions, provisional measures,
+#' @title Fetches proposition from API using a query
+#' @description Fetches information about law's projects, resolutions, provisional measures,
 #' law amendments, opinions and all the other propositions types on the
 #' Deputies' Chamber.
 #' Several parameters can be used to select and filter the final result. By default, the function
 #' returns all the proposition which were presented or had some situation change in the last
 #' 15 days.
-#'
 #' @param id Proposition's ID
 #' @param siglaUfAutor State's abbreviation of the proposition's author
 #' @param siglaTipo Proposition type (i.e., PEC, PL, PDC)
@@ -20,13 +20,15 @@
 #' @param codPartido Party code
 #' @param pagina Page number
 #' @param itens Items quantity by request
-#'
 #' @return Dataframe containing information about the proposition.
-#'
+#' @details Using the `fetch_proposicao()` function with an ID returns more information than using `tipo`, `numero` and `ano`.
+#' So, it is preferable to use the proposition's ID.
 #' @examples
 #' pec241 <- fetch_proposicao(id = 2088351)
 #' pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
-#'
+#' @seealso
+#'  \code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_proposicao
 #' @export
 fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
@@ -85,15 +87,15 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
     dplyr::ungroup()
 }
 
-#' Fetches all the votings which a proposition went through.
-#'
+#' @title Fetches all the votings which a proposition went through
+#' @description Returns all the votings related to a proposition by its id.
 #' @param id_prop Proposition's ID
-#'
 #' @return Dataframe containing all the votings.
-#'
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
-#'
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_votacoes
 #' @export
 fetch_votacoes <- function(id_prop){
   id <- NULL
@@ -106,17 +108,17 @@ fetch_votacoes <- function(id_prop){
     dplyr::ungroup()
 }
 
-#' Retrieves the proposition ID from its type, number and year.
-#'
+#' @title Retrieves the proposition ID from its type, number and year.
+#' @description The function can be used to fetch a vector of ids as well, in case of many propositions.
 #' @param tipo Proposition type (i.e., PEC, PL, PDC)
 #' @param numero Proposition number
 #' @param ano Proposition year
-#'
 #' @return Proposition's ID.
-#'
 #' @examples
 #' pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
-#'
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_id_proposicao
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
   tibble::tibble(tipo, numero, ano) %>%
@@ -143,15 +145,13 @@ fetch_id_proposicao <- function(tipo, numero, ano){
   .congresso_api(.TIPOS_PROPOSICOES_PATH)$dados
 }
 
-#' Fetches the type of the proposition from its id.
-#'
+#' @title Fetches the type of the proposition from its id
+#' @description Returns its id, abbreviation, name and description.
 #' @param id_tipo_prop Proposition's type ID
-#'
 #' @return Dataframe containing the proposition's type info.
-#'
 #' @examples
 #' tipo_prop129 <- fetch_tipo_proposicao(129)
-#'
+#' @rdname fetch_tipo_proposicao
 #' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
   prop_types <- .fetch_tipos_proposicao() %>%
@@ -161,16 +161,16 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
     dplyr::left_join(prop_types, by = "id")
 }
 
-#' Recovers the proposition status including: sequence, organ
+#' @title Recovers the proposition status in the parlament
+#' @description Recovers the proposition status including: sequence, organ
 #' and date info about its processing in the parlament.
-#'
 #' @param id_prop Proposition's ID
-#'
 #' @return Dataframe containing the proposition's status
-#'
 #' @examples
 #' pec241_status <- fetch_status_proposicao(2088351)
-#'
+#' @seealso
+#'  \code{\link[rcongresso]{fetch_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_status_proposicao
 #' @export
 fetch_status_proposicao <- function(id_prop){
   id <- NULL

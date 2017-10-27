@@ -2,7 +2,7 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_tipo_proposicao}
 \alias{fetch_tipo_proposicao}
-\title{Fetches the type of the proposition from its id.}
+\title{Fetches the type of the proposition from its id}
 \usage{
 fetch_tipo_proposicao(id_tipo_prop)
 }
@@ -13,9 +13,8 @@ fetch_tipo_proposicao(id_tipo_prop)
 Dataframe containing the proposition's type info.
 }
 \description{
-Fetches the type of the proposition from its id.
+Returns its id, abbreviation, name and description.
 }
 \examples{
 tipo_prop129 <- fetch_tipo_proposicao(129)
-
 }

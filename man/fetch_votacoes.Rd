@@ -2,7 +2,7 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_votacoes}
 \alias{fetch_votacoes}
-\title{Fetches all the votings which a proposition went through.}
+\title{Fetches all the votings which a proposition went through}
 \usage{
 fetch_votacoes(id_prop)
 }
@@ -13,9 +13,11 @@ fetch_votacoes(id_prop)
 Dataframe containing all the votings.
 }
 \description{
-Fetches all the votings which a proposition went through.
+Returns all the votings related to a proposition by its id.
 }
 \examples{
 votacoes_pec241 <- fetch_votacoes(2088351)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_id_proposicao}}
 }
