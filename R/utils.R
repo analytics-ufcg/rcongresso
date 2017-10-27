@@ -38,12 +38,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .remove_lists_and_nulls <- function(x){
-  arr_null <- which(sapply(x, is.null))
+  arr_null <- x %>%
+    purrr::map_lgl(is.null) %>%
+    which()
   if (length(arr_null)){
     x <- x[-arr_null]
   }
 
-  arr_lists <- which(sapply(x, is.list))
+  arr_lists <- x %>%
+    purrr::map_lgl(is.list) %>%
+    which()
   if (length(arr_lists)){
     x <- x[-arr_lists]
   }
@@ -65,6 +69,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Verifies from the input if all the parameters are available and handles correctly
 #' about the transformation into a valid URL query.
 .verifica_parametros_entrada <- function(parametros) {
-  is_missing <- which(sapply(parametros, is.null))
+  is_missing <- parametros %>%
+    purrr::map_lgl(is.null) %>%
+    which()
   parametros[-is_missing]
 }
