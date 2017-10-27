@@ -94,7 +94,7 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
 #' @rdname fetch_votacoes
 #' @export
 fetch_votacoes <- function(id_prop){
