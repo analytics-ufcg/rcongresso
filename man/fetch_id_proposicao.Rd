@@ -2,7 +2,7 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_id_proposicao}
 \alias{fetch_id_proposicao}
-\title{Retrieves the proposition ID from its type, number and year.}
+\title{Retrieves the proposition ID from its type, number and year}
 \usage{
 fetch_id_proposicao(tipo, numero, ano)
 }

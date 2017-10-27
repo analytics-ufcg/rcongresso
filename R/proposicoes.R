@@ -108,7 +108,7 @@ fetch_votacoes <- function(id_prop){
     dplyr::ungroup()
 }
 
-#' @title Retrieves the proposition ID from its type, number and year.
+#' @title Retrieves the proposition ID from its type, number and year
 #' @description The function can be used to fetch a vector of ids as well, in case of many propositions.
 #' @param tipo Proposition type (i.e., PEC, PL, PDC)
 #' @param numero Proposition number

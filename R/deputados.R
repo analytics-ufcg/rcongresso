@@ -18,7 +18,7 @@ fetch_deputado <- function(dep_id){
     dplyr::ungroup()
 }
 
-#' @title Fetches expenditures from deputy using its id.
+#' @title Fetches expenditures from deputy using its id
 #' @description Fetches expenditures from deputy with his/her parlamentary quota in
 #' the last six months.
 #' @param dep_id deputy's ID

@@ -2,7 +2,7 @@
 % Please edit documentation in R/deputados.R
 \name{fetch_despesas_deputado}
 \alias{fetch_despesas_deputado}
-\title{Fetches expenditures from deputy using its id.}
+\title{Fetches expenditures from deputy using its id}
 \usage{
 fetch_despesas_deputado(dep_id)
 }
