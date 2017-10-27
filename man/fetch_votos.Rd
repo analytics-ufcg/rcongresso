@@ -2,20 +2,25 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_votos}
 \alias{fetch_votos}
-\title{Fetches individual votes from a voting.}
+\title{Fetches individual votes from a voting}
 \usage{
 fetch_votos(id_votacao)
 }
 \arguments{
-\item{id_votacao}{ID da votação}
+\item{id_votacao}{Voting's ID}
 }
 \value{
 Dataframe containing votes for each deputy on this voting.
 }
 \description{
-Fetches individual votes from a voting.
+Some other informations about the deputy are returned, such as: name, party, id.
+}
+\details{
+DETAILS
 }
 \examples{
 votos_pec241 <- fetch_votos(7252)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_votacao}}
 }

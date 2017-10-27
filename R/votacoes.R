@@ -1,13 +1,12 @@
-#' Fetches details about a voting.
-#'
+#' @title Fetches details about a voting
 #' @param id_votacao Voting's ID
-#'
 #' @return Dataframe containing details about a voting, including tittle,
-#'  start voting time, finish voting time, result and approval.
-#'
+#'  start voting time, finish voting time, result and approval
 #' @examples
 #' segundoturno_pec241 <- fetch_votacao(7252)
-#'
+#' @seealso
+#'  \code{\link[rcongresso]{fetch_votos}}
+#' @rdname fetch_votacao
 #' @export
 fetch_votacao <- function(id_votacao){
   id <- NULL
@@ -21,16 +20,16 @@ fetch_votacao <- function(id_votacao){
     dplyr::ungroup()
 }
 
-#' Fetch how the groups and parties in the chamber of deputies
+#' @title Fetches the positions of a group on a voting
+#' @description Fetch how the groups in the chamber of deputies
 #' instructed their members to vote on a given voting.
-#'
-#' @param id_votacao Voting ID.
-#'
-#' @return Dataframe containing the parties and their votes
-#'
+#' @param id_votacao  Voting's ID
+#' @return Dataframe containing the groups and their votes
 #' @examples
 #' orientacoes_pec241 <- fetch_orientacoes(7252)
-#'
+#' @seealso
+#'  \code{\link[rcongresso]{get_votos_partidos}}
+#' @rdname fetch_orientacoes
 #' @export
 fetch_orientacoes <- function(id_votacao){
   id <- NULL
@@ -45,14 +44,16 @@ fetch_orientacoes <- function(id_votacao){
     dplyr::select(-id)
 }
 
-#' Fetches individual votes from a voting.
-#' @param id_votacao ID da votação
-#'
+#' @title Fetches individual votes from a voting
+#' @description Some other informations about the deputy are returned, such as: name, party, id.
+#' @param id_votacao Voting's ID
 #' @return Dataframe containing votes for each deputy on this voting.
-#'
+#' @details DETAILS
 #' @examples
 #' votos_pec241 <- fetch_votos(7252)
-#'
+#' @seealso
+#'  \code{\link[rcongresso]{fetch_votacao}}
+#' @rdname fetch_votos
 #' @export
 fetch_votos <- function(id_votacao){
   path <- query <- NULL
@@ -76,17 +77,14 @@ fetch_votos <- function(id_votacao){
     dplyr::select(-path, -query)
 }
 
-#' Filters only the last voting from each proposition in the dataframe.
-#'
-#' @param votacoes Dataframe containing all the votings related to a proposition.
-#'
-#' @return Dataframe containing only the last voting related to a proposition.
-#'
-#'
+#' @title Gets the last voting on a given voting
+#' @description Filters only the last voting from each proposition in the dataframe.
+#' @param votacoes Dataframe containing all the votings related to a proposition
+#' @return Dataframe containing only the last voting related to a proposition
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #' ultima_votacao <- ultima_votacao(votacoes_pec241)
-#'
+#' @rdname ultima_votacao
 #' @export
 ultima_votacao <- function(votacoes) {
   uriProposicaoPrincipal <- id <- NULL
@@ -99,18 +97,17 @@ ultima_votacao <- function(votacoes) {
     dplyr::select(id, uriProposicaoPrincipal)
 }
 
-#' Fetch how parties in the chamber of deputies
+#' @title Fetches the positions by party on a voting
+#' @description Fetch how parties in the chamber of deputies
 #' instructed their members to vote on a given voting.
-#'
-#' @param votacao Voting id
-#'
+#' @param votacao Voting's id
 #' @return Dataframe with each party's orientation for its deputies.
-#'
 #' @examples
 #' pos_partidos <- get_votos_partidos(7252)
-#'
+#' @seealso
+#'  \code{\link[rcongresso]{fetch_orientacoes}}
+#' @rdname get_votos_partidos
 #' @export
-# regex quebra para casos de GOV. e PCdoB.
 get_votos_partidos <- function(votacao) {
   nomeBancada <- voto <- bancada_associada <- id_votacao <- partido <- NULL
 
@@ -122,15 +119,12 @@ get_votos_partidos <- function(votacao) {
     dplyr::mutate(partido = toupper(.$partido))
 }
 
-#' Finds the id of the proposition to which a given voting refers.
-#'
-#' @param id_votacao Voting's ID.
-#'
+#' @title Finds the id of the proposition to which a given voting refers
+#' @param id_votacao Voting's ID
 #' @return Dataframe containing proposition details
-#'
 #' @examples
 #' pec241 <- fetch_proposicao_from_votacao(7252)
-#'
+#' @rdname fetch_proposicao_from_votacao
 #' @export
 fetch_proposicao_from_votacao <- function(id_votacao) {
   id <- NULL

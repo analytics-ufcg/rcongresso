@@ -2,15 +2,15 @@
 % Please edit documentation in R/votacoes.R
 \name{ultima_votacao}
 \alias{ultima_votacao}
-\title{Filters only the last voting from each proposition in the dataframe.}
+\title{Gets the last voting on a given voting}
 \usage{
 ultima_votacao(votacoes)
 }
 \arguments{
-\item{votacoes}{Dataframe containing all the votings related to a proposition.}
+\item{votacoes}{Dataframe containing all the votings related to a proposition}
 }
 \value{
-Dataframe containing only the last voting related to a proposition.
+Dataframe containing only the last voting related to a proposition
 }
 \description{
 Filters only the last voting from each proposition in the dataframe.
@@ -18,5 +18,4 @@ Filters only the last voting from each proposition in the dataframe.
 \examples{
 votacoes_pec241 <- fetch_votacoes(2088351)
 ultima_votacao <- ultima_votacao(votacoes_pec241)
-
 }

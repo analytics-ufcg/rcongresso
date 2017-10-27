@@ -2,20 +2,16 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_proposicao_from_votacao}
 \alias{fetch_proposicao_from_votacao}
-\title{Finds the id of the proposition to which a given voting refers.}
+\title{Finds the id of the proposition to which a given voting refers}
 \usage{
 fetch_proposicao_from_votacao(id_votacao)
 }
 \arguments{
-\item{id_votacao}{Voting's ID.}
+\item{id_votacao}{Voting's ID}
 }
 \value{
 Dataframe containing proposition details
 }
-\description{
-Finds the id of the proposition to which a given voting refers.
-}
 \examples{
 pec241 <- fetch_proposicao_from_votacao(7252)
-
 }

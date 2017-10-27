@@ -2,13 +2,12 @@
 % Please edit documentation in R/votacoes.R
 \name{get_votos_partidos}
 \alias{get_votos_partidos}
-\title{Fetch how parties in the chamber of deputies
-instructed their members to vote on a given voting.}
+\title{Fetches the positions by party on a voting}
 \usage{
 get_votos_partidos(votacao)
 }
 \arguments{
-\item{votacao}{Voting id}
+\item{votacao}{Voting's id}
 }
 \value{
 Dataframe with each party's orientation for its deputies.
@@ -19,5 +18,7 @@ instructed their members to vote on a given voting.
 }
 \examples{
 pos_partidos <- get_votos_partidos(7252)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_orientacoes}}
 }

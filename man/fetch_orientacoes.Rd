@@ -2,22 +2,23 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_orientacoes}
 \alias{fetch_orientacoes}
-\title{Fetch how the groups and parties in the chamber of deputies
-instructed their members to vote on a given voting.}
+\title{Fetches the positions of a group on a voting}
 \usage{
 fetch_orientacoes(id_votacao)
 }
 \arguments{
-\item{id_votacao}{Voting ID.}
+\item{id_votacao}{Voting's ID}
 }
 \value{
-Dataframe containing the parties and their votes
+Dataframe containing the groups and their votes
 }
 \description{
-Fetch how the groups and parties in the chamber of deputies
+Fetch how the groups in the chamber of deputies
 instructed their members to vote on a given voting.
 }
 \examples{
 orientacoes_pec241 <- fetch_orientacoes(7252)
-
+}
+\seealso{
+\code{\link[rcongresso]{get_votos_partidos}}
 }

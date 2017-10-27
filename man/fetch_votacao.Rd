@@ -2,7 +2,7 @@
 % Please edit documentation in R/votacoes.R
 \name{fetch_votacao}
 \alias{fetch_votacao}
-\title{Fetches details about a voting.}
+\title{Fetches details about a voting}
 \usage{
 fetch_votacao(id_votacao)
 }
@@ -11,12 +11,11 @@ fetch_votacao(id_votacao)
 }
 \value{
 Dataframe containing details about a voting, including tittle,
- start voting time, finish voting time, result and approval.
-}
-\description{
-Fetches details about a voting.
+ start voting time, finish voting time, result and approval
 }
 \examples{
 segundoturno_pec241 <- fetch_votacao(7252)
-
+}
+\seealso{
+\code{\link[rcongresso]{fetch_votos}}
 }
