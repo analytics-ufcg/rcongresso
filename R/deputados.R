@@ -41,3 +41,23 @@ fetch_despesas_deputado <- function(dep_id) {
     dplyr::mutate(idDep = .$id) %>%
     dplyr::select(-path, -id)
 }
+
+#' @title Fetches the last information about the deputy's mandate
+#' @description Fetches information such as party and electoral name.
+#' @param dep_id deputy's ID
+#' @return Dataframe containing details about deputy's party, electoral name and url photo
+#' @examples
+#' abel_mesquita_ultimo_estado <- fetch_ultimo_status_deputado(178957)
+#' @rdname fetch_despesas_deputado
+#' @export
+fetch_ultimo_status_deputado <- function(dep_id) {
+  id <- NULL
+  tibble::tibble(id = dep_id) %>%
+    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados$ultimoStatus %>%
+        .remove_lists_and_nulls()
+    ) %>%
+    dplyr::ungroup()
+}
