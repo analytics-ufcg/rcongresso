@@ -53,8 +53,10 @@ returns all the proposition which were presented or had some situation change in
 15 days.
 }
 \details{
-Using the `fetch_proposicao()` function with an ID returns more information than using `tipo`, `numero` and `ano`.
-So, it is preferable to use the proposition's ID.
+Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
+function call. The call to this function using the proposition's ID returns more details than using the
+others parameters. If you don't have the proposition's ID, the \code{\link[rcongresso]{fetch_id_proposicao}}
+function may be helpful.
 }
 \examples{
 pec241 <- fetch_proposicao(id = 2088351)
