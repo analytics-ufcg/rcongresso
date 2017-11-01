@@ -48,7 +48,7 @@ fetch_despesas_deputado <- function(dep_id) {
 #' @return Dataframe containing details about deputy's party, electoral name and url photo
 #' @examples
 #' abel_mesquita_ultimo_estado <- fetch_ultimo_status_deputado(178957)
-#' @rdname fetch_despesas_deputado
+#' @rdname fetch_ultimo_status_deputado
 #' @export
 fetch_ultimo_status_deputado <- function(dep_id) {
   id <- NULL
