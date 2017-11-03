@@ -5,7 +5,17 @@ date: "1 de novembro de 2017"
 output: html_document
 ---
 
-Na versão 0.2.0 do `rcongresso`, a função `fetch_proposicao()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
+```{r, warning=FALSE, message=FALSE}
+library(knitr)
+library(tidyverse)
+library(rcongresso)
+```
+
+# Introdução
+
+Na versão 0.2 do `rcongresso`, a função `fetch_proposicao()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
+
+# Conhecendo os parâmetros
 
 A _query_ da consulta possui os seguintes parâmetros:
 
@@ -15,17 +25,70 @@ A _query_ da consulta possui os seguintes parâmetros:
 - `siglaPartidoAutor`: Sigla do partido do auto da proposição, por exemplo DEM, PMDB, PT, entre outros.
 - `numero`: Número da proposição. Por exemplo, se quisessemos buscar pela proposição PEC 182/2007, o parâmetro `número` dessa busca seria 182.
 - `ano`: Ano em que a proposição foi apresentada.
+
+<!--
+Aparentemente a formatação da data está incorreta! O formato é, na verdade, mm/dd/yyyy. Apesar disso, eles não atuam em conjunto (aparentemente).
+-->
 - `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _21/10/2005_.
 - `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _10/12/2010_.
 
 Observe que os parâmetros `dataApresentacaoInicio` e `dataApresentacaoFim` podem atuar em conjunto estabelecendo um intervalo de tempo para a busca de proposições.
 
+<!--
+Eu não sei o que esse parâmetro significa. Aparentemente é algo relacionado à tramitação, mas é um palpite de intuição mesmo, não tem a documentação explicando.
+-->
 - `dataInicio`: 
 - `dataFim`:
-- `idAutor`:
-- `autor`:
-- `idSituacao`:
-- `codPartido`:
-- `pagina`:
-- `itens`:
+
+Os parâmetros `dataInicio` e `dataFim` também podem atuar em conjunto para estabelecer o intervalo de tempo para a busca.
+
+- `idAutor`: ID do deputado que é autor da proposição. Por exemplo, se eu quero saber todas as proposições que o deputado Abel Mesquita propôs, basta colocar o seu ID nesse campo.
+- `autor`: Nome eleitoral do autor da proposição em forma de string.
+- `idSituacao`: Número que representa a situação de uma proposição, como um _enum_.
+- `codPartido`: Número que representa o partido do deputado autor da proposição, também funcionando como um enum.
+- `pagina`: Número da página para casos onde os itens retornados excedem a capacidade de requisição.
+- `itens`: Número de itens feitos por requisição. Atualmente o limite são 100 itens por requisição.
+
+# Quais parâmetros agrupar para tornar a busca eficiente?
+
+O resultado mais eficiente da busca é dado ao utilizar o ID da proposição. Na busca utilizando o ID, o pacote faz uma requisição à API pelo endpoint `/proposicoes/{id}`, retornando além de detalhes sobre a proposição, dados sobre a ementa e autor. Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_proposicao()` pode ser útil.
+
+Ao fazer a busca utilizando o _id_, não é necessário utilizar nenhum outro parâmetro na _query_.
+
+## Busca utilizando o ID
+
+Existem dois cenários possíveis nessa busca.
+
+### O ID da proposição é conhecido
+
+Nesse caso fazemos uma chamada direta à API através do método `fetch_proposicao()`. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:
+
+```{r}
+# Utilizar mais de um ID.
+fetch_proposicao(id = 2088351) %>%
+  kable()
+```
+
+
+### O ID da proposição não é conhecido
+
+
+
+```{r}
+# Adicionar mais de uma proposição. Importar um dataframe com proposições ou criar o dataframe aqui mesmo.
+fetch_id_proposicao(tipo = "PEC", numero = 241, ano = 2016) %>%
+  fetch_proposicao(id = .) %>%
+  kable()
+```
+
+## Busca utilizando datas de apresentação das proposições
+
+É possível visualizar proposições dentro de um intervalo de tempo especificado especificando o seu tipo e o ano. Por exemplo, se quisermos visualizar todas as _PECs_ que foram apresentadas entre os dias 20/10/2017 e 30/10/2017 fazemos:
+
+```{r}
+fetch_proposicao(siglaTipo = "PEC", ano = 2017, dataApresentacaoInicio = "20/10/2017",
+                 dataApresentacaoFim = "10/30/2017", itens = 100)
+
+fetch_proposicao(12669)
+```
 
