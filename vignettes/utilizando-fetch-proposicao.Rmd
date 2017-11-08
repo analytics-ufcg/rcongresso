@@ -24,7 +24,7 @@ A _query_ da consulta possui os seguintes parâmetros:
 - `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros.
 - `siglaPartidoAutor`: Sigla do partido do auto da proposição, por exemplo DEM, PMDB, PT, entre outros.
 - `numero`: Número da proposição. Por exemplo, se quisessemos buscar pela proposição PEC 182/2007, o parâmetro `número` dessa busca seria 182.
-- `ano`: Ano em que a proposição foi apresentada.
+- `ano`: Ano em que a proposição foi criada.
 
 <!--
 Aparentemente a formatação da data está incorreta! O formato é, na verdade, mm/dd/yyyy. Apesar disso, eles não atuam em conjunto (aparentemente).
@@ -71,8 +71,6 @@ fetch_proposicao(id = 2088351) %>%
 
 
 ### O ID da proposição não é conhecido
-
-
 
 ```{r}
 # Adicionar mais de uma proposição. Importar um dataframe com proposições ou criar o dataframe aqui mesmo.
