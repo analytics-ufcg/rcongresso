@@ -6,16 +6,17 @@
 #' abel_mesquita_info <- fetch_deputado(178957)
 #' @rdname fetch_deputado
 #' @export
-fetch_deputado <- function(dep_id){
-  id <- NULL
-  tibble::tibble(id = dep_id) %>%
-    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id)) %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      .congresso_api(.$path)$dados %>%
-        .remove_lists_and_nulls()
-    ) %>%
-    dplyr::ungroup()
+fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, siglaPartido = NULL,
+                           siglaSexo = NULL, pagina = NULL, itens = NULL, ordenarPor = NULL){
+
+  parametros <- as.list(environment(), all = TRUE)
+
+  if(!length(.verifica_parametros_entrada(parametros)))
+    .congresso_api(.DEPUTADOS_PATH)$dados
+  else if(is.null(id))
+    .fetch_using_queries(parametros, .DEPUTADOS_PATH)
+  else
+    .fetch_using_id(id, .DEPUTADOS_PATH)
 }
 
 #' @title Fetches expenditures from deputy using its id
