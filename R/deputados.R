@@ -1,6 +1,13 @@
 #' @title Retrieves details about a deputy
 #' @description ID, name, birth date, birth city among other informations are returned.
-#' @param dep_id deputy's ID
+#' @param id deputy's ID
+#' @param idLegislatura Id of one or more mandates of the deputy
+#' @param siglaUf State's abbreviation of the deputy
+#' @param siglaPartido Party's abbreviation of the deputy
+#' @param siglaSexo Gender's abbreviation
+#' @param pagina Page number
+#' @param itens Items quantity by request
+#' @param ordenarPor Element that will be used to sort the returned list
 #' @return Dataframe containing details about the deputy.
 #' @examples
 #' abel_mesquita_info <- fetch_deputado(178957)
