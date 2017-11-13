@@ -38,6 +38,8 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              dataInicio = NULL, dataFim = NULL, idAutor = NULL,
                              autor = NULL, codPartido = NULL, pagina = NULL, itens = NULL){
 
+  autor <- paste0('"', autor, '"')
+
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
