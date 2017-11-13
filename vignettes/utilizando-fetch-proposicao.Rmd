@@ -25,8 +25,8 @@ A _query_ da consulta possui os seguintes parâmetros:
 - `siglaPartidoAutor`: Sigla do partido do auto da proposição, por exemplo DEM, PMDB, PT, entre outros.
 - `numero`: Número da proposição. Por exemplo, se quisessemos buscar pela proposição PEC 182/2007, o parâmetro `número` dessa busca seria 182.
 - `ano`: Ano em que a proposição foi apresentada.
-- `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005/10/21_ (formato `AAAA-MM-DD`).
-- `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010/12/10_ (formato `AAAA-MM-DD`).
+- `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005-10-21_ (formato `AAAA-MM-DD`).
+- `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010-12-10_ (formato `AAAA-MM-DD`).
 
 Observe que os parâmetros `dataApresentacaoInicio` e `dataApresentacaoFim` podem atuar em conjunto estabelecendo um intervalo de tempo para a busca de proposições.
 
@@ -77,8 +77,7 @@ fetch_id_proposicao(tipo = "PEC", numero = 241, ano = 2016) %>%
 É possível visualizar proposições dentro de um intervalo de tempo especificado especificando o seu tipo e o ano. Por exemplo, se quisermos visualizar todas as _PECs_ que foram apresentadas entre os dias 20/10/2017 e 30/10/2017 fazemos:
 
 ```{r}
-fetch_proposicao(siglaTipo = "PEC", ano = 2017, dataApresentacaoInicio = "20/10/2017",
-                 dataApresentacaoFim = "10/30/2017", itens = 100)
+fetch_proposicao(siglaTipo = "PEC", ano = 2017, dataApresentacaoInicio = "2016-12-10", dataApresentacaoFim = "2017-03-10")
 
 fetch_proposicao(12669)
 ```
