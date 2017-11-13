@@ -13,7 +13,7 @@ library(rcongresso)
 
 # Introdução
 
-Na versão 0.2 do `rcongresso`, a função `fetch_proposicao()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
+Na versão 0.2 do `rcongresso`, a função `fetch_proposicao()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes sobre os parâmetros, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
 
 # Conhecendo os parâmetros
 
@@ -24,21 +24,14 @@ A _query_ da consulta possui os seguintes parâmetros:
 - `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros.
 - `siglaPartidoAutor`: Sigla do partido do auto da proposição, por exemplo DEM, PMDB, PT, entre outros.
 - `numero`: Número da proposição. Por exemplo, se quisessemos buscar pela proposição PEC 182/2007, o parâmetro `número` dessa busca seria 182.
-- `ano`: Ano em que a proposição foi criada.
-
-<!--
-Aparentemente a formatação da data está incorreta! O formato é, na verdade, mm/dd/yyyy. Apesar disso, eles não atuam em conjunto (aparentemente).
--->
-- `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _21/10/2005_.
-- `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _10/12/2010_.
+- `ano`: Ano em que a proposição foi apresentada.
+- `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005/10/21_ (formato `AAAA-MM-DD`).
+- `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010/12/10_ (formato `AAAA-MM-DD`).
 
 Observe que os parâmetros `dataApresentacaoInicio` e `dataApresentacaoFim` podem atuar em conjunto estabelecendo um intervalo de tempo para a busca de proposições.
 
-<!--
-Eu não sei o que esse parâmetro significa. Aparentemente é algo relacionado à tramitação, mas é um palpite de intuição mesmo, não tem a documentação explicando.
--->
-- `dataInicio`: 
-- `dataFim`:
+- `dataInicio`: Data do início do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas, no formato `AAAA-MM-DD`. Se omitido, é assumido como a data de 30 dias anteriores à proposição.
+- `dataFim`: Data do fim do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas. Se omitido, é considerado ser o dia em que é feita a requisição.
 
 Os parâmetros `dataInicio` e `dataFim` também podem atuar em conjunto para estabelecer o intervalo de tempo para a busca.
 
