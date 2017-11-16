@@ -27,7 +27,7 @@ Para recuperar uma proposição você precisa de três informações: O **tipo d
 Por exemplo, para a *PL 4302/1998*, o projeto de lei da terceirização: 
 
 ```{r}
-pl4302_id <- fetch_proposicao(siglaTipo = "PL", numero = 4302, ano = 1998)$id
+pl4302_id <- fetch_id_proposicao(tipo = "PL", numero = 4302, ano = 1998)
 ```
 
 Com o ID da proposição, recuperamos a proposição em si: 
