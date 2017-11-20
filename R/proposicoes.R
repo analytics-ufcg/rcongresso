@@ -128,7 +128,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     dplyr::do(
       .congresso_api(.PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
-                          ordem = "ASC", ordenarPor = "id"))$dados$id %>%
+                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$dados$id %>%
         .to_tibble()
     ) %>%
     unlist() %>%
