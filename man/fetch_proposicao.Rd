@@ -8,7 +8,7 @@ fetch_proposicao(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
   dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
   dataInicio = NULL, dataFim = NULL, idAutor = NULL, autor = NULL,
-  codPartido = NULL, pagina = NULL, itens = NULL)
+  codPartido = NULL, itens = NULL)
 }
 \arguments{
 \item{id}{Proposition's ID}
@@ -37,9 +37,7 @@ fetch_proposicao(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 
 \item{codPartido}{Party code}
 
-\item{pagina}{Page number}
-
-\item{itens}{Items quantity by request}
+\item{itens}{Items quantity}
 }
 \value{
 Dataframe containing information about the proposition.

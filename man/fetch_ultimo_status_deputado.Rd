@@ -16,5 +16,5 @@ Dataframe containing details about deputy's party, electoral name and url photo
 Fetches information such as party and electoral name.
 }
 \examples{
-abel_mesquita_ultimo_estado <- fetch_ultimo_status_deputado(178957)
+abel_mesquita_ultimo_estado <- fetch_ultimo_status_deputado(dep_id = 178957)
 }
