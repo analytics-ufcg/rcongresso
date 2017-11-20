@@ -4,10 +4,26 @@
 \alias{fetch_deputado}
 \title{Retrieves details about a deputy}
 \usage{
-fetch_deputado(dep_id)
+fetch_deputado(id = NULL, idLegislatura = NULL, siglaUf = NULL,
+  siglaPartido = NULL, siglaSexo = NULL, pagina = NULL, itens = NULL,
+  ordenarPor = NULL)
 }
 \arguments{
-\item{dep_id}{deputy's ID}
+\item{id}{deputy's ID}
+
+\item{idLegislatura}{Id of one or more mandates of the deputy}
+
+\item{siglaUf}{State's abbreviation of the deputy}
+
+\item{siglaPartido}{Party's abbreviation of the deputy}
+
+\item{siglaSexo}{Gender's abbreviation}
+
+\item{pagina}{Page number}
+
+\item{itens}{Items quantity by request}
+
+\item{ordenarPor}{Element that will be used to sort the returned list}
 }
 \value{
 Dataframe containing details about the deputy.
