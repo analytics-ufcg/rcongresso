@@ -93,3 +93,44 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     which()
   parametros[-is_missing]
 }
+
+#' Fetches a proposition using a list of queries
+#'
+#' @param parametros queries used on the search
+#'
+#' @return Dataframe containing information about the proposition.
+#'
+#' @examples
+#' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
+#'
+#' @export
+.fetch_using_queries <- function(parametros, API_path){
+  .verifica_parametros_entrada(parametros) %>%
+    tibble::as.tibble() %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(API_path, .)$dados %>%
+        .remove_lists_and_nulls()
+    )
+}
+
+#' Fetches details from a proposition.
+#'
+#' @param id Proposition's ID
+#'
+#' @return Dataframe containing information about the proposition.
+#'
+#' @examples
+#' pec241 <- .fetch_using_id(2088351)
+#'
+#' @export
+.fetch_using_id <- function(id, API_path){
+  tibble::tibble(id) %>%
+    dplyr::mutate(path = paste0(API_path, "/", id)) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .congresso_api(.$path)$dados %>%
+        .remove_lists_and_nulls()
+    ) %>%
+    dplyr::ungroup()
+}
