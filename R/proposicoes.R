@@ -65,7 +65,6 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   query$pagina <- seq(1, query$itens/.MAX_ITENS)
 
   if((query$itens < .MAX_ITENS) || (query$itens %% .MAX_ITENS == 0)){
-    query$itens <- .MAX_ITENS
     query %>%
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
