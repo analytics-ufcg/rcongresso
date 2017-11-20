@@ -102,14 +102,44 @@
     <p>ID, name, birth date, birth city among other informations are returned.</p>
     
 
-    <pre class="usage"><span class='fu'>fetch_deputado</span>(<span class='no'>dep_id</span>)</pre>
+    <pre class="usage"><span class='fu'>fetch_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>idLegislatura</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaUf</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>siglaPartido</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaSexo</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>pagina</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>ordenarPor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dep_id</th>
+      <th>id</th>
       <td><p>deputy's ID</p></td>
+    </tr>
+    <tr>
+      <th>idLegislatura</th>
+      <td><p>Id of one or more mandates of the deputy</p></td>
+    </tr>
+    <tr>
+      <th>siglaUf</th>
+      <td><p>State's abbreviation of the deputy</p></td>
+    </tr>
+    <tr>
+      <th>siglaPartido</th>
+      <td><p>Party's abbreviation of the deputy</p></td>
+    </tr>
+    <tr>
+      <th>siglaSexo</th>
+      <td><p>Gender's abbreviation</p></td>
+    </tr>
+    <tr>
+      <th>pagina</th>
+      <td><p>Page number</p></td>
+    </tr>
+    <tr>
+      <th>itens</th>
+      <td><p>Items quantity by request</p></td>
+    </tr>
+    <tr>
+      <th>ordenarPor</th>
+      <td><p>Element that will be used to sort the returned list</p></td>
     </tr>
     </table>
     
@@ -119,7 +149,7 @@
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>abel_mesquita_info</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_deputado</span>(<span class='fl'>178957</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>abel_mesquita_info</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>178957</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
