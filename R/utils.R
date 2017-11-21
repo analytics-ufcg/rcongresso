@@ -106,7 +106,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .fetch_using_queries <- function(parametros, API_path){
   if (!is.null(parametros$itens)){
-    .fetch_all_itens(.verifica_parametros_entrada(parametros))
+    .fetch_all_itens(.verifica_parametros_entrada(parametros), API_path)
   }
   else{
     .verifica_parametros_entrada(parametros) %>%
@@ -153,7 +153,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' items. 530 items can also be read as 500 items + 30 items, then 5 pages with 100 items and
 #' 1 page with 30 items.
 #'
-.fetch_all_itens <- function(query){
+.fetch_all_itens <- function(query, API_path){
 
   query$pagina <- seq(1, query$itens/.MAX_ITENS)
 
@@ -162,7 +162,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
+        .congresso_api(API_path, .)$dados %>%
           .remove_lists_and_nulls()
       )
   } else {
@@ -175,14 +175,14 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
+        .congresso_api(API_path, .)$dados %>%
           .remove_lists_and_nulls()
       ) %>%
       dplyr::bind_rows(req_ultima_pagina %>%
                          tibble::as.tibble() %>%
                          dplyr::rowwise() %>%
                          dplyr::do(
-                           .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
+                           .congresso_api(API_path, .)$dados %>%
                              .remove_lists_and_nulls()
                          ))
   }
