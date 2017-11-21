@@ -5,7 +5,7 @@
 \title{Retrieves details about a deputy}
 \usage{
 fetch_deputado(id = NULL, idLegislatura = NULL, siglaUf = NULL,
-  siglaPartido = NULL, siglaSexo = NULL, pagina = NULL, itens = NULL,
+  siglaPartido = NULL, siglaSexo = NULL, itens = NULL,
   ordenarPor = NULL)
 }
 \arguments{
@@ -18,8 +18,6 @@ fetch_deputado(id = NULL, idLegislatura = NULL, siglaUf = NULL,
 \item{siglaPartido}{Party's abbreviation of the deputy}
 
 \item{siglaSexo}{Gender's abbreviation}
-
-\item{pagina}{Page number}
 
 \item{itens}{Items quantity by request}
 
