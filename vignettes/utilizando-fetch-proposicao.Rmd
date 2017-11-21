@@ -9,6 +9,7 @@ output: html_document
 library(knitr)
 library(tidyverse)
 library(rcongresso)
+library(purrr)
 ```
 
 # Introdução
@@ -39,36 +40,59 @@ Os parâmetros `dataInicio` e `dataFim` também podem atuar em conjunto para est
 - `autor`: Nome eleitoral do autor da proposição em forma de string.
 - `idSituacao`: Número que representa a situação de uma proposição, como um _enum_.
 - `codPartido`: Número que representa o partido do deputado autor da proposição, também funcionando como um enum.
-- `pagina`: Número da página para casos onde os itens retornados excedem a capacidade de requisição.
-- `itens`: Número de itens feitos por requisição. Atualmente o limite são 100 itens por requisição.
+- `itens`: Número máximo de itens na resposta.
 
 # Quais parâmetros agrupar para tornar a busca eficiente?
 
-O resultado mais eficiente da busca é dado ao utilizar o ID da proposição. Na busca utilizando o ID, o pacote faz uma requisição à API pelo endpoint `/proposicoes/{id}`, retornando além de detalhes sobre a proposição, dados sobre a ementa e autor. Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_proposicao()` pode ser útil.
+O resultado mais eficiente da busca é dado ao utilizar o ID da proposição. Na busca utilizando o ID, o pacote faz uma requisição à API pelo endpoint `/proposicoes/{id}`, retornando além de detalhes sobre a proposição, dados sobre a ementa e autor.
 
 Ao fazer a busca utilizando o _id_, não é necessário utilizar nenhum outro parâmetro na _query_.
 
 ## Busca utilizando o ID
 
-Existem dois cenários possíveis nessa busca.
+Existem dois cenários possíveis nessa busca: Quando o ID da proposição **não** é conhecido, que é o caso mais comum; e quando o ID da proposição já é conhecido.
+
+### O ID da proposição não é conhecido
+
+Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_proposicao()` pode ser útil. Utilizar as funções `pmap` e `map_df` da biblioteca _purrr_ facilita a recuperação de muitas proposições da base de dados.
+
+```{r}
+frame_data(
+  ~tipo, ~numero, ~ano,
+  "PEC", 241, 2016) %>%
+  pmap(fetch_id_proposicao) %>%
+  map_df(fetch_proposicao) %>%
+  kable()
+```
+
+Recuperando várias proposições da base de dados, temos:
+```{r}
+frame_data(
+  ~tipo, ~numero, ~ano,
+  "PEC", 241, 2016, # PEC dos gastos públicos
+  "PL", 4474, 2016, # PL dos correios
+  "PL", 3722, 2012, # Estatuto do desarmamento
+  "PL", 158, 2015) %>% # Proibição do porte e consumo de drogas
+  pmap(fetch_id_proposicao) %>%
+  map_df(fetch_proposicao) %>%
+  kable()
+```
+
 
 ### O ID da proposição é conhecido
 
 Nesse caso fazemos uma chamada direta à API através do método `fetch_proposicao()`. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:
 
 ```{r}
-# Utilizar mais de um ID.
 fetch_proposicao(id = 2088351) %>%
   kable()
 ```
 
-
-### O ID da proposição não é conhecido
-
+Podemos utilizar também uma lista de IDs:
 ```{r}
-# Adicionar mais de uma proposição. Importar um dataframe com proposições ou criar o dataframe aqui mesmo.
-fetch_id_proposicao(tipo = "PEC", numero = 241, ano = 2016) %>%
-  fetch_proposicao(id = .) %>%
+ids <- c(611966, 291906, 333205, 458609, 517924, 1999440, 2090343)
+
+fetch_proposicao(ids) %>%
   kable()
 ```
 
