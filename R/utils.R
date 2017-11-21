@@ -104,7 +104,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
 #'
 #' @export
-.fetch_using_queries <- function(parametros){
+.fetch_using_queries <- function(parametros, API_path){
   if (!is.null(parametros$itens)){
     .fetch_all_itens(.verifica_parametros_entrada(parametros))
   }
@@ -113,7 +113,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
+        .congresso_api(API_path, .)$dados %>%
           .remove_lists_and_nulls()
       )
   }
