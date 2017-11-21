@@ -85,3 +85,7 @@ test_that("Quantidade de itens por requisição",{
   expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100)), c(100, 7))
   expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386)), c(386, 7))
 })
+
+test_that("Quantidade default por requisição, atualmente 15",{
+  expect_equal(dim(fetch_proposicao()), c(15, 7))
+})
