@@ -5,7 +5,6 @@
 #' @param siglaUf State's abbreviation of the deputy
 #' @param siglaPartido Party's abbreviation of the deputy
 #' @param siglaSexo Gender's abbreviation
-#' @param pagina Page number
 #' @param itens Items quantity by request
 #' @param ordenarPor Element that will be used to sort the returned list
 #' @return Dataframe containing details about the deputy.
@@ -14,7 +13,7 @@
 #' @rdname fetch_deputado
 #' @export
 fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, siglaPartido = NULL,
-                           siglaSexo = NULL, pagina = NULL, itens = NULL, ordenarPor = NULL){
+                           siglaSexo = NULL, itens = NULL, ordenarPor = NULL){
 
   parametros <- as.list(environment(), all = TRUE)
 
