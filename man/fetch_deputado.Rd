@@ -32,5 +32,5 @@ Dataframe containing details about the deputy.
 ID, name, birth date, birth city among other informations are returned.
 }
 \examples{
-abel_mesquita_info <- fetch_deputado(178957)
+abel_mesquita_info <- fetch_deputado(id = 178957)
 }

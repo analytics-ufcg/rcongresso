@@ -79,3 +79,13 @@ test_that("IDs Votacoes PEC241", {expect_true(r$result)})
 r <- compare::compareEqual(fetch_tipo_proposicao(139)$sigla, "PL")
 test_that("Tipo de proposição", {expect_true(r$result)})
 
+# Testa quantidade de itens por requisição
+test_that("Quantidade de itens por requisição",{
+  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 10)), c(10, 7))
+  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100)), c(100, 7))
+  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386)), c(386, 7))
+})
+
+test_that("Quantidade default por requisição, atualmente 15",{
+  expect_equal(dim(fetch_proposicao()), c(15, 7))
+})
