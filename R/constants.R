@@ -15,3 +15,6 @@
 
 # Regex Pattern
 .REGEX_PATTERN <- "(?=[A-Z][^A-Z])"
+
+# Requests
+.MAX_ITENS <- 100

@@ -18,8 +18,7 @@
 #' @param idAutor Author's ID
 #' @param autor Author's name
 #' @param codPartido Party code
-#' @param pagina Page number
-#' @param itens Items quantity by request
+#' @param itens Items quantity
 #' @return Dataframe containing information about the proposition.
 #' @details Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
 #' function call. The call to this function using the proposition's ID returns more details than using the
@@ -36,7 +35,7 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
                              dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
                              dataInicio = NULL, dataFim = NULL, idAutor = NULL,
-                             autor = NULL, codPartido = NULL, pagina = NULL, itens = NULL){
+                             autor = NULL, codPartido = NULL, itens = NULL){
 
   autor <- paste0('"', autor, '"')
 
@@ -45,50 +44,9 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   if(!length(.verifica_parametros_entrada(parametros)))
     .congresso_api(.PROPOSICOES_PATH)$dados
   else if(is.null(id))
-    .fetch_using_queries(parametros)
+    .fetch_using_queries(parametros, .PROPOSICOES_PATH)
   else
-    .fetch_using_id(id)
-}
-
-#' Fetches a proposition using a list of queries
-#'
-#' @param parametros queries used on the search
-#'
-#' @return Dataframe containing information about the proposition.
-#'
-#' @examples
-#' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
-#'
-#' @export
-.fetch_using_queries <- function(parametros){
-  .verifica_parametros_entrada(parametros) %>%
-    tibble::as.tibble() %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      .congresso_api(.PROPOSICOES_PATH, .)$dados %>%
-        .remove_lists_and_nulls()
-    )
-}
-
-#' Fetches details from a proposition.
-#'
-#' @param id Proposition's ID
-#'
-#' @return Dataframe containing information about the proposition.
-#'
-#' @examples
-#' pec241 <- .fetch_using_id(2088351)
-#'
-#' @export
-.fetch_using_id <- function(id){
-  tibble::tibble(id) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      .congresso_api(.$path)$dados %>%
-        .remove_lists_and_nulls()
-    ) %>%
-    dplyr::ungroup()
+    .fetch_using_id(id, .PROPOSICOES_PATH)
 }
 
 #' @title Fetches all the votings which a proposition went through
@@ -130,7 +88,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     dplyr::do(
       .congresso_api(.PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
-                          ordem = "ASC", ordenarPor = "id"))$dados$id %>%
+                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$dados$id %>%
         .to_tibble()
     ) %>%
     unlist() %>%

@@ -17,5 +17,5 @@ Fetches expenditures from deputy with his/her parlamentary quota in
 the last six months.
 }
 \examples{
-gastos_abel_mesquita <- fetch_despesas_deputado(178957)
+gastos_abel_mesquita <- fetch_despesas_deputado(dep_id = 178957)
 }
