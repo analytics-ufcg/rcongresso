@@ -24,10 +24,10 @@ A _query_ da consulta possui os seguintes parâmetros:
 - `siglaUfAutor`: Sigla do estado do autor da proposição.
 - `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros.
 - `siglaPartidoAutor`: Sigla do partido do auto da proposição, por exemplo DEM, PMDB, PT, entre outros.
-- `numero`: Número da proposição. Por exemplo, se quisessemos buscar pela proposição PEC 182/2007, o parâmetro `número` dessa busca seria 182.
+- `numero`: Número da proposição. Por exemplo, se quisessemos buscar pela proposição PEC 182/2007, o parâmetro `número` dessa busca seria 182. // Deixar impessoal
 - `ano`: Ano em que a proposição foi apresentada.
-- `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005-10-21_ (formato `AAAA-MM-DD`).
-- `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010-12-10_ (formato `AAAA-MM-DD`).
+- `dataApresentacaoInicio`: Data a partir da qual eu quero ver todas as proposições que foram apresentadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005-10-21_ (formato `AAAA-MM-DD`). // Deixar impessoal
+- `dataApresentacaoFim`: Data cujas proposições retornadas na busca foram apresentadas até este dia. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010-12-10_ (formato `AAAA-MM-DD`). // Deixar impessoal
 
 Observe que os parâmetros `dataApresentacaoInicio` e `dataApresentacaoFim` podem atuar em conjunto estabelecendo um intervalo de tempo para a busca de proposições.
 
@@ -42,15 +42,13 @@ Os parâmetros `dataInicio` e `dataFim` também podem atuar em conjunto para est
 - `codPartido`: Número que representa o partido do deputado autor da proposição, também funcionando como um enum.
 - `itens`: Número máximo de itens na resposta.
 
-# Quais parâmetros agrupar para tornar a busca eficiente?
+# Tipos de busca
 
-O resultado mais eficiente da busca é dado ao utilizar o ID da proposição. Na busca utilizando o ID, o pacote faz uma requisição à API pelo endpoint `/proposicoes/{id}`, retornando além de detalhes sobre a proposição, dados sobre a ementa e autor.
+Para melhor compreensão de quais parâmetros agrupados retornam as melhores respostas, serão divididos dois tipos de busca: A **busca direta** e a **busca indireta**. A busca direta é definida como a busca em que se sabe quais proposições serão retornadas ou já se sabe previamente quais proposições pesquisar. Por exemplo, deseja-se buscar mais informações ou recuperar da base de dados a PEC 241/2016. Na busca indireta, não se sabe quais proposições serão retornadas, estas serão definidas por algum parâmetro tal qual tempo, autor ou partido. Por exemplo, deseja-se saber todas as proposições sugeridas por determinado deputado.
 
-Ao fazer a busca utilizando o _id_, não é necessário utilizar nenhum outro parâmetro na _query_.
+## Busca direta 
 
-## Busca utilizando o ID
-
-Existem dois cenários possíveis nessa busca: Quando o ID da proposição **não** é conhecido, que é o caso mais comum; e quando o ID da proposição já é conhecido.
+Na busca direta, existem duas situações: o ID da proposição é conhecido ou não. Vejamos como proceder em ambos os casos.
 
 ### O ID da proposição não é conhecido
 
@@ -62,7 +60,7 @@ frame_data(
   "PEC", 241, 2016) %>%
   pmap(fetch_id_proposicao) %>%
   map_df(fetch_proposicao) %>%
-  kable()
+  glimpse()
 ```
 
 Recuperando várias proposições da base de dados, temos:
@@ -75,9 +73,8 @@ frame_data(
   "PL", 158, 2015) %>% # Proibição do porte e consumo de drogas
   pmap(fetch_id_proposicao) %>%
   map_df(fetch_proposicao) %>%
-  kable()
+  glimpse()
 ```
-
 
 ### O ID da proposição é conhecido
 
@@ -85,7 +82,7 @@ Nesse caso fazemos uma chamada direta à API através do método `fetch_proposic
 
 ```{r}
 fetch_proposicao(id = 2088351) %>%
-  kable()
+  glimpse()
 ```
 
 Podemos utilizar também uma lista de IDs:
@@ -93,16 +90,18 @@ Podemos utilizar também uma lista de IDs:
 ids <- c(611966, 291906, 333205, 458609, 517924, 1999440, 2090343)
 
 fetch_proposicao(ids) %>%
-  kable()
+  glimpse()
 ```
 
-## Busca utilizando datas de apresentação das proposições
+## Busca indireta
 
-É possível visualizar proposições dentro de um intervalo de tempo especificado especificando o seu tipo e o ano. Por exemplo, se quisermos visualizar todas as _PECs_ que foram apresentadas entre os dias 20/10/2017 e 30/10/2017 fazemos:
+Essa busca dá mais liberdade ao usuário permitindo o cruzamento entre parâmetros para o retorno de um conjunto de proposições que se queira analisar. São inúmeras combinações possíveis para os parâmetros, portanto nessa _vignette_ serão abordadas apenas exemplos de buscas mais comuns deixando as demais a critério do usuário.
+
+### Buscando todas as proposições de um determinado deputado
+
+
 
 ```{r}
-fetch_proposicao(siglaTipo = "PEC", ano = 2017, dataApresentacaoInicio = "2016-12-10", dataApresentacaoFim = "2017-03-10")
 
-fetch_proposicao(12669)
 ```
 
