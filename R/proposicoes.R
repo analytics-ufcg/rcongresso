@@ -37,14 +37,15 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              dataInicio = NULL, dataFim = NULL, idAutor = NULL,
                              autor = NULL, codPartido = NULL, itens = NULL){
 
-  autor <- paste0('"', autor, '"')
-
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
     .congresso_api(.PROPOSICOES_PATH)$dados
-  else if(is.null(id))
+  else if(is.null(id)){
+    if(!is.null(autor))
+      autor <- paste0('"', autor, '"')
     .fetch_using_queries(parametros, .PROPOSICOES_PATH)
+  }
   else
     .fetch_using_id(id, .PROPOSICOES_PATH)
 }
