@@ -22,12 +22,12 @@ A _query_ da consulta possui os seguintes parâmetros:
 
 - `id`: Numeração única utilizada para identificar as proposições.
 - `siglaUfAutor`: Sigla do estado do autor da proposição.
-- `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros.
-- `siglaPartidoAutor`: Sigla do partido do auto da proposição, por exemplo DEM, PMDB, PT, entre outros.
+- `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros. Veja mais [detalhes](https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao).
+- `siglaPartidoAutor`: Sigla do partido do autor da proposição, por exemplo DEM, PMDB, PT, entre outros.
 - `numero`: Número da proposição. Por exemplo, a busca pela proposição PEC **182**/2007 tem 182 como parâmetro número.
 - `ano`: Ano em que a proposição foi apresentada.
-- `dataApresentacaoInicio`: Data do início do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas, no formato `AAAA-MM-DD`. Por exemplo, se quisessemos buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005-10-21_.
-- `dataApresentacaoFim`: Data do fim do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas. Por exemplo, se quisessemos buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010-12-10_ (formato `AAAA-MM-DD`).
+- `dataApresentacaoInicio`: Data do início do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas, no formato `AAAA-MM-DD`. Por exemplo, ao buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005-10-21_.
+- `dataApresentacaoFim`: Data do fim do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas. Por exemplo, ao buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010-12-10_ (formato `AAAA-MM-DD`).
 - `dataInicio`: Data do início do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas, no formato `AAAA-MM-DD`. Se omitido, é assumido como a data de 30 dias anteriores à proposição.
 - `dataFim`: Data do fim do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas. Se omitido, é considerado ser o dia em que é feita a requisição.
 - `idAutor`: ID do deputado que é autor da proposição.
@@ -38,7 +38,7 @@ A _query_ da consulta possui os seguintes parâmetros:
 
 # Tipos de busca
 
-Para melhor compreensão de quais parâmetros agrupados retornam as melhores respostas, serão divididos dois tipos de busca: A **busca direta** e a **busca indireta**. A busca direta é definida como a busca em que se sabe quais proposições serão retornadas ou já se sabe previamente quais proposições pesquisar. Por exemplo, deseja-se buscar mais informações ou recuperar da base de dados a PEC 241/2016. Na busca indireta, não se sabe quais proposições serão retornadas, estas serão definidas por algum parâmetro tal qual tempo, autor ou partido. Por exemplo, deseja-se saber todas as proposições sugeridas por determinado deputado.
+Para melhor compreensão de quais parâmetros agrupados retornam as melhores respostas serão divididos dois tipos de busca: A **busca direta** e a **busca indireta**. A busca direta é definida como a busca em que se sabe quais proposições serão retornadas ou já se sabe previamente quais proposições pesquisar. Por exemplo, deseja-se buscar mais informações ou recuperar da base de dados a PEC 241/2016. Na busca indireta, não se sabe quais proposições serão retornadas, estas serão definidas por algum parâmetro tal qual tempo, autor ou partido. Por exemplo, deseja-se saber todas as proposições sugeridas por determinado deputado.
 
 ## Busca direta 
 
@@ -51,7 +51,7 @@ Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_pro
 ```{r}
 frame_data(
   ~tipo, ~numero, ~ano,
-  "PEC", 241, 2016) %>%
+  "PEC", 241, 2016) %>% # PEC dos gastos públicos
   pmap(fetch_id_proposicao) %>%
   map_df(fetch_proposicao) %>%
   glimpse()
@@ -97,10 +97,12 @@ Os intervalos de tempo, seja de tramitação ou de apresentação, também são 
 
 ### Intervalo de tempo de apresentação
 
-Os parâmetros utilizados nessa busca são `dataApresentacaoInicio` e `dataApresentacaoFim` e se referem às datas em que as proposições foram apresentadas na câmara.
+Os parâmetros utilizados nessa busca são `dataApresentacaoInicio` e `dataApresentacaoFim`, ambos se referem às datas em que as proposições foram apresentadas na câmara.
+
+Vejamos quais proposições foram apresentadas no mês de Janeiro de 2017:
 
 ```{r}
-fetch_proposicao(dataApresentacaoInicio = "2017-01-01", dataApresentacaoFim = "2017-02-01") %>%
+fetch_proposicao(dataApresentacaoInicio = "2017-01-01", dataApresentacaoFim = "2017-01-31") %>%
   glimpse()
 ```
 
@@ -108,10 +110,10 @@ fetch_proposicao(dataApresentacaoInicio = "2017-01-01", dataApresentacaoFim = "2
 
 Essa busca é feita quando se deseja recuperar proposições que sofreram mudança de status em algum intervalo de tempo. Os parâmetros utilizados são `dataInicio` e `dataFim`.
 
-Vamos ver quais proposições sofreram mudanças no mês de novembro.
+Vamos ver quais proposições sofreram mudanças no mês de novembro:
 
 ```{r}
-fetch_proposicao(dataInicio = "2017-11-01", dataFim = "2017-12-01") %>%
+fetch_proposicao(dataInicio = "2017-11-01", dataFim = "2017-11-30") %>%
   glimpse()
 ```
 
@@ -126,14 +128,14 @@ fetch_proposicao(siglaPartidoAutor = "PSC", itens = 100) %>%
 
 ### Por estado
 
-Essa busca utiliza o parâmetro `siglaUfAutor` e retorna todas as proposições cujos autores são de determinado estado. Por exemplo, deseja-se ver quais as últimas proposições feitas pelos deputados da região nordeste. A busca pode ser feita da seguinte maneira:
+Essa busca utiliza o parâmetro `siglaUfAutor` e retorna todas as proposições cujos autores são de determinado estado. Por exemplo, deseja-se ver quais as últimas proposições apresentadas pelos deputados da região nordeste. A busca pode ser feita da seguinte maneira:
 
 ```{r}
 estados_nordeste <- c("RN", "PB", "CE", "PE", "SE", "AL", "BA", "PI", "MA")
 
-fetch_proposicao(siglaUfAutor = estados_nordeste) %>%
+fetch_proposicao(siglaUfAutor = estados_nordeste, itens = 100) %>%
   glimpse()
 ```
 
 ### Por autor e ID autor
-Até o dia atual, 23/11/2017, esses dois parâmetros não parecem funcionar como esperado. A API está em versão _alpha_ e alguns erros são recorrentes.
+Até o dia atual, 28/11/2017, esses dois parâmetros parecem não funcionar como esperado. O [erro](https://github.com/labhackercd/dados-abertos/issues/130) foi reportado na página de _issues_ do GitHub da Câmara e está sendo investigado.
