@@ -1,0 +1,141 @@
+---
+title: "Entendendo os parâmetros utilizados na função fetch_proposicao()"
+author: "Paulo Vinícius Soares"
+date: "1 de novembro de 2017"
+output: html_document
+---
+
+```{r, warning=FALSE, message=FALSE}
+library(knitr)
+library(tidyverse)
+library(rcongresso)
+library(purrr)
+```
+
+# Introdução
+
+Na versão 0.2 do `rcongresso`, a função `fetch_proposicao()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes sobre os parâmetros, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
+
+# Conhecendo os parâmetros
+
+A _query_ da consulta possui os seguintes parâmetros:
+
+- `id`: Numeração única utilizada para identificar as proposições.
+- `siglaUfAutor`: Sigla do estado do autor da proposição.
+- `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros. Veja mais [detalhes](https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao).
+- `siglaPartidoAutor`: Sigla do partido do autor da proposição, por exemplo DEM, PMDB, PT, entre outros.
+- `numero`: Número da proposição. Por exemplo, a busca pela proposição PEC **182**/2007 tem 182 como parâmetro número.
+- `ano`: Ano em que a proposição foi apresentada.
+- `dataApresentacaoInicio`: Data do início do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas, no formato `AAAA-MM-DD`. Por exemplo, ao buscar as proposições que foram apresentadas a partir do dia 21/10/2005, o parâmetro `dataApresentacaoInicio` dessa busca seria _2005-10-21_.
+- `dataApresentacaoFim`: Data do fim do intervalo de tempo em que tenham sido apresentadas as proposições a serem listadas. Por exemplo, ao buscar as proposições que foram apresentadas até o dia 10/12/2010, o parâmetro `dataApresentacaoFim` dessa busca seria _2010-12-10_ (formato `AAAA-MM-DD`).
+- `dataInicio`: Data do início do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas, no formato `AAAA-MM-DD`. Se omitido, é assumido como a data de 30 dias anteriores à proposição.
+- `dataFim`: Data do fim do intervalo de tempo em que tenha havido tramitação das proposições a serem listadas. Se omitido, é considerado ser o dia em que é feita a requisição.
+- `idAutor`: ID do deputado que é autor da proposição.
+- `autor`: Nome eleitoral do autor da proposição em forma de string.
+- `idSituacao`: Número que representa a situação de uma proposição, como um _enum_.
+- `codPartido`: Número que representa o partido do deputado autor da proposição, também funcionando como um enum.
+- `itens`: Número máximo de itens na resposta.
+
+# Tipos de busca
+
+Para melhor compreensão de quais parâmetros agrupados retornam as melhores respostas serão divididos dois tipos de busca: A **busca direta** e a **busca indireta**. A busca direta é definida como a busca em que se sabe quais proposições serão retornadas ou já se sabe previamente quais proposições pesquisar. Por exemplo, deseja-se buscar mais informações ou recuperar da base de dados a PEC 241/2016. Na busca indireta, não se sabe quais proposições serão retornadas, estas serão definidas por algum parâmetro tal qual tempo, autor ou partido. Por exemplo, deseja-se saber todas as proposições sugeridas por determinado deputado.
+
+## Busca direta 
+
+Na busca direta, existem duas situações: o ID da proposição é conhecido ou não. Vejamos como proceder em ambos os casos.
+
+### O ID da proposição não é conhecido
+
+Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_proposicao()` pode ser útil. Utilizar as funções `pmap` e `map_df` da biblioteca _purrr_ facilita a recuperação de muitas proposições da base de dados.
+
+```{r}
+frame_data(
+  ~tipo, ~numero, ~ano,
+  "PEC", 241, 2016) %>% # PEC dos gastos públicos
+  pmap(fetch_id_proposicao) %>%
+  map_df(fetch_proposicao) %>%
+  glimpse()
+```
+
+Recuperando várias proposições da base de dados, temos:
+```{r}
+frame_data(
+  ~tipo, ~numero, ~ano,
+  "PEC", 241, 2016, # PEC dos gastos públicos
+  "PL", 4474, 2016, # PL dos correios
+  "PL", 3722, 2012, # PL do estatuto do desarmamento
+  "PL", 158, 2015) %>% # PL da proibição do porte e consumo de drogas
+  pmap(fetch_id_proposicao) %>%
+  map_df(fetch_proposicao) %>%
+  glimpse()
+```
+
+### O ID da proposição é conhecido
+
+Nesse caso fazemos uma chamada ao método utilizando o parêmetro `id`. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:
+
+```{r}
+fetch_proposicao(id = 2088351) %>%
+  glimpse()
+```
+
+Podemos utilizar também uma lista de IDs:
+```{r}
+ids <- c(611966, 291906, 333205, 458609, 517924, 1999440, 2090343)
+
+fetch_proposicao(ids) %>%
+  glimpse()
+```
+
+## Busca indireta
+
+Essa busca dá mais liberdade ao usuário permitindo o cruzamento entre parâmetros para o retorno de um conjunto de proposições que se queira analisar. São inúmeras combinações possíveis para os parâmetros, portanto nessa _vignette_ serão abordadas apenas exemplos de buscas mais comuns deixando as demais a critério do usuário.
+
+Ao fazer esse tipo de busca, em geral, o usuário não tem ideia de quantos itens serão retornados. Dessa forma é indicado utilizar o parâmetro `itens` para definir o máximo de itens retornados. Caso o parâmetro não seja especificado serão retornados 15 itens (valor default definido na API). Os 15 itens retornados são os que sofreram as modificações mais recentemente. 
+
+Os intervalos de tempo, seja de tramitação ou de apresentação, também são indicados nas buscas a fim de refinar os resultados.
+
+### Intervalo de tempo de apresentação
+
+Os parâmetros utilizados nessa busca são `dataApresentacaoInicio` e `dataApresentacaoFim`, ambos se referem às datas em que as proposições foram apresentadas na câmara.
+
+Vejamos quais proposições foram apresentadas no mês de Janeiro de 2017:
+
+```{r}
+fetch_proposicao(dataApresentacaoInicio = "2017-01-01", dataApresentacaoFim = "2017-01-31") %>%
+  glimpse()
+```
+
+### Intervalo de tempo de tramitação
+
+Essa busca é feita quando se deseja recuperar proposições que sofreram mudança de status em algum intervalo de tempo. Os parâmetros utilizados são `dataInicio` e `dataFim`.
+
+Vamos ver quais proposições sofreram mudanças no mês de novembro:
+
+```{r}
+fetch_proposicao(dataInicio = "2017-11-01", dataFim = "2017-11-30") %>%
+  glimpse()
+```
+
+### Por partido
+
+Essa busca utiliza o parâmetro `siglaPartidoAutor` e retorna todas as proposições sugeridas por deputados de determinado partido. 
+
+```{r}
+fetch_proposicao(siglaPartidoAutor = "PSC", itens = 100) %>%
+  glimpse()
+```
+
+### Por estado
+
+Essa busca utiliza o parâmetro `siglaUfAutor` e retorna todas as proposições cujos autores são de determinado estado. Por exemplo, deseja-se ver quais as últimas proposições apresentadas pelos deputados da região nordeste. A busca pode ser feita da seguinte maneira:
+
+```{r}
+estados_nordeste <- c("RN", "PB", "CE", "PE", "SE", "AL", "BA", "PI", "MA")
+
+fetch_proposicao(siglaUfAutor = estados_nordeste, itens = 100) %>%
+  glimpse()
+```
+
+### Por autor e ID autor
+Até o dia atual, 28/11/2017, esses dois parâmetros parecem não funcionar como esperado. O [erro](https://github.com/labhackercd/dados-abertos/issues/130) foi reportado na página de _issues_ do GitHub da Câmara e está sendo investigado.
