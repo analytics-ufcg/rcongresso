@@ -8,7 +8,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .get_json <- function(response){
   httr::content(response, as = "text") %>%
-    jsonlite::fromJSON(flatten = T)
+    print() %>%
+    jsonlite::fromJSON(flatten = T, simplifyDataFrame = TRUE)
 }
 
 #' Wraps an access to the congress API given a reletive path and query arguments.
