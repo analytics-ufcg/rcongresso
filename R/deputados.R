@@ -18,7 +18,7 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
   parametros <- as.list(environment(), all = TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
-    .congresso_api(.DEPUTADOS_PATH)$dados
+    .congresso_api(.DEPUTADOS_PATH)
   else if(is.null(id))
     .fetch_using_queries(parametros, .DEPUTADOS_PATH)
   else
@@ -42,29 +42,9 @@ fetch_despesas_deputado <- function(dep_id) {
     dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id, "/despesas")) %>%
     dplyr::group_by(id, path) %>%
     dplyr::do(
-      .congresso_api(.$path, query)$dados
+      .congresso_api(.$path, query)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(idDep = .$id) %>%
     dplyr::select(-path, -id)
-}
-
-#' @title Fetches the last information about the deputy's mandate
-#' @description Fetches information such as party and electoral name.
-#' @param dep_id deputy's ID
-#' @return Dataframe containing details about deputy's party, electoral name and url photo
-#' @examples
-#' abel_mesquita_ultimo_estado <- fetch_ultimo_status_deputado(dep_id = 178957)
-#' @rdname fetch_ultimo_status_deputado
-#' @export
-fetch_ultimo_status_deputado <- function(dep_id) {
-  id <- NULL
-  tibble::tibble(id = dep_id) %>%
-    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id)) %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      .congresso_api(.$path)$dados$ultimoStatus %>%
-        .remove_lists_and_nulls()
-    ) %>%
-    dplyr::ungroup()
 }
