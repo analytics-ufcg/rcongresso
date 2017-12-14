@@ -8,8 +8,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .get_json <- function(response){
   httr::content(response, as = "text") %>%
-    print() %>%
-    jsonlite::fromJSON(flatten = T, simplifyDataFrame = TRUE)
+    jsonlite::fromJSON(flatten = TRUE)
 }
 
 #' Wraps an access to the congress API given a reletive path and query arguments.
@@ -21,6 +20,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
+  print(api_url)
+
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
   httr::stop_for_status(resp)
@@ -29,7 +30,17 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
 
-  .get_json(resp)
+  .get_json(resp)$dados %>%
+    lapply(.replace_null) %>%
+    unlist() %>%
+    as.list() %>%
+    as.data.frame()
+}
+
+.replace_null <- function(x) {
+  if(!is.list(x)){
+    ifelse(is.null(x), NA, x)
+  }else x
 }
 
 #' Removes all the nested lists and null fields from a list.
@@ -114,8 +125,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, .)$dados %>%
-          .remove_lists_and_nulls()
+        .congresso_api(API_path, .)
       )
   }
 }
@@ -135,8 +145,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     dplyr::mutate(path = paste0(API_path, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)$dados %>%
-        .remove_lists_and_nulls()
+      .congresso_api(.$path)
     ) %>%
     dplyr::ungroup()
 }
@@ -163,8 +172,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, .)$dados %>%
-          .remove_lists_and_nulls()
+        .congresso_api(API_path, .)
       )
   } else {
     req_ultima_pagina <- query
@@ -176,15 +184,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, .)$dados %>%
-          .remove_lists_and_nulls()
+        .congresso_api(API_path, .)
       ) %>%
       dplyr::bind_rows(req_ultima_pagina %>%
                          tibble::as.tibble() %>%
                          dplyr::rowwise() %>%
                          dplyr::do(
-                           .congresso_api(API_path, .)$dados %>%
-                             .remove_lists_and_nulls()
+                           .congresso_api(API_path, .)
                          ))
   }
 }
