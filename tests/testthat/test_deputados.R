@@ -10,8 +10,13 @@ abel_mesquita_info <- fetch_deputado(id_abel_mesquita)
 abel_mesquita_gastos <- fetch_despesas_deputado(id_abel_mesquita)
 # abel_mesquita_status <- fetch_ultimo_status_deputado(id_abel_mesquita)
 
-colnames_abel_mesquita_info <- c("id","uri","nomeCivil","cpf","sexo","dataNascimento",
-                        "ufNascimento","municipioNascimento","escolaridade")
+colnames_abel_mesquita_info <- c("id", "uri", "nomeCivil", "ultimoStatus.id", "ultimoStatus.uri", "ultimoStatus.nome",
+                                 "ultimoStatus.siglaPartido", "ultimoStatus.uriPartido", "ultimoStatus.siglaUf",
+                                 "ultimoStatus.idLegislatura", "ultimoStatus.urlFoto", "ultimoStatus.data", "ultimoStatus.nomeEleitoral",
+                                 "ultimoStatus.gabinete.nome", "ultimoStatus.gabinete.predio", "ultimoStatus.gabinete.sala",
+                                 "ultimoStatus.gabinete.andar", "ultimoStatus.gabinete.telefone", "ultimoStatus.gabinete.email",
+                                 "ultimoStatus.situacao", "ultimoStatus.condicaoEleitoral", "cpf", "sexo", "urlWebsite",
+                                 "dataNascimento", "dataFalecimento", "ufNascimento", "municipioNascimento", "escolaridade")
 
 colnames_abel_mesquita_gastos <- c("ano","mes","tipoDespesa","idDocumento","tipoDocumento", "idTipoDocumento",
                                    "dataDocumento","numDocumento","valorDocumento",
@@ -21,9 +26,7 @@ colnames_abel_mesquita_gastos <- c("ano","mes","tipoDespesa","idDocumento","tipo
 #colnames_abel_mesquita_status <- c("id", "uri", "nome", "siglaPartido", "uriPartido", "siglaUf",
 #                                   "idLegislatura", "urlFoto", "data", "nomeEleitoral", "situacao", "condicaoEleitoral")
 
-tipos_abel_mesquita_info <- c("integer","character","character","character",
-                              "character","character","character","character",
-                              "character")
+tipos_abel_mesquita_info <- rep("character", 29)
 
 tipos_abel_mesquita_gastos <- rep("character", 17) %>%
   append("numeric", 17)
@@ -42,7 +45,7 @@ test_that("Is dataframe", {
 })
 
 test_that("Dimensoes do dataframe",{
-  expect_equal(dim(abel_mesquita_info), c(1, 9))
+  expect_equal(dim(abel_mesquita_info), c(1, 29))
   #expect_equal(dim(abel_mesquita_status), c(1, 12))
   expect_equal(ncol(abel_mesquita_gastos), 18)
 })
@@ -59,7 +62,7 @@ test_that("Campos do dataframe",{
   #expect_equal(sapply(abel_mesquita_status, class), tipos_status_abel_mesquita)
 })
 
-test_that("ID do deputado", {expect_equal(abel_mesquita_info$id, 178957)})
+test_that("ID do deputado", {expect_equal(abel_mesquita_info$id, "178957")})
 test_that("Nome do deputado", {expect_equal(abel_mesquita_info$nomeCivil, NOME_ESPERADO)})
 test_that("Data de nascimento do deputado", {expect_equal(abel_mesquita_info$dataNascimento, "1962-03-29")})
 test_that("UF de nascimento do deputado", {expect_equal(abel_mesquita_info$ufNascimento, "RR")})
