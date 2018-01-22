@@ -15,8 +15,7 @@ fetch_votacao <- function(id_votacao){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)$dados %>%
-        .remove_lists_and_nulls()
+      .congresso_api(.$path)
     ) %>%
     dplyr::ungroup()
 }
@@ -38,7 +37,7 @@ fetch_orientacoes <- function(id_votacao){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
     dplyr::group_by(id) %>%
     dplyr::do(
-      .congresso_api(.$path)$dados$orientacoes
+      .congresso_api(.$path)$orientacoes
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(id_votacao = id) %>%
@@ -71,8 +70,7 @@ fetch_votos <- function(id_votacao){
   queries %>%
     dplyr::group_by(id_votacao, path, query) %>%
     dplyr::do(
-      .congresso_api(.$path, .$query)$dados %>%
-        .empty_list_to_dataframe()
+      .congresso_api(.$path, .$query)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::select(-path, -query)
@@ -135,8 +133,7 @@ fetch_proposicao_from_votacao <- function(id_votacao) {
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path)$dados$proposicao %>%
-        .remove_lists_and_nulls()
+      .congresso_api(.$path)$proposicao
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(id_proposicao = id) %>%
