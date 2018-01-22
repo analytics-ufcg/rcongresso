@@ -40,7 +40,7 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
-    .congresso_api(.PROPOSICOES_PATH)$dados
+    .congresso_api(.PROPOSICOES_PATH)
   else if(is.null(id)){
     .fetch_using_queries(parametros, .PROPOSICOES_PATH)
   }
@@ -64,7 +64,7 @@ fetch_votacoes <- function(id_prop){
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)[[1]]
+      .congresso_api(.$path)
     ) %>%
     dplyr::ungroup()
 }
@@ -87,7 +87,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
     dplyr::do(
       .congresso_api(.PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
-                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$dados$id %>%
+                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
         .to_tibble()
     ) %>%
     unlist() %>%
@@ -103,7 +103,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 .fetch_tipos_proposicao <- function(){
-  .congresso_api(.TIPOS_PROPOSICOES_PATH)$dados
+  .congresso_api(.TIPOS_PROPOSICOES_PATH)
 }
 
 #' @title Fetches the type of the proposition from its id
