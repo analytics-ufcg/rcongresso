@@ -30,11 +30,17 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
 
-  .get_json(resp)$dados %>%
-    lapply(.replace_null) %>%
-    unlist() %>%
-    as.list() %>%
-    as.data.frame()
+  obtained_data <- .get_json(resp)$dados
+
+  if(!is.data.frame(obtained_data)){
+    print("not df")
+    obtained_data %>%
+      lapply(.replace_null) %>%
+      unlist() %>%
+      as.list() %>%
+      as.data.frame(stringsAsFactors = FALSE)
+  } else obtained_data
+
 }
 
 .replace_null <- function(x) {
