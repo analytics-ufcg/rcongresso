@@ -17,7 +17,7 @@ fetch_votacao <- function(id_votacao){
     dplyr::do(
       .congresso_api(.$path)
     ) %>%
-    dplyr::ungroup()
+    dplyr::select(-which(grepl("orientacoes", names(.))))
 }
 
 #' @title Fetches the positions of a group on a voting
