@@ -35,12 +35,17 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   if(!is.data.frame(obtained_data) && !asList){
     print("not df")
     obtained_data %>%
-      lapply(.replace_null) %>%
-      unlist() %>%
-      as.list() %>%
-      as.data.frame(stringsAsFactors = FALSE)
+      .get_dataframe()
   } else obtained_data
 
+}
+
+.get_dataframe <- function(x){
+  x %>%
+    lapply(.replace_null) %>%
+    unlist() %>%
+    as.list() %>%
+    as.data.frame(stringsAsFactors = FALSE)
 }
 
 .replace_null <- function(x) {

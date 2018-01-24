@@ -33,15 +33,13 @@ fetch_votacao <- function(id_votacao){
 #' @export
 fetch_orientacoes <- function(id_votacao){
   id <- NULL
-  tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
-    dplyr::group_by(id) %>%
+  tibble::tibble(id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
+    dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path)$orientacoes
+      .congresso_api(.$path, asList = TRUE)$orientacoes
     ) %>%
-    dplyr::ungroup() %>%
-    dplyr::mutate(id_votacao = id) %>%
-    dplyr::select(-id)
+    dplyr::ungroup()
 }
 
 #' @title Fetches individual votes from a voting
@@ -133,9 +131,9 @@ fetch_proposicao_from_votacao <- function(id_votacao) {
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path)$proposicao
+      .congresso_api(.$path, asList = TRUE)$proposicao %>%
+        .get_dataframe()
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(id_proposicao = id) %>%
-    dplyr::select(-id)
+    dplyr::rename(id_proposicao = id)
 }
