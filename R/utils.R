@@ -15,7 +15,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
 #' @export
-.congresso_api <- function(path=NULL, query=NULL){
+.congresso_api <- function(path=NULL, query=NULL, asList = FALSE){
 
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
@@ -32,7 +32,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   obtained_data <- .get_json(resp)$dados
 
-  if(!is.data.frame(obtained_data)){
+  if(!is.data.frame(obtained_data) && !asList){
     print("not df")
     obtained_data %>%
       lapply(.replace_null) %>%
