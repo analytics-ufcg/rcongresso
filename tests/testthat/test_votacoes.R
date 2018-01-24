@@ -19,8 +19,7 @@ colnames_votacao_pec241 <- c("id","uri","titulo","uriEvento","uriProposicaoPrinc
                             "tipoVotacao","placarSim","placarNao","placarAbstencao",
                             "dataHoraInicio","dataHoraFim")
 colnames_orientacoes_pec241 <- c("nomeBancada","uriBancada","voto","id_votacao")
-colnames_votospartidos_pec241 <- c("orientacao_partido","bancada_associada",
-                                  "id_votacao","partido")
+colnames_votospartidos_pec241 <- c("partido", "orientacao_partido", "bancada_associada", "id_votacao")
 colnames_ultimavotacao_pec241 <- c("id","uriProposicaoPrincipal")
 colnames_proposicao_votacao7252 <- c("id_votacao","uri","ementa","id_proposicao")
 
@@ -30,7 +29,7 @@ tipos_votacao_pec241 <- c("integer","character","character","character","charact
                         "character","integer","integer","integer","character","character")
 tipos_orientacoes_pec241 <- c("character","character","character","numeric")
 tipos_ultima_votacao_pec241 <- c("integer","character")
-tipos_votos_partidos_pec241 <- c("character","character","numeric","character")
+tipos_votos_partidos_pec241 <- c("character","character","character","numeric")
 tipos_proposicao_votacao7252 <- c("numeric","character","character","integer")
 
 names(tipos_votos_pec241) <- colnames_votos_pec241
