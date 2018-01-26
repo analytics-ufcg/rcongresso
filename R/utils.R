@@ -11,7 +11,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     jsonlite::fromJSON(flatten = TRUE)
 }
 
-#' Wraps an access to the congress API given a reletive path and query arguments.
+#' Wraps an access to the congress API given a relative path and query arguments.
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
 #' @export
@@ -40,55 +40,28 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 }
 
+#' In case of receiving a list, this function converts the list into a dataframe.
+#' @param x List
 .get_dataframe <- function(x){
   x %>%
     lapply(.replace_null) %>%
     unlist() %>%
-    as.list() %>%
+    .coerce_numeric() %>%
     as.data.frame(stringsAsFactors = FALSE)
 }
 
+#' Replaces the NULL element for NA in order to keep the dataframe field.
+#' @param x a column of the dataframe
 .replace_null <- function(x) {
   if(!is.list(x)){
     ifelse(is.null(x), NA, x)
   }else x
 }
 
-#' Removes all the nested lists and null fields from a list.
-#' @param x A List
-#' @return A clean list (without NULL and nested lists)
-#' @examples
-#' clean_list <- .remove_lists_and_nulls(list(NULL, list(), 1))
-#' @export
-.remove_lists_and_nulls <- function(x){
-  arr_null <- x %>%
-    purrr::map_lgl(is.null) %>%
-    which()
-  if (length(arr_null)){
-    x <- x[-arr_null]
-  }
-
-  arr_lists <- x %>%
-    purrr::map_lgl(is.list) %>%
-    which()
-  if (length(arr_lists)){
-    x <- x[-arr_lists]
-  }
-
-  tibble::as.tibble(x)
-}
-
-#' Returns an empty dataframe instead of an empty list. This is useful to operate inside
-#' dplyr functions that work only with dataframes.
-#' @param lista An empty list
-#' @return An empty dataframe
-#' @examples
-#' empty_df <- .empty_list_to_dataframe(list())
-#' @export
-.empty_list_to_dataframe <- function(lista) {
-  if (is.list(lista) && !length(lista)){
-    as.data.frame(lista)
-  } else return(lista)
+#' Converts a column with a character type into a numeric type.
+#' @param x a column of the dataframe
+.coerce_numeric <- function(x){
+  lapply(x[names(x)], function(x) ifelse(suppressWarnings(!is.na(as.numeric(x))), as.numeric(x), x))
 }
 
 #' Converts a vector of integer into a tibble. Also useful when the user is working with
