@@ -9,10 +9,9 @@
 #'  \code{\link[rcongresso]{fetch_votos}}
 #' @rdname fetch_votacao
 #' @export
-fetch_votacao <- function(id_votacao){
-  id <- NULL
-  tibble::tibble(id = id_votacao) %>%
-    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id)) %>%
+fetch_votacao <- function(id_votacao = NULL){
+  tibble::tibble(id_votacao) %>%
+    dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
       .congresso_api(.$path)
@@ -31,8 +30,7 @@ fetch_votacao <- function(id_votacao){
 #'  \code{\link[rcongresso]{get_votos_partidos}}
 #' @rdname fetch_orientacoes
 #' @export
-fetch_orientacoes <- function(id_votacao){
-  id <- NULL
+fetch_orientacoes <- function(id_votacao = NULL){
   tibble::tibble(id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
@@ -53,9 +51,9 @@ fetch_orientacoes <- function(id_votacao){
 #'  \code{\link[rcongresso]{fetch_votacao}}
 #' @rdname fetch_votos
 #' @export
-fetch_votos <- function(id_votacao){
+fetch_votos <- function(id_votacao = NULL){
   path <- query <- NULL
-  queries <- tibble::tibble(id_votacao = id_votacao) %>%
+  queries <- tibble::tibble(id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao, "/votos")) %>%
     dplyr::rowwise() %>%
     dplyr::do(
@@ -83,7 +81,7 @@ fetch_votos <- function(id_votacao){
 #' ultima_votacao <- ultima_votacao(votacoes_pec241)
 #' @rdname ultima_votacao
 #' @export
-ultima_votacao <- function(votacoes) {
+ultima_votacao <- function(votacoes = NULL) {
   uriProposicaoPrincipal <- id <- NULL
 
   votacoes %>%
@@ -105,7 +103,7 @@ ultima_votacao <- function(votacoes) {
 #'  \code{\link[rcongresso]{fetch_orientacoes}}
 #' @rdname get_votos_partidos
 #' @export
-get_votos_partidos <- function(votacao) {
+get_votos_partidos <- function(votacao = NULL) {
   nomeBancada <- voto <- bancada_associada <- id_votacao <- partido <- NULL
 
   fetch_orientacoes(votacao) %>%
@@ -124,9 +122,7 @@ get_votos_partidos <- function(votacao) {
 #' pec241 <- fetch_proposicao_from_votacao(7252)
 #' @rdname fetch_proposicao_from_votacao
 #' @export
-fetch_proposicao_from_votacao <- function(id_votacao) {
-  id <- NULL
-
+fetch_proposicao_from_votacao <- function(id_votacao = NULL) {
   tibble::tibble(id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
