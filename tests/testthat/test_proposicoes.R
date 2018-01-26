@@ -25,9 +25,9 @@ tipos_pec241_por_id <- c("integer","character","character","integer","integer","
 #tipos_status_pec241 <- c("integer","character","integer","character","character","character","character",
 #                         "character","character","integer","character","character")
 
-names(tipos_pec241) <- colnames_pec241
-#names(tipos_status_pec241) <- colnames_status_pec241
-names(tipos_pec241_por_id) <- colnames_pec241_por_id
+# names(tipos_pec241) <- colnames_pec241
+# #names(tipos_status_pec241) <- colnames_status_pec241
+# names(tipos_pec241_por_id) <- colnames_pec241_por_id
 
 # Testes
 
@@ -51,12 +51,12 @@ test_that("Atributos do dataframe",{
   #expect_equal(attributes(status_pec241)$names, colnames_status_pec241)
 })
 
-test_that("Campos do dataframe",{
-  #expect_equal(sapply(pec_241, class), tipos_pec241)
-  #expect_equal(sapply(pec_241_por_id, class), tipos_pec241_por_id) Os tipos ainda estão incorretos. Todos estão sendo retornados como
-  #char.
-  #expect_equal(sapply(status_pec241, class), tipos_status_pec241)
-})
+# test_that("Campos do dataframe",{
+#   #expect_equal(sapply(pec_241, class), tipos_pec241)
+#   #expect_equal(sapply(pec_241_por_id, class), tipos_pec241_por_id) Os tipos ainda estão incorretos. Todos estão sendo retornados como
+#   #char.
+#   #expect_equal(sapply(status_pec241, class), tipos_status_pec241)
+# })
 
 # Existe um idTipo que identifica os tipos de proposição em tramitação/votação na
 #    Câmara. Nesse caso, 136 é PEC.
