@@ -41,9 +41,8 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 
   if(!length(.verifica_parametros_entrada(parametros)))
     .congresso_api(.PROPOSICOES_PATH)
-  else if(is.null(id)){
+  else if(is.null(id))
     .fetch_using_queries(parametros, .PROPOSICOES_PATH)
-  }
   else
     .fetch_using_id(id, .PROPOSICOES_PATH)
 }
@@ -120,27 +119,4 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 
   tibble::tibble(id = id_tipo_prop) %>%
     dplyr::left_join(prop_types, by = "id")
-}
-
-#' @title Recovers the proposition status in the parlament
-#' @description Recovers the proposition status including: sequence, organ
-#' and date info about its processing in the parlament.
-#' @param id_prop Proposition's ID
-#' @return Dataframe containing the proposition's status
-#' @examples
-#' pec241_status <- fetch_status_proposicao(2088351)
-#' @seealso
-#'  \code{\link[rcongresso]{fetch_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
-#' @rdname fetch_status_proposicao
-#' @export
-fetch_status_proposicao <- function(id_prop){
-  id <- NULL
-  tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id)) %>%
-    dplyr::group_by(id) %>%
-    dplyr::do(
-      .congresso_api(.$path)$dados$statusProposicao %>%
-        .remove_lists_and_nulls()
-    ) %>%
-    dplyr::ungroup()
 }
