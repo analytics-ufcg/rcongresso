@@ -62,7 +62,7 @@ test_that("Atributos do dataframe",{
 #   #expect_equal(sapply(abel_mesquita_status, class), tipos_status_abel_mesquita)
 # })
 
-test_that("ID do deputado", {expect_equal(abel_mesquita_info$id, "178957")})
+test_that("ID do deputado", {expect_equal(abel_mesquita_info$id, 178957)})
 test_that("Nome do deputado", {expect_equal(abel_mesquita_info$nomeCivil, NOME_ESPERADO)})
 test_that("Data de nascimento do deputado", {expect_equal(abel_mesquita_info$dataNascimento, "1962-03-29")})
 test_that("UF de nascimento do deputado", {expect_equal(abel_mesquita_info$ufNascimento, "RR")})
