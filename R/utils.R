@@ -30,7 +30,11 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   obtained_data <- .get_json(resp)$dados
 
+  print(obtained_data)
+  print(is.data.frame(obtained_data))
+
   if(!is.data.frame(obtained_data) && !asList){
+   print("conversao")
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
@@ -97,7 +101,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
 #'
 #' @export
-.fetch_using_queries <- function(parametros, API_path){
+.fetch_using_queries <- function(parametros, API_path, asList = FALSE){
   if (!is.null(parametros$itens)){
     .fetch_all_itens(.verifica_parametros_entrada(parametros), API_path)
   }
@@ -106,7 +110,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, .)
+        .congresso_api(API_path, ., asList)
       )
   }
 }
@@ -121,12 +125,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' pec241 <- .fetch_using_id(2088351)
 #'
 #' @export
-.fetch_using_id <- function(id, API_path){
+.fetch_using_id <- function(id, API_path, asList = FALSE){
   tibble::tibble(id) %>%
     dplyr::mutate(path = paste0(API_path, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)
+      .congresso_api(.$path, asList = asList)
     ) %>%
     dplyr::ungroup()
 }
