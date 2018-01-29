@@ -42,7 +42,9 @@ fetch_despesas_deputado <- function(dep_id) {
     dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id, "/despesas")) %>%
     dplyr::group_by(id, path) %>%
     dplyr::do(
-      .congresso_api(.$path, query)
+      .congresso_api(.$path, query) %>%
+        .coerce_numeric() %>%
+        as.data.frame(stringsAsFactors = FALSE)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(idDep = .$id) %>%
