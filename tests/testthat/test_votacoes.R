@@ -11,8 +11,7 @@ ultima_votacao_pec241 <- fetch_votacoes(2088351) %>%
 votos_partidos_pec241 <- get_votos_partidos(7252)
 proposicao_votacao7252 <- fetch_proposicao_from_votacao(7252)
 
-# Novo modelo de teste:
-
+# Colunas dos dataframes
 colnames_orientacoes_pec241 <- c("uriBancada"="character","nomeBancada"="character",
                                  "voto"="character","id_votacao"="numeric")
 
@@ -37,6 +36,7 @@ colnames_ultimavotacao_pec241 <- c("id"="integer","uriProposicaoPrincipal"="char
 colnames_proposicao_votacao7252 <- c("id_votacao"="numeric","id_proposicao"="integer","uri"="character","siglaTipo"="character",
                                      "idTipo"="integer","numero"="integer","ano"="integer","ementa"="character")
 
+# Testes
 test_that("Is dataframe", {
   expect_true(is.data.frame(votos_pec241))
   expect_true(is.data.frame(votacao_pec241))

@@ -8,6 +8,16 @@ pec_241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016, dataIni
 pec_241_id <- fetch_id_proposicao("PEC", 241, 2016)
 pec_241_por_id <- fetch_proposicao(pec_241_id)
 
+# Constantes
+PEC241_ID <- 2088351
+TIPO_PROP_PEC <- 136
+TIPO_PROP_PL <- 139
+TAM_DF_10REQ <- c(10, 7)
+TAM_DF_100REQ <- c(100, 7)
+TAM_DF_386REQ <- c(386, 7)
+TAM_DF_DEFAULT <- c(15, 7)
+
+# Colunas dos dataframes
 colnames_pec241 <- c("id"="integer","uri"="character","siglaTipo"="character","idTipo"="integer",
                      "numero"="integer","ano"="integer","ementa"="character")
 
@@ -26,22 +36,25 @@ colnames_pec241_por_id <- c("id"="numeric","uri"="character","siglaTipo"="charac
 
 # Testes
 
-test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
-
 test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(pec_241_por_id))
 })
 
-test_that("Campos do dataframe",{
+test_that("fetch_proposicao()", {
   expect_true(all(sapply(pec_241, class) %in% colnames_pec241))
+})
+
+test_that("fetch_proposicao() usando ID", {
   expect_true(all(sapply(pec_241_por_id, class) %in% colnames_pec241_por_id))
 })
 
+test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
+
 # Existe um idTipo que identifica os tipos de proposição em tramitação/votação na
 #    Câmara. Nesse caso, 136 é PEC.
-test_that("ID PEC241", {expect_equal(pec_241_id, 2088351)})
-test_that("Tipo PEC241=='PEC'", {expect_equal(pec_241$idTipo, 136)})
+test_that("ID PEC241", {expect_equal(pec_241_id, PEC241_ID)})
+test_that("Tipo PEC241=='PEC'", {expect_equal(pec_241$idTipo, TIPO_PROP_PEC)})
 test_that("Numero PEC241", {expect_equal(pec_241$numero, 241)})
 test_that("Ano PEC241", {expect_equal(pec_241$ano, 2016)})
 
@@ -57,16 +70,16 @@ r <- compare::compareEqual(ids, ids_votacoes_pec241)
 test_that("IDs Votacoes PEC241", {expect_true(r$result)})
 
 # Testa tipos de proposições
-r <- compare::compareEqual(fetch_tipo_proposicao(139)$sigla, "PL")
+r <- compare::compareEqual(fetch_tipo_proposicao(TIPO_PROP_PL)$sigla, "PL")
 test_that("Tipo de proposição", {expect_true(r$result)})
 
 # Testa quantidade de itens por requisição
 test_that("Quantidade de itens por requisição",{
-  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 10)), c(10, 7))
-  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100)), c(100, 7))
-  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386)), c(386, 7))
+  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 10)), TAM_DF_10REQ)
+  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100)), TAM_DF_100REQ)
+  expect_equal(dim(fetch_proposicao(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386)), TAM_DF_386REQ)
 })
 
 test_that("Quantidade default por requisição, atualmente 15",{
-  expect_equal(dim(fetch_proposicao()), c(15, 7))
+  expect_equal(dim(fetch_proposicao()), TAM_DF_DEFAULT)
 })
