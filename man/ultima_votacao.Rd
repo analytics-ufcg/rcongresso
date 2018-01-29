@@ -4,7 +4,7 @@
 \alias{ultima_votacao}
 \title{Gets the last voting on a given voting}
 \usage{
-ultima_votacao(votacoes)
+ultima_votacao(votacoes = NULL)
 }
 \arguments{
 \item{votacoes}{Dataframe containing all the votings related to a proposition}

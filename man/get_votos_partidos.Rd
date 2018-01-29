@@ -4,7 +4,7 @@
 \alias{get_votos_partidos}
 \title{Fetches the positions by party on a voting}
 \usage{
-get_votos_partidos(votacao)
+get_votos_partidos(votacao = NULL)
 }
 \arguments{
 \item{votacao}{Voting's id}
