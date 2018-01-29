@@ -37,9 +37,35 @@ colnames_ultimavotacao_pec241 <- c("id"="integer","uriProposicaoPrincipal"="char
 colnames_proposicao_votacao7252 <- c("id_votacao"="numeric","id_proposicao"="integer","uri"="character","siglaTipo"="character",
                                      "idTipo"="integer","numero"="integer","ano"="integer","ementa"="character")
 
-expect_true(all(sapply(votos_pec241, class) %in% colnames_votos_pec241))
-expect_true(all(sapply(votacao_pec241, class) %in% colnames_votacao_pec241))
-expect_true(all(sapply(orientacoes_pec241, class) %in% colnames_orientacoes_pec241))
-expect_true(all(sapply(votos_partidos_pec241, class) %in% colnames_votospartidos_pec241))
-expect_true(all(sapply(ultima_votacao_pec241, class) %in% colnames_ultimavotacao_pec241))
-expect_true(all(sapply(proposicao_votacao7252, class) %in% colnames_proposicao_votacao7252))
+test_that("Is dataframe", {
+  expect_true(is.data.frame(votos_pec241))
+  expect_true(is.data.frame(votacao_pec241))
+  expect_true(is.data.frame(orientacoes_pec241))
+  expect_true(is.data.frame(ultima_votacao_pec241))
+  expect_true(is.data.frame(votos_partidos_pec241))
+  expect_true(is.data.frame(proposicao_votacao7252))
+})
+
+test_that("fetch_votos()", {
+  expect_true(all(sapply(votos_pec241, class) %in% colnames_votos_pec241))
+})
+
+test_that("fetch_votacao()", {
+  expect_true(all(sapply(votacao_pec241, class) %in% colnames_votacao_pec241))
+})
+
+test_that("fetch_orientacoes()", {
+  expect_true(all(sapply(orientacoes_pec241, class) %in% colnames_orientacoes_pec241))
+})
+
+test_that("get_votos_partidos()", {
+  expect_true(all(sapply(votos_partidos_pec241, class) %in% colnames_votospartidos_pec241))
+})
+
+test_that("ultima_votacao()", {
+  expect_true(all(sapply(ultima_votacao_pec241, class) %in% colnames_ultimavotacao_pec241))
+})
+
+test_that("fetch_proposicao_from_votacao()", {
+  expect_true(all(sapply(proposicao_votacao7252, class) %in% colnames_proposicao_votacao7252))
+})
