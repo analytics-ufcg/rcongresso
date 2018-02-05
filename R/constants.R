@@ -18,3 +18,17 @@
 
 # Requests
 .MAX_ITENS <- 100
+
+# Tests
+.COLNAMES_DEP_INFO_ID <- c("id"="numeric","uri"="character","nomeCivil"="character","ultimoStatus.id"="numeric",
+                              "ultimoStatus.uri"="character","ultimoStatus.nome"="character","ultimoStatus.siglaPartido"="character",
+                              "ultimoStatus.uriPartido"="character","ultimoStatus.siglaUf"="character",
+                              "ultimoStatus.idLegislatura"="numeric","ultimoStatus.urlFoto"="character",
+                              "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
+                              "ultimoStatus.gabinete.nome"="character","ultimoStatus.gabinete.predio"="character",
+                              "ultimoStatus.descricaoStatus"="character","redeSocial"="character",
+                              "ultimoStatus.gabinete.sala"="numeric","ultimoStatus.gabinete.andar"="numeric",
+                              "ultimoStatus.gabinete.telefone"="character","ultimoStatus.gabinete.email"="character",
+                              "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
+                              "sexo"="character","urlWebsite"="character","dataNascimento"="character","dataFalecimento"="character",
+                              "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character")
