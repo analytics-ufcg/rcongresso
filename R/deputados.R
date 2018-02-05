@@ -21,8 +21,11 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
     .congresso_api(.DEPUTADOS_PATH)
   else if(is.null(id))
     .fetch_using_queries(parametros, .DEPUTADOS_PATH)
-  else
-    .fetch_using_id(id, .DEPUTADOS_PATH)
+  else{
+    .fetch_using_id(id, .DEPUTADOS_PATH) %>%
+      .assert_dataframe_completo(names(.COLNAMES_DEP_INFO_ID))
+  }
+
 }
 
 #' @title Fetches expenditures from deputy using its id
