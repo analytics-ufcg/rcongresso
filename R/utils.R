@@ -30,11 +30,11 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   obtained_data <- .get_json(resp)$dados
 
-  print(obtained_data)
-  print(is.data.frame(obtained_data))
+  #print(obtained_data)
+  #print(is.data.frame(obtained_data))
 
   if(!is.data.frame(obtained_data) && !asList){
-   print("conversao")
+   #print("conversao")
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
@@ -57,6 +57,20 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   if(!is.list(x)){
     ifelse(is.null(x), NA, x)
   }else x
+}
+
+#' Garantees that the dataframe x has all the columns passed by y.
+#' @param x dataframe
+#' @param y vector of characters containing the names of columns.
+.assert_dataframe_completo <- function(x, y){
+  colnames_x <- colnames(x)
+  indexes <- !(y %in% colnames_x)
+  print(colnames_x)
+  print(indexes)
+  print(y)
+  x[y[which(indexes)]] <- NA
+
+  print(x)
 }
 
 #' Converts a column with a character type into a numeric type.
