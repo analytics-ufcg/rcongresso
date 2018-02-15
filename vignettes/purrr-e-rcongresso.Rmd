@@ -75,8 +75,10 @@ Homens e mulheres votaram diferente? Para responder, recuperamos primeiro os dad
 
 ```{r}
 deputados = tibble(parlamentar.id = unique(votos$parlamentar.id)) %>% 
-  mutate(dados_parlamentar = map(parlamentar.id, fetch_deputado)) #%>% 
-  #unnest(dados_parlamentar)
+  mutate(dados_parlamentar = map(parlamentar.id, fetch_deputado))
+
+#%>% 
+#unnest(dados_parlamentar)
 
 glimpse(deputados)
 ```
