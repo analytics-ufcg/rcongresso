@@ -23,7 +23,7 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
     .fetch_using_queries(parametros, .DEPUTADOS_PATH)
   else{
     .fetch_using_id(id, .DEPUTADOS_PATH) %>%
-      .assert_dataframe_completo(names(.COLNAMES_DEP_INFO_ID))
+      .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID)
   }
 
 }

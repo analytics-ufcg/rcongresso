@@ -64,13 +64,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param y vector of characters containing the names of columns.
 .assert_dataframe_completo <- function(x, y){
   colnames_x <- colnames(x)
-  indexes <- !(y %in% colnames_x)
-  print(colnames_x)
-  print(indexes)
-  print(y)
-  x[y[which(indexes)]] <- NA
+  colnames_y <- names(y)
+  types_y <- unname(y)
+  indexes <- !(colnames_y %in% colnames_x)
 
-  print(x)
+  x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
+
+  x
 }
 
 #' Converts a column with a character type into a numeric type.
