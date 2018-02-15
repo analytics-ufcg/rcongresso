@@ -25,7 +25,7 @@
                               "ultimoStatus.uriPartido"="character","ultimoStatus.siglaUf"="character",
                               "ultimoStatus.idLegislatura"="numeric","ultimoStatus.urlFoto"="character",
                               "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
-                              "ultimoStatus.gabinete.nome"="character","ultimoStatus.gabinete.predio"="character",
+                              "ultimoStatus.gabinete.nome"="numeric","ultimoStatus.gabinete.predio"="character",
                               "ultimoStatus.descricaoStatus"="character","redeSocial"="character",
                               "ultimoStatus.gabinete.sala"="numeric","ultimoStatus.gabinete.andar"="numeric",
                               "ultimoStatus.gabinete.telefone"="character","ultimoStatus.gabinete.email"="character",
