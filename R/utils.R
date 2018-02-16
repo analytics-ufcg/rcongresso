@@ -20,6 +20,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
+  print(api_url)
+
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
   httr::stop_for_status(resp)
@@ -47,7 +49,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   x %>%
     lapply(.replace_null) %>%
     unlist() %>%
-    .coerce_numeric() %>%
+    #.coerce_numeric() %>%
+    as.list() %>%
     as.data.frame(stringsAsFactors = FALSE)
 }
 
@@ -77,6 +80,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param x a column of the dataframe
 .coerce_numeric <- function(x){
   lapply(x[names(x)], function(x) ifelse(suppressWarnings(!is.na(as.numeric(x))), as.numeric(x), x))
+}
+
+.coerce_types <- function(obj, types){
+  if(nrow(obj) != 0){
+    obj <- obj[,order(colnames(obj))]
+    types <- unname(types[sort(names(types))])
+    out <- lapply(1:length(obj),FUN = function(i){FUN1 <- switch(types[i],character = as.character,numeric = as.numeric,integer = as.integer); suppressWarnings(FUN1(obj[,i]))})
+    names(out) <- colnames(obj)
+    as.data.frame(out,stringsAsFactors = FALSE)
+  } else tibble::tibble()
 }
 
 #' Converts a vector of integer into a tibble. Also useful when the user is working with
