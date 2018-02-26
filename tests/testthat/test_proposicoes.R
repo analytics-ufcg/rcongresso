@@ -17,36 +17,19 @@ TAM_DF_100REQ <- c(100, 7)
 TAM_DF_386REQ <- c(386, 7)
 TAM_DF_DEFAULT <- c(15, 7)
 
-# Colunas dos dataframes
-colnames_pec241 <- c("id"="integer","uri"="character","siglaTipo"="character","idTipo"="integer",
-                     "numero"="integer","ano"="integer","ementa"="character")
-
-colnames_pec241_por_id <- c("id"="numeric","uri"="character","siglaTipo"="character","idTipo"="numeric",
-                            "numero"="numeric","ano"="numeric","ementa"="character","dataApresentacao"="character",
-                            "tipoAutor"="character","idTipoAutor"="numeric","descricaoTipo"="character",
-                            "keywords"="character", "urlInteiroTeor"="character","uriOrgaoNumerador"="character",
-                            "uriUltimoRelator"="character","statusProposicao.dataHora"="character",
-                            "statusProposicao.sequencia"="numeric","statusProposicao.siglaOrgao"="character",
-                            "statusProposicao.uriOrgao"="character","statusProposicao.regime"="character",
-                            "statusProposicao.descricaoTramitacao"="character","statusProposicao.idTipoTramitacao"="numeric",
-                            "statusProposicao.descricaoSituacao"="character","statusProposicao.idSituacao"="numeric",
-                            "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "ementaDetalhada"="character","uriPropPrincipal"="character","uriPropAnterior"="character","uriPropPosterior"="character",
-                            "urnFinal"="character","texto"="character","justificativa"="character")
-
 # Testes
-
+# Os nomes das colunas e os tipos estão definidos em colunas_constants.R
 test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(pec_241_por_id))
 })
 
 test_that("fetch_proposicao()", {
-  expect_true(all(sapply(pec_241, class) %in% colnames_pec241))
+  expect_true(all(sapply(pec_241, class) %in% .COLNAMES_PROPOSICAO))
 })
 
 test_that("fetch_proposicao() usando ID", {
-  expect_true(all(sapply(pec_241_por_id, class) %in% colnames_pec241_por_id))
+  expect_true(all(sapply(pec_241_por_id, class) %in% .COLNAMES_PROPOSICAO_POR_ID))
 })
 
 test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})

@@ -14,7 +14,8 @@ fetch_votacao <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)
+      .congresso_api(.$path) %>%
+        .coerce_types(.COLNAMES_VOTACAO)
     ) %>%
     dplyr::select(-which(grepl("orientacoes", names(.))))
 }
@@ -35,7 +36,8 @@ fetch_orientacoes <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path, asList = TRUE)$orientacoes
+      .congresso_api(.$path, asList = TRUE)$orientacoes %>%
+        .coerce_types(.COLNAMES_ORIENTACOES)
     ) %>%
     dplyr::ungroup()
 }
@@ -66,7 +68,8 @@ fetch_votos <- function(id_votacao = NULL){
   queries %>%
     dplyr::group_by(id_votacao, path, query) %>%
     dplyr::do(
-      .congresso_api(.$path, .$query)
+      .congresso_api(.$path, .$query) %>%
+        .coerce_types(.COLNAMES_VOTOS)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::select(-path, -query)
@@ -89,7 +92,8 @@ ultima_votacao <- function(votacoes = NULL) {
     dplyr::filter(id == max(id)) %>%
     unique() %>%
     dplyr::ungroup() %>%
-    dplyr::select(id, uriProposicaoPrincipal)
+    dplyr::select(id, uriProposicaoPrincipal) %>%
+    .coerce_types(.COLNAMES_ULTIMAVOTACAO)
 }
 
 #' @title Fetches the positions by party on a voting
@@ -111,7 +115,8 @@ get_votos_partidos <- function(votacao = NULL) {
     dplyr::select(partido = nomeBancada, orientacao_partido = voto,
                   bancada_associada, id_votacao) %>%
     tidyr::separate_rows(partido, sep = .REGEX_PATTERN) %>%
-    dplyr::mutate(partido = toupper(.$partido))
+    dplyr::mutate(partido = toupper(.$partido)) %>%
+    .coerce_types(.COLNAMES_VOTOSPARTIDOS)
 }
 
 #' @title Finds the id of the proposition to which a given voting refers
@@ -131,5 +136,6 @@ fetch_proposicao_from_votacao <- function(id_votacao = NULL) {
         .get_dataframe()
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::rename(id_proposicao = id)
+    dplyr::rename(id_proposicao = id) %>%
+    .coerce_types(.COLNAMES_PROP_VOTACAO)
 }
