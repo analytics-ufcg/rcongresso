@@ -8,7 +8,7 @@
                            "ultimoStatus.idLegislatura"="integer","ultimoStatus.urlFoto"="character",
                            "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
                            "ultimoStatus.gabinete.nome"="numeric","ultimoStatus.gabinete.predio"="character",
-                           "ultimoStatus.descricaoStatus"="character","redeSocial"="character",
+                           "ultimoStatus.descricaoStatus"="character","redeSocial"="list",
                            "ultimoStatus.gabinete.sala"="numeric","ultimoStatus.gabinete.andar"="numeric",
                            "ultimoStatus.gabinete.telefone"="character","ultimoStatus.gabinete.email"="character",
                            "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
@@ -38,19 +38,25 @@
                             "urnFinal"="character","texto"="character","justificativa"="character")
 
 # Votações
+
+# Endpoint: {/votacoes/{id}/votos}
 .COLNAMES_VOTOS <- c("id_votacao"="integer","voto"="character","parlamentar.id"="integer",
                            "parlamentar.uri"="character","parlamentar.nome"="character",
                            "parlamentar.siglaPartido"="character","parlamentar.uriPartido"="character",
                            "parlamentar.siglaUf"="character","parlamentar.idLegislatura"="integer",
                            "parlamentar.urlFoto"="character")
 
-.COLNAMES_VOTACAO <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character",
-                             "proposicao.id"="integer","proposicao.uri"="character","proposicao.ementa"="character",
-                             "uriProposicaoPrincipal"="character","tipoVotacao"="character","aprovada"="character",
-                             "placarSim"="numeric","placarNao"="numeric","placarAbstencao"="numeric","relator"="character",
-                             "ementaParecer"="character","dataHoraInicio"="character","dataHoraFim"="character",
-                             "numVotantes"="numeric","numPresentes"="numeric","despacho"="character")
+# Endpoint: {/votacoes/{id}}
+.COLNAMES_VOTACAO <- c("aprovada"="character", "dataHoraFim"="character", "dataHoraInicio"="character", "despacho"="character",
+                       "ementaParecer"="character", "id"="integer", "numPresentes"="integer", "numVotantes"="integer",
+                       "placarAbstencao"="integer", "placarNao"="integer", "placarSim"="integer", "proposicao.ano"="integer",
+                       "proposicao.ementa"="character", "proposicao.id"="integer", "proposicao.idTipo"="integer", "proposicao.numero"="integer",
+                       "proposicao.siglaTipo"="character", "proposicao.uri"="character","relator.id"="integer",
+                       "relator.idLegislatura"="integer", "relator.nome"="character", "relator.siglaPartido"="character",
+                       "relator.siglaUf"="character", "relator.uri"="character", "relator.uriPartido"="character", "relator.urlFoto"="character",
+                       "tipoVotacao"="character", "titulo"="character", "uri"="character", "uriEvento"="character", "uriProposicaoPrincipal"="character")
 
+# Endpoint: {/votacoes/{id}}
 .COLNAMES_ORIENTACOES <- c("uriBancada"="character","nomeBancada"="character",
                                  "voto"="character","id_votacao"="integer")
 
