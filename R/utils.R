@@ -20,7 +20,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
-  print(api_url)
+  #print(api_url)
 
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
@@ -47,7 +47,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param x List
 .get_dataframe <- function(x){
   x %>%
-    lapply(.replace_null) %>%
+    #lapply(.replace_null) %>%
     unlist() %>%
     #.coerce_numeric() %>%
     as.list() %>%
@@ -66,14 +66,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param x dataframe
 #' @param y vector of characters containing the names of columns.
 .assert_dataframe_completo <- function(x, y){
-  colnames_x <- colnames(x)
-  colnames_y <- names(y)
-  types_y <- unname(y)
-  indexes <- !(colnames_y %in% colnames_x)
+  if(nrow(x) != 0){
+    colnames_x <- colnames(x)
+    colnames_y <- names(y)
+    types_y <- unname(y)
+    indexes <- !(colnames_y %in% colnames_x)
 
-  x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
+    x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
 
-  x
+    x
+  } else tibble::tibble()
 }
 
 #' Converts a column with a character type into a numeric type.
@@ -82,14 +84,38 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   lapply(x[names(x)], function(x) ifelse(suppressWarnings(!is.na(as.numeric(x))), as.numeric(x), x))
 }
 
+# .coerce_types <- function(obj, types){
+#   if(nrow(obj) != 0){
+#     sapply(obj, )
+#   } else tibble::tibble()
+# }
+
 .coerce_types <- function(obj, types){
   if(nrow(obj) != 0){
     obj <- obj[,order(colnames(obj))]
     types <- unname(types[sort(names(types))])
-    out <- lapply(1:length(obj),FUN = function(i){FUN1 <- switch(types[i],character = as.character,numeric = as.numeric,integer = as.integer); suppressWarnings(FUN1(obj[,i]))})
+    out <- lapply(1:length(obj),FUN = function(i){print(obj[i]);print(types[i]);
+      FUN1 <- switch(types[i],character = as.character,numeric = as.numeric,integer = as.integer, is.na = NA, list = as.list); suppressWarnings(obj[,i] %>% unlist() %>% FUN1)})
     names(out) <- colnames(obj)
     as.data.frame(out,stringsAsFactors = FALSE)
   } else tibble::tibble()
+}
+
+.switch_types <- function(x, colnames, types){
+  print(x)
+  print(paste0("type:",types))
+
+  type <- types[x]
+
+  print(type)
+
+  f <- switch (type,
+    character = as.character,
+    numeric = as.numeric,
+    integer = as.integer,
+    logical = as.logical
+  )
+  f(x)
 }
 
 #' Converts a vector of integer into a tibble. Also useful when the user is working with
