@@ -14,10 +14,11 @@ fetch_votacao <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path) %>%
-        .coerce_types(.COLNAMES_VOTACAO)
+      .congresso_api(.$path)
     ) %>%
-    dplyr::select(-which(grepl("orientacoes", names(.))))
+    dplyr::select(-which(grepl("orientacoes", names(.)))) %>%
+    .assert_dataframe_completo(.COLNAMES_VOTACAO) %>%
+    .coerce_types(.COLNAMES_VOTACAO)
 }
 
 #' @title Fetches the positions of a group on a voting
@@ -36,10 +37,12 @@ fetch_orientacoes <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path, asList = TRUE)$orientacoes %>%
-        .coerce_types(.COLNAMES_ORIENTACOES)
+      .congresso_api(.$path, asList = TRUE)$orientacoes #%>%
+        #.coerce_types(.COLNAMES_ORIENTACOES)
     ) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    .assert_dataframe_completo(.COLNAMES_ORIENTACOES) %>%
+    .coerce_types(.COLNAMES_ORIENTACOES)
 }
 
 #' @title Fetches individual votes from a voting
@@ -68,11 +71,12 @@ fetch_votos <- function(id_votacao = NULL){
   queries %>%
     dplyr::group_by(id_votacao, path, query) %>%
     dplyr::do(
-      .congresso_api(.$path, .$query) %>%
-        .coerce_types(.COLNAMES_VOTOS)
+      .congresso_api(.$path, .$query)
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-path, -query)
+    dplyr::select(-path, -query) %>%
+    .assert_dataframe_completo(.COLNAMES_VOTOS) %>%
+    .coerce_types(.COLNAMES_VOTOS)
 }
 
 #' @title Gets the last voting on a given voting
@@ -128,6 +132,7 @@ get_votos_partidos <- function(votacao = NULL) {
 #' @rdname fetch_proposicao_from_votacao
 #' @export
 fetch_proposicao_from_votacao <- function(id_votacao = NULL) {
+  id <- NULL
   tibble::tibble(id_votacao) %>%
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
@@ -137,5 +142,6 @@ fetch_proposicao_from_votacao <- function(id_votacao = NULL) {
     ) %>%
     dplyr::ungroup() %>%
     dplyr::rename(id_proposicao = id) %>%
+    .assert_dataframe_completo(.COLNAMES_PROP_VOTACAO) %>%
     .coerce_types(.COLNAMES_PROP_VOTACAO)
 }
