@@ -29,6 +29,9 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
   }
   else{
     .fetch_using_id(id, .DEPUTADOS_PATH) %>%
+      dplyr::select(which(grepl("redeSocial", names(.)))) %>%
+      tidyr::nest() %>%
+      dplyr::rename(redeSocial = data) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
       .coerce_types(.COLNAMES_DEP_INFO_ID)
   }
