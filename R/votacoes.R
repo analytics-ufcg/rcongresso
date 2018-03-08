@@ -37,8 +37,7 @@ fetch_orientacoes <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path, asList = TRUE)$orientacoes #%>%
-        #.coerce_types(.COLNAMES_ORIENTACOES)
+      .congresso_api(.$path, asList = TRUE)$orientacoes
     ) %>%
     dplyr::ungroup() %>%
     .assert_dataframe_completo(.COLNAMES_ORIENTACOES) %>%
@@ -97,6 +96,7 @@ ultima_votacao <- function(votacoes = NULL) {
     unique() %>%
     dplyr::ungroup() %>%
     dplyr::select(id, uriProposicaoPrincipal) %>%
+    .assert_dataframe_completo(.COLNAMES_ULTIMAVOTACAO) %>%
     .coerce_types(.COLNAMES_ULTIMAVOTACAO)
 }
 
@@ -120,6 +120,7 @@ get_votos_partidos <- function(votacao = NULL) {
                   bancada_associada, id_votacao) %>%
     tidyr::separate_rows(partido, sep = .REGEX_PATTERN) %>%
     dplyr::mutate(partido = toupper(.$partido)) %>%
+    .assert_dataframe_completo(.COLNAMES_VOTOSPARTIDOS) %>%
     .coerce_types(.COLNAMES_VOTOSPARTIDOS)
 }
 
