@@ -22,6 +22,15 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(proposicao_votacao7252))
 })
 
+test_that("Not Empty", {
+  expect_true(nrow(votos_pec241) != 0)
+  expect_true(nrow(votacao_pec241) != 0)
+  expect_true(nrow(orientacoes_pec241) != 0)
+  expect_true(nrow(ultima_votacao_pec241) != 0)
+  expect_true(nrow(votos_partidos_pec241) != 0)
+  expect_true(nrow(proposicao_votacao7252) != 0)
+})
+
 test_that("fetch_votos()", {
   expect_true(all(sapply(votos_pec241, class) %in% .COLNAMES_VOTOS))
 })

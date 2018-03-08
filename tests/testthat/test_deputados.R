@@ -22,6 +22,12 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(dep_gastos))
 })
 
+test_that("Not Empty", {
+  expect_true(nrow(dep_info) != 0)
+  expect_true(nrow(dep_info_por_id) != 0)
+  expect_true(nrow(dep_gastos) != 0)
+})
+
 test_that("fetch_deputado() usando ID", {
   expect_true(all(sapply(dep_info_por_id, class) %in% .COLNAMES_DEP_INFO_ID))
 })
