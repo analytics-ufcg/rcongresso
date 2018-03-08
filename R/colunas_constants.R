@@ -17,8 +17,8 @@
 
 .COLNAMES_DEP_GASTOS <- c("ano"="numeric","mes"="numeric","tipoDespesa"="character","idDocumento"="integer","tipoDocumento"="numeric",
                          "idTipoDocumento"="integer","dataDocumento"="character","numDocumento"="numeric","valorDocumento"="numeric",
-                         "urlDocumento","nomeFornecedor","cnpjCpfFornecedor"="character","valorLiquido"="numeric","valorGlosa"="numeric",
-                         "numRessarcimento"="numeric","idLote"="integer","parcela"="numeric", "idDep"="integer")
+                         "urlDocumento"="character","nomeFornecedor"="character","cnpjCpfFornecedor"="character","valorLiquido"="numeric",
+                         "valorGlosa"="numeric","numRessarcimento"="numeric","idLote"="integer","parcela"="numeric", "idDep"="integer")
 
 # Proposições
 .COLNAMES_PROPOSICAO <- c("id"="integer","uri"="character","siglaTipo"="character","idTipo"="integer",
@@ -37,6 +37,11 @@
                             "ementaDetalhada"="character","uriPropPrincipal"="character","uriPropAnterior"="character","uriPropPosterior"="character",
                             "urnFinal"="character","texto"="character","justificativa"="character")
 
+.COLNAMES_VOTACOES <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
+                        "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
+                        "proposicao.id"="integer","proposicao.uri"="character","proposicao.siglaTipo"="character","proposicao.idTipo"="integer",
+                        "proposicao.numero"="integer","proposicao.ano"="integer","proposicao.ementa"="character")
+.COLNAMES_TIPO_PROPOSICAO <- c("id"="integer","sigla"="character","nome"="character","descricao"="character")
 # Votações
 
 # Endpoint: {/votacoes/{id}/votos}
