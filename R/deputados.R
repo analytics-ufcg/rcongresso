@@ -24,16 +24,16 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
   }
   else if(is.null(id)){
     .fetch_using_queries(parametros, .DEPUTADOS_PATH) %>%
-      .assert_dataframe_completo(.COLNAMES_DEP_INFO)# %>%
-      #.coerce_types(.COLNAMES_DEP_INFO)
+      .assert_dataframe_completo(.COLNAMES_DEP_INFO) %>%
+      .coerce_types(.COLNAMES_DEP_INFO)
   }
   else{
     .fetch_using_id(id, .DEPUTADOS_PATH) %>%
-      dplyr::select(which(grepl("redeSocial", names(.)))) %>%
-      tidyr::nest() %>%
-      dplyr::rename(redeSocial = data) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
+      tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
+      dplyr::rename(redeSocial = data) %>%
       .coerce_types(.COLNAMES_DEP_INFO_ID)
+
   }
 }
 
@@ -54,11 +54,10 @@ fetch_despesas_deputado <- function(dep_id) {
     dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id, "/despesas")) %>%
     dplyr::group_by(id, path) %>%
     dplyr::do(
-      .congresso_api(.$path, query) %>%
-        .coerce_numeric() %>%
-        as.data.frame(stringsAsFactors = FALSE)
+      .congresso_api(.$path, query)
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::mutate(idDep = .$id) %>%
-    dplyr::select(-path, -id)
+    dplyr::select(-path, idDep = id) %>%
+    .assert_dataframe_completo(.COLNAMES_DEP_GASTOS) %>%
+    .coerce_types(.COLNAMES_DEP_GASTOS)
 }
