@@ -40,11 +40,17 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
-    .congresso_api(.PROPOSICOES_PATH)
+    .congresso_api(.PROPOSICOES_PATH) %>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO)
   else if(is.null(id))
-    .fetch_using_queries(parametros, .PROPOSICOES_PATH)
+    .fetch_using_queries(parametros, .PROPOSICOES_PATH)%>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO)
   else
-    .fetch_using_id(id, .PROPOSICOES_PATH)
+    .fetch_using_id(id, .PROPOSICOES_PATH)%>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_POR_ID)
 }
 
 #' @title Fetches all the votings which a proposition went through
@@ -65,7 +71,9 @@ fetch_votacoes <- function(id_prop){
     dplyr::do(
       .congresso_api(.$path)
     ) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    .assert_dataframe_completo(.COLNAMES_VOTACOES) %>%
+    .coerce_types(.COLNAMES_VOTACOES)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
@@ -118,5 +126,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
     dplyr::mutate(id = as.numeric(.$id))
 
   tibble::tibble(id = id_tipo_prop) %>%
-    dplyr::left_join(prop_types, by = "id")
+    dplyr::left_join(prop_types, by = "id") %>%
+    .assert_dataframe_completo(.COLNAMES_TIPO_PROPOSICAO) %>%
+    .coerce_types(.COLNAMES_TIPO_PROPOSICAO)
 }
