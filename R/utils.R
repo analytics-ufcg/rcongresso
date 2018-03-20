@@ -73,17 +73,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     obj <- obj[,order(colnames(obj))]
     types <- unname(types[sort(names(types))])
     out <- lapply(1:length(obj),FUN = function(i){
-      FUN1 <- .switch_types(types[i]); suppressWarnings(.save_list(obj[,i],FUN1))})
+      FUN1 <- .switch_types(types[i]); suppressWarnings(obj[,i] %>% unlist() %>% FUN1)})
     names(out) <- colnames(obj)
     as.data.frame(out,stringsAsFactors = FALSE)
   } else tibble::tibble()
-}
-
-.save_list <- function(column, func){
-  if(is.list(column))
-    column
-  else
-    column %>% func
 }
 
 #' Returns a conversion function given a type name.
