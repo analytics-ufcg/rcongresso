@@ -32,7 +32,9 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
       .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
       tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
       dplyr::rename(redeSocial = data) %>%
-      .coerce_types(.COLNAMES_DEP_INFO_ID)
+      .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
+      tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
+      dplyr::rename(redeSocial = data)
 
   }
 }
