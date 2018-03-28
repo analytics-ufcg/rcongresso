@@ -11,35 +11,8 @@ ultima_votacao_pec241 <- fetch_votacoes(2088351) %>%
 votos_partidos_pec241 <- get_votos_partidos(7252)
 proposicao_votacao7252 <- fetch_proposicao_from_votacao(7252)
 
-colnames_votos_pec241 <- c("id_votacao","voto","parlamentar.id","parlamentar.uri",
-                          "parlamentar.nome","parlamentar.siglaPartido",
-                          "parlamentar.uriPartido","parlamentar.siglaUf",
-                          "parlamentar.idLegislatura","parlamentar.urlFoto")
-colnames_votacao_pec241 <- c("id","uri","titulo","uriEvento","uriProposicaoPrincipal",
-                            "tipoVotacao","placarSim","placarNao","placarAbstencao",
-                            "dataHoraInicio","dataHoraFim")
-colnames_orientacoes_pec241 <- c("uriBancada","nomeBancada","voto","id_votacao")
-colnames_votospartidos_pec241 <- c("partido", "orientacao_partido", "bancada_associada", "id_votacao")
-colnames_ultimavotacao_pec241 <- c("id","uriProposicaoPrincipal")
-colnames_proposicao_votacao7252 <- c("id_votacao","uri","ementa","id_proposicao")
-
-tipos_votos_pec241 <- c("numeric","character","integer","character","character","character",
-                        "character","character","integer","character")
-tipos_votacao_pec241 <- c("integer","character","character","character","character",
-                        "character","integer","integer","integer","character","character")
-tipos_orientacoes_pec241 <- c("character","character","character","numeric")
-tipos_ultima_votacao_pec241 <- c("integer","character")
-tipos_votos_partidos_pec241 <- c("character","character","character","numeric")
-tipos_proposicao_votacao7252 <- c("numeric","character","character","integer")
-
-names(tipos_votos_pec241) <- colnames_votos_pec241
-names(tipos_votacao_pec241) <- colnames_votacao_pec241
-names(tipos_orientacoes_pec241) <- colnames_orientacoes_pec241
-names(tipos_ultima_votacao_pec241) <- colnames_ultimavotacao_pec241
-names(tipos_votos_partidos_pec241) <- colnames_votospartidos_pec241
-names(tipos_proposicao_votacao7252) <- colnames_proposicao_votacao7252
-
 # Testes
+# Os nomes das colunas e os tipos estão definidos em colunas_constants.R
 test_that("Is dataframe", {
   expect_true(is.data.frame(votos_pec241))
   expect_true(is.data.frame(votacao_pec241))
@@ -49,30 +22,35 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(proposicao_votacao7252))
 })
 
-# Nao necessario (remover depois)
-test_that("Dimensoes do dataframe",{
-  expect_equal(dim(votos_pec241), c(478, 10))
-  expect_equal(dim(votacao_pec241), c(1, 11))
-  expect_equal(dim(orientacoes_pec241), c(23, 4))
-  expect_equal(dim(votos_partidos_pec241), c(38, 4))
-  expect_equal(dim(ultima_votacao_pec241), c(1, 2))
-  expect_equal(dim(proposicao_votacao7252), c(1, 4))
+test_that("Not Empty", {
+  expect_true(nrow(votos_pec241) != 0)
+  expect_true(nrow(votacao_pec241) != 0)
+  expect_true(nrow(orientacoes_pec241) != 0)
+  expect_true(nrow(ultima_votacao_pec241) != 0)
+  expect_true(nrow(votos_partidos_pec241) != 0)
+  expect_true(nrow(proposicao_votacao7252) != 0)
 })
 
-test_that("Atributos do dataframe",{
-  expect_true(all(attributes(votos_pec241)$names %in% colnames_votos_pec241))
-  expect_true(all(attributes(votacao_pec241)$names %in% colnames_votacao_pec241))
-  expect_true(all(attributes(orientacoes_pec241)$names %in% colnames_orientacoes_pec241))
-  expect_true(all(attributes(votos_partidos_pec241)$names %in% colnames_votospartidos_pec241))
-  expect_true(all(attributes(ultima_votacao_pec241)$names %in% colnames_ultimavotacao_pec241))
-  expect_true(all(attributes(proposicao_votacao7252)$names %in% colnames_proposicao_votacao7252))
+test_that("fetch_votos()", {
+  expect_true(all(sapply(votos_pec241, class) %in% .COLNAMES_VOTOS))
 })
 
-test_that("Campos do dataframe",{
-  expect_true(all(sapply(votos_pec241, class) %in% tipos_votos_pec241))
-  expect_true(all(sapply(votacao_pec241, class) %in% tipos_votacao_pec241))
-  expect_true(all(sapply(orientacoes_pec241, class) %in% tipos_orientacoes_pec241))
-  expect_true(all(sapply(votos_partidos_pec241, class) %in% tipos_votos_partidos_pec241))
-  expect_true(all(sapply(ultima_votacao_pec241, class) %in% tipos_ultima_votacao_pec241))
-  expect_true(all(sapply(proposicao_votacao7252, class) %in% tipos_proposicao_votacao7252))
+test_that("fetch_votacao()", {
+  expect_true(all(sapply(votacao_pec241, class) %in% .COLNAMES_VOTACAO))
+})
+
+test_that("fetch_orientacoes()", {
+  expect_true(all(sapply(orientacoes_pec241, class) %in% .COLNAMES_ORIENTACOES))
+})
+
+test_that("get_votos_partidos()", {
+  expect_true(all(sapply(votos_partidos_pec241, class) %in% .COLNAMES_VOTOSPARTIDOS))
+})
+
+test_that("ultima_votacao()", {
+  expect_true(all(sapply(ultima_votacao_pec241, class) %in% .COLNAMES_ULTIMAVOTACAO))
+})
+
+test_that("fetch_proposicao_from_votacao()", {
+  expect_true(all(sapply(proposicao_votacao7252, class) %in% .COLNAMES_PROP_VOTACAO))
 })

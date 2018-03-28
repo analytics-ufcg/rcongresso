@@ -4,7 +4,7 @@
 \alias{fetch_orientacoes}
 \title{Fetches the positions of a group on a voting}
 \usage{
-fetch_orientacoes(id_votacao)
+fetch_orientacoes(id_votacao = NULL)
 }
 \arguments{
 \item{id_votacao}{Voting's ID}

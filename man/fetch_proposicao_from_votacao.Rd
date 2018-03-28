@@ -4,7 +4,7 @@
 \alias{fetch_proposicao_from_votacao}
 \title{Finds the id of the proposition to which a given voting refers}
 \usage{
-fetch_proposicao_from_votacao(id_votacao)
+fetch_proposicao_from_votacao(id_votacao = NULL)
 }
 \arguments{
 \item{id_votacao}{Voting's ID}

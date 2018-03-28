@@ -4,7 +4,7 @@
 \alias{fetch_votos}
 \title{Fetches individual votes from a voting}
 \usage{
-fetch_votos(id_votacao)
+fetch_votos(id_votacao = NULL)
 }
 \arguments{
 \item{id_votacao}{Voting's ID}
