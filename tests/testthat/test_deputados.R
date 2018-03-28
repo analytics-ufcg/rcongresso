@@ -14,6 +14,8 @@ NOME_ESPERADO <- "ABEL SALVADOR MESQUITA JUNIOR"
 ABEL_MESQUITA_DN <- "1962-03-29"
 ABEL_MESQUITA_UF <-"RR"
 
+TAM_DF_DEFAULT <- c(15, 8)
+
 # Testes
 # Os nomes das colunas e os tipos estão definidos em colunas_constants.R
 test_that("Is dataframe", {
@@ -44,3 +46,7 @@ test_that("ID do deputado", {expect_equal(dep_info_por_id$id, ABEL_MESQUITA_ID)}
 test_that("Nome do deputado", {expect_equal(dep_info_por_id$nomeCivil, NOME_ESPERADO)})
 test_that("Data de nascimento do deputado", {expect_equal(dep_info_por_id$dataNascimento, ABEL_MESQUITA_DN)})
 test_that("UF de nascimento do deputado", {expect_equal(dep_info_por_id$ufNascimento, ABEL_MESQUITA_UF)})
+
+test_that("Quantidade default por requisição, atualmente 15",{
+  expect_equal(dim(fetch_deputado()), TAM_DF_DEFAULT)
+})
