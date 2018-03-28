@@ -72,3 +72,16 @@
 
 .COLNAMES_PROP_VOTACAO <- c("id_votacao"="integer","id_proposicao"="integer","uri"="character","siglaTipo"="character",
                                      "idTipo"="integer","numero"="numeric","ano"="numeric","ementa"="character")
+
+# Partidos
+.COLNAMES_PARTIDOS <- c("id"="integer","sigla"="character","nome"="character","uri"="character")
+.COLNAMES_PARTIDOS_ID <- c("id"="integer","nome"="character","numeroEleitoral"="integer",
+                           "sigla"="character","status.data"="character","status.idLegislatura"="integer",
+                           "status.lider.idLegislatura"="integer",
+                           "status.lider.nome"="character","status.lider.siglaPartido"="character",
+                           "status.lider.uriPartido"="character","status.lider.uf"="character",
+                           "status.lider.urlFoto"="character","status.lider.uriPartido"="character",
+                           "status.lider.uri"="character","urlLogo"="character","status.situacao"="character",
+                           "status.totalMembros"="character","status.totalPosse"="character","status.uriMembros"="character",
+                           "uri"="character","urlFacebook"="character","urlWebsite"="character")
+

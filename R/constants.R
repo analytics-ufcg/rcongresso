@@ -8,6 +8,7 @@
 .PROPOSICOES_PATH <- "/api/v2/proposicoes"
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
+.PARTIDOS_PATH <- "/api/v2/partidos"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
 
 # Link do repositório do rcongresso
