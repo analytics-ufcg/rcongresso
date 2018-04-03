@@ -205,3 +205,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
                          ))
   }
 }
+
+#' Check if a proposition/party exists and returns a warning message when it does not.
+#' @param x returned object from proposition or party function
+#' @param message error message expected
+.verifica_id <- function(x, message) {
+  if(is.null(x)){
+    warning(message)
+    x
+  } else x
+}
