@@ -85,7 +85,7 @@ fetch_votacoes <- function(id_prop){
 #' @examples
 #' pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_partido}}
 #' @rdname fetch_id_proposicao
 #' @export
 fetch_id_proposicao <- function(tipo, numero, ano){
@@ -95,6 +95,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
       .congresso_api(.PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
                           ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
+        .verifica_id(.WARNING_PROPOSICAO_ID) %>%
         .to_tibble()
     ) %>%
     unlist() %>%
