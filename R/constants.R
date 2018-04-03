@@ -3,7 +3,7 @@
 
 # Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
-.WARNING_PROPOSICAO_ID <- "Pode haver campos incorretos na proposição. Verifique o tipo, número e ano."
+.WARNING_PROPOSICAO_ID <- "Pode haver campos incorretos na proposicao. Verifique o tipo, numero e ano."
 .WARNING_SIGLA_PARTIDO <- "Algumas siglas podem estar incorretas."
 
 # Paths
