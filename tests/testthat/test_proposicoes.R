@@ -1,6 +1,6 @@
 # Testa erros
-proposicao_inexistente <- fetch_id_proposicao(tipo = "AAA", numero = 55, ano = 1870)
-test_that("GET ID de proposição inexistente", {expect_equal(proposicao_inexistente, NULL)})
+expect_that(fetch_id_proposicao(tipo = "AAA", numero = 55, ano = 1870), gives_warning(.WARNING_PROPOSICAO_ID))
+test_that("GET ID de proposição inexistente", {expect_equal(suppressWarnings(fetch_id_proposicao(tipo = "AAA", numero = 55, ano = 1870)), NULL)})
 test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao(id = 506))})
 
 # Setup
