@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fetches individual votes from a voting — fetch_votos • rcongresso</title>
+<title>Fetches parties from API using a query. — fetch_partido • rcongresso</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -98,39 +98,71 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fetches individual votes from a voting</h1>
+    <h1>Fetches parties from API using a query.</h1>
     </div>
 
     
-    <p>Some other informations about the deputy are returned, such as: name, party, id.</p>
+    <p>Returns a list containing basic information about parties which has or had been any deputy
+in the lower house. If none parameters are passed, the function returns the parties
+which has active deputies on that moment.</p>
     
 
-    <pre class="usage"><span class='fu'>fetch_votos</span>(<span class='kw'>id_votacao</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>fetch_partido</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sigla</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dataInicio</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dataFim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>idLegislatura</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ordenarPor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>id_votacao</th>
-      <td><p>Voting's ID</p></td>
+      <th>id</th>
+      <td><p>Party's ID</p></td>
+    </tr>
+    <tr>
+      <th>sigla</th>
+      <td><p>Party's abbreviation</p></td>
+    </tr>
+    <tr>
+      <th>dataInicio</th>
+      <td><p>Party's processing starting date</p></td>
+    </tr>
+    <tr>
+      <th>dataFim</th>
+      <td><p>Party's processing end date</p></td>
+    </tr>
+    <tr>
+      <th>idLegislatura</th>
+      <td><p>Legislature's number</p></td>
+    </tr>
+    <tr>
+      <th>itens</th>
+      <td><p>Items quantity</p></td>
+    </tr>
+    <tr>
+      <th>ordenarPor</th>
+      <td><p>Order by: 'id', 'sigla' or 'nome'</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe containing votes for each deputy on this voting.</p>
+    <p>Dataframe containing information about the parties.</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>DETAILS</p>
+    <p>Note that if you have the party's ID, it's not necessary to add any other parameter on the
+function call. The call to this function using the party's ID returns more details than using the
+others parameters. If you don't have the party's ID, the <code><a href='fetch_id_partido.html'>fetch_id_partido</a></code>
+function may be helpful.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='fetch_votacao.html'>fetch_votacao</a></code></p>
+    <p><code><a href='get_votos_partidos.html'>get_votos_partidos</a></code>, <code><a href='fetch_orientacoes.html'>fetch_orientacoes</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>votos_pec241</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_votos</span>(<span class='fl'>7252</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>PMB</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_partido</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>36887</span>)
+<span class='no'>PT</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_partido</span>(<span class='kw'>sigla</span> <span class='kw'>=</span> <span class='st'>"PT"</span>)
+<span class='no'>partidos2010a2014</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_partido</span>(<span class='kw'>dataInicio</span> <span class='kw'>=</span> <span class='st'>"2010-01-01"</span>, <span class='kw'>dataFim</span> <span class='kw'>=</span> <span class='st'>"2014-12-31"</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='fl'>100</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

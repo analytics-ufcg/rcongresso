@@ -23,5 +23,5 @@ The function can be used to fetch a vector of ids as well, in case of many propo
 pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
 }
 \seealso{
-\code{\link[rcongresso]{fetch_id_proposicao}}
+\code{\link[rcongresso]{fetch_id_partido}}
 }

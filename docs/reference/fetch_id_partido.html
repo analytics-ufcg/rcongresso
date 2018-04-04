@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fetches individual votes from a voting — fetch_votos • rcongresso</title>
+<title>Retrieves the party's ID from its abbreviation. — fetch_id_partido • rcongresso</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -98,39 +98,35 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fetches individual votes from a voting</h1>
+    <h1>Retrieves the party's ID from its abbreviation.</h1>
     </div>
 
     
-    <p>Some other informations about the deputy are returned, such as: name, party, id.</p>
+    <p>The function can be used to fetch a vector of ids as well, in case of many parties.</p>
     
 
-    <pre class="usage"><span class='fu'>fetch_votos</span>(<span class='kw'>id_votacao</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
+    <pre class="usage"><span class='fu'>fetch_id_partido</span>(<span class='no'>sigla</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>id_votacao</th>
-      <td><p>Voting's ID</p></td>
+      <th>sigla</th>
+      <td><p>Party's abbreviation</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Dataframe containing votes for each deputy on this voting.</p>
-    
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>DETAILS</p>
+    <p>Party's ID.</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code><a href='fetch_votacao.html'>fetch_votacao</a></code></p>
+    <p><code><a href='fetch_id_proposicao.html'>fetch_id_proposicao</a></code></p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>votos_pec241</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_votos</span>(<span class='fl'>7252</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>p</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_id_partido</span>(<span class='fu'>c</span>(<span class='st'>"PT"</span>,<span class='st'>"PSDB"</span>,<span class='st'>"PP"</span>,<span class='st'>"PMDB"</span>))</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
@@ -138,8 +134,6 @@
       <li><a href="#arguments">Arguments</a></li>
       
       <li><a href="#value">Value</a></li>
-
-      <li><a href="#details">Details</a></li>
 
       <li><a href="#see-also">See also</a></li>
       
