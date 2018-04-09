@@ -232,7 +232,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 .fetch_all_itens <- function(query, API_path){
   query$itens <- .MAX_ITENS
 
-  list_param <- .get_hrefs(path = API_path, query = query)$href[4] %>%
+  list_param <- .get_hrefs(path = API_path, query = query)$href[.LAST_PAGE_INDEX] %>%
     strsplit("&")
 
   ult_pag <- list_param[[1]][2] %>%
