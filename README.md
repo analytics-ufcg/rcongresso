@@ -5,7 +5,7 @@
 [![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/rcongresso)](https://cran.r-project.org/package=rcongresso)
 ![](https://cranlogs.r-pkg.org/badges/grand-total/rcongresso)
 
-Pacote R para acessar dados do congresso nacional baseado na API RESTful criada em 2017 (https://dadosabertos.camara.leg.br/), gerando data frames e interagindo bem com o tidyverse.
+Pacote R para acessar dados do congresso nacional baseado na [API RESTful](https://dadosabertos.camara.leg.br/swagger/api.html) criada em 2017, gerando data frames e interagindo bem com o tidyverse.
 
 Site: https://analytics-ufcg.github.io/rcongresso 
 

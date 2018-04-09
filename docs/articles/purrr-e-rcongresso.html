@@ -8,14 +8,17 @@
 <title>Usando purrr + rcongresso para analisar votações • rcongresso</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-<!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Usando purrr + rcongresso para analisar votações">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="summary">
+<!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
 <body>
-    <div class="container template-vignette">
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -24,12 +27,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="../index.html">rcongresso</a>
+      <span class="navbar-brand">
+        <a class="navbar-link" href="../index.html">rcongresso</a>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.2</span>
+      </span>
     </div>
+
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="..//index.html">
+  <a href="../index.html">
     <span class="fa fa-home fa-lg"></span>
      
   </a>
@@ -73,17 +80,20 @@
 
       
       </header><div class="row">
-  <div class="col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Usando purrr + rcongresso para analisar votações</h1>
                         <h4 class="author">Nazareno</h4>
             
-            <h4 class="date">2018-04-03</h4>
-          </div>
+            <h4 class="date">2018-04-09</h4>
+      
+      <small>Source: <a href="https://github.com/analytics-ufcg/rcongresso/blob/master/vignettes/purrr-e-rcongresso.Rmd"><code>vignettes/purrr-e-rcongresso.Rmd</code></a></small>
+      <div class="hidden name"><code>purrr-e-rcongresso.Rmd</code></div>
+
+    </div>
 
     
     
-<div class="contents">
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rcongresso)
 <span class="kw">library</span>(dplyr)
 <span class="kw">library</span>(tidyr)
@@ -238,18 +248,18 @@
 ## $ ufNascimento                   &lt;chr&gt; "RR", "CE", "BA", "MG", "SE", "...
 ## $ ultimoStatus.condicaoEleitoral &lt;chr&gt; "Titular", "Titular", "Titular"...
 ## $ ultimoStatus.data              &lt;chr&gt; "2015-02-01", "2016-04-15", "20...
-## $ ultimoStatus.descricaoStatus   &lt;chr&gt; NA, NA, NA, "Em virtude de desp...
-## $ ultimoStatus.gabinete.andar    &lt;dbl&gt; 2, 3, 4, 2, 9, 5, NA, 2, 3, 6, ...
+## $ ultimoStatus.descricaoStatus   &lt;chr&gt; NA, NA, NA, NA, NA, NA, "", NA,...
+## $ ultimoStatus.gabinete.andar    &lt;dbl&gt; 2, 3, 4, NA, 9, NA, NA, 2, 3, 6...
 ## $ ultimoStatus.gabinete.email    &lt;chr&gt; "dep.abelmesquitajr.@camara.leg...
-## $ ultimoStatus.gabinete.nome     &lt;dbl&gt; 248, 335, 402, 231, 937, 556, 3...
-## $ ultimoStatus.gabinete.predio   &lt;chr&gt; "4", "4", "4", "4", "4", "4", "...
-## $ ultimoStatus.gabinete.sala     &lt;dbl&gt; 248, 335, 402, 231, 937, 556, 3...
+## $ ultimoStatus.gabinete.nome     &lt;dbl&gt; 248, 335, 402, NA, 937, NA, 374...
+## $ ultimoStatus.gabinete.predio   &lt;chr&gt; "4", "4", "4", NA, "4", NA, "3"...
+## $ ultimoStatus.gabinete.sala     &lt;dbl&gt; 248, 335, 402, NA, 937, NA, 374...
 ## $ ultimoStatus.gabinete.telefone &lt;chr&gt; "3215-5248", "3215-5335", "3215...
 ## $ ultimoStatus.id                &lt;int&gt; 178957, 178864, 178914, 178890,...
 ## $ ultimoStatus.idLegislatura     &lt;int&gt; 55, 55, 55, 55, 55, 55, 55, 55,...
 ## $ ultimoStatus.nome              &lt;chr&gt; "ABEL MESQUITA JR.", "ADAIL CAR...
 ## $ ultimoStatus.nomeEleitoral     &lt;chr&gt; "ABEL MESQUITA JR.", "ADAIL CAR...
-## $ ultimoStatus.siglaPartido      &lt;chr&gt; "DEM", "PP", "AVANTE", "PT", "P...
+## $ ultimoStatus.siglaPartido      &lt;chr&gt; "DEM", "PODE", "AVANTE", "PT", ...
 ## $ ultimoStatus.siglaUf           &lt;chr&gt; "RR", "CE", "PE", "MG", "SE", "...
 ## $ ultimoStatus.situacao          &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA,...
 ## $ ultimoStatus.uri               &lt;chr&gt; "https://dadosabertos.camara.le...
@@ -319,7 +329,6 @@
 ## $ uriBancada                           &lt;chr&gt; "https://dadosabertos.cam...
 ## $ voto                                 &lt;chr&gt; "Sim", "Não", "Sim", "Sim...</code></pre>
 </div>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -344,11 +353,13 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
 </div>
+
+  
 
   </body>
 </html>
