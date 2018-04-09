@@ -139,7 +139,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .fetch_using_queries <- function(parametros, API_path, asList = FALSE){
   if (parametros$itens == -1){
-    .fetch_all_itens(.verifica_parametros_entrada(parametros), API_path)
+    .fetch_all_items(.verifica_parametros_entrada(parametros), API_path)
   }
   else if (!is.null(parametros$itens)){
     .fetch_itens(.verifica_parametros_entrada(parametros), API_path)
@@ -229,7 +229,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   } else x
 }
 
-.fetch_all_itens <- function(query, API_path){
+.fetch_all_items <- function(query, API_path){
   query$itens <- .MAX_ITENS
 
   list_param <- .get_hrefs(path = API_path, query = query)$href[.LAST_PAGE_INDEX] %>%
