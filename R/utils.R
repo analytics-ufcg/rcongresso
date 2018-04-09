@@ -11,12 +11,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     jsonlite::fromJSON(flatten = TRUE)
 }
 
-#' Wraps an access to the congress API given a relative path and query arguments.
-#' @param path URL relative to the API base URL
-#' @param query Query parameters
-#' @export
-.congresso_api <- function(path=NULL, query=NULL, asList = FALSE){
-
+.get_from_api <- function(path=NULL, query=NULL){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
@@ -28,6 +23,21 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
 
+  resp
+}
+
+.get_hrefs <- function(path=NULL, query=NULL) {
+  resp <- .get_from_api(path, query)
+  .get_json(resp)$links
+}
+
+#' Wraps an access to the congress API given a relative path and query arguments.
+#' @param path URL relative to the API base URL
+#' @param query Query parameters
+#' @export
+.congresso_api <- function(path=NULL, query=NULL, asList = FALSE){
+
+  resp <- .get_from_api(path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
@@ -128,8 +138,11 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #'
 #' @export
 .fetch_using_queries <- function(parametros, API_path, asList = FALSE){
-  if (!is.null(parametros$itens)){
+  if (parametros$itens == -1){
     .fetch_all_itens(.verifica_parametros_entrada(parametros), API_path)
+  }
+  else if (!is.null(parametros$itens)){
+    .fetch_itens(.verifica_parametros_entrada(parametros), API_path)
   }
   else{
     .verifica_parametros_entrada(parametros) %>%
@@ -174,7 +187,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' items. 530 items can also be read as 500 items + 30 items, then 5 pages with 100 items and
 #' 1 page with 30 items.
 #'
-.fetch_all_itens <- function(query, API_path){
+.fetch_itens <- function(query, API_path){
 
   query$pagina <- seq(1, query$itens/.MAX_ITENS)
 
@@ -214,4 +227,18 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     warning(message)
     x
   } else x
+}
+
+.fetch_all_itens <- function(query, API_path){
+  query$itens <- .MAX_ITENS
+
+  list_param <- .get_hrefs(path = API_path, query = query)$href[4] %>%
+    strsplit("&")
+
+  ult_pag <- list_param[[1]][2] %>%
+    strsplit("=")
+
+  query$itens <- as.integer(ult_pag[[1]][2]) * .MAX_ITENS
+
+  .fetch_itens(query, API_path)
 }

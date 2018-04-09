@@ -21,3 +21,4 @@
 
 # Requests
 .MAX_ITENS <- 100
+.LAST_PAGE_INDEX <- 4
