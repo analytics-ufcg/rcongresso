@@ -138,7 +138,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #'
 #' @export
 .fetch_using_queries <- function(parametros, API_path, asList = FALSE){
-  if (parametros$itens == -1){
+  if (!is.null(parametros$itens) && (parametros$itens == -1)){
     .fetch_all_items(.verifica_parametros_entrada(parametros), API_path)
   }
   else if (!is.null(parametros$itens)){
