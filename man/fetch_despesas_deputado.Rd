@@ -2,20 +2,32 @@
 % Please edit documentation in R/deputados.R
 \name{fetch_despesas_deputado}
 \alias{fetch_despesas_deputado}
-\title{Fetches expenditures from deputy using its id}
+\title{Fetches expenditures from deputy}
 \usage{
-fetch_despesas_deputado(dep_id)
+fetch_despesas_deputado(id = NULL, idLegislatura = NULL, ano = NULL,
+  mes = NULL, cnpjCpfFornecedor = NULL, itens = NULL)
 }
 \arguments{
-\item{dep_id}{deputy's ID}
+\item{id}{Deputy's ID. Mandatory field}
+
+\item{idLegislatura}{Deputy's ID}
+
+\item{ano}{Expenditure's year}
+
+\item{mes}{Expenditure's month}
+
+\item{cnpjCpfFornecedor}{Provider's CPF or CNPJ}
+
+\item{itens}{Items quantity. '-1' returns all the expenditures}
 }
 \value{
 Dataframe containing details about the deputy's expenditures
 }
 \description{
-Fetches expenditures from deputy with his/her parlamentary quota in
-the last six months.
+Fetches expenditures from deputy with his/her parlamentary quota. If no time
+parameters are passed, the fucntion returns the expenditures in the last six months.
 }
 \examples{
-gastos_abel_mesquita <- fetch_despesas_deputado(dep_id = 178957)
+gastos_abel_mesquita <- fetch_despesas_deputado(id = 178957)
+gastos_abel_junho2017 <- fetch_despesas_deputado(id = 178957, ano = 2017, mes = 06, itens = -1)
 }
