@@ -8,7 +8,8 @@
 #' @param dataFim Party's processing end date
 #' @param idLegislatura Legislature's number
 #' @param ordenarPor Order by: 'id', 'sigla' or 'nome'
-#' @param itens Items quantity
+#' @param itens Items quantity. '-1' returns all parties which have
+#' deputies at the request moment
 #' @return Dataframe containing information about the parties.
 #' @details Note that if you have the party's ID, it's not necessary to add any other parameter on the
 #' function call. The call to this function using the party's ID returns more details than using the

@@ -18,7 +18,8 @@ fetch_partido(id = NULL, sigla = NULL, dataInicio = NULL,
 
 \item{idLegislatura}{Legislature's number}
 
-\item{itens}{Items quantity}
+\item{itens}{Items quantity. '-1' returns all parties which have
+deputies at the request moment}
 
 \item{ordenarPor}{Order by: 'id', 'sigla' or 'nome'}
 }

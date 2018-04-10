@@ -18,7 +18,8 @@
 #' @param idAutor Author's ID
 #' @param autor Author's name
 #' @param codPartido Party code
-#' @param itens Items quantity
+#' @param itens Items quantity. '-1' returns all the propositions which had been processed
+#' in the last 30 days
 #' @return Dataframe containing information about the proposition.
 #' @details Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
 #' function call. The call to this function using the proposition's ID returns more details than using the
