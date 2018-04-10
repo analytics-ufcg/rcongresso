@@ -1,6 +1,7 @@
 #' @title Retrieves details about a deputy
 #' @description ID, name, birth date, birth city among other informations are returned.
-#' @param id deputy's ID
+#' @param id Deputy's ID
+#' @param nome Deputy's name (partially or complete)
 #' @param idLegislatura Id of one or more mandates of the deputy
 #' @param siglaUf State's abbreviation of the deputy
 #' @param siglaPartido Party's abbreviation of the deputy
@@ -12,7 +13,7 @@
 #' abel_mesquita_info <- fetch_deputado(id = 178957)
 #' @rdname fetch_deputado
 #' @export
-fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, siglaPartido = NULL,
+fetch_deputado <- function(id = NULL, nome = NULL, idLegislatura = NULL, siglaUf = NULL, siglaPartido = NULL,
                            siglaSexo = NULL, itens = NULL, ordenarPor = NULL){
 
   parametros <- as.list(environment(), all = TRUE)
@@ -40,27 +41,28 @@ fetch_deputado <- function(id = NULL, idLegislatura = NULL, siglaUf = NULL, sigl
   }
 }
 
-#' @title Fetches expenditures from deputy using its id
-#' @description Fetches expenditures from deputy with his/her parlamentary quota in
-#' the last six months.
-#' @param dep_id deputy's ID
+#' @title Fetches expenditures from deputy
+#' @description Fetches expenditures from deputy with his/her parlamentary quota. If no time
+#' parameters are passed, the fucntion returns the expenditures in the last six months.
+#' @param id Deputy's ID. Mandatory field
+#' @param idLegislatura Deputy's ID
+#' @param ano Expenditure's year
+#' @param mes Expenditure's month
+#' @param cnpjCpfFornecedor Provider's CPF or CNPJ
+#' @param itens Items quantity. '-1' returns all the expenditures
 #' @return Dataframe containing details about the deputy's expenditures
 #' @examples
-#' gastos_abel_mesquita <- fetch_despesas_deputado(dep_id = 178957)
+#' gastos_abel_mesquita <- fetch_despesas_deputado(id = 178957)
+#' gastos_abel_junho2017 <- fetch_despesas_deputado(id = 178957, ano = 2017, mes = 06, itens = -1)
 #' @rdname fetch_despesas_deputado
 #' @export
-fetch_despesas_deputado <- function(dep_id) {
-  id <- path <- NULL
-  query <- list(ordem = "ASC", ordenarPor = "numAno")
+fetch_despesas_deputado <- function(id = NULL, idLegislatura = NULL, ano = NULL, mes = NULL,
+                                    cnpjCpfFornecedor = NULL, itens = NULL) {
 
-  tibble::tibble(id = dep_id) %>%
-    dplyr::mutate(path = paste0(.DEPUTADOS_PATH, "/", id, "/despesas")) %>%
-    dplyr::group_by(id, path) %>%
-    dplyr::do(
-      .congresso_api(.$path, query)
-    ) %>%
-    dplyr::ungroup() %>%
-    dplyr::select(-path, idDep = id) %>%
+  parametros <- as.list(environment(), all = TRUE)
+  path <- paste0(.DEPUTADOS_PATH, "/", id, "/despesas")
+
+  .fetch_using_queries(parametros, path) %>%
     .assert_dataframe_completo(.COLNAMES_DEP_GASTOS) %>%
     .coerce_types(.COLNAMES_DEP_GASTOS)
 }
