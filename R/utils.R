@@ -189,8 +189,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #'
 .fetch_itens <- function(query, API_path){
 
-  print(query$itens)
-
   query$pagina <- seq(1, query$itens/.MAX_ITENS)
 
   if((query$itens < .MAX_ITENS) || (query$itens %% .MAX_ITENS == 0)){
@@ -234,16 +232,21 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 .fetch_all_items <- function(query, API_path){
   query$itens <- .MAX_ITENS
 
-  print(query$itens)
-
   # Pegar pelo "last" e não buscar pelo índice diretamente, já que o índice pode variar.
-  list_param <- .get_hrefs(path = API_path, query = query)$href[.LAST_PAGE_INDEX] %>%
-    strsplit("&")
-
-  print(.get_hrefs(path = API_path, query = query))
+  list_param <- .get_hrefs(path = API_path, query = query) %>%
+    dplyr::filter(rel == "last") %>%
+    dplyr::select(href) %>%
+    purrr::pluck(1) %>%
+    strsplit("/") %>%
+    purrr::pluck(1, length(.[[1]])) %>%
+    strsplit("&") %>%
+    purrr::pluck(1)
 
   # Procurar pelo parâmetro página. Mesma lógica do babado aqui em cima.
-  ult_pag <- list_param[[1]][2] %>%
+  index_ult_pag <- list_param %>%
+    stringr::str_detect("pagina")
+
+  ult_pag <- list_param[index_ult_pag] %>%
     strsplit("=")
 
   query$itens <- as.integer(ult_pag[[1]][2]) * .MAX_ITENS
