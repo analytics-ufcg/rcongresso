@@ -57,7 +57,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.3</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.4</span>
       </span>
     </div>
 
@@ -120,8 +120,8 @@
     <p>ID, name, birth date, birth city among other informations are returned.</p>
     
 
-    <pre class="usage"><span class='fu'>fetch_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>idLegislatura</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaUf</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>siglaPartido</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaSexo</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+    <pre class="usage"><span class='fu'>fetch_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>nome</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>idLegislatura</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>siglaUf</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaPartido</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaSexo</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>ordenarPor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -129,7 +129,11 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>id</th>
-      <td><p>deputy's ID</p></td>
+      <td><p>Deputy's ID</p></td>
+    </tr>
+    <tr>
+      <th>nome</th>
+      <td><p>Deputy's name (partially or complete)</p></td>
     </tr>
     <tr>
       <th>idLegislatura</th>

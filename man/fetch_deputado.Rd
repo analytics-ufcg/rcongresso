@@ -4,12 +4,14 @@
 \alias{fetch_deputado}
 \title{Retrieves details about a deputy}
 \usage{
-fetch_deputado(id = NULL, idLegislatura = NULL, siglaUf = NULL,
-  siglaPartido = NULL, siglaSexo = NULL, itens = NULL,
+fetch_deputado(id = NULL, nome = NULL, idLegislatura = NULL,
+  siglaUf = NULL, siglaPartido = NULL, siglaSexo = NULL, itens = NULL,
   ordenarPor = NULL)
 }
 \arguments{
-\item{id}{deputy's ID}
+\item{id}{Deputy's ID}
+
+\item{nome}{Deputy's name (partially or complete)}
 
 \item{idLegislatura}{Id of one or more mandates of the deputy}
 
