@@ -230,6 +230,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .fetch_all_items <- function(query, API_path){
+
+  href <- rel <- NULL
+
   query$itens <- .MAX_ITENS
 
   # Pegar pelo "last" e não buscar pelo índice diretamente, já que o índice pode variar.
