@@ -7,8 +7,22 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' pec241_json <- .get_json("https://dadosabertos.camara.leg.br/api/v2/proposicoes/2088351")
 #' @export
 .get_json <- function(response){
-  httr::content(response, as = "text") %>%
+  parsed <- httr::content(response, as = "text") %>%
     jsonlite::fromJSON(flatten = TRUE)
+
+  if (httr::http_error(response)) {
+    stop(
+      sprintf(
+        "Dados Abertos API request failed [%s]\n%s\n<%s>",
+        status_code(response),
+        parsed$message,
+        parsed$documentation_url
+      ),
+      call. = FALSE
+    )
+  }
+
+  parsed
 }
 
 .get_from_api <- function(path=NULL, query=NULL){
@@ -17,10 +31,29 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
-  httr::stop_for_status(resp)
+  print(resp)
+
+  #httr::stop_for_status(resp)
 
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
+  }
+
+  parsed <- httr::content(resp, as = "text") %>%
+    jsonlite::fromJSON(flatten = TRUE)
+
+  print(resp)
+
+  if (httr::http_error(resp)) {
+    stop(
+      sprintf(
+        "Dados Abertos API request failed [%s]\n%s\n<%s>",
+        httr::status_code(resp),
+        parsed$message,
+        parsed$documentation_url
+      ),
+      call. = FALSE
+    )
   }
 
   resp
@@ -37,8 +70,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .congresso_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(path, query)
-  obtained_data <- .get_json(resp)$dados
+  resp <- .get_from_api(path, query)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
    #print("conversao")
