@@ -5,7 +5,7 @@
 #' @param siglaUf State's abbreviation of the deputy
 #' @param siglaPartido Party's abbreviation of the deputy
 #' @param siglaSexo Gender's abbreviation
-#' @param itens Items quantity by request
+#' @param itens Items quantity. '-1' returns all current deputies at the request moment
 #' @param ordenarPor Element that will be used to sort the returned list
 #' @return Dataframe containing details about the deputy.
 #' @examples

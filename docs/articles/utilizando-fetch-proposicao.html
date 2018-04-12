@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.2</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.3</span>
       </span>
     </div>
 
@@ -85,7 +85,7 @@
       <h1>Entendendo os parâmetros utilizados na função fetch_proposicao()</h1>
                         <h4 class="author">Paulo Vinícius Soares</h4>
             
-            <h4 class="date">2018-04-09</h4>
+            <h4 class="date">2018-04-10</h4>
       
       <small>Source: <a href="https://github.com/analytics-ufcg/rcongresso/blob/master/vignettes/utilizando-fetch-proposicao.Rmd"><code>vignettes/utilizando-fetch-proposicao.Rmd</code></a></small>
       <div class="hidden name"><code>utilizando-fetch-proposicao.Rmd</code></div>
@@ -373,7 +373,7 @@
 <p>Essa busca utiliza o parâmetro <code>siglaPartidoAutor</code> e retorna todas as proposições sugeridas por deputados de determinado partido.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaPartidoAutor =</span> <span class="st">"PSC"</span>, <span class="dt">itens =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
-<pre><code>## Observations: 36
+<pre><code>## Observations: 37
 ## Variables: 7
 ## $ ano       &lt;int&gt; 2007, 2009, 2011, 2011, 2011, 2011, 2013, 2013, 2013...
 ## $ ementa    &lt;chr&gt; "Dispõe sobre a execução administrativa da Dívida At...
@@ -391,7 +391,7 @@
 
 <span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaUfAutor =</span> estados_nordeste, <span class="dt">itens =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
-<pre><code>## Observations: 602
+<pre><code>## Observations: 619
 ## Variables: 7
 ## $ ano       &lt;int&gt; 2011, 2011, 2011, 2014, 2015, 2015, 2017, 2017, 2018...
 ## $ ementa    &lt;chr&gt; "Altera a redação dos arts. 134 e 260 da Lei nº 8.06...
@@ -409,14 +409,14 @@
 
 <span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">autor =</span> autores) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
-<pre><code>## Observations: 16
+<pre><code>## Observations: 17
 ## Variables: 7
-## $ ano       &lt;int&gt; 2007, 2016, 2018, 2000, 2017, 2018, 2018, 2018, 2016...
+## $ ano       &lt;int&gt; 2007, 2015, 2016, 2018, 2000, 2017, 2018, 2018, 2018...
 ## $ ementa    &lt;chr&gt; "Estabelece a criação do Segmento Nacional de Finanç...
-## $ id        &lt;int&gt; 361065, 2076885, 2169931, 18086, 2125250, 2169185, 2...
-## $ idTipo    &lt;int&gt; 140, 139, 444, 139, 139, 133, 139, 140, 139, 130, 13...
-## $ numero    &lt;int&gt; 93, 4336, 304, 2413, 7085, 4972, 9753, 489, 4783, 18...
-## $ siglaTipo &lt;chr&gt; "PLP", "PL", "PRC", "PL", "PL", "INC", "PL", "PLP", ...
+## $ id        &lt;int&gt; 361065, 1699212, 2076885, 2169931, 18086, 2125250, 2...
+## $ idTipo    &lt;int&gt; 140, 139, 139, 444, 139, 139, 133, 139, 140, 139, 13...
+## $ numero    &lt;int&gt; 93, 2778, 4336, 304, 2413, 7085, 4972, 9753, 489, 47...
+## $ siglaTipo &lt;chr&gt; "PLP", "PL", "PL", "PRC", "PL", "PL", "INC", "PL", "...
 ## $ uri       &lt;chr&gt; "https://dadosabertos.camara.leg.br/api/v2/proposico...</code></pre>
 </div>
 </div>

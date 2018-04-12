@@ -19,7 +19,7 @@ fetch_deputado(id = NULL, idLegislatura = NULL, siglaUf = NULL,
 
 \item{siglaSexo}{Gender's abbreviation}
 
-\item{itens}{Items quantity by request}
+\item{itens}{Items quantity. '-1' returns all current deputies at the request moment}
 
 \item{ordenarPor}{Element that will be used to sort the returned list}
 }

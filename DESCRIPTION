@@ -1,7 +1,7 @@
 Package: rcongresso
 Type: Package
 Title: Wraps the API for the Brazilian Chamber of Deputies
-Version: 0.4.2
+Version: 0.4.3
 Authors@R: c(
     person("Paulo Vinícius", "Soares", , "paulo.soares@ccc.ufcg.edu.br", c("aut", "cre")),
     person("Nazareno", "Andrade", , "nazareno@computacao.ufcg.edu.br", c("aut")),

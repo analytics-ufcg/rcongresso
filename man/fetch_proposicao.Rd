@@ -37,7 +37,8 @@ fetch_proposicao(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 
 \item{codPartido}{Party code}
 
-\item{itens}{Items quantity}
+\item{itens}{Items quantity. '-1' returns all the propositions which had been processed
+in the last 30 days}
 }
 \value{
 Dataframe containing information about the proposition.
