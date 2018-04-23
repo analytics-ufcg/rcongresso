@@ -22,3 +22,8 @@
 # Requests
 .MAX_ITENS <- 100
 .LAST_PAGE_INDEX <- 4
+.COD_ERRO_CLIENTE <- 400
+.COD_ERRO_SERV <- 500
+.MAX_TENTATIVAS_REQ <- 5
+.MENSAGEM_ERRO_REQ <- function(error_code, api_url){stop(sprintf("Falha na requisição a API dos Dados Abertos. Erro %s ao tentar acessar: %s",
+                                                  error_code, api_url), call. = FALSE)}
