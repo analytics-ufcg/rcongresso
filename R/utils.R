@@ -7,53 +7,33 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' pec241_json <- .get_json("https://dadosabertos.camara.leg.br/api/v2/proposicoes/2088351")
 #' @export
 .get_json <- function(response){
-  parsed <- httr::content(response, as = "text") %>%
+  httr::content(response, as = "text") %>%
     jsonlite::fromJSON(flatten = TRUE)
-
-  if (httr::http_error(response)) {
-    stop(
-      sprintf(
-        "Dados Abertos API request failed [%s]\n%s\n<%s>",
-        status_code(response),
-        parsed$message,
-        parsed$documentation_url
-      ),
-      call. = FALSE
-    )
-  }
-
-  parsed
 }
 
-.get_from_api <- function(path=NULL, query=NULL){
+.use_backoff_exponencial <- function(path = NULL, query=NULL, timeout = 0, tentativa = 0){
+  final_timeout <- timeout*2.05
+  Sys.sleep(final_timeout)
+  .get_from_api(path, query, final_timeout, tentativa)
+}
+
+.get_from_api <- function(path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
-  print(resp)
-
-  #httr::stop_for_status(resp)
+  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
+     httr::status_code(resp) < .COD_ERRO_SERV){
+    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
+    if(tentativa < .MAX_TENTATIVAS_REQ){
+      .use_backoff_exponencial(path, query, timeout, tentativa+1)
+    } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  }
 
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
-  }
-
-  parsed <- httr::content(resp, as = "text") %>%
-    jsonlite::fromJSON(flatten = TRUE)
-
-  print(resp)
-
-  if (httr::http_error(resp)) {
-    stop(
-      sprintf(
-        "Dados Abertos API request failed [%s]\n%s\n<%s>",
-        httr::status_code(resp),
-        parsed$message,
-        parsed$documentation_url
-      ),
-      call. = FALSE
-    )
   }
 
   resp
@@ -70,10 +50,11 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .congresso_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(path, query)$dados
+  resp <- .get_from_api(path, query)
+  obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
-   #print("conversao")
+    #print("conversao")
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
