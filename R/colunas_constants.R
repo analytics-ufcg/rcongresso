@@ -41,7 +41,12 @@
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
                         "proposicao.id"="integer","proposicao.uri"="character","proposicao.siglaTipo"="character","proposicao.idTipo"="integer",
                         "proposicao.numero"="integer","proposicao.ano"="integer","proposicao.ementa"="character")
+
 .COLNAMES_TIPO_PROPOSICAO <- c("id"="integer","sigla"="character","nome"="character","descricao"="character")
+
+.COLNAMES_RELACIONADAS <- c("id"="integer","uri"="character","siglaTipo"="character","idTipo"="integer","numero"="integer","ano"="integer","ementa"="character")
+
+
 # Votações
 
 # Endpoint: {/votacoes/{id}/votos}
