@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.5</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
             
             <h4 class="date">2018-05-25</h4>
       
-      <small>Source: <a href="https://github.com/analytics-ufcg/rcongresso/blob/master/vignettes/utilizando-fetch-proposicao.Rmd"><code>vignettes/utilizando-fetch-proposicao.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/analytics-ufcg/rcongresso/blob/master/vignettes/utilizando-fetch-proposicao.Rmd"><code>vignettes/utilizando-fetch-proposicao.Rmd</code></a></small>
       <div class="hidden name"><code>utilizando-fetch-proposicao.Rmd</code></div>
 
     </div>
@@ -154,10 +154,10 @@
 <a href="#o-id-da-proposicao-nao-e-conhecido" class="anchor"></a>O ID da proposição não é conhecido</h3>
 <p>Caso o ID da proposição não seja conhecido, utilizar a função <code><a href="../reference/fetch_id_proposicao.html">fetch_id_proposicao()</a></code> pode ser útil. Utilizar as funções <code>pmap</code> e <code>map_df</code> da biblioteca <em>purrr</em> facilita a recuperação de muitas proposições da base de dados.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">frame_data</a></span>(
-  <span class="op">~</span>tipo, <span class="op">~</span>numero, <span class="op">~</span>ano,
-  <span class="st">"PEC"</span>, <span class="dv">241</span>, <span class="dv">2016</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># PEC dos gastos públicos</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">pmap</a></span>(fetch_id_proposicao) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_df</a></span>(fetch_proposicao) <span class="op">%&gt;%</span>
+  ~tipo, ~numero, ~ano,
+  <span class="st">"PEC"</span>, <span class="dv">241</span>, <span class="dv">2016</span>) %&gt;%<span class="st"> </span><span class="co"># PEC dos gastos públicos</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">pmap</a></span>(fetch_id_proposicao) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_df</a></span>(fetch_proposicao) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 1
 ## Variables: 34
@@ -197,13 +197,13 @@
 ## $ urnFinal                             &lt;chr&gt; NA</code></pre>
 <p>Recuperando várias proposições da base de dados, temos:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">frame_data</a></span>(
-  <span class="op">~</span>tipo, <span class="op">~</span>numero, <span class="op">~</span>ano,
+  ~tipo, ~numero, ~ano,
   <span class="st">"PEC"</span>, <span class="dv">241</span>, <span class="dv">2016</span>, <span class="co"># PEC dos gastos públicos</span>
   <span class="st">"PL"</span>, <span class="dv">4474</span>, <span class="dv">2016</span>, <span class="co"># PL dos correios</span>
   <span class="st">"PL"</span>, <span class="dv">3722</span>, <span class="dv">2012</span>, <span class="co"># PL do estatuto do desarmamento</span>
-  <span class="st">"PL"</span>, <span class="dv">158</span>, <span class="dv">2015</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># PL da proibição do porte e consumo de drogas</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">pmap</a></span>(fetch_id_proposicao) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_df</a></span>(fetch_proposicao) <span class="op">%&gt;%</span>
+  <span class="st">"PL"</span>, <span class="dv">158</span>, <span class="dv">2015</span>) %&gt;%<span class="st"> </span><span class="co"># PL da proibição do porte e consumo de drogas</span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">pmap</a></span>(fetch_id_proposicao) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_df</a></span>(fetch_proposicao) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 4
 ## Variables: 34
@@ -246,7 +246,7 @@
 <h3 class="hasAnchor">
 <a href="#o-id-da-proposicao-e-conhecido" class="anchor"></a>O ID da proposição é conhecido</h3>
 <p>Nesse caso fazemos uma chamada ao método utilizando o parêmetro <code>id</code>. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">id =</span> <span class="dv">2088351</span>) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">id =</span> <span class="dv">2088351</span>) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 1
 ## Variables: 34
@@ -287,7 +287,7 @@
 <p>Podemos utilizar também uma lista de IDs:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">611966</span>, <span class="dv">291906</span>, <span class="dv">333205</span>, <span class="dv">458609</span>, <span class="dv">517924</span>, <span class="dv">1999440</span>, <span class="dv">2090343</span>)
 
-<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(ids) <span class="op">%&gt;%</span>
+<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(ids) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 7
 ## Variables: 34
@@ -338,7 +338,7 @@
 <a href="#intervalo-de-tempo-de-apresentacao" class="anchor"></a>Intervalo de tempo de apresentação</h3>
 <p>Os parâmetros utilizados nessa busca são <code>dataApresentacaoInicio</code> e <code>dataApresentacaoFim</code>, ambos se referem às datas em que as proposições foram apresentadas na câmara.</p>
 <p>Vejamos quais proposições foram apresentadas no mês de Janeiro de 2017:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">dataApresentacaoInicio =</span> <span class="st">"2017-01-01"</span>, <span class="dt">dataApresentacaoFim =</span> <span class="st">"2017-01-31"</span>) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">dataApresentacaoInicio =</span> <span class="st">"2017-01-01"</span>, <span class="dt">dataApresentacaoFim =</span> <span class="st">"2017-01-31"</span>) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 15
 ## Variables: 7
@@ -355,7 +355,7 @@
 <a href="#intervalo-de-tempo-de-tramitacao" class="anchor"></a>Intervalo de tempo de tramitação</h3>
 <p>Essa busca é feita quando se deseja recuperar proposições que sofreram mudança de status em algum intervalo de tempo. Os parâmetros utilizados são <code>dataInicio</code> e <code>dataFim</code>.</p>
 <p>Vamos ver quais proposições sofreram mudanças no mês de novembro:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">dataInicio =</span> <span class="st">"2017-11-01"</span>, <span class="dt">dataFim =</span> <span class="st">"2017-11-30"</span>) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">dataInicio =</span> <span class="st">"2017-11-01"</span>, <span class="dt">dataFim =</span> <span class="st">"2017-11-30"</span>) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 15
 ## Variables: 7
@@ -371,7 +371,7 @@
 <h3 class="hasAnchor">
 <a href="#por-partido" class="anchor"></a>Por partido</h3>
 <p>Essa busca utiliza o parâmetro <code>siglaPartidoAutor</code> e retorna todas as proposições sugeridas por deputados de determinado partido.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaPartidoAutor =</span> <span class="st">"PSC"</span>, <span class="dt">itens =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaPartidoAutor =</span> <span class="st">"PSC"</span>, <span class="dt">itens =</span> <span class="dv">100</span>) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 62
 ## Variables: 7
@@ -389,7 +389,7 @@
 <p>Essa busca utiliza o parâmetro <code>siglaUfAutor</code> e retorna todas as proposições cujos autores são de determinado estado. Por exemplo, deseja-se ver quais as últimas proposições apresentadas pelos deputados da região nordeste. A busca pode ser feita da seguinte maneira:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">estados_nordeste &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"RN"</span>, <span class="st">"PB"</span>, <span class="st">"CE"</span>, <span class="st">"PE"</span>, <span class="st">"SE"</span>, <span class="st">"AL"</span>, <span class="st">"BA"</span>, <span class="st">"PI"</span>, <span class="st">"MA"</span>)
 
-<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaUfAutor =</span> estados_nordeste, <span class="dt">itens =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaUfAutor =</span> estados_nordeste, <span class="dt">itens =</span> <span class="dv">100</span>) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 732
 ## Variables: 7
@@ -407,7 +407,7 @@
 <p>Essa busca utiliza os parâmetros <code>autor</code> e <code>idAutor</code>. São retornadas as proposições que sofreram mudanças nos últimos 15 dias cujos autores se encontram na lista de busca.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">autores &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"Luiza Erundina"</span>, <span class="st">"Pedro Fernandes"</span>, <span class="st">"Haroldo Lima"</span>, <span class="st">"Jandira"</span>)
 
-<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">autor =</span> autores) <span class="op">%&gt;%</span>
+<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">autor =</span> autores) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
 <pre><code>## Observations: 60
 ## Variables: 7

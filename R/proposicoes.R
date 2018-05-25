@@ -77,6 +77,29 @@ fetch_votacoes <- function(id_prop){
     .coerce_types(.COLNAMES_VOTACOES)
 }
 
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the related propositions.
+#' @examples
+#' relacionadas_pec241 <- fetch_relacionadas(2088351)
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_relacionadas
+#' @export
+fetch_relacionadas <- function(id_prop){
+  id <- NULL
+  tibble::tibble(id = id_prop) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/relacionadas")) %>%
+      dplyr::rowwise() %>%
+      dplyr::do(
+               .congresso_api(.$path)
+             ) %>%
+      dplyr::ungroup() %>%
+      .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
+      .coerce_types(.COLNAMES_RELACIONADAS)
+}
+
 #' @title Retrieves the proposition ID from its type, number and year
 #' @description The function can be used to fetch a vector of ids as well, in case of many propositions.
 #' @param tipo Proposition type (i.e., PEC, PL, PDC)

@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Fetches proposition from API using a query — fetch_proposicao" />
 
 <meta property="og:description" content="Fetches information about law's projects, resolutions, provisional measures,
@@ -45,8 +48,6 @@ returns all the proposition which were presented or had some situation change in
 <![endif]-->
 
 
-
-
   </head>
 
   <body>
@@ -62,7 +63,7 @@ returns all the proposition which were presented or had some situation change in
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.5</span>
       </span>
     </div>
 
@@ -117,10 +118,11 @@ returns all the proposition which were presented or had some situation change in
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fetches proposition from API using a query</h1>
-    <small>Source: <a href='https://github.com/analytics-ufcg/rcongresso/blob/master/R/proposicoes.R'><code>R/proposicoes.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/analytics-ufcg/rcongresso/blob/master/R/proposicoes.R'><code>R/proposicoes.R</code></a></small>
     <div class="hidden name"><code>fetch_proposicao.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Fetches information about law's projects, resolutions, provisional measures,
 law amendments, opinions and all the other propositions types on the
@@ -129,6 +131,7 @@ Several parameters can be used to select and filter the final result. By default
 returns all the proposition which were presented or had some situation change in the last
 15 days.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>fetch_proposicao</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaUfAutor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>siglaTipo</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>siglaPartidoAutor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>numero</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ano</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
