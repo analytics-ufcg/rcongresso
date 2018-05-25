@@ -5,11 +5,11 @@ setup <- function(){
   pec_241_id <<- fetch_id_proposicao("PEC", 241, 2016)
   pec_241_por_id <<- fetch_proposicao(pec_241_id)
   votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
+  relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
 
   return(TRUE)
 }
-## Verificar porque esse negocio só retorna dizendo que mensagem não tá definida quando
-## na vdd essa praga ta bem aqui na minha frente DESGRAÇA
+
 # Setup
 check_api <- function(){
   tryCatch(setup(), error = function(e){
@@ -57,6 +57,10 @@ test <- function(){
 
   test_that("fetch_votacoes()", {
     expect_true(all(sapply(votacoes_pec_241, class) %in% .COLNAMES_VOTACOES))
+  })
+
+  test_that("fetch_relacionadas()", {
+    expect_true(all(sapply(relacionadas_pec_241, class) %in% .COLNAMES_RELACIONADAS))
   })
 
   test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
