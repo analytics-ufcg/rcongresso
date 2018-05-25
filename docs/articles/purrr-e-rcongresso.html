@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.5</span>
       </span>
     </div>
 
@@ -87,7 +87,7 @@
             
             <h4 class="date">2018-05-25</h4>
       
-      <small>Source: <a href="https://github.com/analytics-ufcg/rcongresso/blob/master/vignettes/purrr-e-rcongresso.Rmd"><code>vignettes/purrr-e-rcongresso.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/analytics-ufcg/rcongresso/blob/master/vignettes/purrr-e-rcongresso.Rmd"><code>vignettes/purrr-e-rcongresso.Rmd</code></a></small>
       <div class="hidden name"><code>purrr-e-rcongresso.Rmd</code></div>
 
     </div>
@@ -104,11 +104,11 @@
 <a href="#recuperando-dados-de-varias-proposicoes" class="anchor"></a>Recuperando dados de várias proposições</h2>
 <p>A partir dos dados da proposição (ex: PEC 171 de 1993), são necessários dois passos: descobrir o id da proposição na API e recuperar os dados da proposição como dataframe.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">proposicoes =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">frame_data</a></span>(
-  <span class="op">~</span>tipo, <span class="op">~</span>numero, <span class="op">~</span>ano,
+  ~tipo, ~numero, ~ano,
   <span class="st">"PEC"</span>, <span class="dv">171</span>,     <span class="dv">1993</span>,
   <span class="st">"PL"</span>,  <span class="dv">1057</span>,    <span class="dv">2007</span>
-) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">pmap</a></span>(fetch_id_proposicao) <span class="op">%&gt;%</span>
+) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map2">pmap</a></span>(fetch_id_proposicao) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_df</a></span>(fetch_proposicao)
 
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(proposicoes)</code></pre></div>
@@ -153,15 +153,15 @@
 <h2 class="hasAnchor">
 <a href="#votacoes-e-votos-da-proposicao" class="anchor"></a>Votações e votos da proposição</h2>
 <p>Uma proposição pode ter várias votações no plenário da câmara. Aqui vamos olhar apenas a última votação, em geral tida como a aprovação ou não da questão. Vamos usar uma função para deixar mais legível o processo de escolher e baixar dados a última votação de uma proposição:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fetch_id_ultima_votacao =<span class="st"> </span><span class="cf">function</span>(id_proposicao){
-  <span class="kw"><a href="../reference/fetch_votacoes.html">fetch_votacoes</a></span>(id_proposicao) <span class="op">%&gt;%</span>
-<span class="st">    </span><span class="kw"><a href="../reference/ultima_votacao.html">ultima_votacao</a></span>() <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fetch_id_ultima_votacao =<span class="st"> </span>function(id_proposicao){
+  <span class="kw"><a href="../reference/fetch_votacoes.html">fetch_votacoes</a></span>(id_proposicao) %&gt;%
+<span class="st">    </span><span class="kw"><a href="../reference/ultima_votacao.html">ultima_votacao</a></span>() %&gt;%
 <span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/pull.html">pull</a></span>(id)
 }</code></pre></div>
 <p>Para cada id das proposições que temos, vamos recuperar o id da última votação realizada e então recuperar os votos de todos os deputados para essa votação:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos =<span class="st"> </span>proposicoes <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">id_votacao =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_int</a></span>(id, fetch_id_ultima_votacao)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">votos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(id_votacao, fetch_votos)) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos =<span class="st"> </span>proposicoes %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">id_votacao =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_int</a></span>(id, fetch_id_ultima_votacao)) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">votos =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(id_votacao, fetch_votos)) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(votos)
 
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(votos)</code></pre></div>
@@ -217,11 +217,11 @@
 <h2 class="hasAnchor">
 <a href="#vendo-os-votos" class="anchor"></a>Vendo os votos</h2>
 <p>Quantos votos foram a favor e contra (e abstenções e obstruções) para cada proposição?</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(siglaTipo, numero, ano, voto) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> <span class="kw">paste</span>(siglaTipo, numero, ano), <span class="dt">y =</span> n, <span class="dt">fill =</span> voto)) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_bar">geom_col</a></span>() <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(siglaTipo, numero, ano, voto) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>() %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> <span class="kw">paste</span>(siglaTipo, numero, ano), <span class="dt">y =</span> n, <span class="dt">fill =</span> voto)) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_bar">geom_col</a></span>() +<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_flip">coord_flip</a></span>()</code></pre></div>
 <p><img src="purrr-e-rcongresso_files/figure-html/unnamed-chunk-5-1.png" width="576"></p>
 </div>
@@ -231,9 +231,9 @@
 <p>Homens e mulheres votaram diferente? Para responder, recuperamos primeiro os dados dos deputados mencionados no dataframe de votos:</p>
 <p>Devido à instabilidades da API é sempre bom utilizar programação defensiva para nos protegermos de possíveis erros 404. Dessa forma, vamos encapsular a função <em>fetch_deputado</em> em um <em>safely</em> da biblioteca <em>purrr</em>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">safely_fetch_deputado &lt;-<span class="st"> </span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/safely">possibly</a></span>(fetch_deputado, <span class="dt">otherwise =</span> <span class="ot">NA</span>)
-deputados =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="dt">parlamentar.id =</span> <span class="kw">unique</span>(votos<span class="op">$</span>parlamentar.id)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">dados_parlamentar =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(parlamentar.id, safely_fetch_deputado)) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(<span class="op">!</span><span class="kw">is.na</span>(dados_parlamentar)) <span class="op">%&gt;%</span>
+deputados =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">tibble</a></span>(<span class="dt">parlamentar.id =</span> <span class="kw">unique</span>(votos$parlamentar.id)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">dados_parlamentar =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(parlamentar.id, safely_fetch_deputado)) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(!<span class="kw">is.na</span>(dados_parlamentar)) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(dados_parlamentar)
 
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(deputados)</code></pre></div>
@@ -251,7 +251,7 @@ deputados =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyv
 ## $ ufNascimento                   &lt;chr&gt; "RR", "CE", "BA", "MG", "SE", "...
 ## $ ultimoStatus.condicaoEleitoral &lt;chr&gt; "Titular", "Titular", "Titular"...
 ## $ ultimoStatus.data              &lt;chr&gt; "2015-02-01", "2016-04-15", "20...
-## $ ultimoStatus.descricaoStatus   &lt;chr&gt; NA, NA, NA, NA, NA, NA, "", NA,...
+## $ ultimoStatus.descricaoStatus   &lt;chr&gt; NA, NA, NA, "Revogação da limin...
 ## $ ultimoStatus.gabinete.andar    &lt;dbl&gt; 2, 3, 4, 6, 9, NA, NA, 3, 6, 7,...
 ## $ ultimoStatus.gabinete.email    &lt;chr&gt; "dep.abelmesquitajr.@camara.leg...
 ## $ ultimoStatus.gabinete.nome     &lt;dbl&gt; 248, 335, 402, 627, 937, NA, 37...
@@ -271,22 +271,22 @@ deputados =<span class="st"> </span><span class="kw"><a href="http://dplyr.tidyv
 ## $ uri                            &lt;chr&gt; "https://dadosabertos.camara.le...
 ## $ urlWebsite                     &lt;chr&gt; NA, NA, NA, NA, NA, "www.ademir...
 ## $ redeSocial                     &lt;list&gt; [NA, NA, NA, NA, NA, NA, NA, N...</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(deputados, <span class="dt">by =</span> <span class="st">"parlamentar.id"</span>) <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(siglaTipo, numero, ano, voto, sexo) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> <span class="kw">paste</span>(siglaTipo, numero, ano), <span class="dt">y =</span> n, <span class="dt">fill =</span> voto)) <span class="op">+</span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_bar">geom_col</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) <span class="op">+</span><span class="st"> </span>
-<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(<span class="op">~</span><span class="st"> </span>sexo) <span class="op">+</span><span class="st"> </span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">votos %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(deputados, <span class="dt">by =</span> <span class="st">"parlamentar.id"</span>) %&gt;%<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(siglaTipo, numero, ano, voto, sexo) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>() %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/ggplot">ggplot</a></span>(<span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/aes">aes</a></span>(<span class="dt">x =</span> <span class="kw">paste</span>(siglaTipo, numero, ano), <span class="dt">y =</span> n, <span class="dt">fill =</span> voto)) +
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/geom_bar">geom_col</a></span>(<span class="dt">position =</span> <span class="st">"dodge"</span>) +<span class="st"> </span>
+<span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/facet_wrap">facet_wrap</a></span>(~<span class="st"> </span>sexo) +<span class="st"> </span>
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/ggplot2/topics/coord_flip">coord_flip</a></span>()</code></pre></div>
 <p><img src="purrr-e-rcongresso_files/figure-html/unnamed-chunk-7-1.png" width="576"></p>
 </div>
 <div id="quais-foram-as-orientacoes-das-bancadas-nessas-votacoes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quais-foram-as-orientacoes-das-bancadas-nessas-votacoes" class="anchor"></a>Quais foram as orientações das bancadas nessas votações?</h2>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">orientacoes =<span class="st"> </span>proposicoes <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">id_votacao =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_int</a></span>(id, fetch_id_ultima_votacao)) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">o =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(id_votacao, fetch_orientacoes)) <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">orientacoes =<span class="st"> </span>proposicoes %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">id_votacao =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map_int</a></span>(id, fetch_id_ultima_votacao)) %&gt;%
+<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">o =</span> <span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(id_votacao, fetch_orientacoes)) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>(o)
 
 <span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(orientacoes)</code></pre></div>

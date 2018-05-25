@@ -25,6 +25,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
+
+
+
 <meta property="og:title" content="Fetches parties from API using a query. — fetch_partido" />
 
 <meta property="og:description" content="Returns a list containing basic information about parties which has or had been any deputy
@@ -42,8 +45,6 @@ which has active deputies on that moment." />
 <![endif]-->
 
 
-
-
   </head>
 
   <body>
@@ -59,7 +60,7 @@ which has active deputies on that moment." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.4</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.5</span>
       </span>
     </div>
 
@@ -114,15 +115,17 @@ which has active deputies on that moment." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fetches parties from API using a query.</h1>
-    <small>Source: <a href='https://github.com/analytics-ufcg/rcongresso/blob/master/R/partidos.R'><code>R/partidos.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/analytics-ufcg/rcongresso/blob/master/R/partidos.R'><code>R/partidos.R</code></a></small>
     <div class="hidden name"><code>fetch_partido.Rd</code></div>
     </div>
 
+    <div class="ref-description">
     
     <p>Returns a list containing basic information about parties which has or had been any deputy
 in the lower house. If none parameters are passed, the function returns the parties
 which has active deputies on that moment.</p>
     
+    </div>
 
     <pre class="usage"><span class='fu'>fetch_partido</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>sigla</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dataInicio</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>dataFim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>idLegislatura</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ordenarPor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
