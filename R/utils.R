@@ -21,6 +21,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
+  #print(api_url)
+
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
