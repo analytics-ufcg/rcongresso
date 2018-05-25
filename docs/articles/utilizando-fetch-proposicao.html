@@ -29,7 +29,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.5</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.6</span>
       </span>
     </div>
 
@@ -373,7 +373,7 @@
 <p>Essa busca utiliza o parâmetro <code>siglaPartidoAutor</code> e retorna todas as proposições sugeridas por deputados de determinado partido.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">siglaPartidoAutor =</span> <span class="st">"PSC"</span>, <span class="dt">itens =</span> <span class="dv">100</span>) %&gt;%
 <span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
-<pre><code>## Observations: 62
+<pre><code>## Observations: 63
 ## Variables: 7
 ## $ ano       &lt;int&gt; 2009, 2011, 2011, 2011, 2011, 2011, 2011, 2011, 2012...
 ## $ ementa    &lt;chr&gt; "Dispõe sobre o livre exercício da profissão de músi...
@@ -407,8 +407,10 @@
 <p>Essa busca utiliza os parâmetros <code>autor</code> e <code>idAutor</code>. São retornadas as proposições que sofreram mudanças nos últimos 15 dias cujos autores se encontram na lista de busca.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">autores &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"Luiza Erundina"</span>, <span class="st">"Pedro Fernandes"</span>, <span class="st">"Haroldo Lima"</span>, <span class="st">"Jandira"</span>)
 
-<span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">autor =</span> autores) %&gt;%
-<span class="st">  </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</code></pre></div>
+<span class="kw">tryCatch</span>(
+  <span class="kw"><a href="../reference/fetch_proposicao.html">fetch_proposicao</a></span>(<span class="dt">autor =</span> autores) %&gt;%
+<span class="st">    </span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
+)</code></pre></div>
 <pre><code>## Observations: 60
 ## Variables: 7
 ## $ ano       &lt;int&gt; 1999, 1999, 1999, 1999, 2000, 2000, 1999, 1999, 1999...
