@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fetches expenditures from deputy using its id — fetch_despesas_deputado • rcongresso</title>
+<title>Fetches expenditures from deputy — fetch_despesas_deputado • rcongresso</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -25,10 +25,10 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../jquery.sticky-kit.min.js"></script>
 <script src="../pkgdown.js"></script>
-<meta property="og:title" content="Fetches expenditures from deputy using its id — fetch_despesas_deputado" />
+<meta property="og:title" content="Fetches expenditures from deputy — fetch_despesas_deputado" />
 
-<meta property="og:description" content="Fetches expenditures from deputy with his/her parlamentary quota in
-the last six months." />
+<meta property="og:description" content="Fetches expenditures from deputy with his/her parlamentary quota. If no time
+parameters are passed, the fucntion returns the expenditures in the last six months." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -58,7 +58,7 @@ the last six months." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rcongresso</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.3</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.4.4</span>
       </span>
     </div>
 
@@ -112,24 +112,45 @@ the last six months." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fetches expenditures from deputy using its id</h1>
+    <h1>Fetches expenditures from deputy</h1>
     <small>Source: <a href='https://github.com/analytics-ufcg/rcongresso/blob/master/R/deputados.R'><code>R/deputados.R</code></a></small>
     <div class="hidden name"><code>fetch_despesas_deputado.Rd</code></div>
     </div>
 
     
-    <p>Fetches expenditures from deputy with his/her parlamentary quota in
-the last six months.</p>
+    <p>Fetches expenditures from deputy with his/her parlamentary quota. If no time
+parameters are passed, the fucntion returns the expenditures in the last six months.</p>
     
 
-    <pre class="usage"><span class='fu'>fetch_despesas_deputado</span>(<span class='no'>dep_id</span>)</pre>
+    <pre class="usage"><span class='fu'>fetch_despesas_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>idLegislatura</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ano</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>mes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>cnpjCpfFornecedor</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>itens</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>dep_id</th>
-      <td><p>deputy's ID</p></td>
+      <th>id</th>
+      <td><p>Deputy's ID. Mandatory field</p></td>
+    </tr>
+    <tr>
+      <th>idLegislatura</th>
+      <td><p>Deputy's ID</p></td>
+    </tr>
+    <tr>
+      <th>ano</th>
+      <td><p>Expenditure's year</p></td>
+    </tr>
+    <tr>
+      <th>mes</th>
+      <td><p>Expenditure's month</p></td>
+    </tr>
+    <tr>
+      <th>cnpjCpfFornecedor</th>
+      <td><p>Provider's CPF or CNPJ</p></td>
+    </tr>
+    <tr>
+      <th>itens</th>
+      <td><p>Items quantity. '-1' returns all the expenditures</p></td>
     </tr>
     </table>
     
@@ -139,7 +160,8 @@ the last six months.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>gastos_abel_mesquita</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_despesas_deputado</span>(<span class='kw'>dep_id</span> <span class='kw'>=</span> <span class='fl'>178957</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='no'>gastos_abel_mesquita</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_despesas_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>178957</span>)
+<span class='no'>gastos_abel_junho2017</span> <span class='kw'>&lt;-</span> <span class='fu'>fetch_despesas_deputado</span>(<span class='kw'>id</span> <span class='kw'>=</span> <span class='fl'>178957</span>, <span class='kw'>ano</span> <span class='kw'>=</span> <span class='fl'>2017</span>, <span class='kw'>mes</span> <span class='kw'>=</span> <span class='fl'>06</span>, <span class='kw'>itens</span> <span class='kw'>=</span> -<span class='fl'>1</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

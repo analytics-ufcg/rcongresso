@@ -11,13 +11,28 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     jsonlite::fromJSON(flatten = TRUE)
 }
 
-.get_from_api <- function(path=NULL, query=NULL){
+.use_backoff_exponencial <- function(path = NULL, query=NULL, timeout = 0, tentativa = 0){
+  final_timeout <- timeout*2.05
+  Sys.sleep(final_timeout)
+  .get_from_api(path, query, final_timeout, tentativa)
+}
+
+.get_from_api <- function(path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.API_LINK, path = path, query = query)
 
+  #print(api_url)
+
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
-  httr::stop_for_status(resp)
+  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
+     httr::status_code(resp) < .COD_ERRO_SERV){
+    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
+    if(tentativa < .MAX_TENTATIVAS_REQ){
+      .use_backoff_exponencial(path, query, timeout, tentativa+1)
+    } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  }
 
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
@@ -41,7 +56,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
-   #print("conversao")
+    #print("conversao")
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
@@ -230,12 +245,26 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .fetch_all_items <- function(query, API_path){
+
+  href <- rel <- NULL
+
   query$itens <- .MAX_ITENS
 
-  list_param <- .get_hrefs(path = API_path, query = query)$href[.LAST_PAGE_INDEX] %>%
-    strsplit("&")
+  # Pegar pelo "last" e não buscar pelo índice diretamente, já que o índice pode variar.
+  list_param <- .get_hrefs(path = API_path, query = query) %>%
+    dplyr::filter(rel == "last") %>%
+    dplyr::select(href) %>%
+    purrr::pluck(1) %>%
+    strsplit("/") %>%
+    purrr::pluck(1, length(.[[1]])) %>%
+    strsplit("&") %>%
+    purrr::pluck(1)
 
-  ult_pag <- list_param[[1]][2] %>%
+  # Procurar pelo parâmetro página. Mesma lógica do babado aqui em cima.
+  index_ult_pag <- list_param %>%
+    stringr::str_detect("pagina")
+
+  ult_pag <- list_param[index_ult_pag] %>%
     strsplit("=")
 
   query$itens <- as.integer(ult_pag[[1]][2]) * .MAX_ITENS
