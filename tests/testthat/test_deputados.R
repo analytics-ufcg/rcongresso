@@ -27,7 +27,7 @@ test <- function(){
   ABEL_MESQUITA_UF <-"RR"
 
   TAM_DF_DEFAULT <- c(15, 8)
-  TAM_DF_DEP_ATIVOS <- c(512, 8)
+  #TAM_DF_DEP_ATIVOS <- c(513, 8)
 
   # Testes
   # Os nomes das colunas e os tipos estão definidos em colunas_constants.R
@@ -70,9 +70,12 @@ test <- function(){
     expect_equal(dim(fetch_deputado()), TAM_DF_DEFAULT)
   })
 
-  test_that("Quantidade de deputados em exercício, atualmente 513",{
-    expect_equal(dim(dep_ativos), TAM_DF_DEP_ATIVOS)
-  })
+  # Verificar um meio de testar melhor essa parte porque não necessariamente vão ter 513 deputados sempre.
+  # Esse número varia entre 513 e 510, alguns podem se afastar e até o suplente assumir acho que não
+  # aparece aqui, podendo quebrar os testes.
+  # test_that("Quantidade de deputados em exercício, atualmente 513",{
+  #   expect_equal(dim(dep_ativos), TAM_DF_DEP_ATIVOS)
+  # })
 }
 
 if(check_api()){
