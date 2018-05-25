@@ -149,7 +149,9 @@ Essa busca utiliza os parâmetros `autor` e `idAutor`. São retornadas as propos
 ```{r}
 autores <- c("Luiza Erundina", "Pedro Fernandes", "Haroldo Lima", "Jandira")
 
-fetch_proposicao(autor = autores) %>%
-  glimpse()
+tryCatch(
+  fetch_proposicao(autor = autores) %>%
+    glimpse()
+)
 ```
 
