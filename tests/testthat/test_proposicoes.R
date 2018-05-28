@@ -6,6 +6,7 @@ setup <- function(){
   pec_241_por_id <<- fetch_proposicao(pec_241_id)
   votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
   relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
+  tramitacao_pec_241 <<- fetch_tramitacao(pec_241_id)
 
   return(TRUE)
 }
@@ -61,6 +62,10 @@ test <- function(){
 
   test_that("fetch_relacionadas()", {
     expect_true(all(sapply(relacionadas_pec_241, class) %in% .COLNAMES_RELACIONADAS))
+  })
+
+  test_that("fetch_tramitacao()", {
+    expect_true(all(sapply(tramitacao_pec_241, class) %in% .COLNAMES_TRAMITACOES))
   })
 
   test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})

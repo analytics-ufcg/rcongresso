@@ -100,6 +100,29 @@ fetch_relacionadas <- function(id_prop){
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
+#' @title Fetches the tramitation of a proposition
+#' @description Returns the tramitation of a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the tramitation.
+#' @examples
+#' tramitacao_pec241 <- fetch_tramitacao(2088351)
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#' @rdname fetch_tramitacao
+#' @export
+fetch_tramitacao <- function(id_prop){
+  id <- NULL
+  tibble::tibble(id = id_prop) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/tramitacoes")) %>%
+      dplyr::rowwise() %>%
+      dplyr::do(
+               .congresso_api(.$path)
+             ) %>%
+      dplyr::ungroup() %>%
+      .assert_dataframe_completo(.COLNAMES_TRAMITACOES) %>%
+      .coerce_types(.COLNAMES_TRAMITACOES)
+}
+
 #' @title Retrieves the proposition ID from its type, number and year
 #' @description The function can be used to fetch a vector of ids as well, in case of many propositions.
 #' @param tipo Proposition type (i.e., PEC, PL, PDC)

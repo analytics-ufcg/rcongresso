@@ -44,8 +44,12 @@
 
 .COLNAMES_TIPO_PROPOSICAO <- c("id"="integer","sigla"="character","nome"="character","descricao"="character")
 
-.COLNAMES_RELACIONADAS <- c("id"="integer","uri"="character","siglaTipo"="character","idTipo"="integer","numero"="integer","ano"="integer","ementa"="character")
+.COLNAMES_RELACIONADAS <- c("id"="integer","uri"="character","siglaTipo"="character","idTipo"="integer","numero"="integer",
+                            "ano"="integer","ementa"="character")
 
+.COLNAMES_TRAMITACOES <- c("dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
+                           "despacho"="character","idSituacao"="integer","idTipoTramitacao"="character","regime"="character",
+                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character")
 
 # Votações
 
