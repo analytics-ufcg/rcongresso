@@ -89,13 +89,14 @@ fetch_votacoes <- function(id_prop){
 #' @export
 fetch_relacionadas <- function(id_prop){
   id <- NULL
-  tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/relacionadas")) %>%
-      dplyr::rowwise() %>%
+  tibble::tibble(id_prop = as.integer(id_prop)) %>%
+    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
+    dplyr::group_by(id_prop, path) %>%
       dplyr::do(
                .congresso_api(.$path)
              ) %>%
       dplyr::ungroup() %>%
+      dplyr::select(-path) %>%
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
