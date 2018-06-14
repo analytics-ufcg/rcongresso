@@ -88,8 +88,10 @@ fetch_votacoes <- function(id_prop){
 #' @rdname fetch_relacionadas
 #' @export
 fetch_relacionadas <- function(id_prop){
-  id <- NULL
-  tibble::tibble(id_prop = as.integer(id_prop)) %>%
+  path <- NULL
+  unique(id_prop) %>%
+    as.integer %>%
+    tibble::tibble(id_prop = .) %>%
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
     dplyr::group_by(id_prop, path) %>%
       dplyr::do(
@@ -112,17 +114,19 @@ fetch_relacionadas <- function(id_prop){
 #' @rdname fetch_tramitacao
 #' @export
 fetch_tramitacao <- function(id_prop){
-  id <- path <- NULL
-  tibble::tibble(id_prop = as.integer(id_prop)) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
-      dplyr::group_by(id_prop, path) %>%
-      dplyr::do(
-               .congresso_api(.$path)
-             ) %>%
-      dplyr::ungroup() %>%
-      dplyr::select(-path) %>%
-      .assert_dataframe_completo(.COLNAMES_TRAMITACOES) %>%
-      .coerce_types(.COLNAMES_TRAMITACOES)
+  path <- NULL
+  unique(id_prop) %>%
+    as.integer %>%
+    tibble::tibble(id_prop = .) %>%
+      dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
+        dplyr::group_by(id_prop, path) %>%
+        dplyr::do(
+                 .congresso_api(.$path)
+               ) %>%
+        dplyr::ungroup() %>%
+        dplyr::select(-path) %>%
+        .assert_dataframe_completo(.COLNAMES_TRAMITACOES) %>%
+        .coerce_types(.COLNAMES_TRAMITACOES)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
