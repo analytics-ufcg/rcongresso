@@ -14,12 +14,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 .use_backoff_exponencial <- function(path = NULL, query=NULL, timeout = 0, tentativa = 0){
   final_timeout <- timeout*2.05
   Sys.sleep(final_timeout)
-  .get_from_api(path, query, final_timeout, tentativa)
+  .get_from_camara_api(path, query, final_timeout, tentativa)
 }
 
-.get_from_api <- function(path=NULL, query=NULL, timeout = 1, tentativa = 0){
+.get_from_camara_api <- function(path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
-  api_url <- httr::modify_url(.API_LINK, path = path, query = query)
+  api_url <- httr::modify_url(.CAMARA_API_LINK, path = path, query = query)
 
   #print(api_url)
 
@@ -42,17 +42,17 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_hrefs <- function(path=NULL, query=NULL) {
-  resp <- .get_from_api(path, query)
+  resp <- .get_from_camara_api(path, query)
   .get_json(resp)$links
 }
 
-#' Wraps an access to the congress API given a relative path and query arguments.
+#' Wraps an access to the camara API given a relative path and query arguments.
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
 #' @export
-.congresso_api <- function(path=NULL, query=NULL, asList = FALSE){
+.camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(path, query)
+  resp <- .get_from_camara_api(path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
@@ -164,7 +164,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, ., asList)
+        .camara_api(API_path, ., asList)
       )
   }
 }
@@ -184,7 +184,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     dplyr::mutate(path = paste0(API_path, "/", id)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path, asList = asList)
+      .camara_api(.$path, asList = asList)
     ) %>%
     dplyr::ungroup()
 }
@@ -211,7 +211,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, .)
+        .camara_api(API_path, .)
       )
   } else {
     req_ultima_pagina <- query
@@ -223,13 +223,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
-        .congresso_api(API_path, .)
+        .camara_api(API_path, .)
       ) %>%
       dplyr::bind_rows(req_ultima_pagina %>%
                          tibble::as.tibble() %>%
                          dplyr::rowwise() %>%
                          dplyr::do(
-                           .congresso_api(API_path, .)
+                           .camara_api(API_path, .)
                          ))
   }
 }
