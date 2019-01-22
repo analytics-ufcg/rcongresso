@@ -41,7 +41,7 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
-    .congresso_api(.PROPOSICOES_PATH) %>%
+    .camara_api(.PROPOSICOES_PATH) %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
     .coerce_types(.COLNAMES_PROPOSICAO)
   else if(is.null(id))
@@ -70,7 +70,7 @@ fetch_votacoes <- function(id_prop){
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)
+      .camara_api(.$path)
     ) %>%
     dplyr::ungroup() %>%
     .assert_dataframe_completo(.COLNAMES_VOTACOES) %>%
@@ -95,7 +95,7 @@ fetch_relacionadas <- function(id_prop){
     dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
     dplyr::group_by(id_prop, path) %>%
       dplyr::do(
-               .congresso_api(.$path)
+               .camara_api(.$path)
              ) %>%
       dplyr::ungroup() %>%
       dplyr::select(-path) %>%
@@ -121,7 +121,7 @@ fetch_tramitacao <- function(id_prop){
       dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
         dplyr::group_by(id_prop, path) %>%
         dplyr::do(
-                 .congresso_api(.$path)
+                 .camara_api(.$path)
                ) %>%
         dplyr::ungroup() %>%
         dplyr::select(-path) %>%
@@ -145,7 +145,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
   tibble::tibble(tipo, numero, ano) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.PROPOSICOES_PATH,
+      .camara_api(.PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
                           ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
         .verifica_id(.WARNING_PROPOSICAO_ID) %>%
@@ -164,7 +164,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @export
 .fetch_tipos_proposicao <- function(){
-  .congresso_api(.TIPOS_PROPOSICOES_PATH)
+  .camara_api(.TIPOS_PROPOSICOES_PATH)
 }
 
 #' @title Fetches the type of the proposition from its id

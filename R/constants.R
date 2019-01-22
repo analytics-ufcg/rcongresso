@@ -1,5 +1,6 @@
 # Link default da API
-.API_LINK <- "https://dadosabertos.camara.leg.br"
+.CAMARA_API_LINK <- "https://dadosabertos.camara.leg.br"
+.SENADO_API_LINK <- "http://legis.senado.leg.br/dadosabertos/materia/"
 
 # Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
