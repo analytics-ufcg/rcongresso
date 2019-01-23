@@ -94,3 +94,6 @@
                            "status.totalMembros"="character","status.totalPosse"="character","status.uriMembros"="character",
                            "uri"="character","urlFacebook"="character","urlWebsite"="character")
 
+# Comissoes
+.COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "idTipoOrgao"="integer",
+                         "tipoOrgao"="character")

@@ -21,8 +21,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(.CAMARA_API_LINK, path = path, query = query)
 
-  #print(api_url)
-
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
@@ -56,7 +54,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
-    #print("conversao")
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
