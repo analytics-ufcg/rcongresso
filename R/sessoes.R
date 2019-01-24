@@ -35,13 +35,10 @@ fetch_sessoes <- function(id_prop, casa) {
 #' @rdname fetch_sessoes_senado
 #' @export
 fetch_sessoes_senado <- function(id_prop) {
-  url_base_sessions <-
-    "http://legis.senado.leg.br/dadosabertos/materia/ordia/"
-  url <- paste0(url_base_sessions, id_prop)
   
-  json_sessions <- jsonlite::fromJSON(url, flatten = T)
+  sessions_list <- .senado_api(paste0(.SENADO_SESSOES_PATH, '91341'), asList = T)
   
-  sessions_data <- json_sessions %>%
+  sessions_data <- sessions_list %>%
     magrittr::extract2("OrdiaMateria") %>%
     magrittr::extract2("Materia")
   
@@ -65,16 +62,20 @@ fetch_sessoes_senado <- function(id_prop) {
 #' @rdname fetch_sessoes_camara
 #' @export
 fetch_sessoes_camara <- function(id_prop) {
-  events_base_url <-
-    'http://www.camara.gov.br/proposicoesWeb/sessoes_e_reunioes?idProposicao='
-  bill_events_url <- paste0(events_base_url, id_prop)
-  events <- bill_events_url %>%
+  
+  events <- .get_from_url_html(base_url = .CAMARA_WEBSITE_LINK, 
+                               path = .CAMARA_SESSOES_PATH, 
+                               query = paste0("idProposicao=", id_prop)) %>%
     xml2::read_html() %>%
     rvest::html_nodes(xpath = '//*[@id="content"]/table') %>%
     rvest::html_table()
+  
   events_df <- events[[1]]
   names(events_df) <- c('timestamp', 'origem', 'descricao', 'links')
-  events_df %>%
+  
+  events_df %<>%
     dplyr::select(-links) %>%
     dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp))
+  
+  events_df
 }
