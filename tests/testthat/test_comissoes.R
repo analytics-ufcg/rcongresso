@@ -1,18 +1,19 @@
 context("Comissões")
 
 setup <- function() {
-  comissao_capadr <<- fetch_comissoes_camara("CAPADR")
+  comissao_capadr <<- fetch_comissao_camara("CAPADR")
   
   return(TRUE)
 }
 
 check_api <- function(){
-  tryCatch(setup(), error = function(e){return(FALSE)})
+  tryCatch(setup(), error = function(e){
+    message(e)
+    return(FALSE)
+  })
 }
 
 test <- function(){
-  test_that("GET comissão inexistente", {expect_true(nrow(fetch_comissoes_camara(-1)) == 0)})
-  
   test_that("Is dataframe", {
     expect_true(is.data.frame(comissao_capadr))
   })
