@@ -29,5 +29,5 @@ Suggests: testthat,
     DT,
     ggplot2,
     purrr
-RoxygenNote: 6.1.1
+RoxygenNote: 6.0.1
 VignetteBuilder: knitr
