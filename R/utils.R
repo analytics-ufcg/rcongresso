@@ -14,15 +14,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 .use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
   final_timeout <- timeout*2.05
   Sys.sleep(final_timeout)
-  .get_from_api(api_base, path, query, final_timeout, tentativa)
+  .get_from_api_json(api_base, path, query, final_timeout, tentativa)
 }
 
-.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
-  ua <- httr::user_agent(.RCONGRESSO_LINK)
-  api_url <- httr::modify_url(api_base, path = path, query = query)
-
-  resp <- httr::GET(api_url, ua, httr::accept_json())
-
+.get_from_url <- function(url=NULL, timeout = 1, tentativa = 0, ...) {
+  resp <- httr::GET(url, ...)
+  
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
      httr::status_code(resp) < .COD_ERRO_SERV){
     .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
@@ -31,6 +28,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
     } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   }
+  
+  resp
+}
+
+.get_from_api_json <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
+  ua <- httr::user_agent(.RCONGRESSO_LINK)
+  api_url <- httr::modify_url(api_base, path = path, query = query)
+
+  resp <- .get_from_url(url=api_url, timeout, tentativa, ua, httr::accept_json())
 
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
@@ -39,8 +45,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp
 }
 
+.get_from_url_html <- function(base_url=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
+  url <- httr::modify_url(base_url, path = path, query = query)
+  
+  resp <- .get_from_url(url=url, timeout=timeout, tentativa=tentativa)
+  
+  resp
+}
+
 .get_hrefs <- function(path=NULL, query=NULL) {
-  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
+  resp <- .get_from_api_json(.CAMARA_API_LINK, path, query)
   .get_json(resp)$links
 }
 
@@ -50,7 +64,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
+  resp <- .get_from_api_json(.CAMARA_API_LINK, path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
@@ -66,7 +80,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .senado_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(.SENADO_API_LINK, path, query)
+  resp <- .get_from_api_json(.SENADO_API_LINK, path, query)
   obtained_data <- .get_json(resp)
 
   if(!is.data.frame(obtained_data) && !asList){
