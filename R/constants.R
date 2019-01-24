@@ -8,7 +8,7 @@
 .WARNING_SIGLA_PARTIDO <- "Algumas siglas podem estar incorretas."
 
 # Paths
-.PROPOSICOESPATH <- "/api/v2/proposicoes"
+.PROPOSICOES_PATH <- "/api/v2/proposicoes"
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
 .PARTIDOS_PATH <- "/api/v2/partidos"
