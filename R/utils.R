@@ -11,17 +11,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     jsonlite::fromJSON(flatten = TRUE)
 }
 
-.use_backoff_exponencial <- function(path = NULL, query=NULL, timeout = 0, tentativa = 0){
+.use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
   final_timeout <- timeout*2.05
   Sys.sleep(final_timeout)
-  .get_from_camara_api(path, query, final_timeout, tentativa)
+  .get_from_api(api_base, path, query, final_timeout, tentativa)
 }
 
-.get_from_camara_api <- function(path=NULL, query=NULL, timeout = 1, tentativa = 0){
+.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
-  api_url <- httr::modify_url(.CAMARA_API_LINK, path = path, query = query)
-
-  #print(api_url)
+  api_url <- httr::modify_url(api_base, path = path, query = query)
 
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
@@ -30,7 +28,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
     if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(path, query, timeout, tentativa+1)
+      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
     } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   }
 
@@ -42,7 +40,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_hrefs <- function(path=NULL, query=NULL) {
-  resp <- .get_from_camara_api(path, query)
+  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
   .get_json(resp)$links
 }
 
@@ -52,11 +50,26 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_camara_api(path, query)
+  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
-    #print("conversao")
+    obtained_data %>%
+      .get_dataframe()
+  } else obtained_data
+
+}
+
+#' Wraps an access to the senate API given a relative path and query arguments.
+#' @param path URL relative to the API base URL
+#' @param query Query parameters
+#' @export
+.senado_api <- function(path=NULL, query=NULL, asList = FALSE){
+
+  resp <- .get_from_api(.SENADO_API_LINK, path, query)
+  obtained_data <- .get_json(resp)
+
+  if(!is.data.frame(obtained_data) && !asList){
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
