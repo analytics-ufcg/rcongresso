@@ -30,7 +30,6 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
 #' @description Returns a dataframe containing the relatoria's historic, with date and relator's name from Senado. 
 #' @param proposicao_id Proposição's ID from Senado
 #' @return Dataframe containing detailed information about relatorias of a proposição from Senado
-#' @examples fetch_relatorias_senado(91341)
 #' @export
 .fetch_relatorias_senado <- function(proposicao_id) {
   url_relatorias <-
@@ -69,27 +68,11 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
   df
 }
 
-#' @title Renames a vector with the pattern of underscores and lowercases
-#' @description Renames each item from vector with the pattern: split by underscore and lowercase
-#' @param x Strings vector
-#' @return Vector containing the renamed strings.
-#' @examples
-#' to_underscore(c("testName", "TESTNAME"))
-#' @export
-.to_underscore <- function(x) {
-  gsub('([A-Za-z])([A-Z])([a-z])', '\\1_\\2\\3', x) %>%
-    gsub('.', '_', ., fixed = TRUE) %>%
-    gsub('([a-z])([A-Z])', '\\1_\\2', .) %>%
-    tolower()
-}
-
 #' @title Fetches proposição's relatoria historic from Camara
 #' @description Returns a dataframe containing the relatoria's historic, with date and relator's name from Camara. 
 #' @param proposicao_id Proposição's ID from Camara
 #' @return Dataframe containing detailed information about relatorias of a proposição from Camara
-#' @examples .fetch_relatorias_camara(91341)
 #' @export
 .fetch_relatorias_camara <- function(proposicao_id) {
   tibble::tibble()
 }
-

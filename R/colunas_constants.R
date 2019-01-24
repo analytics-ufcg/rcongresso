@@ -94,3 +94,11 @@
                            "status.totalMembros"="character","status.totalPosse"="character","status.uriMembros"="character",
                            "uri"="character","urlFacebook"="character","urlWebsite"="character")
 
+# Relatorias
+.COLNAMES_RELATORIAS <- c("codigo_tipo_relator"="character", "descricao_tipo_relator"="character", "data_designacao"="character",
+                          "data_destituicao"="character", "descricao_motivo_destituicao"="character", "codigo_parlamentar"="character",
+                          "nome_parlamentar"="character", "nome_completo_parlamentar"="character","sexo_parlamentar"="character", 
+                          "forma_tratamento"="character", "url_foto_parlamentar"="character", "url_pagina_parlamentar"="character",
+                          "email_parlamentar"="character", "sigla_partido_parlamentar"="character", "uf_parlamentar"="character",
+                          "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character", 
+                          "sigla_casa_comissao"="character", "nome_casa_comissao"="character")

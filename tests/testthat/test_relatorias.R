@@ -30,6 +30,10 @@ test <- function(){
   test_that("Quantidade de linhas retornadas - fetch_relatorias",{
     expect_equal(nrow(relatorias_senado_df), QUANT_IDS)
   })
+  
+  test_that("fetch_relatorias()", {
+    expect_true(all(sapply(relatorias_senado_df, class) %in% .COLNAMES_RELATORIAS))
+  })
 }
 
 if(check_api()){
