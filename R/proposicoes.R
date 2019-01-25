@@ -159,9 +159,6 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @return Proposition types
 #'
-#' @examples
-#' tipos_proposicao <- fetch_tipos_proposicao()
-#'
 #' @export
 .fetch_tipos_proposicao <- function(){
   .camara_api(.TIPOS_PROPOSICOES_PATH)

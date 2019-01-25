@@ -17,6 +17,7 @@
 .PARTIDOS_PATH <- "/api/v2/partidos"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
+.ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
