@@ -21,7 +21,7 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
   if(!is.null(last_n)){
     relatorias <- 
       relatorias %>%
-      head(last_n)
+      utils::head(last_n)
   }
   return(relatorias)
 }
@@ -33,7 +33,7 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
 #' @export
 .fetch_relatorias_senado <- function(proposicao_id) {
   url_relatorias <-
-    paste0(.SENADO_API_LINK , "relatorias/")
+    paste0(.SENADO_API_LINK , .RELATORIA_SENADO_PATH)
   
   url <- paste0(url_relatorias, proposicao_id)
   json_relatorias <- jsonlite::fromJSON(url,flatten = T)

@@ -1,27 +1,22 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
-#' Recovers a json from a URL using HTTP.
-#' @param full_link URL admitting GET HTTP requests.
-#' @return the json.
-#' @examples
-#' pec241_json <- .get_json("https://dadosabertos.camara.leg.br/api/v2/proposicoes/2088351")
-#' @export
+#' Extracts the JSON data from an HTTP response
+#' @param response The HTTP response
+#' @return The json
 .get_json <- function(response){
   httr::content(response, as = "text") %>%
     jsonlite::fromJSON(flatten = TRUE)
 }
 
-.use_backoff_exponencial <- function(path = NULL, query=NULL, timeout = 0, tentativa = 0){
+.use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
   final_timeout <- timeout*2.05
   Sys.sleep(final_timeout)
-  .get_from_camara_api(path, query, final_timeout, tentativa)
+  .get_from_api(api_base, path, query, final_timeout, tentativa)
 }
 
-.get_from_camara_api <- function(path=NULL, query=NULL, timeout = 1, tentativa = 0){
+.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
-  api_url <- httr::modify_url(.CAMARA_API_LINK, path = path, query = query)
-
-  #print(api_url)
+  api_url <- httr::modify_url(api_base, path = path, query = query)
 
   resp <- httr::GET(api_url, ua, httr::accept_json())
 
@@ -30,7 +25,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
     if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(path, query, timeout, tentativa+1)
+      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
     } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   }
 
@@ -42,21 +37,38 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_hrefs <- function(path=NULL, query=NULL) {
-  resp <- .get_from_camara_api(path, query)
+  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
   .get_json(resp)$links
 }
 
 #' Wraps an access to the camara API given a relative path and query arguments.
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
+#' @param asList If return should be a list or a dataframe
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_camara_api(path, query)
+  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
-    #print("conversao")
+    obtained_data %>%
+      .get_dataframe()
+  } else obtained_data
+
+}
+
+#' Wraps an access to the senate API given a relative path and query arguments.
+#' @param path URL relative to the API base URL
+#' @param query Query parameters
+#' @param asList If return should be a list or a dataframe
+#' @export
+.senado_api <- function(path=NULL, query=NULL, asList = FALSE){
+
+  resp <- .get_from_api(.SENADO_API_LINK, path, query)
+  obtained_data <- .get_json(resp)
+
+  if(!is.data.frame(obtained_data) && !asList){
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
@@ -121,7 +133,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param num A integer vector
 #' @return A tibble
 #' @examples
-#' df <- .to_tibble(c(1,2))
+#' df <- rcongresso:::.to_tibble(c(1,2))
 #' @export
 .to_tibble <- function(num) {
   if (is.null(num)) tibble::tibble()
@@ -133,7 +145,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param parametros A list of parameters from the input
 #' @return A list of parameters without NULL
 #' @examples
-#' parametros <- .verifica_parametros_entrada(list(NULL, itens=100, pagina=1))
+#' parametros <- rcongresso:::.verifica_parametros_entrada(list(NULL, itens=100, pagina=1))
 #' @export
 .verifica_parametros_entrada <- function(parametros) {
   is_missing <- parametros %>%
@@ -145,11 +157,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Fetches a proposition using a list of queries
 #'
 #' @param parametros queries used on the search
+#' @param API_path API path
+#' @param asList If return should be a list or a dataframe
 #'
 #' @return Dataframe containing information about the proposition.
 #'
 #' @examples
-#' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
+#' pec241 <- rcongresso:::.fetch_using_queries(
+#'    parametros = list(id = "2088351"),
+#'    API_path = "/api/v2/proposicoes"
+#' )
 #'
 #' @export
 .fetch_using_queries <- function(parametros, API_path, asList = FALSE){
@@ -172,11 +189,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Fetches details from a proposition.
 #'
 #' @param id Proposition's ID
+#' @param API_path API path
+#' @param asList If return should be a list or a dataframe
 #'
 #' @return Dataframe containing information about the proposition.
 #'
 #' @examples
-#' pec241 <- .fetch_using_id(2088351)
+#' pec241 <- rcongresso:::.fetch_using_id(2088351, API_path = "/api/v2/proposicoes")
 #'
 #' @export
 .fetch_using_id <- function(id, API_path, asList = FALSE){
@@ -202,6 +221,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' items. 530 items can also be read as 500 items + 30 items, then 5 pages with 100 items and
 #' 1 page with 30 items.
 #'
+#' @param query query parameters
+#' @param API_path API path
 .fetch_itens <- function(query, API_path){
 
   query$pagina <- seq(1, query$itens/.MAX_ITENS)

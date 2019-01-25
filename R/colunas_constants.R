@@ -102,3 +102,7 @@
                           "email_parlamentar"="character", "sigla_partido_parlamentar"="character", "uf_parlamentar"="character",
                           "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character", 
                           "sigla_casa_comissao"="character", "nome_casa_comissao"="character")
+
+# Comissoes
+.COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "idTipoOrgao"="integer",
+                         "tipoOrgao"="character")
