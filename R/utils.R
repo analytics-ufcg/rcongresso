@@ -11,32 +11,53 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     jsonlite::fromJSON(flatten = TRUE)
 }
 
-.use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
-  final_timeout <- timeout*2.05
-  Sys.sleep(final_timeout)
-  .get_from_api_json(api_base, path, query, final_timeout, tentativa)
+.req_succeeded <- function(status_code) {
+  return(status_code >= .COD_REQ_SUCCESS_MIN && status_code < .COD_REQ_SUCCESS_MAX)
 }
 
-.get_from_url <- function(url=NULL, timeout = 1, tentativa = 0, ...) {
-  resp <- httr::GET(url, ...)
+.is_client_error <- function(status_code) {
+  return(status_code >= .COD_ERRO_CLIENTE && status_code < .COD_ERRO_SERV)
+}
+
+.is_server_error <- function(status_code) {
+  return(status_code >= .COD_ERRO_SERV)
+}
+
+.throw_req_error <- function(error_code, api_url){
+  stop(sprintf(.MENSAGEM_ERRO_REQ, error_code, api_url), call. = FALSE)
+}
+
+.get_from_url_with_exponential_backoff <- function(url=NULL, timeout = 1, ...) {
+  tentativa <- 0
+  final_timeout <- timeout
+  status_code = -1
   
-  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
-     httr::status_code(resp) < .COD_ERRO_SERV){
-    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
-  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
-    if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
-    } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  while(!.req_succeeded(status_code) && (tentativa < .MAX_TENTATIVAS_REQ)) {
+    resp <- httr::GET(url, ...)
+    status_code = httr::status_code(resp)
+    
+    if(.is_client_error(status_code)){
+      .throw_req_error(status_code, url)
+    } else if(.is_server_error(status_code)) {
+      Sys.sleep(final_timeout)
+      final_timeout <- final_timeout*2.05
+    }
+    
+    tentativa <- tentativa + 1
+  }
+  
+  if (tentativa >= .MAX_TENTATIVAS_REQ) {
+    .throw_req_error(status_code, url)
   }
   
   resp
 }
 
-.get_from_api_json <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
+.get_from_api_json <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
 
-  resp <- .get_from_url(url=api_url, timeout, tentativa, ua, httr::accept_json())
+  resp <- .get_from_url_with_exponential_backoff(api_url, timeout, ua, httr::accept_json())
 
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
@@ -45,10 +66,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp
 }
 
-.get_from_url_html <- function(base_url=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
+.get_from_url <- function(base_url=NULL, path=NULL, query=NULL, timeout = 1){
   url <- httr::modify_url(base_url, path = path, query = query)
   
-  resp <- .get_from_url(url=url, timeout=timeout, tentativa=tentativa)
+  resp <- .get_from_url_with_exponential_backoff(url, timeout)
   
   resp
 }
