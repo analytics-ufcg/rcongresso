@@ -48,6 +48,20 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
 #' @export
+.camara_site <- function(path=NULL, query=NULL, asList = FALSE){
+  url <- paste0(.CAMARA_WEBSITE_LINK, path, "?", query)
+
+  obtained_data <-
+    XML::xmlParse(url) %>%
+    XML::xmlToList()
+
+  obtained_data
+}
+
+#' Wraps an access to the camara API given a relative path and query arguments.
+#' @param path URL relative to the API base URL
+#' @param query Query parameters
+#' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
   resp <- .get_from_api(.CAMARA_API_LINK, path, query)
@@ -283,4 +297,29 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   query$itens <- as.integer(ult_pag[[1]][2]) * .MAX_ITENS
 
   .fetch_itens(query, API_path)
+}
+
+#' @title Renomeia as colunas do dataframe
+#' @description Renomeia as colunas do dataframe usando o padrão de letras minúsculas e underscore
+#' @param df Dataframe
+#' @return Dataframe com as colunas renomeadas.
+#' @importFrom magrittr %<>%
+#' @export
+.rename_df_columns <- function(df) {
+  names(df) %<>% .to_underscore
+  df
+}
+
+#' @title Renomeia um vetor com o padrão de underscores e minúsculas
+#' @description Renomeia cada item do vetor com o padrão: separado por underscore e letras minúsculas
+#' @param x Vetor de strings
+#' @return Vetor contendo as strings renomeadas.
+#' @examples
+#' to_underscore(c("testName", "TESTNAME"))
+#' @export
+.to_underscore <- function(x) {
+  gsub('([A-Za-z])([A-Z])([a-z])', '\\1_\\2\\3', x) %>%
+    gsub('.', '_', ., fixed = TRUE) %>%
+    gsub('([a-z])([A-Z])', '\\1_\\2', .) %>%
+    tolower()
 }

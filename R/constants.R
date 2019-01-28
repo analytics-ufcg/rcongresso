@@ -1,5 +1,6 @@
 # Link default da API
 .CAMARA_API_LINK <- "https://dadosabertos.camara.leg.br"
+.CAMARA_WEBSITE_LINK <- "http://camara.leg.br"
 .SENADO_API_LINK <- "http://legis.senado.leg.br"
 
 # Mensagens de erro
@@ -13,6 +14,8 @@
 .DEPUTADOS_PATH <- "/api/v2/deputados"
 .PARTIDOS_PATH <- "/api/v2/partidos"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
+
+.EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
