@@ -14,6 +14,7 @@
 .PROPOSICOES_PATH <- "/api/v2/proposicoes"
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
+.RELATORIA_SENADO_PATH <- "/dadosabertos/materia/relatorias/"
 .PARTIDOS_PATH <- "/api/v2/partidos"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"

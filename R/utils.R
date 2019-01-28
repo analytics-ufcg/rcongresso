@@ -328,29 +328,26 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .fetch_itens(query, API_path)
 }
 
-#' @title Renomeia as colunas do dataframe passado para o formato underscore
-#' @description Renomeia as colunas do dataframe usando o padrão
-#' de underscore e letras minúsculas
-#' @param df Dataframe do Senado
-#' @return Dataframe com as colunas renomeadas
+
+#' @title Changes the column names of the input dataframe to underscore
+#' @description Changes the column names of the input dataframe to underscore
+#' @param df input dataframe
+#' @return dataframe with underscore column names
 #' @export
 rename_table_to_underscore <- function(df) {
   new_names = names(df) %>%
-    to_underscore()
+    .to_underscore()
   
   names(df) <- new_names
   
   df
 }
 
-#' @title Renomeia um vetor com o padrão de underscores e minúsculas
-#' @description Renomeia cada item do vetor com o padrão: separado por underscore e letras minúsculas
-#' @param x Vetor de strings
-#' @return Vetor contendo as strings renomeadas.
-#' @examples
-#' to_underscore(c("testName", "TESTNAME"))
-#' @export
-to_underscore <- function(x) {
+#' @title Renames a vector with the pattern of underscores and lowercases
+#' @description Renames each item from vector with the pattern: split by underscore and lowercase
+#' @param x Strings vector
+#' @return Vector containing the renamed strings.
+.to_underscore <- function(x) {
   gsub('([A-Za-z])([A-Z])([a-z])', '\\1_\\2\\3', x) %>%
     gsub('.', '_', ., fixed = TRUE) %>%
     gsub('([a-z])([A-Z])', '\\1_\\2', .) %>%
