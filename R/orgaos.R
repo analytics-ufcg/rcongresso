@@ -4,5 +4,5 @@
 fetch_orgaos_camara <- function() {
   .camara_api(.ORGAOS_FILE_CAMARA_PATH) %>%
     tibble::as.tibble() %>%
-    dplyr::rename(c(idTipoOrgao="tipo_orgao_id", nome="descricao"))
+    dplyr::rename(tipo_orgao_id=idTipoOrgao, descricao=nome)
 }
