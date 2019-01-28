@@ -321,6 +321,7 @@ fetch_json_try <- function(url) {
 #' @importFrom magrittr %<>%
 #' @export
 rename_df_columns <- function(df) {
-  names(df) %<>% to_underscore
+  names(df) <- names(df) %>% 
+    to_underscore
   df
 }
