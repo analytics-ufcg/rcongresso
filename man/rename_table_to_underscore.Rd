@@ -2,17 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{rename_table_to_underscore}
 \alias{rename_table_to_underscore}
-\title{Renomeia as colunas do dataframe passado para o formato underscore}
+\title{Changes the column names of the input dataframe to underscore}
 \usage{
 rename_table_to_underscore(df)
 }
 \arguments{
-\item{df}{Dataframe do Senado}
+\item{df}{input dataframe}
 }
 \value{
-Dataframe com as colunas renomeadas
+dataframe with underscore column names
 }
 \description{
-Renomeia as colunas do dataframe usando o padrão
-de underscore e letras minúsculas
+Changes the column names of the input dataframe to underscore
 }
