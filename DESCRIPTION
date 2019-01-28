@@ -20,14 +20,15 @@ Imports: httr,
     dplyr,
     tibble,
     tidyr,
-    stringr
+    stringr,
+    xml2,
+    purrr
 Suggests: testthat,
     compare,
     readr,
     knitr,
     rmarkdown,
     DT,
-    ggplot2,
-    purrr
+    ggplot2
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
