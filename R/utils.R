@@ -292,3 +292,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   .fetch_itens(query, API_path)
 }
+
+#' @title Renames a vector with the pattern of underscores and lowercases
+#' @description Renames each item from vector with the pattern: split by underscore and lowercase
+#' @param x Strings vector
+#' @return Vector containing the renamed strings.
+#' @export
+.to_underscore <- function(x) {
+  gsub('([A-Za-z])([A-Z])([a-z])', '\\1_\\2\\3', x) %>%
+    gsub('.', '_', ., fixed = TRUE) %>%
+    gsub('([a-z])([A-Z])', '\\1_\\2', .) %>%
+    tolower()
+}
