@@ -70,7 +70,7 @@ fetch_sessoes_camara <- function(id_prop) {
     rvest::html_table()
   
   sessoes_df <- 
-    events[[1]] %>%
+    sessoes[[1]] %>%
     dplyr::select(-Links) %>%
     magrittr::set_colnames(names(.COLNAMES_SESSOES_CAMARA)) %>%
     dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp)) %>%

@@ -108,7 +108,7 @@
                          "tipoOrgao"="character")
 
 # Sessões
-.COLNAMES_SESSOES_CAMARA <- c("timestamp"="timestamp", "origem"="character", "descricao"="character")
+.COLNAMES_SESSOES_CAMARA <- c("timestamp"="character", "origem"="character", "descricao"="character")
 .COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character", 
                               "sigla_tipo_sessao" ="character", "numero_sessao"="character", "data_sessao"="character", "hora_inicio_sessao"="character")
 
