@@ -23,7 +23,8 @@ Imports: httr,
     stringr,
     xml2,
     purrr,
-    rvest
+    rvest,
+    lubridate
 Suggests: testthat,
     compare,
     readr,

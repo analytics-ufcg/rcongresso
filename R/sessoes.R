@@ -36,13 +36,10 @@ fetch_sessoes <- function(id_prop, casa) {
 #' @export
 fetch_sessoes_senado <- function(id_prop) {
   
-  sessions_list <- .senado_api(paste0(.SENADO_SESSOES_PATH, '91341'), asList = T)
-  
-  sessions_data <- sessions_list %>%
+  sessoes <- 
+    .senado_api(paste0(.SENADO_SESSOES_PATH, id_prop), asList = T) %>%
     magrittr::extract2("OrdiaMateria") %>%
-    magrittr::extract2("Materia")
-  
-  ordem_do_dia_df <- sessions_data %>%
+    magrittr::extract2("Materia") %>%
     magrittr::extract2("OrdensDoDia") %>%
     magrittr::extract2("OrdemDoDia") %>%
     magrittr::extract2("SessaoPlenaria") %>%
@@ -50,7 +47,9 @@ fetch_sessoes_senado <- function(id_prop) {
     tidyr::unnest() %>%
     rename_table_to_underscore()
   
-  ordem_do_dia_df
+  sessoes %>%
+    .assert_dataframe_completo(.COLNAMES_SESSOES_SENADO) %>%
+    .coerce_types(.COLNAMES_SESSOES_SENADO)
 }
 
 #' @title Fetches all the sessions when a proposition was/is going to be discussed in the Chamber of Deputies
@@ -63,14 +62,14 @@ fetch_sessoes_senado <- function(id_prop) {
 #' @export
 fetch_sessoes_camara <- function(id_prop) {
   
-  events <- .get_from_url(base_url = .CAMARA_WEBSITE_LINK, 
+  sessoes <- .get_from_url(base_url = .CAMARA_WEBSITE_LINK, 
                                path = .CAMARA_SESSOES_PATH, 
                                query = paste0("idProposicao=", id_prop)) %>%
     xml2::read_html() %>%
     rvest::html_nodes(xpath = '//*[@id="content"]/table') %>%
     rvest::html_table()
   
-  events_df <- 
+  sessoes_df <- 
     events[[1]] %>%
     dplyr::select(-Links) %>%
     magrittr::set_colnames(names(.COLNAMES_SESSOES_CAMARA)) %>%
