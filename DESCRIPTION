@@ -22,7 +22,8 @@ Imports: httr,
     tidyr,
     stringr,
     xml2,
-    purrr
+    purrr,
+    rvest
 Suggests: testthat,
     compare,
     readr,

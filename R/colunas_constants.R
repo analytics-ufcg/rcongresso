@@ -106,3 +106,7 @@
 # Comissoes
 .COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "idTipoOrgao"="integer",
                          "tipoOrgao"="character")
+
+# Sessões Câmara
+.COLNAMES_SESSOES_CAMARA <- c("timestamp"="timestamp", "origem"="character", "descricao"="character")
+

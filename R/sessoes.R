@@ -70,12 +70,11 @@ fetch_sessoes_camara <- function(id_prop) {
     rvest::html_nodes(xpath = '//*[@id="content"]/table') %>%
     rvest::html_table()
   
-  events_df <- events[[1]]
-  names(events_df) <- c('timestamp', 'origem', 'descricao', 'links')
-  
-  events_df %<>%
-    dplyr::select(-links) %>%
-    dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp))
-  
-  events_df
+  events_df <- 
+    events[[1]] %>%
+    dplyr::select(-Links) %>%
+    magrittr::set_colnames(names(.COLNAMES_SESSOES_CAMARA)) %>%
+    dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp)) %>%
+    .assert_dataframe_completo(.COLNAMES_SESSOES_CAMARA) %>%
+    .coerce_types(.COLNAMES_SESSOES_CAMARA)
 }

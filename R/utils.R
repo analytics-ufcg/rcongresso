@@ -25,11 +25,11 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_from_url_with_exponential_backoff <- function(url=NULL, timeout = 1, ...) {
-  tentativa <- 0
+  tries <- 0
   final_timeout <- timeout
   status_code = -1
   
-  while(!.req_succeeded(status_code) && (tentativa < .MAX_TENTATIVAS_REQ)) {
+  while(!.req_succeeded(status_code) && (tries < .MAX_TENTATIVAS_REQ)) {
     resp <- httr::GET(url, ...)
     status_code = httr::status_code(resp)
     
@@ -40,10 +40,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       final_timeout <- final_timeout*2.05
     }
     
-    tentativa <- tentativa + 1
+    tries <- tries + 1
   }
   
-  if (tentativa >= .MAX_TENTATIVAS_REQ) {
+  if (tries >= .MAX_TENTATIVAS_REQ) {
     .throw_req_error(status_code, url)
   }
   
