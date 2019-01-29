@@ -2,13 +2,13 @@
 % Please edit documentation in R/orgaos.R
 \name{fetch_orgaos_camara}
 \alias{fetch_orgaos_camara}
-\title{Baixa os órgãos na Câmara}
+\title{Fetches data about all Câmara's órgãos}
 \usage{
 fetch_orgaos_camara()
 }
 \value{
-Dataframe contendo os órgãos da Câmara
+A dataframe
 }
 \description{
-Retorna um dataframe contendo os órgãos da câmara
+Fetches a dataframe containing information about all Câmara's órgãos
 }
