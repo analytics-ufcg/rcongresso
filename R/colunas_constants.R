@@ -38,7 +38,7 @@
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
                             "statusProposicao.descricaoSituacao"="character","statusProposicao.codSituacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "ementaDetalhada"="character","uriPropPosterior"="character"
+                            "ementaDetalhada"="character","uriPropPrincipal"="character", "uriPropPosterior"="character"
                             ## "uriOrgaoNumerador"="character","tipoAutor"="character","idTipoAutor"="numeric","uriUltimoRelator"="character","uriPropPrincipal"="character","uriPropAnterior"="character", "urnFinal"="character","texto"="character","justificativa"="character",
                             )
 
