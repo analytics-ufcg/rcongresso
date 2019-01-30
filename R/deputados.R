@@ -62,7 +62,7 @@ fetch_despesas_deputado <- function(id = NULL, idLegislatura = NULL, ano = NULL,
   parametros <- as.list(environment(), all = TRUE)
   path <- paste0(.DEPUTADOS_PATH, "/", id, "/despesas")
 
-  .fetch_using_queries(parametros, path) %>%
+  .camara_api(path) %>%
     .assert_dataframe_completo(.COLNAMES_DEP_GASTOS) %>%
     .coerce_types(.COLNAMES_DEP_GASTOS)
 }

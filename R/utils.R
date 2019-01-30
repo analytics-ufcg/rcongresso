@@ -14,26 +14,62 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .get_from_api(api_base, path, query, final_timeout, tentativa)
 }
 
+#' Stores a value in the cache.
+#' @param key Key to store
+#' @param value Value to store
+.store_in_cache <- function(key, value) {
+    print(length(cache))
+    cache[[key]] <- value
+    print(length(cache))
+    usethis::use_data(cache, internal=T, overwrite=T)
+    cache <<- cache
+}
+
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
 
-  resp <- httr::GET(api_url, ua, httr::accept_json())
+  if (!exists("cache")) {
+      ## print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
+      devtools::load_all()
+      if (!exists("cache")) {
+          ## print('>>>>>>>>>>>>>>>>>create')
+          cache <<- list()
+      }
+  }
+
+  ## print('------------------------')
+  ## print(api_url)
+  resp <- cache[[api_url]]
+
+  if (is.null(resp)) {
+      ## print("NNNNNNNNNNNAOOO ACHOOOOOOOOOO")
+      resp_in_cache <- FALSE
+      resp <- httr::GET(api_url, ua, httr::accept_json())
+  } else {
+      resp_in_cache <- TRUE
+  }
 
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
-     httr::status_code(resp) < .COD_ERRO_SERV){
-    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+      httr::status_code(resp) < .COD_ERRO_SERV){
+      if (!resp_in_cache) .store_in_cache(api_url, resp)
+      .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
-    if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
-    } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+      if(tentativa < .MAX_TENTATIVAS_REQ){
+          .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
+      } else {
+          if (!resp_in_cache) .store_in_cache(api_url, resp)
+          .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+      }
   }
+
+  if (!resp_in_cache) .store_in_cache(api_url, resp)
 
   if (httr::http_type(resp) != "application/json") {
-    stop(.ERRO_RETORNO_JSON, call. = FALSE)
+      stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
 
-  resp
+  return(resp)
 }
 
 .get_hrefs <- function(path=NULL, query=NULL) {
@@ -86,6 +122,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     as.data.frame(stringsAsFactors = FALSE)
 }
 
+#' Prints a warning and a list.
+#' @param msg warning message
+#' @param l list
+.print_warning_and_list <- function(msg, l) {
+    cat(crayon::red("\n", msg, "\n  ", paste(l, collapse="\n   "),"\n"))
+}
+
 #' Garantees that the dataframe x has all the columns passed by y.
 #' @param x dataframe
 #' @param y vector of characters containing the names of columns.
@@ -95,6 +138,14 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     colnames_y <- names(y)
     types_y <- unname(y)
     indexes <- !(colnames_y %in% colnames_x)
+
+    if (any(indexes)) {
+        .print_warning_and_list("Not found columns:", colnames_y[indexes])
+    }
+    nao_esperadas = colnames_x[!(colnames_x %in% colnames_y)]
+    if (length(nao_esperadas)) {
+        .print_warning_and_list("Unexpected columns:", nao_esperadas)
+    }
 
     x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
 
@@ -110,7 +161,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     obj <- obj[,order(colnames(obj))]
     types <- unname(types[sort(names(types))])
     out <- lapply(1:length(obj),FUN = function(i){
-      FUN1 <- .switch_types(types[i]); suppressWarnings(obj[,i] %>% unlist() %>% FUN1)})
+        FUN1 <- .switch_types(types[i])
+        suppressWarnings(obj[,i] %>% unlist() %>% FUN1)
+    })
     names(out) <- colnames(obj)
     as.data.frame(out,stringsAsFactors = FALSE)
   } else tibble::tibble()
