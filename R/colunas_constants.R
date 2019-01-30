@@ -64,11 +64,12 @@
 .COLNAMES_VOTACAO <- c("aprovada"="character", "dataHoraFim"="character", "dataHoraInicio"="character", "despacho"="character",
                        "ementaParecer"="character", "id"="integer", "numPresentes"="integer", "numVotantes"="integer",
                        "placarAbstencao"="integer", "placarNao"="integer", "placarSim"="integer", "proposicao.ano"="integer",
-                       "proposicao.ementa"="character", "proposicao.id"="integer", "proposicao.idTipo"="integer", "proposicao.numero"="integer",
-                       "proposicao.siglaTipo"="character", "proposicao.uri"="character","relator.id"="integer",
-                       "relator.idLegislatura"="integer", "relator.nome"="character", "relator.siglaPartido"="character",
-                       "relator.siglaUf"="character", "relator.uri"="character", "relator.uriPartido"="character", "relator.urlFoto"="character",
-                       "tipoVotacao"="character", "titulo"="character", "uri"="character", "uriEvento"="character", "uriProposicaoPrincipal"="character")
+                       "proposicao.ementa"="character", "proposicao.id"="integer", "proposicao.idTipo"="integer", 
+                       "proposicao.numero"="integer", "proposicao.siglaTipo"="character", "proposicao.uri"="character",
+                       "relator.id"="integer", "relator.idLegislatura"="integer", "relator.nome"="character", 
+                       "relator.siglaPartido"="character", "relator.siglaUf"="character", "relator.uri"="character",
+                       "relator.uriPartido"="character", "relator.urlFoto"="character", "tipoVotacao"="character", 
+                       "titulo"="character", "uri"="character", "uriEvento"="character", "uriProposicaoPrincipal"="character")
 
 # Endpoint: {/votacoes/{id}}
 .COLNAMES_ORIENTACOES <- c("uriBancada"="character","nomeBancada"="character",
@@ -94,6 +95,19 @@
                            "status.totalMembros"="character","status.totalPosse"="character","status.uriMembros"="character",
                            "uri"="character","urlFacebook"="character","urlWebsite"="character")
 
+# Relatorias
+.COLNAMES_RELATORIAS <- c("codigo_tipo_relator"="character", "descricao_tipo_relator"="character", "data_designacao"="character",
+                          "data_destituicao"="character", "descricao_motivo_destituicao"="character", "codigo_parlamentar"="character",
+                          "nome_parlamentar"="character", "nome_completo_parlamentar"="character","sexo_parlamentar"="character", 
+                          "forma_tratamento"="character", "url_foto_parlamentar"="character", "url_pagina_parlamentar"="character",
+                          "email_parlamentar"="character", "sigla_partido_parlamentar"="character", "uf_parlamentar"="character",
+                          "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character", 
+                          "sigla_casa_comissao"="character", "nome_casa_comissao"="character")
+# Emendas
+.COLNAMES_EMENDAS <- c("codigo_emenda"="character", "numero"="integer", "data_apresentacao"="character", "local"="character",
+                       "descricao_turno"="character", "descricao_tipo_emenda"="character", "autor"="character", "id_autor"="character",
+                       "partido"="character", "casa"="character", "tipo_documento"="character", "inteiro_teor"="character")
+
 # Comissoes
-.COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "idTipoOrgao"="integer",
-                         "tipoOrgao"="character")
+.COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character",
+                         "idTipoOrgao"="integer", "tipoOrgao"="character")

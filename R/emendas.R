@@ -29,9 +29,7 @@ fetch_emendas <- function(id, casa) {
 #' @param bill_id ID de uma proposição do Senado
 #' @return Dataframe com as informações sobre as emendas de uma proposição no Senado.
 fetch_emendas_senado <- function(bill_id) {
-  url_base_emendas <-
-    "http://legis.senado.leg.br/dadosabertos/materia/emendas/"
-  url <- paste0(url_base_emendas, bill_id)
+  url <- paste0(.SENADO_API_LINK, .EMENDAS_SENADO_PATH, bill_id)
   
   json_emendas <- fetch_json_try(url)
   
@@ -44,14 +42,15 @@ fetch_emendas_senado <- function(bill_id) {
   num_emendas = nrow(emendas_df)
   
   if (num_emendas == 0) {
-    emendas_df <-
-      tibble::frame_data( ~ codigo_emenda, ~ data_apresentacao, ~ numero, ~ local, ~ autor, ~ partido, ~ casa, ~ tipo_documento, ~ inteiro_teor)
+    emendas_df <- setNames(
+      data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
+      )
     
   } else if (num_emendas == 1) {
-    texto <- generate_dataframe(emendas_df$textos_emenda) %>%
+    texto <- .generate_dataframe(emendas_df$textos_emenda) %>%
       dplyr::select(tipo_documento, url_texto)
     
-    autoria <- generate_dataframe(emendas_df$autoria_emenda) %>%
+    autoria <- .generate_dataframe(emendas_df$autoria_emenda) %>%
       dplyr::mutate(
         partido = paste0(
           identificacao_parlamentar_sigla_partido_parlamentar,
@@ -71,7 +70,10 @@ fetch_emendas_senado <- function(bill_id) {
                     partido = autoria$partido,
                     tipo_documento = texto$tipo_documento,
                     inteiro_teor = texto$url_texto,
-                    casa = 'senado') 
+                    partido = autoria$partido,
+                    id_autor = autoria$identificacao_parlamentar_codigo_parlamentar,
+                    casa = 'senado') %>% 
+      dplyr::select(-autoria_emenda, -textos_emenda)
     
     
   } else{
@@ -85,13 +87,17 @@ fetch_emendas_senado <- function(bill_id) {
           "textos_emenda_texto_emenda_url_texto" = "inteiro_teor",
           "textos_emenda_texto_emenda_tipo_documento" = "tipo_documento",
           "autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar" = "partido",
-          "autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar" = "uf"
+          "autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar" = "uf",
+          "autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar" = "id_autor"
         )
       ) %>%
       dplyr::mutate(
         partido = paste0(partido, "/", uf),
         casa = "senado"
-      ) 
+      ) %>% 
+      dplyr::select(-dplyr::starts_with("autoria_emenda"), 
+                    -dplyr::starts_with("textos_emenda"),
+                    -uf)
     
   }
   
@@ -99,7 +105,19 @@ fetch_emendas_senado <- function(bill_id) {
     dplyr::mutate(autor = paste0(autor, " ", partido), 
                   numero = as.integer(numero),
                   tipo_documento = as.character(tipo_documento),
-                  inteiro_teor = as.character(inteiro_teor)) %>%
-    dplyr::select(-partido)
+                  inteiro_teor = as.character(inteiro_teor)) 
   
+}
+
+#' @title Retorna um dataframe a partir de uma coluna com listas encadeadas
+#' @description Retorna um dataframe a partir de uma coluna com listas encadeadas.
+#' @param column Coluna
+#' @return Dataframe com as informações provenientes de uma coluna com listas encadeadas.
+#' @examples
+#' generate_dataframe(column)
+#' @export
+.generate_dataframe <- function (column) {
+  as.data.frame(column) %>%
+    tidyr::unnest() %>%
+    rename_df_columns()
 }

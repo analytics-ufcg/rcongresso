@@ -301,6 +301,7 @@ fetch_json_try <- function(url) {
       json_data <- jsonlite::fromJSON(url, flatten = T)
     },
     error = function(msg) {
+      print(msg)
     })
     if (!is.null(json_data) & is.null(json_data$ERROR)) {
       break
@@ -322,6 +323,18 @@ fetch_json_try <- function(url) {
 #' @export
 rename_df_columns <- function(df) {
   names(df) <- names(df) %>% 
-    to_underscore
+    .to_underscore
   df
+}
+
+#' @title Renames a vector with the pattern of underscores and lowercases
+#' @description Renames each item from vector with the pattern: split by underscore and lowercase
+#' @param x Strings vector
+#' @return Vector containing the renamed strings.
+#' @export
+.to_underscore <- function(x) {
+  gsub('([A-Za-z])([A-Z])([a-z])', '\\1_\\2\\3', x) %>%
+    gsub('.', '_', ., fixed = TRUE) %>%
+    gsub('([a-z])([A-Z])', '\\1_\\2', .) %>%
+    tolower()
 }
