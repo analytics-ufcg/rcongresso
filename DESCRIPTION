@@ -21,7 +21,9 @@ Imports: httr,
     tibble,
     tidyr,
     stringr,
-    crayon
+    crayon,
+    devtools,
+    usethis
 Suggests: testthat,
     compare,
     readr,
