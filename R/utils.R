@@ -18,29 +18,40 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param key Key to store
 #' @param value Value to store
 .store_in_cache <- function(key, value) {
+    return(NULL)
     print(length(cache))
     cache[[key]] <- value
     print(length(cache))
     usethis::use_data(cache, internal=T, overwrite=T)
+    devtools::load_all()
+    print(length(cache))
     ## cache <<- cache
+}
+
+#' Gets a value from the cache.
+#' @param key Key to get
+.get_from_cache <- function(key) {
+    return(NULL)
+    if (!exists("cache")) {
+        ## print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
+        devtools::load_all()
+        if (!exists("cache")) {
+            ## print('>>>>>>>>>>>>>>>>>create')
+            cache <- list()
+            usethis::use_data(cache, internal=T, overwrite=T)
+            devtools::load_all()
+        }
+    }
+    resp <- cache[[key]]
 }
 
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
 
-  if (!exists("cache")) {
-      ## print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
-      devtools::load_all()
-      if (!exists("cache")) {
-          ## print('>>>>>>>>>>>>>>>>>create')
-          cache <<- list()
-      }
-  }
-
   ## print('------------------------')
   ## print(api_url)
-  resp <- cache[[api_url]]
+  resp <- .get_from_cache(api_url)
 
   if (is.null(resp)) {
       ## print("NNNNNNNNNNNAOOO ACHOOOOOOOOOO")
