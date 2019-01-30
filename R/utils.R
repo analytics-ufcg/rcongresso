@@ -17,71 +17,51 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .get_from_api(api_base, path, query, final_timeout, tentativa)
 }
 
+#' Save the cache to a file
+.save_cache <- function() {
+    pkgenv <- parent.frame()
+    .HTTP_CACHE <- get(".HTTP_CACHE", envir=pkgenv)
+    usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
+}
+
 #' Stores a value in the cache.
 #' @param key Key to store
 #' @param value Value to store
-.store_in_cache <- function(key, value) {
-    ## return(NULL)
-    ## print('--------------store')
-    ## print(key)
-    ## print(value)
-    ## print(length(.cache))
-    ## .cache <- get(".cache", envir=.GlobalEnv)
-    .HTTP_CACHE[[key]] <- value
-    ## print(length(.cache))
-    ## assign(".cache", .cache, envir=.GlobalEnv)
-    usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
-    ## devtools::load_all()
-    ## print(length(.cache))
-    ## .cache <<- .cache
+.put_in_cache <- function(key, value) {
+    pkgenv <- parent.frame()
+    cache <- get(".HTTP_CACHE", envir=pkgenv)
+    cache[[key]] <- value
+    assign(".HTTP_CACHE", cache, envir=pkgenv)
+    .save_cache()
 }
 
 #' Gets a value from the cache.
 #' @param key Key to get
 .get_from_cache <- function(key) {
-    ## return(NULL)
-    ## print('--------------get')
-    ## print(key)
-
-    ## print(.HTTP_CACHE)
-    if (is.null(.HTTP_CACHE)) {
-        ## devtools::load_all()
-        ## print(.HTTP_CACHE)
-        ## print(rcongresso:::.HTTP_CACHE)
-        if (is.null(.HTTP_CACHE)) {
-            .HTTP_CACHE <- list()
+    pkgenv <- parent.frame()
+    cache <- get(".HTTP_CACHE", envir=pkgenv)
+    if (is.null(cache)) {
+        tryCatch({
+            load(file=usethis::proj_path(fs::path("R", "sysdata.rda")))
+            assign(".HTTP_CACHE", .HTTP_CACHE, envir=pkgenv)
+            cache <- get(".HTTP_CACHE", envir=pkgenv)
+        }, error = function(error_condition) {
             print("Initializing cache")
-            ## print(.HTTP_CACHE)
-            ## assign(".HTTP_CACHE", .HTTP_CACHE, envir=parent.frame())
-            assign(".HTTP_CACHE", .HTTP_CACHE, envir=.GlobalEnv)
-            usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
-        }
-    }
+            assign(".HTTP_CACHE", list(), envir=pkgenv)
 
-    ## if (!exists(".cache")) {
-    ##     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
-    ##     devtools::load_all()
-    ##     if (!exists("rcongresso:::.cache")) {
-    ##         print('>>>>>>>>>>>>>>>>>create')
-    ##         .cache <- list()
-    ##         assign(".cache", .cache, envir=.GlobalEnv)
-    ##         usethis::use_data(.cache, internal=T, overwrite=T)
-    ##         ## devtools::load_all()
-    ##     }
-    ## } else print(.cache)
-    resp <- .HTTP_CACHE[[key]]
+            .save_cache()
+        })
+    }
+    resp <- cache[[key]]
 }
 
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
 
-  ## print('------------------------')
-  ## print(api_url)
   resp <- .get_from_cache(api_url)
 
   if (is.null(resp)) {
-      ## print("NNNNNNNNNNNAOOO ACHOOOOOOOOOO")
       resp_in_cache <- FALSE
       resp <- httr::GET(api_url, ua, httr::accept_json())
   } else {
@@ -90,18 +70,18 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
       httr::status_code(resp) < .COD_ERRO_SERV){
-      if (!resp_in_cache) .store_in_cache(api_url, resp)
+      if (!resp_in_cache) .put_in_cache(api_url, resp)
       .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
   } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
       if(tentativa < .MAX_TENTATIVAS_REQ){
           .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
       } else {
-          if (!resp_in_cache) .store_in_cache(api_url, resp)
+          if (!resp_in_cache) .put_in_cache(api_url, resp)
           .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
       }
   }
 
-  if (!resp_in_cache) .store_in_cache(api_url, resp)
+  if (!resp_in_cache) .put_in_cache(api_url, resp)
 
   if (httr::http_type(resp) != "application/json") {
       stop(.ERRO_RETORNO_JSON, call. = FALSE)

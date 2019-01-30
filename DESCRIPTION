@@ -23,8 +23,8 @@ Imports: httr,
     tidyr,
     stringr,
     crayon,
-    devtools,
-    usethis
+    usethis,
+    fs
 Suggests: testthat,
     compare,
     readr,
