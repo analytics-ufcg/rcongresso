@@ -19,6 +19,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param value Value to store
 .store_in_cache <- function(key, value) {
     return(NULL)
+    ## print('--------------store')
+    ## print(key)
+    ## print(value)
     ## print(length(cachemy))
     ## cachemy[[key]] <- value
     ## print(length(cachemy))
@@ -32,8 +35,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param key Key to get
 .get_from_cache <- function(key) {
     return(NULL)
+    ## print('--------------get')
+    ## print(key)
     ## if (!exists("cachemy")) {
-    ##     ## print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
+    ##     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
     ##     devtools::load_all()
     ##     if (!exists("cachemy")) {
     ##         ## print('>>>>>>>>>>>>>>>>>create')
@@ -137,6 +142,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param msg warning message
 #' @param l list
 .print_warning_and_list <- function(msg, l) {
+    return(NULL)
     cat(crayon::red("\n", msg, "\n  ", paste(l, collapse="\n   "),"\n"))
 }
 
