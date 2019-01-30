@@ -29,15 +29,9 @@ fetch_deputado <- function(id = NULL, nome = NULL, idLegislatura = NULL, siglaUf
       .coerce_types(.COLNAMES_DEP_INFO)
   }
   else{
-    data <- NULL
     .fetch_using_id(id, .DEPUTADOS_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
-      tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
-      dplyr::rename(redeSocial = data) %>%
-      .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
-      tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
-      dplyr::rename(redeSocial = data)
-
+      .coerce_types(.COLNAMES_DEP_INFO_ID)
   }
 }
 

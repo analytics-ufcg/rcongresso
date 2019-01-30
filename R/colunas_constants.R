@@ -46,7 +46,7 @@
                         "proposicao.id"="integer","proposicao.uri"="character","proposicao.siglaTipo"="character","proposicao.codTipo"="integer",
                         "proposicao.numero"="integer","proposicao.ano"="integer","proposicao.ementa"="character")
 
-.COLNAMES_TIPO_PROPOSICAO <- c("id"="integer","sigla"="character","nome"="character","descricao"="character")
+.COLNAMES_TIPO_PROPOSICAO <- c("cod"="integer","sigla"="character","nome"="character","descricao"="character")
 
 .COLNAMES_RELACIONADAS <- c("id_prop"="integer","id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
