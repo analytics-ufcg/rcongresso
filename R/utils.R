@@ -22,7 +22,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     cache[[key]] <- value
     print(length(cache))
     usethis::use_data(cache, internal=T, overwrite=T)
-    cache <<- cache
+    ## cache <<- cache
 }
 
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){

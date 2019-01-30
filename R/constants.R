@@ -30,3 +30,5 @@
 .MAX_TENTATIVAS_REQ <- 5
 .MENSAGEM_ERRO_REQ <- function(error_code, api_url){stop(sprintf("Falha na requisicao a API dos Dados Abertos. Erro %s ao tentar acessar: %s",
                                                   error_code, api_url), call. = FALSE)}
+
+cache <- list()
