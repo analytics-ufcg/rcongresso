@@ -97,12 +97,15 @@
 # Relatorias
 .COLNAMES_RELATORIAS <- c("codigo_tipo_relator"="character", "descricao_tipo_relator"="character", "data_designacao"="character",
                           "data_destituicao"="character", "descricao_motivo_destituicao"="character", "codigo_parlamentar"="character",
-                          "nome_parlamentar"="character", "nome_completo_parlamentar"="character","sexo_parlamentar"="character", 
+                          "nome_parlamentar"="character", "nome_completo_parlamentar"="character","sexo_parlamentar"="character",
                           "forma_tratamento"="character", "url_foto_parlamentar"="character", "url_pagina_parlamentar"="character",
                           "email_parlamentar"="character", "sigla_partido_parlamentar"="character", "uf_parlamentar"="character",
-                          "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character", 
+                          "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character",
                           "sigla_casa_comissao"="character", "nome_casa_comissao"="character")
 
 # Comissoes
 .COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "idTipoOrgao"="integer",
                          "tipoOrgao"="character")
+
+# Autores
+.COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")
