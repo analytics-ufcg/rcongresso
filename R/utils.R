@@ -1,5 +1,8 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
+#' Used to store HTTP responses.
+.HTTP_CACHE <- NULL
+
 #' Extracts the JSON data from an HTTP response
 #' @param response The HTTP response
 #' @return The json
@@ -19,38 +22,48 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param value Value to store
 .store_in_cache <- function(key, value) {
     ## return(NULL)
-    ## print('--------------store')
-    ## print(key)
-    ## print(value)
-    ## print(length(cache))
-    cache <- get("cache", envir=.GlobalEnv)
-    cache[[key]] <- value
-    ## print(length(cache))
-    assign("cache", cache, envir=.GlobalEnv)
-    usethis::use_data(cache, internal=T, overwrite=T)
+    print('--------------store')
+    print(key)
+    print(value)
+    ## print(length(.cache))
+    ## .cache <- get(".cache", envir=.GlobalEnv)
+    .HTTP_CACHE[[key]] <- value
+    ## print(length(.cache))
+    ## assign(".cache", .cache, envir=.GlobalEnv)
+    ## usethis::use_data(.cache, internal=T, overwrite=T)
     ## devtools::load_all()
-    ## print(length(cache))
-    ## cache <<- cache
+    ## print(length(.cache))
+    ## .cache <<- .cache
 }
 
 #' Gets a value from the cache.
 #' @param key Key to get
 .get_from_cache <- function(key) {
     ## return(NULL)
-    ## print('--------------get')
-    ## print(key)
-    if (!exists("cache")) {
-        ## print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
+    print('--------------get')
+    print(key)
+
+    if (is.null(.HTTP_CACHE)) {
         devtools::load_all()
-        if (!exists("cache")) {
-            ## print('>>>>>>>>>>>>>>>>>create')
-            cache <- list()
-            assign("cache", cache, envir=.GlobalEnv)
-            usethis::use_data(cache, internal=T, overwrite=T)
-            ## devtools::load_all()
+        if (is.null(.HTTP_CACHE)) {
+            .HTTP_CACHE <- list()
+            assign(".HTTP_CACHE", .HTTP_CACHE, envir=.GlobalEnv)
+            usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
         }
     }
-    resp <- cache[[key]]
+
+    ## if (!exists(".cache")) {
+    ##     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>load_all')
+    ##     devtools::load_all()
+    ##     if (!exists("rcongresso:::.cache")) {
+    ##         print('>>>>>>>>>>>>>>>>>create')
+    ##         .cache <- list()
+    ##         assign(".cache", .cache, envir=.GlobalEnv)
+    ##         usethis::use_data(.cache, internal=T, overwrite=T)
+    ##         ## devtools::load_all()
+    ##     }
+    ## } else print(.cache)
+    resp <- .HTTP_CACHE[[key]]
 }
 
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
