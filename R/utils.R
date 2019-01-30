@@ -22,15 +22,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param value Value to store
 .store_in_cache <- function(key, value) {
     ## return(NULL)
-    print('--------------store')
-    print(key)
-    print(value)
+    ## print('--------------store')
+    ## print(key)
+    ## print(value)
     ## print(length(.cache))
     ## .cache <- get(".cache", envir=.GlobalEnv)
     .HTTP_CACHE[[key]] <- value
     ## print(length(.cache))
     ## assign(".cache", .cache, envir=.GlobalEnv)
-    ## usethis::use_data(.cache, internal=T, overwrite=T)
+    usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
     ## devtools::load_all()
     ## print(length(.cache))
     ## .cache <<- .cache
@@ -40,13 +40,19 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param key Key to get
 .get_from_cache <- function(key) {
     ## return(NULL)
-    print('--------------get')
-    print(key)
+    ## print('--------------get')
+    ## print(key)
 
+    ## print(.HTTP_CACHE)
     if (is.null(.HTTP_CACHE)) {
-        devtools::load_all()
+        ## devtools::load_all()
+        ## print(.HTTP_CACHE)
+        ## print(rcongresso:::.HTTP_CACHE)
         if (is.null(.HTTP_CACHE)) {
             .HTTP_CACHE <- list()
+            print("Initializing cache")
+            ## print(.HTTP_CACHE)
+            ## assign(".HTTP_CACHE", .HTTP_CACHE, envir=parent.frame())
             assign(".HTTP_CACHE", .HTTP_CACHE, envir=.GlobalEnv)
             usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
         }
