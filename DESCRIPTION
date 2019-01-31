@@ -22,16 +22,13 @@ Imports: httr,
     tibble,
     tidyr,
     stringr,
-<<<<<<< HEAD
     xml2,
     purrr,
     rvest,
     lubridate
-=======
     crayon,
     usethis,
     fs
->>>>>>> 07090f8fd5de9d5ba059978875d03d69af705a4c
 Suggests: testthat,
     compare,
     readr,
