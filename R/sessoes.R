@@ -1,7 +1,7 @@
-
 #' @title Fetches all the sessions when a proposition was/is going to be discussed in a Congress House
 #' @description Returns all the sessions when a proposition was/is going to be discussed in a Congress House.
 #' @param id_prop Proposition's ID
+#' @param casa Proposition's casa
 #' @return Dataframe containing all the sessions.
 #' @examples
 #' sessoes_pec_241_2016 <- fetch_sessoes(2088351,'camara')
