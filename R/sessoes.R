@@ -17,7 +17,7 @@ fetch_sessoes <- function(id_prop, casa) {
   } else if (casa == 'senado') {
     sessoes <- fetch_sessoes_senado(id_prop)
   } else {
-    print('Parâmetro "casa" não identificado.')
+    print('casa param is missing.')
     return()
   }
   
