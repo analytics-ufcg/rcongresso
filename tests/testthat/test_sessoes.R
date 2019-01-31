@@ -2,8 +2,8 @@ context("Sessões")
 
 # Setup
 setup <- function(){
-  sessoes_pec_241_2016 <- fetch_sessoes(2088351, 'camara')
-  sessoes_lei_qualidade_fiscal <- fetch_sessoes(91341, 'senado')
+  sessoes_pec_241_2016 <<- fetch_sessoes(2088351, 'camara')
+  sessoes_lei_qualidade_fiscal <<- fetch_sessoes(91341, 'senado')
   
   return(TRUE)
 }

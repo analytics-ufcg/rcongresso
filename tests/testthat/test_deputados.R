@@ -4,7 +4,6 @@ context("Deputados")
 dep_info <<- fetch_deputado(siglaUf = "RR", siglaSexo = "M")
 dep_info_por_id <<- fetch_deputado(178957)
 dep_gastos <<- fetch_despesas_deputado(178957)
-dep_ativos <<- fetch_deputado(itens = -1)
 
 
 # Testa erros
@@ -27,14 +26,12 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(dep_info))
   expect_true(is.data.frame(dep_info_por_id))
   expect_true(is.data.frame(dep_gastos))
-  expect_true(is.data.frame(dep_ativos))
 })
 
 test_that("Not Empty", {
   expect_true(nrow(dep_info) != 0)
   expect_true(nrow(dep_info_por_id) != 0)
   expect_true(nrow(dep_gastos) != 0)
-  expect_true(nrow(dep_ativos) != 0)
 })
 
 test_that("fetch_deputado() usando ID", {
@@ -49,9 +46,6 @@ test_that("fetch_despesas_deputado()", {
   expect_true(all(sapply(dep_gastos, class) %in% .COLNAMES_DEP_GASTOS))
 })
 
-test_that("fetch_deputado() - Todos os deputados em exercício", {
-  expect_true(all(sapply(dep_ativos, class) %in% .COLNAMES_DEP_INFO))
-})
 
 test_that("ID do deputado", {expect_equal(dep_info_por_id$id, ABEL_MESQUITA_ID)})
 test_that("Nome do deputado", {expect_equal(dep_info_por_id$nomeCivil, NOME_ESPERADO)})
