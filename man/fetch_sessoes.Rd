@@ -8,6 +8,8 @@ fetch_sessoes(id_prop, casa)
 }
 \arguments{
 \item{id_prop}{Proposition's ID}
+
+\item{casa}{Proposition's casa}
 }
 \value{
 Dataframe containing all the sessions.
