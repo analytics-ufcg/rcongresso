@@ -6,6 +6,8 @@ setup <- function(){
   emendas_ausentes <<- fetch_emendas(126364, 'senado')
   emendas_variadas <<- fetch_emendas(133943, 'senado')
   
+  emendas_camara <<- fetch_emendas(345311, 'camara')
+  
   return(TRUE)
 }
 
@@ -23,6 +25,11 @@ test <- function(){
     expect_true(tibble::is_tibble(emendas_unica))
     expect_true(tibble::is_tibble(emendas_ausentes))
     expect_true(tibble::is_tibble(emendas_variadas))
+  })
+  
+  test_that("Empty", {
+    expect_true(nrow(emendas_camara) == 0)
+    expect_true(nrow(emendas_ausentes) == 0)
   })
   
   test_that("Not Empty", {

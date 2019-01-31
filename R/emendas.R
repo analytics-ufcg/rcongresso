@@ -111,10 +111,21 @@ fetch_emendas_senado <- function(bill_id) {
   
 }
 
-#' @title Retorna um dataframe a partir de uma coluna com listas encadeadas
-#' @description Retorna um dataframe a partir de uma coluna com listas encadeadas.
-#' @param column Coluna
-#' @return Dataframe com as informações provenientes de uma coluna com listas encadeadas.
+
+#' @title Returns emendas of a proposição from Câmara.
+#' @description Fetchs a dataframe with emendas's data of a proposição from Câmara.
+#' @param bill_id Proposição's ID from Câmara.
+#' @return Dataframe with informations about emendas of a proposição from Câmara.
+fetch_emendas_camara <- function(bill_id) {
+  setNames(
+    data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
+  )
+}
+
+#' @title Generates a dataframe from a column with a linked list
+#' @description Returns a dataframe from a column with a linked list.
+#' @param column Column
+#' @return Dataframe
 #' @export
 .generate_dataframe <- function (column) {
   as.data.frame(column) %>%
