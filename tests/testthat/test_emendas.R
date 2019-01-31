@@ -2,9 +2,9 @@ context("Emendas")
 
 # Setup
 setup <- function(){
-  emendas_unica <<- fetch_emendas_senado(91341)
-  emendas_ausentes <<- fetch_emendas_senado(126364)
-  emendas_variadas <<- fetch_emendas_senado(133943)
+  emendas_unica <<- fetch_emendas(91341, 'senado')
+  emendas_ausentes <<- fetch_emendas(126364, 'senado')
+  emendas_variadas <<- fetch_emendas(133943, 'senado')
   
   return(TRUE)
 }
@@ -16,14 +16,13 @@ check_api <- function(){
 test <- function(){
   # Testa erros
   test_that("GET proposição inexistente", {expect_error(fetch_emendas_senado(-1))})
-  test_that("GET emendas de uma proposição inexistente", {expect_true(nrow(fetch_emendas_senado(-1)) == 0)})
   
   # Testes
   # Os nomes das colunas e os tipos estão definidos em colunas_constants.R
   test_that("Is tibble", {
     expect_true(tibble::is_tibble(emendas_unica))
-    expect_true(is.data.frame(emendas_ausentes))
-    expect_true(is.data.frame(emendas_variadas))
+    expect_true(tibble::is_tibble(emendas_ausentes))
+    expect_true(tibble::is_tibble(emendas_variadas))
   })
   
   test_that("Not Empty", {
@@ -32,7 +31,7 @@ test <- function(){
   })
   
   test_that("Várias - fetch_emendas_senado()", {
-    expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_VOTOS))
+    expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_EMENDAS))
   })
 }
 

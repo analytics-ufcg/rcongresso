@@ -1,7 +1,7 @@
-#' @title Retorna as emendas de uma proposição no Congresso
-#' @description Retorna dataframe com os dados das emendas de uma proposição no Congresso.
-#' @param bill_id ID de uma proposição do Congresso
-#' @return Dataframe com as informações sobre as emendas de uma proposição no Congresso.
+#' @title Returns emendas of a proposição from Congresso
+#' @description Fetchs a dataframe with emendas's data of a proposição from Congresso.
+#' @param bill_id Proposição's ID
+#' @return Dataframe with informations about emendas of a proposição.
 #' @examples
 #' fetch_emendas(91341,'senado')
 #' @export
@@ -16,22 +16,24 @@ fetch_emendas <- function(id, casa) {
     return()
   }
   
-  emendas  <-
-    emendas %>%
-    dplyr::mutate(prop_id = id, codigo_emenda = as.integer(codigo_emenda)) %>%
-    dplyr::select(
-      prop_id, codigo_emenda, data_apresentacao, numero, local, autor, casa, tipo_documento, inteiro_teor) 
+  emendas <-
+    emendas %>% 
+    .assert_dataframe_completo(.COLNAMES_EMENDAS) %>%
+    .coerce_types(.COLNAMES_EMENDAS) %>% 
+    tibble::as_tibble()
+    
+  emendas
 }
 
 
-#' @title Retorna as emendas de uma proposição no Senado
-#' @description Retorna dataframe com os dados das emendas de uma proposição no Senado.
-#' @param bill_id ID de uma proposição do Senado
-#' @return Dataframe com as informações sobre as emendas de uma proposição no Senado.
+#' @title Returns emendas of a proposição from Senado
+#' @description Fetchs a dataframe with emendas's data of a proposição from Senado.
+#' @param bill_id Proposição's ID from senado.
+#' @return Dataframe with informations about emendas of a proposição from Senado.
 fetch_emendas_senado <- function(bill_id) {
-  url <- paste0(.SENADO_API_LINK, .EMENDAS_SENADO_PATH, bill_id)
+  path <- paste0(.EMENDAS_SENADO_PATH, bill_id)
   
-  json_emendas <- fetch_json_try(url)
+  json_emendas <- .senado_api(path = path, asList = TRUE)
   
   emendas_df <- json_emendas %>%
     magrittr::extract2("EmendaMateria") %>%
@@ -76,7 +78,7 @@ fetch_emendas_senado <- function(bill_id) {
       dplyr::select(-autoria_emenda, -textos_emenda)
     
     
-  } else{
+  } else {
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
       plyr::rename(
@@ -94,10 +96,7 @@ fetch_emendas_senado <- function(bill_id) {
       dplyr::mutate(
         partido = paste0(partido, "/", uf),
         casa = "senado"
-      ) %>% 
-      dplyr::select(-dplyr::starts_with("autoria_emenda"), 
-                    -dplyr::starts_with("textos_emenda"),
-                    -uf)
+      ) 
     
   }
   
@@ -105,7 +104,10 @@ fetch_emendas_senado <- function(bill_id) {
     dplyr::mutate(autor = paste0(autor, " ", partido), 
                   numero = as.integer(numero),
                   tipo_documento = as.character(tipo_documento),
-                  inteiro_teor = as.character(inteiro_teor)) 
+                  inteiro_teor = as.character(inteiro_teor)) %>% 
+      dplyr::select(-dplyr::starts_with("autoria_emenda"), 
+                    -dplyr::starts_with("textos_emenda"),
+                    -dplyr::starts_with("uf"))
   
 }
 
@@ -113,8 +115,6 @@ fetch_emendas_senado <- function(bill_id) {
 #' @description Retorna um dataframe a partir de uma coluna com listas encadeadas.
 #' @param column Coluna
 #' @return Dataframe com as informações provenientes de uma coluna com listas encadeadas.
-#' @examples
-#' generate_dataframe(column)
 #' @export
 .generate_dataframe <- function (column) {
   as.data.frame(column) %>%
