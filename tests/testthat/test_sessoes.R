@@ -29,7 +29,7 @@ test <- function(){
   })
   
   test_that("fetch_sessoes()", {
-    expect_true(all(sapply(sessoes_pec_241_2016, class) %in% .COLNAMES_SESSOES_CAMARA)),
+    expect_true(all(sapply(sessoes_pec_241_2016, class) %in% .COLNAMES_SESSOES_CAMARA))
     expect_true(all(sapply(sessoes_lei_qualidade_fiscal, class) %in% .COLNAMES_SESSOES_SENADO))
   })
 }
