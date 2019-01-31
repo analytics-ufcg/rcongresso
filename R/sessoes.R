@@ -69,7 +69,7 @@ fetch_sessoes_camara <- function(id_prop) {
   
   sessoes_df <- 
     sessoes[[1]] %>%
-    dplyr::select(-Links) %>%
+    dplyr::select(-"Links") %>%
     magrittr::set_colnames(names(.COLNAMES_SESSOES_CAMARA)) %>%
     dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp)) %>%
     .assert_dataframe_completo(.COLNAMES_SESSOES_CAMARA) %>%
