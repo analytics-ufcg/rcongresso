@@ -10,11 +10,9 @@
 #' @export
 fetch_sessoes <- function(id_prop, casa) {
   sessoes <- tibble::tibble()
-  
-  casa <- tolower(casa)
-  if (casa == 'camara') {
+  if (tolower(casa) == 'camara') {
     sessoes <- fetch_sessoes_camara(id_prop)
-  } else if (casa == 'senado') {
+  } else if (tolower(casa) == 'senado') {
     sessoes <- fetch_sessoes_senado(id_prop)
   } else {
     print('casa param is missing.')
