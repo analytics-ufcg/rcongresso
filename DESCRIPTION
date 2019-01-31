@@ -22,6 +22,10 @@ Imports: httr,
     tibble,
     tidyr,
     stringr,
+    xml2,
+    purrr,
+    rvest,
+    lubridate,
     crayon,
     usethis,
     fs
@@ -31,7 +35,6 @@ Suggests: testthat,
     knitr,
     rmarkdown,
     DT,
-    ggplot2,
-    purrr
+    ggplot2
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
