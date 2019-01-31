@@ -1,5 +1,5 @@
 # Deputados
-.COLNAMES_DEP_INFO <- c("id"="integer","uri"="character","nome"="character","siglaPartido"="character",
+.COLNAMES_DEP_INFO <- c("id"="integer","uri"="character","nome"="character","siglaPartido"="character","sigla"="character",
                        "uriPartido"="character","siglaUf"="character","idLegislatura"="integer","urlFoto"="character")
 
 .COLNAMES_DEP_INFO_ID <- c(
@@ -137,7 +137,7 @@
     "nome"="character", "codTipoOrgao"="integer", "tipoOrgao"="character",
     "dataInicio"="character", "dataInstalacao"="character",
     "dataFim"="character", "descricaoSituacao"="character", "casa"="character",
-    "sala"="character", "urlWebsite"="character", "idSituacao"="integer"
+    "sala"="character", "urlWebsite"="character", "codSituacao"="integer"
 )
 
 .COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
