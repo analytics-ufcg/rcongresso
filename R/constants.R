@@ -15,7 +15,7 @@
 .RELATORIA_SENADO_PATH <- paste0(.SENADO_PATH, "/relatorias/")
 .EMENDAS_SENADO_PATH <- paste0(.SENADO_PATH, "/emendas/")
 .PARTIDOS_PATH <- "/api/v2/partidos"
-.TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
+.TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
 
 # Link do repositório do rcongresso
