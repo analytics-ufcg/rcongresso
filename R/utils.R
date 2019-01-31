@@ -1,7 +1,7 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 .HTTP_CACHE <- new.env(parent = emptyenv())
-.cache_file_path <- usethis::proj_path(fs::path("data", "test_cache.rds"))
+.cache_file_path <- usethis::proj_path(fs::path("inst", "data", "test_cache.rds"))
 
 #' Extracts the JSON data from an HTTP response
 #' @param response The HTTP response
