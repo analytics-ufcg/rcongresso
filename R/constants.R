@@ -16,8 +16,12 @@
 .DEPUTADOS_PATH <- "/api/v2/deputados"
 .RELATORIA_SENADO_PATH <- "/dadosabertos/materia/relatorias/"
 .PARTIDOS_PATH <- "/api/v2/partidos"
+<<<<<<< HEAD
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/tiposProposicao"
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
+=======
+.TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
+>>>>>>> 07090f8fd5de9d5ba059978875d03d69af705a4c
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
 
 # Paths Senado

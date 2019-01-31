@@ -14,6 +14,7 @@ Description: Provides propositions, votings, deputies and parties data from
 License: LGPL-3
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 2.10)
 Imports: httr,
     jsonlite,
     magrittr,
@@ -21,10 +22,16 @@ Imports: httr,
     tibble,
     tidyr,
     stringr,
+<<<<<<< HEAD
     xml2,
     purrr,
     rvest,
     lubridate
+=======
+    crayon,
+    usethis,
+    fs
+>>>>>>> 07090f8fd5de9d5ba059978875d03d69af705a4c
 Suggests: testthat,
     compare,
     readr,

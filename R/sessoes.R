@@ -24,8 +24,6 @@ fetch_sessoes <- function(id_prop, casa) {
   return(sessoes)
 }
 
-
-
 #' @title Fetches all the sessions when a proposition was/is going to be discussed in the Senate
 #' @description Returns all the sessions when a proposition was/is going to be discussed in the Senate.
 #' @param id_prop Proposition's ID
