@@ -63,7 +63,7 @@ fetch_votos <- function(id_votacao = NULL){
     dplyr::do(
       tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
-              query = paste0("pagina=", 1:5, "&itens=100"))
+              query = paste0("pagina=", 1:6, "&itens=100"))
     ) %>%
     dplyr::ungroup()
 

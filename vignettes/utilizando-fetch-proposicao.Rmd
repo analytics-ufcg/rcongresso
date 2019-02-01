@@ -27,7 +27,7 @@ A _query_ da consulta possui os seguintes parâmetros:
 
 - `id`: Numeração única utilizada para identificar as proposições.
 - `siglaUfAutor`: Sigla do estado do autor da proposição.
-- `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros. Veja mais [detalhes](https://dadosabertos.camara.leg.br/api/v2/referencias/tiposProposicao).
+- `siglaTipo`: Sigla do tipo da proposição, por exemplo PEC, REQ, PL, PLP, entre outros. Veja mais [detalhes](https://dadosabertos.camara.leg.br/api/v2/referencias/proposicoes/siglaTipo).
 - `siglaPartidoAutor`: Sigla do partido do autor da proposição, por exemplo DEM, PMDB, PT, entre outros.
 - `numero`: Número da proposição. Por exemplo, a busca pela proposição PEC **182**/2007 tem 182 como parâmetro número.
 - `ano`: Ano em que a proposição foi apresentada.

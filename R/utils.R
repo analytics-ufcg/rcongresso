@@ -1,14 +1,30 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
-#' Recovers a json from a URL using HTTP.
-#' @param full_link URL admitting GET HTTP requests.
-#' @return the json.
-#' @examples
-#' pec241_json <- .get_json("https://dadosabertos.camara.leg.br/api/v2/proposicoes/2088351")
-#' @export
+#' Used to store HTTP responses.
+.HTTP_CACHE <- NULL
+
+#' Extracts the JSON data from an HTTP response
+#' @param response The HTTP response
+#' @return The json
 .get_json <- function(response){
   httr::content(response, as = "text") %>%
     jsonlite::fromJSON(flatten = TRUE)
+}
+
+.req_succeeded <- function(status_code) {
+  return(status_code >= .COD_REQ_SUCCESS_MIN && status_code < .COD_REQ_SUCCESS_MAX)
+}
+
+.is_client_error <- function(status_code) {
+  return(status_code >= .COD_ERRO_CLIENTE && status_code < .COD_ERRO_SERV)
+}
+
+.is_server_error <- function(status_code) {
+  return(status_code >= .COD_ERRO_SERV)
+}
+
+.throw_req_error <- function(error_code, api_url){
+  stop(sprintf(.MENSAGEM_ERRO_REQ, error_code, api_url), call. = FALSE)
 }
 
 .use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
@@ -17,45 +33,117 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .get_from_api(api_base, path, query, final_timeout, tentativa)
 }
 
-.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
-  ua <- httr::user_agent(.RCONGRESSO_LINK)
-  api_url <- httr::modify_url(api_base, path = path, query = query)
+.get_from_url <- function(base_url=NULL, path=NULL, query=NULL, timeout = 1){
+  url <- httr::modify_url(base_url, path = path, query = query)
 
-  resp <- httr::GET(api_url, ua, httr::accept_json())
+  resp <- .get_from_url_with_exponential_backoff(url, timeout)
 
-  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
-     httr::status_code(resp) < .COD_ERRO_SERV){
-    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
-  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
-    if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
-    } else .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  resp
+}
+
+.get_from_url_with_exponential_backoff <- function(url=NULL, timeout = 1, ...) {
+  tries <- 0
+  final_timeout <- timeout
+  status_code = -1
+
+  while(!.req_succeeded(status_code) && (tries < .MAX_TENTATIVAS_REQ)) {
+    resp <- httr::GET(url, ...)
+    status_code = httr::status_code(resp)
+
+    if(.is_client_error(status_code)){
+      .throw_req_error(status_code, url)
+    } else if(.is_server_error(status_code)) {
+      Sys.sleep(final_timeout)
+      final_timeout <- final_timeout*2.05
+    }
+
+    tries <- tries + 1
   }
 
-  if (httr::http_type(resp) != "application/json") {
-    stop(.ERRO_RETORNO_JSON, call. = FALSE)
+  if (tries >= .MAX_TENTATIVAS_REQ) {
+    .throw_req_error(status_code, url)
   }
 
   resp
 }
 
+
+#' Save the cache to a file
+.save_cache <- function() {
+  pkgenv <- parent.frame()
+  .HTTP_CACHE <- get(".HTTP_CACHE", envir=pkgenv)
+  usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
+}
+
+#' Stores a value in the cache.
+#' @param key Key to store
+#' @param value Value to store
+.put_in_cache <- function(key, value) {
+  pkgenv <- parent.frame()
+  cache <- get(".HTTP_CACHE", envir=pkgenv)
+  cache[[key]] <- value
+  assign(".HTTP_CACHE", cache, envir=pkgenv)
+  .save_cache()
+}
+
+#' Gets a value from the cache.
+#' @param key Key to get
+.get_from_cache <- function(key) {
+  pkgenv <- parent.frame()
+  cache <- get(".HTTP_CACHE", envir=pkgenv)
+  if (is.null(cache)) {
+    tryCatch({
+      load(file=usethis::proj_path(fs::path("R", "sysdata.rda")))
+      assign(".HTTP_CACHE", .HTTP_CACHE, envir=pkgenv)
+      cache <- get(".HTTP_CACHE", envir=pkgenv)
+    }, error = function(error_condition) {
+      print("Initializing cache")
+      assign(".HTTP_CACHE", list(), envir=pkgenv)
+
+      .save_cache()
+    })
+  }
+  resp <- cache[[key]]
+}
+
+.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
+  ua <- httr::user_agent(.RCONGRESSO_LINK)
+  api_url <- httr::modify_url(api_base, path = path, query = query)
+
+  resp <- .get_from_cache(api_url)
+
+  if (is.null(resp)) {
+    resp_in_cache <- FALSE
+    resp <- httr::GET(api_url, ua, httr::accept_json())
+  } else {
+    resp_in_cache <- TRUE
+  }
+
+  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
+     httr::status_code(resp) < .COD_ERRO_SERV){
+    if (!resp_in_cache) .put_in_cache(api_url, resp)
+    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
+    if(tentativa < .MAX_TENTATIVAS_REQ){
+      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
+    } else {
+      if (!resp_in_cache) .put_in_cache(api_url, resp)
+      .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+    }
+  }
+
+  if (!resp_in_cache) .put_in_cache(api_url, resp)
+
+  if (httr::http_type(resp) != "application/json") {
+    stop(.ERRO_RETORNO_JSON, call. = FALSE)
+  }
+
+  return(resp)
+}
+
 .get_hrefs <- function(path=NULL, query=NULL) {
   resp <- .get_from_api(.CAMARA_API_LINK, path, query)
   .get_json(resp)$links
-}
-
-#' Wraps an access to the camara API given a relative path and query arguments.
-#' @param path URL relative to the API base URL
-#' @param query Query parameters
-#' @export
-.camara_site <- function(path=NULL, query=NULL, asList = FALSE){
-  url <- paste0(.CAMARA_WEBSITE_LINK, path, "?", query)
-
-  obtained_data <-
-    XML::xmlParse(url) %>%
-    XML::xmlToList()
-
-  obtained_data
 }
 
 #' Wraps an access to the camara API given a relative path and query arguments.
@@ -77,6 +165,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Wraps an access to the senate API given a relative path and query arguments.
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
+#' @param asList If return should be a list or a dataframe
 #' @export
 .senado_api <- function(path=NULL, query=NULL, asList = FALSE){
 
@@ -101,6 +190,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     as.data.frame(stringsAsFactors = FALSE)
 }
 
+#' Prints a warning and a list.
+#' @param msg warning message
+#' @param l list
+.print_warning_and_list <- function(msg, l) {
+  cat(crayon::red("\n", msg, "\n  ", paste(l, collapse="\n   "),"\n"))
+}
+
 #' Garantees that the dataframe x has all the columns passed by y.
 #' @param x dataframe
 #' @param y vector of characters containing the names of columns.
@@ -110,6 +206,14 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     colnames_y <- names(y)
     types_y <- unname(y)
     indexes <- !(colnames_y %in% colnames_x)
+
+    if (any(indexes)) {
+      .print_warning_and_list("Not found columns:", colnames_y[indexes])
+    }
+    nao_esperadas = colnames_x[!(colnames_x %in% colnames_y)]
+    if (length(nao_esperadas)) {
+      .print_warning_and_list("Unexpected columns:", nao_esperadas)
+    }
 
     x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
 
@@ -125,7 +229,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     obj <- obj[,order(colnames(obj))]
     types <- unname(types[sort(names(types))])
     out <- lapply(1:length(obj),FUN = function(i){
-      FUN1 <- .switch_types(types[i]); suppressWarnings(obj[,i] %>% unlist() %>% FUN1)})
+      FUN1 <- .switch_types(types[i])
+      suppressWarnings(obj[,i] %>% unlist() %>% FUN1)
+    })
     names(out) <- colnames(obj)
     as.data.frame(out,stringsAsFactors = FALSE)
   } else tibble::tibble()
@@ -148,7 +254,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param num A integer vector
 #' @return A tibble
 #' @examples
-#' df <- .to_tibble(c(1,2))
+#' df <- rcongresso:::.to_tibble(c(1,2))
 #' @export
 .to_tibble <- function(num) {
   if (is.null(num)) tibble::tibble()
@@ -160,7 +266,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param parametros A list of parameters from the input
 #' @return A list of parameters without NULL
 #' @examples
-#' parametros <- .verifica_parametros_entrada(list(NULL, itens=100, pagina=1))
+#' parametros <- rcongresso:::.verifica_parametros_entrada(list(NULL, itens=100, pagina=1))
 #' @export
 .verifica_parametros_entrada <- function(parametros) {
   is_missing <- parametros %>%
@@ -172,11 +278,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Fetches a proposition using a list of queries
 #'
 #' @param parametros queries used on the search
+#' @param API_path API path
+#' @param asList If return should be a list or a dataframe
 #'
 #' @return Dataframe containing information about the proposition.
 #'
 #' @examples
-#' pec241 <- .fetch_using_queries(siglaTipo = "PEC", numero = 241, ano = 2016)
+#' pec241 <- rcongresso:::.fetch_using_queries(
+#'    parametros = list(id = "2088351"),
+#'    API_path = "/api/v2/proposicoes"
+#' )
 #'
 #' @export
 .fetch_using_queries <- function(parametros, API_path, asList = FALSE){
@@ -199,11 +310,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Fetches details from a proposition.
 #'
 #' @param id Proposition's ID
+#' @param API_path API path
+#' @param asList If return should be a list or a dataframe
 #'
 #' @return Dataframe containing information about the proposition.
 #'
 #' @examples
-#' pec241 <- .fetch_using_id(2088351)
+#' pec241 <- rcongresso:::.fetch_using_id(2088351, API_path = "/api/v2/proposicoes")
 #'
 #' @export
 .fetch_using_id <- function(id, API_path, asList = FALSE){
@@ -229,6 +342,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' items. 530 items can also be read as 500 items + 30 items, then 5 pages with 100 items and
 #' 1 page with 30 items.
 #'
+#' @param query query parameters
+#' @param API_path API path
 .fetch_itens <- function(query, API_path){
 
   query$pagina <- seq(1, query$itens/.MAX_ITENS)
@@ -299,27 +414,28 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .fetch_itens(query, API_path)
 }
 
-#' @title Renomeia as colunas do dataframe
-#' @description Renomeia as colunas do dataframe usando o padrão de letras minúsculas e underscore
-#' @param df Dataframe
-#' @return Dataframe com as colunas renomeadas.
-#' @importFrom magrittr %<>%
-#' @export
-.rename_df_columns <- function(df) {
-  names(df) %<>% .to_underscore
-  df
-}
-
-#' @title Renomeia um vetor com o padrão de underscores e minúsculas
-#' @description Renomeia cada item do vetor com o padrão: separado por underscore e letras minúsculas
-#' @param x Vetor de strings
-#' @return Vetor contendo as strings renomeadas.
-#' @examples
-#' to_underscore(c("testName", "TESTNAME"))
+#' @title Renames a vector with the pattern of underscores and lowercases
+#' @description Renames each item from vector with the pattern: split by underscore and lowercase
+#' @param x Strings vector
+#' @return Vector containing the renamed strings.
 #' @export
 .to_underscore <- function(x) {
   gsub('([A-Za-z])([A-Z])([a-z])', '\\1_\\2\\3', x) %>%
     gsub('.', '_', ., fixed = TRUE) %>%
     gsub('([a-z])([A-Z])', '\\1_\\2', .) %>%
     tolower()
+}
+
+#' @title Changes the column names of the input dataframe to underscore
+#' @description Changes the column names of the input dataframe to underscore
+#' @param df input dataframe
+#' @return dataframe with underscore column names
+#' @export
+rename_table_to_underscore <- function(df) {
+  new_names = names(df) %>%
+    .to_underscore()
+
+  names(df) <- new_names
+
+  df
 }

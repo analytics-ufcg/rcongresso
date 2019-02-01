@@ -159,9 +159,6 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @return Proposition types
 #'
-#' @examples
-#' tipos_proposicao <- fetch_tipos_proposicao()
-#'
 #' @export
 .fetch_tipos_proposicao <- function(){
   .camara_api(.TIPOS_PROPOSICOES_PATH)
@@ -177,10 +174,10 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
   prop_types <- .fetch_tipos_proposicao() %>%
-    dplyr::mutate(id = as.numeric(.$id))
+    dplyr::mutate(cod = as.numeric(.$cod))
 
-  tibble::tibble(id = id_tipo_prop) %>%
-    dplyr::left_join(prop_types, by = "id") %>%
+  tibble::tibble(cod = id_tipo_prop) %>%
+    dplyr::left_join(prop_types, by = "cod") %>%
     .assert_dataframe_completo(.COLNAMES_TIPO_PROPOSICAO) %>%
     .coerce_types(.COLNAMES_TIPO_PROPOSICAO)
 }
