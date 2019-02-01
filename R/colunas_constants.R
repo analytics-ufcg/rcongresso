@@ -52,9 +52,21 @@
 .COLNAMES_RELACIONADAS <- c("id_prop"="integer","id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
 
-.COLNAMES_TRAMITACOES <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
+.COLNAMES_TRAMITACOES_CAMARA <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
                            "despacho"="character","codSituacao"="integer","codTipoTramitacao"="character","regime"="character",
                            "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character")
+
+.COLNAMES_TRAMITACOES_SENADO <- c("codigo_tramitacao"="character","numero_autuacao"="character","data_hora"="character","sequencia"="character",
+                           "data_recebimento"="character","origem_tramitacao_local_codigo_local"="character","origem_tramitacao_local_tipo_local"="character",
+                           "origem_tramitacao_local_sigla_casa_local"="character","origem_tramitacao_local_nome_casa_local"="character",
+                           "origem_tramitacao_local_sigla_local"="character","origem_tramitacao_local_nome_local"="character",
+                           "destino_tramitacao_local_codigo_local"="character","destino_tramitacao_local_tipo_local"="character",
+                           "destino_tramitacao_local_sigla_casa_local"="character", "destino_tramitacao_local_nome_casa_local"="character",
+                           "destino_tramitacao_local_sigla_local"="character","destino_tramitacao_local_nome_local"="character",
+                           "situacao_codigo_situacao"="character","situacao_sigla_situacao"="character","situacao_descricao_situacao"="character",
+                           "codigo_materia"="character","sigla_casa_identificacao_materia"="character","nome_casa_identificacao_materia"="character",
+                           "sigla_subtipo_materia"="character","descricao_subtipo_materia"="character","numero_materia"="character",
+                           "descricao_identificacao_materia"="character","indicador_tramitando"="character")
 
 # Votações
 
@@ -123,6 +135,6 @@
 
 # Sessões
 .COLNAMES_SESSOES_CAMARA <- c("timestamp"="character", "origem"="character", "descricao"="character")
-.COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character", 
+.COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",
                               "sigla_tipo_sessao" ="character", "numero_sessao"="character", "data_sessao"="character", "hora_inicio_sessao"="character")
 

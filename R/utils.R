@@ -35,9 +35,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 .get_from_url <- function(base_url=NULL, path=NULL, query=NULL, timeout = 1){
   url <- httr::modify_url(base_url, path = path, query = query)
-  
+
   resp <- .get_from_url_with_exponential_backoff(url, timeout)
-  
+
   resp
 }
 
@@ -45,25 +45,25 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   tries <- 0
   final_timeout <- timeout
   status_code = -1
-  
+
   while(!.req_succeeded(status_code) && (tries < .MAX_TENTATIVAS_REQ)) {
     resp <- httr::GET(url, ...)
     status_code = httr::status_code(resp)
-    
+
     if(.is_client_error(status_code)){
       .throw_req_error(status_code, url)
     } else if(.is_server_error(status_code)) {
       Sys.sleep(final_timeout)
       final_timeout <- final_timeout*2.05
     }
-    
+
     tries <- tries + 1
   }
-  
+
   if (tries >= .MAX_TENTATIVAS_REQ) {
     .throw_req_error(status_code, url)
   }
-  
+
   resp
 }
 
@@ -99,7 +99,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     }, error = function(error_condition) {
       print("Initializing cache")
       assign(".HTTP_CACHE", list(), envir=pkgenv)
-      
+
       .save_cache()
     })
   }
@@ -109,16 +109,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
-  
+
   resp <- .get_from_cache(api_url)
-  
+
   if (is.null(resp)) {
     resp_in_cache <- FALSE
     resp <- httr::GET(api_url, ua, httr::accept_json())
   } else {
     resp_in_cache <- TRUE
   }
-  
+
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
      httr::status_code(resp) < .COD_ERRO_SERV){
     if (!resp_in_cache) .put_in_cache(api_url, resp)
@@ -131,13 +131,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
     }
   }
-  
+
   if (!resp_in_cache) .put_in_cache(api_url, resp)
-  
+
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
-  
+
   return(resp)
 }
 
@@ -152,15 +152,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param asList If return should be a list or a dataframe
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
-  
+
   resp <- .get_from_api(.CAMARA_API_LINK, path, query)
   obtained_data <- .get_json(resp)$dados
-  
+
   if(!is.data.frame(obtained_data) && !asList){
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
-  
+
 }
 
 #' Wraps an access to the senate API given a relative path and query arguments.
@@ -169,15 +169,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param asList If return should be a list or a dataframe
 #' @export
 .senado_api <- function(path=NULL, query=NULL, asList = FALSE){
-  
+
   resp <- .get_from_api(.SENADO_API_LINK, path, query)
   obtained_data <- .get_json(resp)
-  
+
   if(!is.data.frame(obtained_data) && !asList){
     obtained_data %>%
       .get_dataframe()
   } else obtained_data
-  
+
 }
 
 #' In case of receiving a list, this function converts the list into a dataframe.
@@ -207,7 +207,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     colnames_y <- names(y)
     types_y <- unname(y)
     indexes <- !(colnames_y %in% colnames_x)
-    
+
     if (any(indexes)) {
       .print_warning_and_list("Not found columns:", colnames_y[indexes])
     }
@@ -215,9 +215,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     if (length(nao_esperadas)) {
       .print_warning_and_list("Unexpected columns:", nao_esperadas)
     }
-    
+
     x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
-    
+
     x
   } else tibble::tibble()
 }
@@ -346,9 +346,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param query query parameters
 #' @param API_path API path
 .fetch_itens <- function(query, API_path){
-  
+
   query$pagina <- seq(1, query$itens/.MAX_ITENS)
-  
+
   if((query$itens < .MAX_ITENS) || (query$itens %% .MAX_ITENS == 0)){
     query %>%
       tibble::as.tibble() %>%
@@ -361,7 +361,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     req_ultima_pagina$itens <- query$itens %% .MAX_ITENS
     req_ultima_pagina$pagina <- max(seq(1, query$itens/.MAX_ITENS)) +1
     query$itens <- .MAX_ITENS
-    
+
     query %>%
       tibble::as.tibble() %>%
       dplyr::rowwise() %>%
@@ -388,11 +388,11 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .fetch_all_items <- function(query, API_path){
-  
+
   href <- rel <- NULL
-  
+
   query$itens <- .MAX_ITENS
-  
+
   # Pegar pelo "last" e não buscar pelo índice diretamente, já que o índice pode variar.
   list_param <- .get_hrefs(path = API_path, query = query) %>%
     dplyr::filter(rel == "last") %>%
@@ -402,16 +402,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     purrr::pluck(1, length(.[[1]])) %>%
     strsplit("&") %>%
     purrr::pluck(1)
-  
+
   # Procurar pelo parâmetro página. Mesma lógica do babado aqui em cima.
   index_ult_pag <- list_param %>%
     stringr::str_detect("pagina")
-  
+
   ult_pag <- list_param[index_ult_pag] %>%
     strsplit("=")
-  
+
   query$itens <- as.integer(ult_pag[[1]][2]) * .MAX_ITENS
-  
+
   .fetch_itens(query, API_path)
 }
 
@@ -435,8 +435,51 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 rename_table_to_underscore <- function(df) {
   new_names = names(df) %>%
     .to_underscore()
-  
+
   names(df) <- new_names
-  
+
   df
+}
+
+#' @title Renomeia as colunas do dataframe de movimentação no Senado
+#' @description Renomeia as colunas do dataframe de movimentação no Senado usando o padrão
+#' de underscore e letras minúsculas
+#' @param df Dataframe da votação no Senado
+#' @return Dataframe com as colunas renomeadas
+#' @export
+.rename_tramitacao_df <- function(df) {
+  new_names = names(df) %>%
+    to_underscore() %>%
+    stringr::str_replace(
+      "identificacao_tramitacao_|
+      identificacao_tramitacao_origem_tramitacao_local_|
+      identificacao_tramitacao_destino_tramitacao_local_|
+      identificacao_tramitacao_situacao_",
+      ""
+    )
+
+  names(df) <- new_names
+
+  df
+}
+
+.fetch_json_try <- function(url) {
+  count <- 0
+  repeat {
+    json_data <- NULL
+    tryCatch({
+      json_data <- jsonlite::fromJSON(url, flatten = T)
+    },
+    error = function(msg) {
+    })
+    if (!is.null(json_data) & is.null(json_data$ERROR)) {
+      break
+    } else {
+      print("Erro ao baixar dados, tentando outra vez...")
+      count <- count + 1
+      print(paste("Tentativas: ", count))
+      Sys.sleep(2)
+    }
+  }
+  return(json_data)
 }
