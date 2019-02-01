@@ -1,12 +1,12 @@
-#' @title Retorna as emendas de uma proposição na Camara
-#' @description Retorna dataframe com os dados das emendas de uma proposição na Camara
-#' @param id ID de uma proposição da Camara
-#' @param sigla Sigla da proposição
-#' @param numero Numero da proposição
-#' @param ano Ano da proposição
-#' @return Dataframe com as informações sobre as emendas de uma proposição na Camara
+#' @title Fetches proposition's emendas
+#' @description Fetches a dataframe containing the emendas of the proposition
+#' @param sigla Proposition type (i.e., PEC, PL, PDC)
+#' @param numero Proposition number
+#' @param ano Proposition year
+#' @return A dataframe containing details about the emendas of the proposition
 #' @examples
-#' fetch_emendas_camara('pl', 490, 2007)
+#' fetch_emendas_camara('pl', 6726, 2016)
+#' @export
 fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
   emendas_substitutivos_redacaofinal_list <-
     .get_from_url(base_url = .CAMARA_WEBSITE_LINK,
