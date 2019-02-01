@@ -103,6 +103,30 @@ fetch_relacionadas <- function(id_prop){
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
+#' @title Fetches the tramitation of a proposition
+#' @description Returns the tramitation of a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @param casa Proposition's casa
+#' @return Dataframe containing all the tramitation.
+#' @examples
+#' tramitacao_pec241 <- fetch_sessoes(2088351,'camara')
+#' tramitacao_pls229 <- fetch_sessoes(91341,'senado')
+#' @rdname fetch_sessoes
+#' @export
+fetch_tramitacao <- function(id_prop, casa) {
+  tramitacao <- tibble::tibble()
+  if (tolower(casa) == 'camara') {
+    tramitacao <- fetch_tramitacao_camara(id_prop)
+  } else if (tolower(casa) == 'senado') {
+    tramitacao <- fetch_tramitacao_senado(id_prop)
+  } else {
+    print('casa param is missing.')
+    return()
+  }
+
+  return(tramitacao)
+}
+
 #' @title Fetches the tramitation of a proposition in the Chamber of Deputies
 #' @description Returns the tramitation of a proposition by its id.
 #' @param id_prop Proposition's ID
