@@ -449,7 +449,7 @@ rename_table_to_underscore <- function(df) {
 #' @export
 .rename_tramitacao_df <- function(df) {
   new_names = names(df) %>%
-    to_underscore() %>%
+    .to_underscore() %>%
     stringr::str_replace(
       "identificacao_tramitacao_|
       identificacao_tramitacao_origem_tramitacao_local_|

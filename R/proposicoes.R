@@ -41,15 +41,15 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
   parametros <- as.list(environment(), all=TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros)))
-    .camara_api(.PROPOSICOES_PATH) %>%
+    .camara_api(.CAMARA_PROPOSICOES_PATH) %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
     .coerce_types(.COLNAMES_PROPOSICAO)
   else if(is.null(id))
-    .fetch_using_queries(parametros, .PROPOSICOES_PATH)%>%
+    .fetch_using_queries(parametros, .CAMARA_PROPOSICOES_PATH)%>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
     .coerce_types(.COLNAMES_PROPOSICAO)
   else
-    .fetch_using_id(id, .PROPOSICOES_PATH)%>%
+    .fetch_using_id(id, .CAMARA_PROPOSICOES_PATH)%>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID) %>%
     .coerce_types(.COLNAMES_PROPOSICAO_POR_ID)
 }
@@ -67,7 +67,7 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 fetch_votacoes <- function(id_prop){
   id <- NULL
   tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(
       .camara_api(.$path)
@@ -92,7 +92,7 @@ fetch_relacionadas <- function(id_prop){
   unique(id_prop) %>%
     as.integer %>%
     tibble::tibble(id_prop = .) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
     dplyr::group_by(id_prop, path) %>%
       dplyr::do(
                .camara_api(.$path)
@@ -142,7 +142,7 @@ fetch_tramitacao_camara <- function(id_prop){
 fetch_tramitacao_senado <- function(id_prop){
   url <-
     paste0(.SENADO_PROPOSICOES_PATH,
-           proposicao_id)
+           id_prop)
 
   json_tramitacao <- .fetch_json_try(url)
 
@@ -175,9 +175,7 @@ fetch_tramitacao_senado <- function(id_prop){
     .rename_tramitacao_df(proposicao_tramitacoes_df) %>%
     dplyr::rename(data_hora = data_tramitacao, sequencia = numero_ordem_tramitacao)
 
-  proposicao_tramitacoes_df %>%
-    .assert_dataframe_completo(.COLNAMES_TRAMITACOES_SENADO) %>%
-    .coerce_types(.COLNAMES_TRAMITACOES_SENADO)
+  proposicao_tramitacoes_df
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
@@ -196,7 +194,7 @@ fetch_id_proposicao <- function(tipo, numero, ano){
   tibble::tibble(tipo, numero, ano) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .camara_api(.PROPOSICOES_PATH,
+      .camara_api(.CAMARA_PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
                           ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
         .verifica_id(.WARNING_PROPOSICAO_ID) %>%
