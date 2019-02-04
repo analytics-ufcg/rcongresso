@@ -168,7 +168,7 @@ fetch_tramitacao_senado <- function(id_prop){
     paste0(.SENADO_API_LINK, .SENADO_PROPOSICOES_PATH,
            id_prop)
 
-  json_tramitacao <- .fetch_json_try_senado(url)
+  json_tramitacao <- .senado_api(url, asList = T)
 
   tramitacao_data <-
     json_tramitacao %>%
