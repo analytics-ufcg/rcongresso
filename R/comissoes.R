@@ -11,15 +11,15 @@ fetch_comissao_camara <- function(sigla = NULL) {
     .coerce_types(.COLNAMES_COMISSOES)
 }
 
-#' @title Retorna a composição da comissão do senado
-#' @description Retorna dataframe com os dados dos membros de uma comissão do Senado
-#' @param sigla Sigla da comissão do Senado
-#' @return Dataframes
+#' @title Fetches comissions on Senate
+#' @description Fetches a dataframe containing information about the comission requested
+#' @param sigla Comissao's id
+#' @return Returns a dataframe containing information about the comission requested
 fetch_composicao_comissoes_senado <- function(sigla) {
-  url <- paste0(.ORGAOS_SENADO_PATH, sigla)
+  url <- paste0(.SENADO_API_LINK, .ORGAOS_SENADO_PATH, sigla)
   tryCatch(
     {
-      json_sessions <- jsonlite::fromJSON(url, flatten = T)
+      json_sessions <- .senado_api(url, asList = T)
 
       colegiado <-
         json_sessions %>%
