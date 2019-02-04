@@ -8,9 +8,9 @@
 fetch_emendas <- function(id, casa) {
   casa <- tolower(casa)
   if (casa == 'camara') {
-    emendas <- fetch_emendas_camara(id)
+    emendas <- fetch_emendas_camara(bill_id = id)
   } else if (casa == 'senado') {
-    emendas <- fetch_emendas_senado(id)
+    emendas <- fetch_emendas_senado(bill_id = id)
   } else {
     print('Parâmetro "casa" não identificado.')
     return()
@@ -61,13 +61,7 @@ fetch_emendas_senado <- function(bill_id) {
         )
       )
     
-    emendas_df <- emendas_df %>%
-      plyr::rename(
-        c(
-          "numero_emenda" = "numero",
-          "colegiado_apresentacao" = "local"
-        )
-      ) %>%
+    emendas_df <- emendas_df %>% 
       dplyr::mutate(autor = autoria$nome_autor,
                     partido = autoria$partido,
                     tipo_documento = texto$tipo_documento,
@@ -75,24 +69,22 @@ fetch_emendas_senado <- function(bill_id) {
                     partido = autoria$partido,
                     id_autor = autoria$identificacao_parlamentar_codigo_parlamentar,
                     casa = 'senado') %>% 
-      dplyr::select(-autoria_emenda, -textos_emenda)
+      dplyr::select(-autoria_emenda, -textos_emenda, numero = numero_emenda, local = colegiado_apresentacao)
     
     
   } else {
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
-      plyr::rename(
-        c(
-          "numero_emenda" = "numero",
-          "colegiado_apresentacao" = "local",
-          "autoria_emenda_autor_nome_autor" = "autor",
-          "textos_emenda_texto_emenda_url_texto" = "inteiro_teor",
-          "textos_emenda_texto_emenda_tipo_documento" = "tipo_documento",
-          "autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar" = "partido",
-          "autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar" = "uf",
-          "autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar" = "id_autor"
-        )
-      ) %>%
+      dplyr::rename(
+          numero = "numero_emenda", 
+          local = "colegiado_apresentacao",
+          autor = "autoria_emenda_autor_nome_autor",
+          inteiro_teor = "textos_emenda_texto_emenda_url_texto",
+          tipo_documento = "textos_emenda_texto_emenda_tipo_documento",
+          partido = "autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar",
+          uf = "autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar",
+          id_autor = "autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar"
+        )%>%
       dplyr::mutate(
         partido = paste0(partido, "/", uf),
         casa = "senado"
