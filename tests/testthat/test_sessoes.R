@@ -23,11 +23,6 @@ test <- function(){
     expect_true(is.data.frame(sessoes_lei_qualidade_fiscal))
   })
   
-  test_that("Not Empty", {
-    expect_true(nrow(sessoes_pec_241_2016) != 0)
-    expect_true(nrow(sessoes_lei_qualidade_fiscal) != 0)
-  })
-  
   test_that("fetch_sessoes()", {
     expect_true(all(sapply(sessoes_pec_241_2016, class) %in% .COLNAMES_SESSOES_CAMARA))
     expect_true(all(sapply(sessoes_lei_qualidade_fiscal, class) %in% .COLNAMES_SESSOES_SENADO))
