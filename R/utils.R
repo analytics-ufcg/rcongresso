@@ -463,7 +463,7 @@ rename_table_to_underscore <- function(df) {
   df
 }
 
-.fetch_json_try <- function(url) {
+.fetch_json_try_senado <- function(url) {
   count <- 0
   repeat {
     json_data <- NULL
