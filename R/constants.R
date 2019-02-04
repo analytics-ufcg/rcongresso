@@ -19,10 +19,11 @@
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
+.AGENDA_CAMARA_PATH <- "/api/v2/eventos?dataInicio="
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
-  
+
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
 
