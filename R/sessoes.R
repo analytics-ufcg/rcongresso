@@ -65,11 +65,18 @@ fetch_sessoes_camara <- function(id_prop) {
     rvest::html_nodes(xpath = '//*[@id="content"]/table') %>%
     rvest::html_table()
   
-  sessoes_df <- 
-    sessoes[[1]] %>%
-    dplyr::select(-"Links") %>%
-    magrittr::set_colnames(names(.COLNAMES_SESSOES_CAMARA)) %>%
-    dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp)) %>%
-    .assert_dataframe_completo(.COLNAMES_SESSOES_CAMARA) %>%
-    .coerce_types(.COLNAMES_SESSOES_CAMARA)
+  if(length(sessoes) != 0) {
+    sessoes_df <- 
+      sessoes[[1]] %>%
+      dplyr::select(-"Links") %>%
+      magrittr::set_colnames(names(.COLNAMES_SESSOES_CAMARA)) %>%
+      dplyr::mutate(timestamp = lubridate::dmy_hm(timestamp)) %>%
+      .assert_dataframe_completo(.COLNAMES_SESSOES_CAMARA) %>%
+      .coerce_types(.COLNAMES_SESSOES_CAMARA) 
+  }
+  else {
+    sessoes_df <- data.frame()
+  }
+  
+  return(sessoes_df)
 }
