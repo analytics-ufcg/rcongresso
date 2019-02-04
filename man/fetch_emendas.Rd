@@ -7,7 +7,9 @@
 fetch_emendas(id, casa)
 }
 \arguments{
-\item{bill_id}{Proposição's ID}
+\item{id}{Proposição's ID}
+
+\item{casa}{Proposição's house}
 }
 \value{
 Dataframe with informations about emendas of a proposição.

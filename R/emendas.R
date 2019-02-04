@@ -1,6 +1,7 @@
 #' @title Returns emendas of a proposição from Congresso
 #' @description Fetchs a dataframe with emendas's data of a proposição from Congresso.
-#' @param bill_id Proposição's ID
+#' @param id Proposição's ID
+#' @param casa Proposição's house
 #' @return Dataframe with informations about emendas of a proposição.
 #' @examples
 #' fetch_emendas(91341,'senado')
@@ -30,6 +31,7 @@ fetch_emendas <- function(id, casa) {
 #' @description Fetchs a dataframe with emendas's data of a proposição from Senado.
 #' @param bill_id Proposição's ID from senado.
 #' @return Dataframe with informations about emendas of a proposição from Senado.
+#' @export
 fetch_emendas_senado <- function(bill_id) {
   path <- paste0(.EMENDAS_SENADO_PATH, bill_id)
   
@@ -108,6 +110,7 @@ fetch_emendas_senado <- function(bill_id) {
 #' @description Fetchs a dataframe with emendas's data of a proposição from Câmara.
 #' @param bill_id Proposição's ID from Câmara.
 #' @return Dataframe with informations about emendas of a proposição from Câmara.
+#' @export
 fetch_emendas_camara <- function(bill_id) {
   setNames(
     data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
@@ -118,7 +121,6 @@ fetch_emendas_camara <- function(bill_id) {
 #' @description Returns a dataframe from a column with a linked list.
 #' @param column Column
 #' @return Dataframe
-#' @export
 .generate_dataframe <- function (column) {
   as.data.frame(column) %>%
     tidyr::unnest() %>%
