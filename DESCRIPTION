@@ -27,9 +27,7 @@ Imports: httr,
     purrr,
     rvest,
     lubridate,
-    crayon,
-    usethis,
-    fs
+    crayon
 Suggests: testthat,
     compare,
     readr,
