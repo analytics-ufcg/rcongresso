@@ -64,13 +64,12 @@ fetch_emendas_senado <- function(bill_id) {
       )
     
     emendas_df <- emendas_df %>% 
-      dplyr::mutate(autor = autoria$nome_autor,
-                    partido = autoria$partido,
-                    tipo_documento = texto$tipo_documento,
-                    inteiro_teor = texto$url_texto,
-                    partido = autoria$partido,
-                    id_autor = autoria$identificacao_parlamentar_codigo_parlamentar,
-                    casa = 'senado') %>% 
+      dplyr::mutate("autor" = autoria$nome_autor,
+                    "partido" = autoria$partido,
+                    "tipo_documento" = texto$tipo_documento,
+                    "inteiro_teor" = texto$url_texto,
+                    "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
+                    "casa" = 'senado') %>% 
       dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
     
     
@@ -88,17 +87,17 @@ fetch_emendas_senado <- function(bill_id) {
           id_autor = "autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar"
         )%>%
       dplyr::mutate(
-        partido = paste0(partido, "/", uf),
-        casa = "senado"
+        "partido" = paste0(partido, "/", uf),
+        "casa" = "senado"
       ) 
     
   }
   
   emendas_df %>%
-    dplyr::mutate(autor = paste0(autor, " ", partido), 
-                  numero = as.integer(numero),
-                  tipo_documento = as.character(tipo_documento),
-                  inteiro_teor = as.character(inteiro_teor)) %>% 
+    dplyr::mutate("autor" = paste0(autor, " ", partido), 
+                  "numero" = as.integer(numero),
+                  "tipo_documento" = as.character(tipo_documento),
+                  "inteiro_teor" = as.character(inteiro_teor)) %>% 
       dplyr::select(-dplyr::starts_with("autoria_emenda"), 
                     -dplyr::starts_with("textos_emenda"),
                     -dplyr::starts_with("uf"))
