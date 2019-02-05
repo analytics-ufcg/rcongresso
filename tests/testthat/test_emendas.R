@@ -1,7 +1,7 @@
 context("Emendas")
 
 setup <- function() {
-  emendas <<- fetch_emendas_camara('pl', 6726, 2016)
+  emendas <- fetch_emendas_camara('pl', 6726, 2016)
 
   return(TRUE)
 }
