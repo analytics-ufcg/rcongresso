@@ -165,7 +165,7 @@ fetch_tramitacao_camara <- function(id_prop){
 #' @export
 fetch_tramitacao_senado <- function(id_prop){
   url <-
-    paste0(.SENADO_API_LINK, .SENADO_PROPOSICOES_PATH,
+    paste0(.SENADO_PROPOSICOES_PATH,
            id_prop)
 
   json_tramitacao <- .senado_api(url, asList = T)

@@ -2,16 +2,16 @@
 % Please edit documentation in R/comissoes.R
 \name{fetch_composicao_comissoes_senado}
 \alias{fetch_composicao_comissoes_senado}
-\title{Retorna a composição da comissão do senado}
+\title{Fetches comissions on Senate}
 \usage{
 fetch_composicao_comissoes_senado(sigla)
 }
 \arguments{
-\item{sigla}{Sigla da comissão do Senado}
+\item{sigla}{Comissao's id}
 }
 \value{
-Dataframes
+Returns a dataframe containing information about the comission requested
 }
 \description{
-Retorna dataframe com os dados dos membros de uma comissão do Senado
+Fetches a dataframe containing information about the comission requested
 }
