@@ -23,6 +23,7 @@
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
 .SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/movimentacoes/"
+.ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
