@@ -124,9 +124,11 @@
 # Comissoes
 .COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "codTipoOrgao"="integer",
                          "tipoOrgao"="character")
+.COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
+                                "PARLAMENTAR.x"="character")
 
 # Sessões
 .COLNAMES_SESSOES_CAMARA <- c("timestamp"="character", "origem"="character", "descricao"="character")
-.COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character", 
+.COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",
                               "sigla_tipo_sessao" ="character", "numero_sessao"="character", "data_sessao"="character", "hora_inicio_sessao"="character")
 
