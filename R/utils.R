@@ -1,7 +1,8 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 .HTTP_CACHE <- new.env(parent = emptyenv())
-.cache_file_path <- usethis::proj_path(fs::path("inst", "data", "test_cache.rds"))
+.cache_dir_path <- file.path(system.file(package="rcongresso"), "extdata")
+.cache_file_path <- file.path(.cache_dir_path, "test_cache.rds")
 
 #' Extracts the JSON data from an HTTP response
 #' @param response The HTTP response
@@ -70,6 +71,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 #' Save the cache to a file
 .save_cache <- function() {
+    dir.create(.cache_dir_path, showWarnings = FALSE)
     saveRDS(.HTTP_CACHE, .cache_file_path)
 }
 
@@ -89,7 +91,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     if (length(.HTTP_CACHE) == 0) {
         tryCatch({
             cache <- readRDS(.cache_file_path)
-            for( key in names(cache) ) assign(key, cache[[key]], envir=.HTTP_CACHE)
+            for( k in names(cache) ) assign(k, cache[[k]], envir=.HTTP_CACHE)
+        }, warning = function(w) {
         }, error = function(error_condition) {
         })
     }
@@ -113,10 +116,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp <- .get_from_cache(api_url)
   
   if (is.null(resp)) {
-    resp_in_cache <- FALSE
-    resp <- httr::GET(api_url, ua, httr::accept_json())
+      resp_in_cache <- FALSE
+      print(c("Not in cache", .cache_file_path))
+      resp <- httr::GET(api_url, ua, httr::accept_json())
   } else {
-    resp_in_cache <- TRUE
+      resp_in_cache <- TRUE
+      print(c("In cache", .cache_file_path))
   }
   
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
