@@ -1,5 +1,5 @@
 # Deputados
-.COLNAMES_DEP_INFO <- c("id"="integer","uri"="character","nome"="character","siglaPartido"="character",
+.COLNAMES_DEP_INFO <- c("id"="integer","uri"="character","nome"="character","siglaPartido"="character","sigla"="character",
                        "uriPartido"="character","siglaUf"="character","idLegislatura"="integer","urlFoto"="character")
 
 .COLNAMES_DEP_INFO_ID <- c(
@@ -117,12 +117,6 @@
                           "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character",
                           "sigla_casa_comissao"="character", "nome_casa_comissao"="character")
 
-# Comissoes
-.COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "codTipoOrgao"="integer",
-                         "tipoOrgao"="character")
-.COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
-                                "PARLAMENTAR.x"="character")
-
 # Autores
 .COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")
 
@@ -131,3 +125,20 @@
 .COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",
                               "sigla_tipo_sessao" ="character", "numero_sessao"="character", "data_sessao"="character", "hora_inicio_sessao"="character")
 
+# Órgãos
+# Endpoint: {/api/v2/orgaos/{id}}
+.COLNAMES_ORGAO <- c(
+    "id"="integer", "uri"="character", "sigla"="character", "nome"="character",
+    "apelido"="character", "codTipoOrgao"="integer", "tipoOrgao"="character"
+)
+# Endpoint: {/arquivos/orgaos/json/orgaos.json}
+.COLNAMES_ORGAOS <- c(
+    "uri"="character", "sigla"="character", "apelido"="character",
+    "nome"="character", "codTipoOrgao"="integer", "tipoOrgao"="character",
+    "dataInicio"="character", "dataInstalacao"="character",
+    "dataFim"="character", "descricaoSituacao"="character", "casa"="character",
+    "sala"="character", "urlWebsite"="character", "codSituacao"="integer"
+)
+
+.COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
+                                "PARLAMENTAR.x"="character")
