@@ -13,7 +13,7 @@ fetch_emendas <- function(id, casa) {
   } else if (casa == 'senado') {
     emendas <- fetch_emendas_senado(bill_id = id)
   } else {
-    print('Parâmetro "casa" não identificado.')
+    print('Parametro "casa" nao identificado.')
     return()
   }
   
@@ -46,13 +46,13 @@ fetch_emendas_senado <- function(bill_id) {
   num_emendas = nrow(emendas_df)
   
   if (num_emendas == 0) {
-    emendas_df <- setNames(
+    emendas_df <- stats::setNames(
       data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
       )
     
   } else if (num_emendas == 1) {
     texto <- .generate_dataframe(emendas_df$textos_emenda) %>%
-      dplyr::select(tipo_documento, url_texto)
+      dplyr::select("tipo_documento", "url_texto")
     
     autoria <- .generate_dataframe(emendas_df$autoria_emenda) %>%
       dplyr::mutate(
@@ -71,7 +71,7 @@ fetch_emendas_senado <- function(bill_id) {
                     partido = autoria$partido,
                     id_autor = autoria$identificacao_parlamentar_codigo_parlamentar,
                     casa = 'senado') %>% 
-      dplyr::select(-autoria_emenda, -textos_emenda, numero = numero_emenda, local = colegiado_apresentacao)
+      dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
     
     
   } else {
@@ -112,7 +112,7 @@ fetch_emendas_senado <- function(bill_id) {
 #' @return Dataframe with informations about emendas of a proposição from Câmara.
 #' @export
 fetch_emendas_camara <- function(bill_id) {
-  setNames(
+  stats::setNames(
     data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
   )
 }
