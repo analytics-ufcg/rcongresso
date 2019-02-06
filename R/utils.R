@@ -1,7 +1,8 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
-#' Used to store HTTP responses.
-.HTTP_CACHE <- NULL
+.HTTP_CACHE <- new.env(parent = emptyenv())
+.cache_dir_path <- file.path(system.file(package="rcongresso"), "extdata")
+.cache_file_path <- file.path(.cache_dir_path, "test_cache.rds")
 
 #' Extracts the JSON data from an HTTP response
 #' @param response The HTTP response
@@ -70,40 +71,43 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
 #' Save the cache to a file
 .save_cache <- function() {
-  pkgenv <- parent.frame()
-  .HTTP_CACHE <- get(".HTTP_CACHE", envir=pkgenv)
-  usethis::use_data(.HTTP_CACHE, internal=T, overwrite=T)
+    dir.create(.cache_dir_path, showWarnings = FALSE)
+    saveRDS(.HTTP_CACHE, .cache_file_path)
 }
 
 #' Stores a value in the cache.
 #' @param key Key to store
 #' @param value Value to store
 .put_in_cache <- function(key, value) {
-  pkgenv <- parent.frame()
-  cache <- get(".HTTP_CACHE", envir=pkgenv)
-  cache[[key]] <- value
-  assign(".HTTP_CACHE", cache, envir=pkgenv)
-  .save_cache()
+    # Sometimes (after package installation) it's a locked list
+    if (typeof(.HTTP_CACHE) == "environment") {
+      assign(key, value, envir=.HTTP_CACHE)
+      .save_cache()
+    }
 }
 
 #' Gets a value from the cache.
 #' @param key Key to get
 .get_from_cache <- function(key) {
-  pkgenv <- parent.frame()
-  cache <- get(".HTTP_CACHE", envir=pkgenv)
-  if (is.null(cache)) {
-    tryCatch({
-      load(file=usethis::proj_path(fs::path("R", "sysdata.rda")))
-      assign(".HTTP_CACHE", .HTTP_CACHE, envir=pkgenv)
-      cache <- get(".HTTP_CACHE", envir=pkgenv)
-    }, error = function(error_condition) {
-      print("Initializing cache")
-      assign(".HTTP_CACHE", list(), envir=pkgenv)
-
-      .save_cache()
-    })
-  }
-  resp <- cache[[key]]
+    if (length(.HTTP_CACHE) == 0) {
+        tryCatch({
+            cache <- readRDS(.cache_file_path)
+            for( k in names(cache) ) assign(k, cache[[k]], envir=.HTTP_CACHE)
+        }, warning = function(w) {
+        }, error = function(error_condition) {
+        })
+    }
+    if (typeof(.HTTP_CACHE) == "environment") {
+        # Sometimes it's an environment
+        tryCatch({
+            get(key, envir=.HTTP_CACHE)
+        }, error = function(e) {
+            NULL
+        })
+    } else {
+        # Sometimes it's a list (when checking package)
+        .HTTP_CACHE[[key]]
+    }
 }
 
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
@@ -113,22 +117,24 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp <- .get_from_cache(api_url)
 
   if (is.null(resp)) {
-    resp_in_cache <- FALSE
-    resp <- httr::GET(api_url, ua, httr::accept_json())
+      resp_in_cache <- FALSE
+      print(c("Not in cache", .cache_file_path))
+      resp <- httr::GET(api_url, ua, httr::accept_json())
   } else {
-    resp_in_cache <- TRUE
+      resp_in_cache <- TRUE
+      print(c("In cache", .cache_file_path))
   }
 
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
      httr::status_code(resp) < .COD_ERRO_SERV){
     if (!resp_in_cache) .put_in_cache(api_url, resp)
-    .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+    .throw_req_error(httr::status_code(resp), api_url)
   } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
     if(tentativa < .MAX_TENTATIVAS_REQ){
       .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
     } else {
       if (!resp_in_cache) .put_in_cache(api_url, resp)
-      .MENSAGEM_ERRO_REQ(httr::status_code(resp), api_url)
+      .throw_req_error(httr::status_code(resp), api_url)
     }
   }
 
