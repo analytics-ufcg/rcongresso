@@ -1,3 +1,5 @@
+Meta
+doc
 # History files
 .Rhistory
 .Rapp.history
@@ -25,3 +27,4 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 inst/doc
+man/dot-*
