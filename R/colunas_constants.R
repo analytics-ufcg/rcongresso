@@ -140,5 +140,9 @@
     "sala"="character", "urlWebsite"="character", "codSituacao"="integer"
 )
 
+# Comissões
 .COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
                                 "PARLAMENTAR.x"="character")
+
+# Deferimento
+.COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")

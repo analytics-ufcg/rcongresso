@@ -24,12 +24,15 @@
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
+.DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
 
 # Regex Pattern
 .REGEX_PATTERN <- "(?=[A-Z][^A-Z])"
+.REGEX_DEFERIMENTO_INDEFERIDO <- "^Indefiro"
+.REGEX_DEFERIMENTO_DEFERIDO <- "^(Defiro)|(Aprovado)"
 
 # Requests
 .MAX_ITENS <- 100

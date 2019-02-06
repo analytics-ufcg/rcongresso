@@ -27,7 +27,9 @@ Imports: httr,
     purrr,
     rvest,
     lubridate,
-    crayon
+    crayon, 
+    plyr, 
+    fuzzyjoin
 Suggests: testthat,
     compare,
     readr,
