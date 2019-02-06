@@ -4,6 +4,7 @@ context("Deputados")
 dep_info <<- fetch_deputado(siglaUf = "RR", siglaSexo = "M")
 dep_info_por_id <<- fetch_deputado(178957)
 dep_gastos <<- fetch_despesas_deputado(178957)
+dep_partido_estado <<- extract_partido_estado_autor("https://dadosabertos.camara.leg.br/api/v2/deputados/178957")
 
 
 # Testa erros
@@ -16,6 +17,7 @@ ABEL_MESQUITA_ID <- 178957
 NOME_ESPERADO <- "ABEL SALVADOR MESQUITA JUNIOR"
 ABEL_MESQUITA_DN <- "1962-03-29"
 ABEL_MESQUITA_UF <-"RR"
+ABEL_MESQUITA_PARTIDO <- "DEM"
 
 TAM_DF_DEFAULT <- c(15, 8)
 #TAM_DF_DEP_ATIVOS <- c(513, 8)
@@ -50,6 +52,7 @@ test_that("ID do deputado", {expect_equal(dep_info_por_id$id, ABEL_MESQUITA_ID)}
 test_that("Nome do deputado", {expect_equal(dep_info_por_id$nomeCivil, NOME_ESPERADO)})
 test_that("Data de nascimento do deputado", {expect_equal(dep_info_por_id$dataNascimento, ABEL_MESQUITA_DN)})
 test_that("UF de nascimento do deputado", {expect_equal(dep_info_por_id$ufNascimento, ABEL_MESQUITA_UF)})
+test_that("Partido + UF do deputado", {expect_equal(dep_partido_estado,paste0(ABEL_MESQUITA_PARTIDO, "/", ABEL_MESQUITA_UF))})
 
 ## test_that("Quantidade default por requisição, atualmente 15",{
 ##   expect_equal(dim(fetch_deputado()), TAM_DF_DEFAULT)
