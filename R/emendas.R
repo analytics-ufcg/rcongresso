@@ -41,7 +41,7 @@ fetch_emendas_senado <- function(bill_id) {
     magrittr::extract2("EmendaMateria") %>%
     magrittr::extract2("Materia") %>% 
     magrittr::extract2("Emendas") %>%
-    purrr::map_df( ~ .) %>% rename_df_columns()
+    purrr::map_df( ~ .) %>% .rename_df_columns()
   
   num_emendas = nrow(emendas_df)
   
@@ -54,12 +54,14 @@ fetch_emendas_senado <- function(bill_id) {
     texto <- .generate_dataframe(emendas_df$textos_emenda) %>%
       dplyr::select("tipo_documento", "url_texto")
     
-    autoria <- .generate_dataframe(emendas_df$autoria_emenda) %>%
+    autoria <- .generate_dataframe(emendas_df$autoria_emenda)
+      
+    autoria <- autoria %>% 
       dplyr::mutate(
         partido = paste0(
-          identificacao_parlamentar_sigla_partido_parlamentar,
+          autoria$identificacao_parlamentar_sigla_partido_parlamentar,
           "/",
-          identificacao_parlamentar_uf_parlamentar
+          autoria$identificacao_parlamentar_uf_parlamentar
         )
       )
     
@@ -123,5 +125,5 @@ fetch_emendas_camara <- function(bill_id) {
 .generate_dataframe <- function (column) {
   as.data.frame(column) %>%
     tidyr::unnest() %>%
-    rename_df_columns()
+    .rename_df_columns()
 }

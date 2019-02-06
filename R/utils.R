@@ -415,35 +415,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .fetch_itens(query, API_path)
 }
 
-fetch_json_try <- function(url) {
-  count <- 0
-  repeat {
-    json_data <- NULL
-    tryCatch({
-      json_data <- jsonlite::fromJSON(url, flatten = T)
-    },
-    error = function(msg) {
-      print(msg)
-    })
-    if (!is.null(json_data) & is.null(json_data$ERROR)) {
-      break
-    } else {
-      print("Erro ao baixar dados, tentando outra vez...")
-      count <- count + 1
-      print(paste("Tentativas: ", count))
-      Sys.sleep(2)
-    }
-  }
-  return(json_data)
-}
-
 #' @title Renomeia as colunas do dataframe
 #' @description Renomeia as colunas do dataframe usando o padrão de letras minúsculas e underscore
 #' @param df Dataframe
 #' @return Dataframe com as colunas renomeadas.
 #' @importFrom magrittr %<>%
-#' @export
-rename_df_columns <- function(df) {
+.rename_df_columns <- function(df) {
   names(df) <- names(df) %>% 
     .to_underscore
   df
