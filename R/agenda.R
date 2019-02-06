@@ -10,11 +10,12 @@ fetch_agenda_camara <- function(initial_date, end_date) {
   url <- paste0(.AGENDA_CAMARA_PATH, initial_date, "&dataFim=", end_date, "&ordem=ASC&ordenarPor=dataHoraInicio")
   json_proposicao <- .camara_api(url)
 
-  descricoes_inuteis <- c('Seminário', 'Diligência', 'Sessão Não Deliberativa de Debates', 'Reunião de Instalação e Eleição', 'Outro Evento', 'Mesa Redonda', 'Sessão Não Deliberativa Solene')
+  descricoes_inuteis <- c('Seminario', 'Diligencia', 'Sessao Nao Deliberativa de Debates', 'Reuniao de Instalacao e Eleicao',
+                          'Outro Evento', 'Mesa Redonda', 'Sessao Nao Deliberativa Solene')
   agenda <-
     json_proposicao %>%
     dplyr::filter(situacao != 'Cancelada' &
-                    !(descricaoTipo %in% descricoes_inuteis)) %>%
+                    !(iconv(c(descricaoTipo), from="UTF-8", to="ASCII//TRANSLIT") %in% descricoes_inuteis)) %>%
     tidyr::unnest()
 
   agenda %>%
