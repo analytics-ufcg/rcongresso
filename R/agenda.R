@@ -17,11 +17,11 @@ fetch_agenda_senado <- function(initial_date) {
     rename_table_to_underscore() %>%
     tibble::as_tibble()
 
-  descricoes_inuteis <- c('SESSÃO SOLENE', 'SESSÃO NÃO DELIBERATIVA', 'NÃO HAVERÁ SESSÃO', 'SESSÃO ESPECIAL')
+  descricoes_inuteis <- c('SESSAO SOLENE', 'SESSAO NAO DELIBERATIVA', 'NAO HAVERA SESSAO', 'SESSAO ESPECIAL')
 
   agenda <-
     agenda %>%
-    dplyr::filter(!(tipo_sessao %in% descricoes_inuteis))
+    dplyr::filter(!(iconv(c(tipo_sessao), from="UTF-8", to="ASCII//TRANSLIT") %in% descricoes_inuteis))
 
   materia <- tibble::tibble()
   if('materias_materia' %in% names(agenda)) {
