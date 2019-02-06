@@ -13,7 +13,7 @@ fetch_emendas <- function(id, casa) {
   } else if (casa == 'senado') {
     emendas <- fetch_emendas_senado(bill_id = id)
   } else {
-    print('Parametro "casa" nao identificado.')
+    stop('Parametro "casa" nao identificado.')
     return()
   }
   
