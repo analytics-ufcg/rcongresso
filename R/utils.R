@@ -79,6 +79,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param key Key to store
 #' @param value Value to store
 .put_in_cache <- function(key, value) {
+    # Sometimes (after package installation) it's a locked list
     if (typeof(.HTTP_CACHE) == "environment") {
       assign(key, value, envir=.HTTP_CACHE)
       .save_cache()
