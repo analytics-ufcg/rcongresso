@@ -111,7 +111,7 @@ fetch_relacionadas <- function(id_prop){
 #' @examples
 #' tramitacao_pec241 <- fetch_sessoes(2088351,'camara')
 #' tramitacao_pls229 <- fetch_sessoes(91341,'senado')
-#' @rdname fetch_sessoes
+#' @rdname fetch_tramitacao
 #' @export
 fetch_tramitacao <- function(id_prop, casa) {
   tramitacao <- tibble::tibble()
