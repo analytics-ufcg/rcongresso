@@ -263,7 +263,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 #' fetch_autor_camara(2121442)
 #' @export
 fetch_autor_camara <- function (proposicao_id = NULL) {
-  autor_uri <- paste0(.PROPOSICOES_PATH, '/', proposicao_id, "/autores")
+  autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   .camara_api(autor_uri) %>%
     .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
     .coerce_types(.COLNAMES_AUTORES)
