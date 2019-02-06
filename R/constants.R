@@ -21,6 +21,7 @@
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
 .AGENDA_CAMARA_PATH <- "/api/v2/eventos?dataInicio="
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
+.PAUTAS_CAMARA <- "/api/v2/eventos/"
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
