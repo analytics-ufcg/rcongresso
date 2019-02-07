@@ -129,7 +129,7 @@
 # Endpoint: {/api/v2/orgaos/{id}}
 .COLNAMES_ORGAO <- c(
     "id"="integer", "uri"="character", "sigla"="character", "nome"="character",
-    "apelido"="character", "codTipoOrgao"="integer", "tipoOrgao"="character"
+    "apelido"="character", "codTipoOrgao"="integer", "tipoOrgao"="character", "idOrgao"="character"
 )
 # Endpoint: {/arquivos/orgaos/json/orgaos.json}
 .COLNAMES_ORGAOS <- c(
