@@ -125,6 +125,9 @@
 .COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",
                               "sigla_tipo_sessao" ="character", "numero_sessao"="character", "data_sessao"="character", "hora_inicio_sessao"="character")
 
+# Emendas
+.COLNAMES_EMENDAS_CAMARA <- c("CodProposicao"="integer", "Descricao"="character")
+
 # Órgãos
 # Endpoint: {/api/v2/orgaos/{id}}
 .COLNAMES_ORGAO <- c(

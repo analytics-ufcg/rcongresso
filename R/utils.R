@@ -155,7 +155,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Wraps an access to the camara API given a relative path and query arguments.
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
-#' @param asList If return should be a list or a dataframe
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
