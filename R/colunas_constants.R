@@ -136,6 +136,21 @@
 .COLNAMES_SESSOES_CAMARA <- c("timestamp"="character", "origem"="character", "descricao"="character")
 .COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",
                               "sigla_tipo_sessao" ="character", "numero_sessao"="character", "data_sessao"="character", "hora_inicio_sessao"="character")
+# Agenda
+.COLNAMES_AGENDA_SENADO <- c("dia_util"="character","data"="character","dia_semana"="character",
+                             "mes"="character","horario"="character","hora"="character",
+                             "numero_sessao"="character","tipo_sessao"="character","local_sessao"="character",
+                             "codigo_sessao"="character","casa"="character","sessao_legislativa"="character",
+                             "legislatura"="character","codigo_situacao_sessao"="character","situacao_sessao"="character",
+                             "realizada_status"="character","evento_descricao_tipo_evento"="character","evento_data"="character",
+                             "evento_dia_semana"="character","evento_horario"="character","evento_tipo_sessao"="character",
+                             "evento_descricao_evento"="character","evento_fim_inscricao"="character","evento_indicador_publica_orador"="character",
+                             "oradores_tipo_orador_descricao_tipo_orador"="character","oradores_tipo_orador_orador_sessao_orador"="list","materias_materia"="list")
+.COLNAMES_AGENDA_ORADORES_SENADO <- c("ordem"="character","parlamentar"="character","codigo_tipo_orador"="character","codigo_sessao"="character")
+.COLNAMES_AGENDA_MATERIA_SENADO <- c("codigo_materia"="character","identificacao"="character","sigla_materia"="character","numero_materia"="character","ano_materia"="character",
+                                     "descricao_objetivo_processo"="character","descricao_identificacao_materia"="character","sigla_casa_iniciadora"="character",
+                                     "ementa"="character","parecer"="character","apreciacao"="character","apreciacao_papeleta"="character","ementa_papeleta"="character","cabecalho"="character",
+                                     "nome_autor"="character","tipo_pauta"="character","descricao_tipo_pauta"="character","sequencia_ordem"="character","origem"="character","codigo_sessao"="character")
 
 # Emendas
 .COLNAMES_EMENDAS_CAMARA <- c("CodProposicao"="integer", "Descricao"="character")
