@@ -415,11 +415,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .fetch_itens(query, API_path)
 }
 
-#' @title Renomeia as colunas do dataframe
-#' @description Renomeia as colunas do dataframe usando o padrão de letras minúsculas e underscore
+#' @title Renames dataframe's columns
+#' @description Renames dataframe's columns using underscore and lowercase pattern.
 #' @param df Dataframe
-#' @return Dataframe com as colunas renomeadas.
-#' @importFrom magrittr %<>%
+#' @return Dataframe with renamed columns.
 .rename_df_columns <- function(df) {
   names(df) <- names(df) %>% 
     .to_underscore

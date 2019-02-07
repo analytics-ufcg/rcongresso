@@ -15,8 +15,8 @@
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
 .SENADO_PATH <- "/dadosabertos/materia"
-.RELATORIA_SENADO_PATH <- paste0(.SENADO_PATH, "/relatorias/")
-.EMENDAS_SENADO_PATH <- paste0(.SENADO_PATH, "/emendas/")
+.RELATORIA_SENADO_PATH <- "/relatorias/"
+.EMENDAS_SENADO_PATH <- "/emendas/"
 .PARTIDOS_PATH <- "/api/v2/partidos"
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"

@@ -33,7 +33,7 @@ fetch_emendas <- function(id, casa) {
 #' @return Dataframe with informations about emendas of a proposição from Senado.
 #' @export
 fetch_emendas_senado <- function(bill_id) {
-  path <- paste0(.EMENDAS_SENADO_PATH, bill_id)
+  path <- paste0(.SENADO_PATH, .EMENDAS_SENADO_PATH, bill_id)
   
   json_emendas <- .senado_api(path = path, asList = TRUE)
   
