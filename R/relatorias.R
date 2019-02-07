@@ -33,7 +33,7 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
 #' @export
 .fetch_relatorias_senado <- function(proposicao_id) {
   url_relatorias <-
-    paste0(.SENADO_API_LINK , .SENADO_PATH, .RELATORIA_SENADO_PATH)
+    paste0(.SENADO_PATH, .RELATORIA_SENADO_PATH)
   
   path <- paste0(url_relatorias, proposicao_id)
   json_relatorias <- .senado_api(path = path, asList = TRUE)
