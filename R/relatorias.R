@@ -35,9 +35,8 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
   url_relatorias <-
     paste0(.SENADO_API_LINK , .SENADO_PATH, .RELATORIA_SENADO_PATH)
   
-  url <- paste0(url_relatorias, proposicao_id)
-  json_relatorias <- jsonlite::fromJSON(url,flatten = T)
-  
+  path <- paste0(url_relatorias, proposicao_id)
+  json_relatorias <- .senado_api(path = path, asList = TRUE)
   relatorias_data <-
     json_relatorias %>%
     magrittr::extract2("RelatoriaMateria") %>%
