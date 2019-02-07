@@ -1,7 +1,7 @@
 context("Emendas")
 
 setup <- function() {
-  emendas <- fetch_emendas_camara('pl', 6726, 2016)
+  emendas <<- fetch_emendas_camara('pl', 6726, 2016)
 
   return(TRUE)
 }
@@ -22,7 +22,7 @@ test <- function(){
     expect_true(nrow(emendas) != 0)
   })
 
-  test_that("fetch_autor_camara()", {
+  test_that("fetch_emendas_camara()", {
     expect_true(all(sapply(emendas, class) %in% .COLNAMES_EMENDAS_CAMARA))
   })
 }
