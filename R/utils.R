@@ -72,13 +72,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   if (is.null(resp)) {
       resp_in_cache <- FALSE
-      print(c("Not in cache", .cache_file_path))
       resp <- httr::GET(api_url, ua, httr::accept_json())
   } else {
       resp_in_cache <- TRUE
-      print(c("In cache", .cache_file_path))
   }
 
+  # Handle errors and retries
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
      httr::status_code(resp) < .COD_ERRO_SERV){
     if (!resp_in_cache) .put_in_cache(api_url, resp)
