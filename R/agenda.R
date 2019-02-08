@@ -92,7 +92,7 @@ fetch_agenda_camara <- function(initial_date, end_date) {
                     !(iconv(c(descricaoTipo), from="UTF-8", to="ASCII//TRANSLIT") %in% descricoes_inuteis)) %>%
     tidyr::unnest()
 
-  x <- agenda %>%
+  agenda %>%
     dplyr::rowwise() %>%
     dplyr::do(fetch_pauta_camara(
       .$id, .$dataHoraInicio, .$dataHoraFim, .$sigla, .$nome) %>%
