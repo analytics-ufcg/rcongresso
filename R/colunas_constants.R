@@ -131,6 +131,10 @@
                       "proposicao_.id"="integer","proposicao_.uri"="character","proposicao_.siglaTipo"="character","proposicao_.codTipo"="integer","proposicao_.numero"="integer",
                       "proposicao_.ano"="integer","proposicao_.ementa"="character")
 
+.COLNAMES_PAUTA_CAMARA <- c("regime"="character","codRegime"="integer","ordem"="integer","uriProposicaoRelacionada"="character","situacaoItem"="character","uriVotacao"="character",
+                            "proposicao_.id"="integer","proposicao_.uri"="character","proposicao_.siglaTipo"="character","proposicao_.codTipo"="integer","proposicao_.numero"="integer",
+                            "proposicao_.ano"="integer","proposicao_.ementa"="character","hora_inicio"="character","hora_fim"="character","sigla_orgao"="character","nome_orgao"="character")
+
 # Órgãos
 # Endpoint: {/api/v2/orgaos/{id}}
 .COLNAMES_ORGAO <- c(
