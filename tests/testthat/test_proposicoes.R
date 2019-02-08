@@ -5,8 +5,9 @@ pec_241_id <<- fetch_id_proposicao("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao(pec_241_id)
 votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
 relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
-tramitacao_pec_241 <<- fetch_tramitacao(pec_241_id)
-tramitacao_pec_241_x2 <<- fetch_tramitacao(replicate(2, pec_241_id))
+tramitacao_pec_241 <<- fetch_tramitacao_camara(pec_241_id)
+tramitacao_pec_241_x2 <<- fetch_tramitacao_camara(replicate(2, pec_241_id))
+pls229 <- fetch_tramitacao_senado(91341)
 
 # Constantes
 PEC241_ID <- 2088351
@@ -53,9 +54,13 @@ test_that("fetch_relacionadas()", {
   expect_true(all(sapply(relacionadas_pec_241, class) %in% .COLNAMES_RELACIONADAS))
 })
 
-test_that("fetch_tramitacao()", {
-  expect_true(all(sapply(tramitacao_pec_241, class) %in% .COLNAMES_TRAMITACOES))
+test_that("fetch_tramitacao_camara()", {
+  expect_true(all(sapply(tramitacao_pec_241, class) %in% .COLNAMES_TRAMITACOES_CAMARA))
   expect_equal(nrow(tramitacao_pec_241), nrow(tramitacao_pec_241_x2))
+})
+
+test_that("fetch_tramitacao_senado()", {
+  expect_true(all(sapply(pls229, class) %in% .COLNAMES_TRAMITACOES_SENADO))
 })
 
 test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})

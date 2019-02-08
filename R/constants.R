@@ -11,7 +11,7 @@
 .WARNING_SIGLA_PARTIDO <- "Algumas siglas podem estar incorretas."
 
 # Paths Câmara
-.PROPOSICOES_PATH <- "/api/v2/proposicoes"
+.CAMARA_PROPOSICOES_PATH <- "/api/v2/proposicoes"
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
 .RELATORIA_SENADO_PATH <- "/dadosabertos/materia/relatorias/"
@@ -23,9 +23,14 @@
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
 .PAUTAS_CAMARA <- "/api/v2/eventos/"
 
+# Path site Câmara
+.EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"
+
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
+.SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/movimentacoes/"
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
+.AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
