@@ -128,6 +128,11 @@
                           "email_parlamentar"="character", "sigla_partido_parlamentar"="character", "uf_parlamentar"="character",
                           "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character",
                           "sigla_casa_comissao"="character", "nome_casa_comissao"="character")
+# Emendas
+.COLNAMES_EMENDAS_SENADO <- c("codigo_emenda"="character", "numero"="integer", "data_apresentacao"="character", "local"="character",
+                       "descricao_turno"="character", "descricao_tipo_emenda"="character", "autor"="character", "id_autor"="character",
+                       "partido"="character", "casa"="character", "tipo_documento"="character", "inteiro_teor"="character")
+.COLNAMES_EMENDAS_CAMARA <- c("CodProposicao"="integer", "Descricao"="character")
 
 # Autores
 .COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")
@@ -151,9 +156,6 @@
                                      "descricao_objetivo_processo"="character","descricao_identificacao_materia"="character","sigla_casa_iniciadora"="character",
                                      "ementa"="character","parecer"="character","apreciacao"="character","apreciacao_papeleta"="character","ementa_papeleta"="character","cabecalho"="character",
                                      "nome_autor"="character","tipo_pauta"="character","descricao_tipo_pauta"="character","sequencia_ordem"="character","origem"="character","codigo_sessao"="character")
-
-# Emendas
-.COLNAMES_EMENDAS_CAMARA <- c("CodProposicao"="integer", "Descricao"="character")
 
 # Órgãos
 # Endpoint: {/api/v2/orgaos/{id}}
