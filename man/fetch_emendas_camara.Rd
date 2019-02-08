@@ -2,7 +2,6 @@
 % Please edit documentation in R/emendas.R
 \name{fetch_emendas_camara}
 \alias{fetch_emendas_camara}
-
 \title{Fetches proposition's emendas}
 \usage{
 fetch_emendas_camara(sigla = NULL, numero = NULL, ano = NULL)
