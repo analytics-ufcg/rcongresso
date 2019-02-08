@@ -129,7 +129,7 @@
 # Endpoint: {/api/v2/orgaos/{id}}
 .COLNAMES_ORGAO <- c(
     "id"="integer", "uri"="character", "sigla"="character", "nome"="character",
-    "apelido"="character", "codTipoOrgao"="integer", "tipoOrgao"="character", "idOrgao"="character"
+    "apelido"="character", "codTipoOrgao"="integer", "tipoOrgao"="character"
 )
 # Endpoint: {/arquivos/orgaos/json/orgaos.json}
 .COLNAMES_ORGAOS <- c(
@@ -137,8 +137,15 @@
     "nome"="character", "codTipoOrgao"="integer", "tipoOrgao"="character",
     "dataInicio"="character", "dataInstalacao"="character",
     "dataFim"="character", "descricaoSituacao"="character", "casa"="character",
-    "sala"="character", "urlWebsite"="character", "codSituacao"="integer"
+    "sala"="character", "urlWebsite"="character", "codSituacao"="integer", "idOrgao"="character"
 )
 
 .COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
                                 "PARLAMENTAR.x"="character")
+
+# Agenda
+.COLNAMES_AGENDA_COMISSOES_CAMARA <- c("data"="Date","sigla"="list","id_proposicao"="list","local"="character")
+
+.COLNAMES_AGENDA_COMISSAO_CAMARA <- c("comissao"="factor","cod_reuniao"="factor","data"="factor","hora"="factor",
+                                      "local"="factor","estado"="factor","tipo"="factor","titulo_reuniao"="factor","proposicoes"="list",
+                                      "sigla"="list","id_proposicao"="list")
