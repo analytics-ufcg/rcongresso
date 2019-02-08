@@ -27,8 +27,6 @@ test_that("Not Empty", {
   expect_true(nrow(emendas_camara) != 0)
 })
 
-test_that("Is invalid 'casa'", { expect_error(fetch_emendas(91341, "casa"))})
-
 test_that("Várias - fetch_emendas_senado()", {
   expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_EMENDAS_SENADO))
   })
