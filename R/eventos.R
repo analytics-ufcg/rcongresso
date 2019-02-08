@@ -19,7 +19,7 @@ fetch_eventos_camara <- function(prop_id) {
                  origem="Origem",
                  # O R check só aceita ASCII no código... Então a palavra
                  # "Descrição" foi codificada abaixo:
-                 descricao="Descri\uc3a7\uc3a3o") %>%
+                 descricao="Descri\u00e7\u00e3o") %>%
       dplyr::mutate(timestamp=lubridate::dmy_hm(timestamp))
 }
 
