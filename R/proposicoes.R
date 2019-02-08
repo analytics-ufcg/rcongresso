@@ -268,3 +268,50 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
     .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
     .coerce_types(.COLNAMES_AUTORES)
 }
+
+#' @title Requirements's deferments
+#' @description Verify deferments to a id's list of requirements
+#' @param proposicao_id ID of requirements
+#' @return Dataframe
+#' @examples
+#' fetch_deferimento(c("102343", "109173", "115853"))
+#' @export
+fetch_deferimento <- function(proposicao_id) {
+  regexes <-
+    tibble::frame_data(
+      ~ deferimento,
+      ~ regex,
+      "indeferido",
+      .REGEX_DEFERIMENTO_INDEFERIDO,
+      "deferido",
+      .REGEX_DEFERIMENTO_DEFERIDO
+    )
+
+  fetch_one_deferimento <- function(proposicao_id) {
+    json <-
+      .senado_api(paste0(.DEFERIMENTO_SENADO_PATH,
+                         proposicao_id), asList = T)
+
+    resultados <-
+      json$MovimentacaoMateria$Materia$OrdensDoDia$OrdemDoDia$DescricaoResultado
+    # handle NULL
+    if (is.null(resultados))
+      resultados <- c('')
+
+    resultados %>%
+      tibble::as.tibble() %>%
+      dplyr::mutate(proposicao_id = proposicao_id) %>%
+      fuzzyjoin::regex_left_join(regexes, by = c(value = "regex")) %>%
+      tidyr::fill(deferimento) %>%
+      utils::tail(., n = 1) %>%
+      dplyr::select(proposicao_id, deferimento)
+  }
+
+  proposicao_id %>%
+    unlist %>%
+    unique %>%
+    lapply(fetch_one_deferimento) %>%
+    plyr::rbind.fill() %>%
+    .assert_dataframe_completo(.COLNAMES_DEFRIMENTO) %>%
+    .coerce_types(.COLNAMES_DEFRIMENTO)
+}
