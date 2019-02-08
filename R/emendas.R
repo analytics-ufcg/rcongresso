@@ -155,8 +155,7 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 
   emendas %>%
     dplyr::mutate(data_apresentacao = as.character(as.Date(data_apresentacao))) %>%
-    .assert_dataframe_completo(.COLNAMES_EMENDAS_CAMARA) %>%
-    .coerce_types(.COLNAMES_EMENDAS_CAMARA)
+    .assert_dataframe_completo(.COLNAMES_EMENDAS_CAMARA)
 }
 
 #' @title Auxiliar function for fetch_emendas_camara
