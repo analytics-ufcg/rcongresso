@@ -69,3 +69,139 @@ fetch_agenda_senado <- function(initial_date) {
 
   agenda <- list(agenda = agenda, materias = materia, oradores = oradores)
 }
+
+#' @title Dataframe with the Senate schedule
+#' @description Return a dataframe with the Senate schedule
+#' @param initial_date initial date yyyy-mm-dd
+#' @param end_date end date yyyy-mm-dd
+#' @return Dataframe
+#' @examples
+#' .get_data_frame_agenda_senado('2016-05-15', '2016-05-25')
+.get_data_frame_agenda_senado <- function(initial_date, end_date) {
+  url <-
+    paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date), "/detalhe")
+  json_proposicao <- .senado_api(url, asList = T)
+
+  json_proposicao$Reunioes$Reuniao %>%
+    tibble::as_tibble() %>%
+    rename_table_to_underscore() %>%
+    dplyr::filter(situacao != 'Cancelada')
+}
+
+#' @title Comissions schedule Senate
+#' @description Return a dataframe with the Senate's Comissions schedule
+#' @param initial_date initial date yyyy-mm-dd
+#' @param end_date end date yyyy-mm-dd
+#' @return Dataframe
+#' @examples
+#' fetch_agenda_senado_comissoes('2016-05-15', '2016-05-25')
+fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
+  tipos_inuteis <- c('Outros eventos', 'Reuniao', 'Reuniao de Subcomissao')
+
+  agenda <-
+    .get_data_frame_agenda_senado(initial_date, end_date) %>%
+    dplyr::filter(!(iconv(c(tipo), from="UTF-8", to="ASCII//TRANSLIT") %in% tipos_inuteis)) %>%
+    unique()
+
+  if (nrow(agenda) != 0) {
+    if ("partes_parte" %in% names(agenda)) {
+      agenda <-
+        agenda %>%
+        dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .pega_id_proposicao(.))) %>%
+        dplyr::mutate(nome = purrr::map(partes_parte, ~ .pega_nome(.))) %>%
+        dplyr::filter(id_proposicao != "")
+
+      if (nrow(agenda) != 0) {
+        agenda <-
+          agenda %>%
+          dplyr::rowwise() %>%
+          dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
+          dplyr::select(c(data, nome, id_proposicao, local)) %>%
+          dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
+          dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
+          tidyr::unnest() %>%
+          dplyr::select(c(data, nome, id_proposicao, local))
+      }else {
+        return(tibble::frame_data(~ data, ~ sigla, ~ id_proposicao, ~ local))
+      }
+
+    }else {
+      agenda <-
+        agenda %>%
+        dplyr::mutate(id_proposicao = purrr::map(partes_parte_itens_item, ~ .$Codigo)) %>%
+        dplyr::mutate(nome = purrr::map(partes_parte_itens_item, ~ .$Nome)) %>%
+        dplyr::filter(partes_parte_tipo == "Deliberativa")
+
+      if (nrow(agenda) != 0) {
+        agenda <-
+          agenda %>%
+          dplyr::select(data, id_proposicao, nome, titulo_da_reuniao) %>%
+          tidyr::unnest() %>%
+          dplyr::rowwise() %>%
+          dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
+          dplyr::select(c(data, nome, id_proposicao, local))
+      }else {
+        return(tibble::frame_data(~ data, ~ sigla, ~ id_proposicao, ~ local))
+      }
+    }
+
+    new_names <- c("data", "sigla", "id_proposicao", "local")
+    names(agenda) <- new_names
+
+    agenda %>%
+      dplyr::mutate(data = lubridate::dmy(data)) %>%
+      dplyr::arrange(data)
+
+  }else {
+    tibble::frame_data(~ data, ~ sigla, ~ id_proposicao, ~ local)
+  }
+
+}
+
+#' @title Extract proposition name
+#' @description Receive as param a list from the Senate schedule and return the propositions name that are in 'pauta'
+#' @param l list that has the id
+#' @return char
+.pega_nome <- function(l){
+  if(length(l$Tipo) == 1) {
+    if (l$Tipo == "Deliberativa") {
+      paste(l$Itens$Item$Nome, collapse = ",")
+    }else {
+      ""
+    }
+  }else {
+    if ("Deliberativa" %in% l$Tipo) {
+      if(!is.null(l$Itens.Item)) {
+        paste(l$Nome, collapse = ",")
+      }else {
+        ""
+      }
+    }else {
+      ""
+    }
+  }
+}
+
+#' @title Extract the proposition id
+#' @description Receive as param a list from the Senate schedule and return the propositions ids that are in 'pauta'
+#' @param l list that has the id
+#' @return char
+.pega_id_proposicao <- function(l){
+  if(length(l$Tipo) == 1 ) {
+    if (l$Tipo == "Deliberativa") {
+      paste(l$Itens$Item$Codigo, collapse = ",")
+    }else {
+      ""
+    }
+  }else {
+    if ("Deliberativa" %in% l$Tipo) {
+      if(!is.null(l$Itens.Item)) {
+        paste(l$Itens.Item$Codigo, collapse = ",")
+      }else {
+        ""
+      }
+    }else {
+      ""
+    }
+  }
+}

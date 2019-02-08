@@ -156,6 +156,7 @@
                                      "descricao_objetivo_processo"="character","descricao_identificacao_materia"="character","sigla_casa_iniciadora"="character",
                                      "ementa"="character","parecer"="character","apreciacao"="character","apreciacao_papeleta"="character","ementa_papeleta"="character","cabecalho"="character",
                                      "nome_autor"="character","tipo_pauta"="character","descricao_tipo_pauta"="character","sequencia_ordem"="character","origem"="character","codigo_sessao"="character")
+.COLNAMES_AGENDA_COMISSOES_SENADO <- c("data"="Date","sigla"="character","id_proposicao"="character","local"="character")
 
 # Órgãos
 # Endpoint: {/api/v2/orgaos/{id}}
