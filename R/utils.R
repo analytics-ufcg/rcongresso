@@ -155,7 +155,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Wraps an access to the camara API given a relative path and query arguments.
 #' @param path URL relative to the API base URL
 #' @param query Query parameters
-#' @param asList If return should be a list or a dataframe
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
@@ -441,6 +440,27 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 rename_table_to_underscore <- function(df) {
   new_names = names(df) %>%
     .to_underscore()
+
+  names(df) <- new_names
+
+  df
+}
+
+#' @title Renames the cols of the bill's passage on Senate
+#' @description Renames each item from vector with the pattern: split by underscore and lowercase
+#' @param df Dataframe
+#' @return Dataframe containing the renamed strings.
+#' @export
+.rename_tramitacao_df <- function(df) {
+  new_names = names(df) %>%
+    .to_underscore() %>%
+    stringr::str_replace(
+      "identificacao_tramitacao_|
+      identificacao_tramitacao_origem_tramitacao_local_|
+      identificacao_tramitacao_destino_tramitacao_local_|
+      identificacao_tramitacao_situacao_",
+      ""
+    )
 
   names(df) <- new_names
 
