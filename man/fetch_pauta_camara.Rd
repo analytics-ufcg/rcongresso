@@ -12,6 +12,10 @@ fetch_pauta_camara(id, hora_inicio, hora_fim, sigla_orgao, nome_orgao)
 \item{hora_inicio}{inital time}
 
 \item{hora_fim}{end time}
+
+\item{sigla_orgao}{Acronym of the organ}
+
+\item{nome_orgao}{Name of the organ}
 }
 \value{
 Dataframe
