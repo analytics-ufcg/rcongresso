@@ -5,6 +5,7 @@ pec_241_id <<- fetch_id_proposicao("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao(pec_241_id)
 votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
 relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
+deferimento <- fetch_deferimento(c("102343", "109173", "115853"))
 
 # Constantes
 PEC241_ID <- 2088351
@@ -27,12 +28,14 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(pec_241_por_id))
   expect_true(is.data.frame(votacoes_pec_241))
+  expect_true(is.data.frame(deferimento))
 })
 
 test_that("Not Empty", {
   expect_true(nrow(pec_241) != 0)
   expect_true(nrow(pec_241_por_id) != 0)
   expect_true(nrow(votacoes_pec_241) != 0)
+  expect_true(nrow(deferimento) != 0)
 })
 
 test_that("fetch_proposicao()", {
@@ -49,6 +52,10 @@ test_that("fetch_votacoes()", {
 
 test_that("fetch_relacionadas()", {
   expect_true(all(sapply(relacionadas_pec_241, class) %in% .COLNAMES_RELACIONADAS))
+})
+
+test_that("fetch_deferimento()", {
+  expect_true(all(sapply(deferimento, class) %in% .COLNAMES_DEFRIMENTO))
 })
 
 test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
