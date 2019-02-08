@@ -98,8 +98,8 @@ fetch_agenda_camara <- function(initial_date, end_date) {
       .$id, .$dataHoraInicio, .$dataHoraFim, .$sigla, .$nome) %>%
         tibble::as.tibble()) %>%
     unique() %>%
-    .assert_dataframe_completo(.COLNAMES_AGENDA) %>%
-    .coerce_types(.COLNAMES_AGENDA)
+    .assert_dataframe_completo(.COLNAMES_AGENDA_CAMARA) %>%
+    .coerce_types(.COLNAMES_AGENDA_CAMARA)
 }
 
 #' @title Get the agenda of a meeting

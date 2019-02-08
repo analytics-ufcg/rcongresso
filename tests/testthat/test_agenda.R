@@ -35,7 +35,7 @@ test <- function(){
   })
 
   test_that("fetch_agenda_camara()", {
-    expect_true(all(sapply(agenda_camara, class) %in% .COLNAMES_AGENDA))
+    expect_true(all(sapply(agenda_camara, class) %in% .COLNAMES_AGENDA_CAMARA))
     expect_true(all(sapply(pauta_camara, class) %in% .COLNAMES_PAUTA_CAMARA))
   })
 
