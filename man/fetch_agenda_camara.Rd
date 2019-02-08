@@ -9,7 +9,7 @@ fetch_agenda_camara(initial_date, end_date)
 \arguments{
 \item{initial_date}{initial date yyyy-mm-dd}
 
-\item{end_date}{dend date formato yyyy-mm-dd}
+\item{end_date}{end date yyyy-mm-dd}
 }
 \value{
 Dataframe

@@ -5,6 +5,7 @@
 #' @return list
 #' @examples
 #' fetch_agenda_senado('2018-07-03')
+#' @rdname fetch_agenda_senado
 fetch_agenda_senado <- function(initial_date) {
   url <- paste0(.AGENDA_SENADO_PATH, gsub('-','', initial_date))
   json_proposicao <- .senado_api(url, asList = T)
@@ -77,6 +78,7 @@ fetch_agenda_senado <- function(initial_date) {
 #' @return Dataframe
 #' @examples
 #' fetch_agenda_camara('2018-07-03', '2018-07-10')
+#' @rdname fetch_agenda_camara
 #' @export
 fetch_agenda_camara <- function(initial_date, end_date) {
   url <- paste0(.AGENDA_CAMARA_PATH, initial_date, "&dataFim=", end_date, "&ordem=ASC&ordenarPor=dataHoraInicio")
@@ -105,9 +107,12 @@ fetch_agenda_camara <- function(initial_date, end_date) {
 #' @param id event id
 #' @param hora_inicio inital time
 #' @param hora_fim end time
+#' @param sigla_orgao Acronym of the organ
+#' @param nome_orgao  Name of the organ
 #' @return Dataframe
 #' @examples
 #' fetch_pauta_camara('53184', '2018-07-03T10:00', '2018-07-03T12:37', 'CVT', 'Comissão de Viação e Transportes VIAÇÃO E TRANSPORTES')
+#' @rdname fetch_pauta_camara
 fetch_pauta_camara <- function(id, hora_inicio, hora_fim, sigla_orgao, nome_orgao) {
   url <- paste0(.PAUTAS_CAMARA, id, "/pauta")
   json_proposicao <- .camara_api(url)
