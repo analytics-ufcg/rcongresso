@@ -425,7 +425,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param df Dataframe
 #' @return Dataframe with renamed columns.
 .rename_df_columns <- function(df) {
-  names(df) <- names(df) %>% 
+  names(df) <- names(df) %>%
     .to_underscore
   df
 }
@@ -475,4 +475,37 @@ rename_table_to_underscore <- function(df) {
   names(df) <- new_names
 
   df
+}
+
+#' @title Get the author on Chamber
+#' @description Return a dataframe with the link, name, code, type and house
+#' @param prop_id Proposition ID
+#' @return Dataframe contendo o link, o nome, o código do tipo, o tipo e a casa de origem do autor.
+#' @examples
+#' extract_autor_in_camara(2121442)
+#' @export
+.extract_autor_in_camara <- function(prop_id) {
+  camara_exp <- "camara dos deputados"
+  senado_exp <- "senado federal"
+
+  url <- paste0(.CAMARA_PROPOSICOES_PATH, "/", prop_id, "/autores")
+  json_voting <- .camara_api(url, asList = T)
+
+  authors <- json_voting %>%
+    dplyr::rename(
+      autor.uri = uri,
+      autor.nome = nome,
+      autor.tipo = tipo,
+      autor.cod_tipo = codTipo) %>%
+    dplyr::mutate(casa_origem =
+                    dplyr::case_when(
+                      stringr::str_detect(iconv(c(tolower(autor.nome)), from="UTF-8", to="ASCII//TRANSLIT"), camara_exp) | autor.tipo == "Deputado" ~ "Camara dos Deputados",
+                      stringr::str_detect(tolower(autor.nome), senado_exp) | autor.tipo == "Senador" ~ "Senado Federal",
+                      autor.cod_tipo == 40000 ~ "Senado Federal",
+                      autor.cod_tipo == 2 ~ "Camara dos Deputados"))
+
+  partido_estado <- rcongresso::extract_partido_estado_autor(authors$autor.uri %>% tail(1))
+
+  authors %>%
+    dplyr::mutate(autor.nome = paste0(autor.nome, " ", partido_estado))
 }

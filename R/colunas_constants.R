@@ -132,7 +132,10 @@
 .COLNAMES_EMENDAS_SENADO <- c("codigo_emenda"="character", "numero"="integer", "data_apresentacao"="character", "local"="character",
                        "descricao_turno"="character", "descricao_tipo_emenda"="character", "autor"="character", "id_autor"="character",
                        "partido"="character", "casa"="character", "tipo_documento"="character", "inteiro_teor"="character")
-.COLNAMES_EMENDAS_CAMARA <- c("CodProposicao"="integer", "Descricao"="character")
+.COLNAMES_EMENDAS_CAMARA <- c("codigo_emenda"="integer","data_apresentacao"="character","numero"="numeric","local"="chraracter",
+                              "autor"="chraracter","casa"="chraracter","tipo_documento"="chraracter","inteiro_teor"="chraracter")
+.COLNAMES_EMENDAS_GERAL <-c("prop_id"="numeric","codigo_emenda"="integer","data_apresentacao"="character","numero"="numeric",
+                            "local"="character","autor"="character","casa"="character","tipo_documento"="character","inteiro_teor"="character")
 
 # Autores
 .COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")
