@@ -30,6 +30,7 @@
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
 .SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/movimentacoes/"
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
+.DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 
 # Link do repositório do rcongresso
@@ -37,6 +38,8 @@
 
 # Regex Pattern
 .REGEX_PATTERN <- "(?=[A-Z][^A-Z])"
+.REGEX_DEFERIMENTO_INDEFERIDO <- "^Indefiro"
+.REGEX_DEFERIMENTO_DEFERIDO <- "^(Defiro)|(Aprovado)"
 
 # Requests
 .MAX_ITENS <- 100

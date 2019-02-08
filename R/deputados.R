@@ -60,3 +60,28 @@ fetch_despesas_deputado <- function(id = NULL, idLegislatura = NULL, ano = NULL,
     .assert_dataframe_completo(.COLNAMES_DEP_GASTOS) %>%
     .coerce_types(.COLNAMES_DEP_GASTOS)
 }
+
+#' @title Get the state and party of an author
+#' @description Return state and party
+#' @param uri uri that contains data about the author
+#' @return State and party
+#' @export
+extract_partido_estado_autor <- function(uri) {
+  if (!is.na(uri)) {
+    resp <- .get_from_api(uri, NULL, NULL)
+    autor <- .get_json(resp)$dados
+
+    autor_uf <-
+      autor %>%
+      magrittr::extract2('ufNascimento')
+
+    autor_partido <-
+      autor %>%
+      magrittr::extract2('ultimoStatus') %>%
+      magrittr::extract2('siglaPartido')
+
+    paste0(autor_partido, '/', autor_uf)
+  } else {
+    ''
+  }
+}
