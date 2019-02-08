@@ -2,16 +2,24 @@
 % Please edit documentation in R/emendas.R
 \name{fetch_emendas_camara}
 \alias{fetch_emendas_camara}
-\title{Returns emendas of a proposição from Câmara.}
+
+\title{Fetches proposition's emendas}
 \usage{
-fetch_emendas_camara(bill_id)
+fetch_emendas_camara(sigla = NULL, numero = NULL, ano = NULL)
 }
 \arguments{
-\item{bill_id}{Proposição's ID from Câmara.}
+\item{sigla}{Proposition type (i.e., PEC, PL, PDC)}
+
+\item{numero}{Proposition number}
+
+\item{ano}{Proposition year}
 }
 \value{
-Dataframe with informations about emendas of a proposição from Câmara.
+A dataframe containing details about the emendas of the proposition
 }
 \description{
-Fetchs a dataframe with emendas's data of a proposição from Câmara.
+Fetches a dataframe containing the emendas of the proposition
+}
+\examples{
+fetch_emendas_camara('pl', 6726, 2016)
 }

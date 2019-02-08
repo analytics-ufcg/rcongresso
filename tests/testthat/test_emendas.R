@@ -1,12 +1,10 @@
 context("Emendas")
 
 # Setup
-emendas_unica <<- fetch_emendas(id = 91341, casa = 'senado')
-emendas_ausentes <<- fetch_emendas(id = 126364, casa = 'senado')
-emendas_variadas <<- fetch_emendas(id = 133943, casa = 'senado')
-  
-emendas_camara <<- fetch_emendas(id = 345311, casa = 'camara')
-  
+emendas_unica <<- fetch_emendas_senado(91341)
+emendas_ausentes <<- fetch_emendas_senado(126364)
+emendas_variadas <<- fetch_emendas_senado(133943)
+emendas_camara <<- fetch_emendas_camara('pl', 6726, 2016)
 
 # Testa erros
 test_that("GET proposição inexistente", {expect_error(fetch_emendas_senado(-1))})
@@ -20,13 +18,13 @@ test_that("Is tibble", {
 })
 
 test_that("Empty", {
-  expect_true(nrow(emendas_camara) == 0)
   expect_true(nrow(emendas_ausentes) == 0)
 })
 
 test_that("Not Empty", {
   expect_true(nrow(emendas_unica) != 0)
   expect_true(nrow(emendas_variadas) != 0)
+  expect_true(nrow(emendas_camara) != 0)
 })
 
 test_that("Is invalid 'casa'", { expect_error(fetch_emendas(91341, "casa"))})
@@ -35,3 +33,10 @@ test_that("Várias - fetch_emendas_senado()", {
   expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_EMENDAS))
   })
 
+test_that("Is dataframe", {
+  expect_true(is.data.frame(emendas_camara))
+})
+
+test_that("fetch_emendas_camara()", {
+  expect_true(all(sapply(emendas_camara, class) %in% .COLNAMES_EMENDAS_CAMARA))
+})

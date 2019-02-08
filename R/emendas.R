@@ -1,31 +1,3 @@
-#' @title Returns emendas of a proposição from Congresso
-#' @description Fetchs a dataframe with emendas's data of a proposição from Congresso.
-#' @param id Proposição's ID
-#' @param casa Proposição's house
-#' @return Dataframe with informations about emendas of a proposição.
-#' @examples
-#' fetch_emendas(91341,'senado')
-#' @export
-fetch_emendas <- function(id, casa) {
-  casa <- tolower(casa)
-  if (casa == 'camara') {
-    emendas <- fetch_emendas_camara(bill_id = id)
-  } else if (casa == 'senado') {
-    emendas <- fetch_emendas_senado(bill_id = id)
-  } else {
-    stop('Parametro "casa" nao identificado.')
-    return()
-  }
-  
-  emendas <-
-    emendas %>% 
-    .assert_dataframe_completo(.COLNAMES_EMENDAS) %>%
-    .coerce_types(.COLNAMES_EMENDAS) %>% 
-    tibble::as_tibble()
-    
-  emendas
-}
-
 
 #' @title Returns emendas of a proposição from Senado
 #' @description Fetchs a dataframe with emendas's data of a proposição from Senado.
@@ -47,7 +19,7 @@ fetch_emendas_senado <- function(bill_id) {
   
   if (num_emendas == 0) {
     emendas_df <- stats::setNames(
-      data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
+      data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), names(.COLNAMES_EMENDAS_SENADO)
       )
     
   } else if (num_emendas == 1) {
@@ -102,20 +74,39 @@ fetch_emendas_senado <- function(bill_id) {
                   "inteiro_teor" = as.character(inteiro_teor)) %>% 
       dplyr::select(-dplyr::starts_with("autoria_emenda"), 
                     -dplyr::starts_with("textos_emenda"),
-                    -dplyr::starts_with("uf"))
+                    -dplyr::starts_with("uf")) %>% 
+    .assert_dataframe_completo(.COLNAMES_EMENDAS_SENADO) %>%
+    .coerce_types(.COLNAMES_EMENDAS_SENADO) %>% 
+    tibble::as_tibble()
   
 }
 
-
-#' @title Returns emendas of a proposição from Câmara.
-#' @description Fetchs a dataframe with emendas's data of a proposição from Câmara.
-#' @param bill_id Proposição's ID from Câmara.
-#' @return Dataframe with informations about emendas of a proposição from Câmara.
+#' @title Fetches proposition's emendas
+#' @description Fetches a dataframe containing the emendas of the proposition
+#' @param sigla Proposition type (i.e., PEC, PL, PDC)
+#' @param numero Proposition number
+#' @param ano Proposition year
+#' @return A dataframe containing details about the emendas of the proposition
+#' @examples
+#' fetch_emendas_camara('pl', 6726, 2016)
 #' @export
-fetch_emendas_camara <- function(bill_id) {
-  stats::setNames(
-    data.frame(matrix(ncol = length(.COLNAMES_EMENDAS), nrow = 0)), names(.COLNAMES_EMENDAS)
-  )
+fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
+  emendas_substitutivos_redacaofinal_list <-
+    .get_from_url(base_url = .CAMARA_WEBSITE_LINK,
+                  path = .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH,
+                  query = paste0('tipo=', sigla, '&numero=', numero, '&ano=', ano))$content %>%
+    rawToChar() %>%
+    XML::xmlParse() %>%
+    XML::xmlToList()
+  
+  emendas_df <-
+    emendas_substitutivos_redacaofinal_list %>%
+    magrittr::extract2('Emendas') %>%
+    purrr::map_dfr(as.list)
+  
+  emendas_df %>%
+    .assert_dataframe_completo(.COLNAMES_EMENDAS_CAMARA) %>%
+    .coerce_types(.COLNAMES_EMENDAS_CAMARA)
 }
 
 #' @title Generates a dataframe from a column with a linked list
