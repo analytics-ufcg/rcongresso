@@ -30,7 +30,7 @@ test_that("Not Empty", {
 test_that("Is invalid 'casa'", { expect_error(fetch_emendas(91341, "casa"))})
 
 test_that("Várias - fetch_emendas_senado()", {
-  expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_EMENDAS))
+  expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_EMENDAS_SENADO))
   })
 
 test_that("Is dataframe", {
