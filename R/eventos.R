@@ -14,7 +14,12 @@ fetch_eventos_camara <- function(prop_id) {
       rvest::html_table() %>%
       .[[1]] %>%
       dplyr::select(-Links) %>%
-      dplyr::rename(timestamp="Data e hora", origem="Origem", descricao="Descrição") %>%
+      dplyr::rename(
+                 timestamp="Data e hora",
+                 origem="Origem",
+                 # O R check só aceita ASCII no código... Então a palavra
+                 # "Descrição" foi codificada abaixo:
+                 descricao="Descri\uc3a7\uc3a3o") %>%
       dplyr::mutate(timestamp=lubridate::dmy_hm(timestamp))
 }
 
