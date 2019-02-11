@@ -30,19 +30,17 @@ fetch_tramitacao <- function(id_prop, casa) {
 #' @rdname fetch_tramitacao_camara
 #' @export
 fetch_tramitacao_camara <- function(id_prop){
-  path <- NULL
   unique(id_prop) %>%
     as.integer %>%
     tibble::tibble(id_prop = .) %>%
-      dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
-        dplyr::group_by(id_prop, path) %>%
-        dplyr::do(
-                 .camara_api(.$path)
-               ) %>%
-        dplyr::ungroup() %>%
-        dplyr::select(-path) %>%
-        .assert_dataframe_completo(.COLNAMES_TRAMITACOES_CAMARA) %>%
-        .coerce_types(.COLNAMES_TRAMITACOES_CAMARA)
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
+    dplyr::group_by(id_prop, path) %>%
+      dplyr::do(.camara_api(.$path)) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-path) %>%
+    .assert_dataframe_completo(.COLNAMES_TRAMITACOES_CAMARA) %>%
+    .coerce_types(.COLNAMES_TRAMITACOES_CAMARA) %>%
+    .rename_df_columns()
 }
 
 #' @title Fetches the tramitation of a proposition in the Senate
