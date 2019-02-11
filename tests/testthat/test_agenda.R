@@ -30,8 +30,8 @@ test <- function(){
   })
 
   test_that("Have many rows", {
-    expect_true(nrow(agenda_camara) >= 480)
-    expect_true(nrow(pauta_camara) >= 8000)
+    expect_true(nrow(agenda_camara) >= 110)
+    expect_true(nrow(pauta_camara) >= 100)
   })
 
   test_that("fetch_agenda_camara()", {
