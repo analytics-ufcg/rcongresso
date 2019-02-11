@@ -14,7 +14,9 @@
 .CAMARA_PROPOSICOES_PATH <- "/api/v2/proposicoes"
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
-.RELATORIA_SENADO_PATH <- "/dadosabertos/materia/relatorias/"
+.SENADO_PATH <- "/dadosabertos/materia"
+.RELATORIA_SENADO_PATH <- "/relatorias/"
+.EMENDAS_SENADO_PATH <- "/emendas/"
 .PARTIDOS_PATH <- "/api/v2/partidos"
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
@@ -23,12 +25,14 @@
 
 # Path site Câmara
 .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"
+.EVENTOS_PROPOSICAO_CAMARA_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
 .SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/movimentacoes/"
 .SENADO_TRAMITACAO_PROPOSICAO_PATH <- "/dadosabertos/materia/"
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
+.DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 .SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/"
 
@@ -37,6 +41,8 @@
 
 # Regex Pattern
 .REGEX_PATTERN <- "(?=[A-Z][^A-Z])"
+.REGEX_DEFERIMENTO_INDEFERIDO <- "^Indefiro"
+.REGEX_DEFERIMENTO_DEFERIDO <- "^(Defiro)|(Aprovado)"
 
 # Requests
 .MAX_ITENS <- 100

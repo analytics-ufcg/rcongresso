@@ -420,6 +420,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   .fetch_itens(query, API_path)
 }
 
+#' @title Renames dataframe's columns
+#' @description Renames dataframe's columns using underscore and lowercase pattern.
+#' @param df Dataframe
+#' @return Dataframe with renamed columns.
+.rename_df_columns <- function(df) {
+  names(df) <- names(df) %>% 
+    .to_underscore
+  df
+}
+
 #' @title Renames a vector with the pattern of underscores and lowercases
 #' @description Renames each item from vector with the pattern: split by underscore and lowercase
 #' @param x Strings vector
