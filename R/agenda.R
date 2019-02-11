@@ -122,7 +122,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           tidyr::unnest() %>%
           dplyr::select(c(data, nome, id_proposicao, local))
       }else {
-        return(tibble::frame_data(~ data, ~ sigla, ~ id_proposicao, ~ local))
+        return(tibble::tibble(data = character(), sigla = character(), id_proposicao = character(), local = character()))
       }
 
     }else {
@@ -141,7 +141,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
           dplyr::select(c(data, nome, id_proposicao, local))
       }else {
-        return(tibble::frame_data(~ data, ~ sigla, ~ id_proposicao, ~ local))
+        return(tibble::tibble(data = character(), sigla = character(), id_proposicao = character(), local = character()))
       }
     }
 
@@ -153,7 +153,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
       dplyr::arrange(data)
 
   }else {
-    tibble::frame_data(~ data, ~ sigla, ~ id_proposicao, ~ local)
+    tibble::tibble(data = character(), sigla = character(), id_proposicao = character(), local = character())
   }
 
 }
