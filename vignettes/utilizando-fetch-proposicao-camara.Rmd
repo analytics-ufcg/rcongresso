@@ -57,7 +57,7 @@ Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_pro
 frame_data(
   ~tipo, ~numero, ~ano,
   "PEC", 241, 2016) %>% # PEC dos gastos públicos
-  pmap(fetch_id_proposicao) %>%
+  pmap(fetch_id_proposicao_camara) %>%
   map_df(fetch_proposicao_camara) %>%
   glimpse()
 ```
@@ -70,7 +70,7 @@ frame_data(
   "PL", 4474, 2016, # PL dos correios
   "PL", 3722, 2012, # PL do estatuto do desarmamento
   "PL", 158, 2015) %>% # PL da proibição do porte e consumo de drogas
-  pmap(fetch_id_proposicao) %>%
+  pmap(fetch_id_proposicao_camara) %>%
   map_df(fetch_proposicao_camara) %>%
   glimpse()
 ```
@@ -80,7 +80,7 @@ frame_data(
 Nesse caso fazemos uma chamada ao método utilizando o parêmetro `id`. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:
 
 ```{r}
-fetch_proposicao_camara_camara(id = 2088351) %>%
+fetch_proposicao_camara(id = 2088351) %>%
   glimpse()
 ```
 
@@ -88,7 +88,7 @@ Podemos utilizar também uma lista de IDs:
 ```{r}
 ids <- c(611966, 291906, 333205, 458609, 517924, 1999440, 2090343)
 
-fetch_proposicao_camara_camara(ids) %>%
+fetch_proposicao_camara(ids) %>%
   glimpse()
 ```
 
