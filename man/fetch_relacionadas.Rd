@@ -19,5 +19,5 @@ Returns all propositions related to a proposition by its id.
 relacionadas_pec241 <- fetch_relacionadas(2088351)
 }
 \seealso{
-\code{\link[rcongresso]{fetch_id_proposicao}}
+\code{\link[rcongresso]{fetch_id_proposicao_camara}}
 }

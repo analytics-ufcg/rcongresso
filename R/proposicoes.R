@@ -23,14 +23,14 @@
 #' @return Dataframe containing information about the proposition.
 #' @details Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
 #' function call. The call to this function using the proposition's ID returns more details than using the
-#' others parameters. If you don't have the proposition's ID, the \code{\link[rcongresso]{fetch_id_proposicao}}
+#' others parameters. If you don't have the proposition's ID, the \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' function may be helpful.
 #' @examples
-#' pec241 <- fetch_proposicao(id = 2088351)
-#' pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
+#' pec241 <- fetch_proposicao_camara(id = 2088351)
+#' pec241 <- fetch_proposicao_camara(siglaTipo = "PEC", numero = 241, ano = 2016)
 #' @seealso
-#'  \code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
-#' @rdname fetch_proposicao
+#'  \code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao_camara}}
+#' @rdname fetch_proposicao_camara
 #' @export
 fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
@@ -132,7 +132,7 @@ fetch_proposicao_senado <- function(id) {
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
 #' @rdname fetch_votacoes
 #' @export
 fetch_votacoes <- function(id_prop){
@@ -155,7 +155,7 @@ fetch_votacoes <- function(id_prop){
 #' @examples
 #' relacionadas_pec241 <- fetch_relacionadas(2088351)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas
 #' @export
 fetch_relacionadas <- function(id_prop){
@@ -181,7 +181,7 @@ fetch_relacionadas <- function(id_prop){
 #' @param ano Proposition year
 #' @return Proposition's ID.
 #' @examples
-#' pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
+#' pec241_id <- fetch_id_proposicao_camara("PEC", 241, 2016)
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_partido}}
 #' @rdname fetch_id_proposicao_camara
