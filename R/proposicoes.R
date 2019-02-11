@@ -63,7 +63,7 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @rdname fetch_proposicao_senado
 #' @export
 fetch_proposicao_senado <- function(id) {
-  proposicao_data <- .senado_api(paste0(.SENADO_TRAMITACAO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
+  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
   
   proposicao_ids <-
     proposicao_data %>%
