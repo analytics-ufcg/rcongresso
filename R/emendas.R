@@ -31,9 +31,7 @@ fetch_emendas <- function(id, casa, sigla=NULL, numero=NULL, ano=NULL) {
     emendas %>%
     dplyr::mutate(prop_id = id, codigo_emenda = as.integer(codigo_emenda)) %>%
     dplyr::select(
-      prop_id, codigo_emenda, data_apresentacao, numero, local, autor, casa, tipo_documento, inteiro_teor) %>%
-    .assert_dataframe_completo(.COLNAMES_EMENDAS_GERAL) %>%
-    .coerce_types(.COLNAMES_EMENDAS_GERAL)
+      prop_id, codigo_emenda, data_apresentacao, numero, local, autor, casa, tipo_documento, inteiro_teor)
 }
 
 #' @title Returns emendas of a proposição from Senado
@@ -113,10 +111,7 @@ fetch_emendas_senado <- function(bill_id) {
       dplyr::select(-dplyr::starts_with("autoria_emenda"),
                     -dplyr::starts_with("textos_emenda"),
                     -dplyr::starts_with("uf")) %>%
-    .assert_dataframe_completo(.COLNAMES_EMENDAS_SENADO) %>%
-    .coerce_types(.COLNAMES_EMENDAS_SENADO) %>%
     tibble::as_tibble()
-
 }
 
 #' @title Fetches proposition's emendas
@@ -144,7 +139,8 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
     purrr::map_dfr(as.list)
 
   if(nrow(emendas_df) == 0) {
-    return(tibble::frame_data( ~ codigo_emenda, ~ data_apresentacao, ~ numero, ~ local, ~ autor, ~ casa, ~ tipo_documento, ~ inteiro_teor))
+    return(tibble::tibble(codigo_emenda = integer(), data_apresentacao = character(), numero = numeric(), local = character(),
+                          autor = character(), casa = character(), tipo_documento = character(), inteiro_teor = character()))
   }
 
   new_names <- c("cod_proposicao", "descricao")
