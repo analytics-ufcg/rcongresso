@@ -1,13 +1,15 @@
 context("Proposições")
 
-pec_241 <<- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016, dataInicio = "2016-01-01")
-pec_241_id <<- fetch_id_proposicao("PEC", 241, 2016)
-pec_241_por_id <<- fetch_proposicao(pec_241_id)
+pec_241 <<- fetch_proposicao_camara(siglaTipo = "PEC", numero = 241, ano = 2016, dataInicio = "2016-01-01")
+pec_241_id <<- fetch_id_proposicao_camara("PEC", 241, 2016)
+pec_241_por_id <<- fetch_proposicao_camara(pec_241_id)
+pls_91341_id <<- 91341
+pls_91341 <- fetch_proposicao_senado(pls_91341_id)
 votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
 relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
 tramitacao_pec_241 <<- fetch_tramitacao_camara(pec_241_id)
 tramitacao_pec_241_x2 <<- fetch_tramitacao_camara(replicate(2, pec_241_id))
-pls229 <- fetch_tramitacao_senado(91341)
+pls_91341_tramitacao <<- fetch_tramitacao_senado(pls_91341_id)
 
 # Constantes
 PEC241_ID <- 2088351
@@ -38,12 +40,16 @@ test_that("Not Empty", {
   expect_true(nrow(votacoes_pec_241) != 0)
 })
 
-test_that("fetch_proposicao()", {
-  expect_true(all(sapply(pec_241, class) %in% .COLNAMES_PROPOSICAO))
+test_that("fetch_proposicao() na camara", {
+  expect_true(all(sapply(pec_241, class) %in% .COLNAMES_PROPOSICAO_CAMARA))
 })
 
-test_that("fetch_proposicao() usando ID", {
-  expect_true(all(sapply(pec_241_por_id, class) %in% .COLNAMES_PROPOSICAO_POR_ID))
+test_that("fetch_proposicao() na camara usando ID", {
+  expect_true(all(sapply(pec_241_por_id, class) %in% .COLNAMES_PROPOSICAO_POR_ID_CAMARA))
+})
+
+test_that("fetch_proposicao() no senado", {
+  expect_true(all(sapply(pls_91341, class) %in% .COLNAMES_PROPOSICAO_SENADO))
 })
 
 test_that("fetch_votacoes()", {
@@ -60,7 +66,7 @@ test_that("fetch_tramitacao_camara()", {
 })
 
 test_that("fetch_tramitacao_senado()", {
-  expect_true(all(sapply(pls229, class) %in% .COLNAMES_TRAMITACOES_SENADO))
+  expect_true(all(sapply(pls_91341_tramitacao, class) %in% .COLNAMES_TRAMITACOES_SENADO))
 })
 
 test_that("ID Correto", {expect_equal(pec_241_id, fetch_id_proposicao("PEC", 241, 2016))})
