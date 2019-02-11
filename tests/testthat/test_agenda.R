@@ -6,7 +6,10 @@ setup <- function(){
   agenda_senado <<- lista_agenda_senado$agenda
   materias_senado <<- lista_agenda_senado$materias
   oradores_senado <<- lista_agenda_senado$oradores
-  agenda_comissoes_senado <<- fetch_agenda_senado_comissoes('2016-05-15', '2016-05-25')
+  agenda_comissoes_senado <<- fetch_agenda_senado_comissoes("2016-05-15", "2016-05-25")
+  agenda_comissoes_senado_1 <<- fetch_agenda_senado_comissoes("2019-01-10", "2019-01-17")
+  agenda_comissoes_senado_2 <<- fetch_agenda_senado_comissoes("2018-08-13", "2018-08-17")
+  agenda_comissoes_senado_3 <<- fetch_agenda_senado_comissoes("2018-10-22", "2018-10-26")
 
   return(TRUE)
 }
@@ -30,6 +33,9 @@ test <- function(){
     expect_true(is.data.frame(materias_senado))
     expect_true(is.data.frame(oradores_senado))
     expect_true(is.data.frame(agenda_comissoes_senado))
+    expect_true(is.data.frame(agenda_comissoes_senado_1))
+    expect_true(is.data.frame(agenda_comissoes_senado_2))
+    expect_true(is.data.frame(agenda_comissoes_senado_3))
   })
 
   test_that("fetch_agenda_camara()", {
@@ -37,6 +43,9 @@ test <- function(){
     expect_true(all(sapply(materias_senado, class) %in% .COLNAMES_AGENDA_MATERIA_SENADO))
     expect_true(all(sapply(oradores_senado, class) %in% .COLNAMES_AGENDA_ORADORES_SENADO))
     expect_true(all(sapply(agenda_comissoes_senado, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
+    expect_true(all(sapply(agenda_comissoes_senado_1, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
+    expect_true(all(sapply(agenda_comissoes_senado_2, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
+    expect_true(all(sapply(agenda_comissoes_senado_3, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
   })
 
   test_that("Have many rows", {
