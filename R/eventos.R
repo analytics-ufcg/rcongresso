@@ -1,7 +1,7 @@
-#' @title Recupera os eventos (sessões/reuniões) de uma proposição na Câmara
-#' @description Retorna um dataframe contendo o timestamp, o local e a descrição do evento
-#' @param prop_id ID da proposição
-#' @return Dataframe contendo o timestamp, o local e a descrição do evento.
+#' @title Fetch events about a proposition in the Câmara
+#' @description Returns a dataframe with timestamp, origen and description about each event
+#' @param prop_id Proposition ID
+#' @return Dataframe
 #' @examples
 #' fetch_eventos_camara(2121442)
 #' @export
@@ -23,10 +23,10 @@ fetch_eventos_camara <- function(prop_id) {
       dplyr::mutate(timestamp=lubridate::dmy_hm(timestamp))
 }
 
-#' @title Recupera os últimos eventos (sessões/reuniões) de uma proposição na Câmara
-#' @description Retorna um dataframe contendo o timestamp, o local e a descrição do evento
-#' @param prop_id ID da proposição
-#' @return Dataframe contendo o timestamp, o local e a descrição do evento.
+#' @title Get the last events about a proposition in the Câmara
+#' @description Returns a dataframe with timestamp, origen and description about each event
+#' @param prop_id Proposition ID
+#' @return Dataframe
 #' @examples
 #' get_latest_eventos_camara(2121442)
 #' @export
@@ -35,10 +35,10 @@ get_latest_eventos_camara <- function(prop_id) {
         dplyr::filter(timestamp <= lubridate::now())
 }
 
-#' @title Recupera os próximos eventos (sessões/reuniões) de uma proposição na Câmara
-#' @description Retorna um dataframe contendo o timestamp, o local e a descrição do evento
-#' @param prop_id ID da proposição
-#' @return Dataframe contendo o timestamp, o local e a descrição do evento.
+#' @title Get the next events about a proposition in the Câmara
+#' @description Returns a dataframe with timestamp, origen and description about each event
+#' @param prop_id Proposition ID
+#' @return Dataframe
 #' @examples
 #' get_next_eventos_camara(2121442)
 #' @export
