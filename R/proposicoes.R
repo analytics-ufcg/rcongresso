@@ -67,38 +67,38 @@ fetch_proposicao_senado <- function(id) {
   
   proposicao_ids <-
     proposicao_data %>%
-    extract2("IdentificacaoMateria") %>%
+    magrittr::extract2("IdentificacaoMateria") %>%
     tibble::as.tibble()
   
   proposicao_info <-
     proposicao_data %>%
-    extract2("DadosBasicosMateria") %>%
+    magrittr::extract2("DadosBasicosMateria") %>%
     purrr::flatten() %>%
     tibble::as.tibble()
   
   proposicao_author <-
     proposicao_data %>%
-    extract2("Autoria") %>%
-    extract2("Autor") %>%
+    magrittr::extract2("Autoria") %>%
+    magrittr::extract2("Autor") %>%
     dplyr::transmute(autor = paste( paste(NomeAutor, IdentificacaoParlamentar.SiglaPartidoParlamentar), UfAutor, sep = "/" ))
   
   proposicao_specific_assunto <-
     proposicao_data %>%
-    extract2("Assunto") %>%
-    extract2("AssuntoEspecifico") %>%
+    magrittr::extract2("Assunto") %>%
+    magrittr::extract2("AssuntoEspecifico") %>%
     tibble::as.tibble() %>%
     dplyr::rename(assunto_especifico = Descricao, codigo_assunto_especifico = Codigo)
   
   proposicao_general_assunto <-
     proposicao_data %>%
-    extract2("Assunto") %>%
-    extract2("AssuntoGeral") %>%
+    magrittr::extract2("Assunto") %>%
+    magrittr::extract2("AssuntoGeral") %>%
     tibble::as.tibble() %>%
     dplyr::rename(assunto_geral = Descricao, codigo_assunto_geral = Codigo)
   
   proposicao_source <-
     proposicao_data %>%
-    extract2("OrigemMateria") %>%
+    magrittr::extract2("OrigemMateria") %>%
     tibble::as.tibble()
   
   anexadas <-
