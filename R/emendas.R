@@ -157,7 +157,7 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 #' @title Auxiliar function for fetch_emendas_camara
 #' @description Return dataframe with data of an emenda
 .fetch_emendas_camara_auxiliar <- function(id) {
-  rcongresso::fetch_proposicao(id) %>%
+  rcongresso::fetch_proposicao_camara(id) %>%
     dplyr::mutate(autor = .extract_autor_in_camara(.$id)[1,]$autor.nome, casa = "camara") %>%
     dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, ementa))
 }
