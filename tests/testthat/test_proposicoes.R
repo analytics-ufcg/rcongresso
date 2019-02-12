@@ -49,6 +49,15 @@ test_that("fetch_proposicao_camara() usando ID", {
 
 test_that("fetch_proposicao_senado()", {
   expect_true(all(sapply(pls_91341, class) %in% .COLNAMES_PROPOSICAO_SENADO))
+  expect_true(nrow(pls_91341) != 0)
+})
+
+test_that("fetch_proposicao_senado() not empty", {
+  expect_true(nrow(pls_91341) != 0)
+})
+
+test_that("fetch_proposicao_senado() is dataframe", {
+  expect_true(is.data.frame(pls_91341))
 })
 
 test_that("fetch_votacoes()", {

@@ -34,7 +34,6 @@
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
 .DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
-.SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
