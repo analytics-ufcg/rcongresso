@@ -81,8 +81,12 @@ fetch_agenda_senado <- function(initial_date) {
 #' @rdname fetch_agenda_camara
 #' @export
 fetch_agenda_camara <- function(initial_date, end_date) {
-  url <- paste0(.AGENDA_CAMARA_PATH, "?dataInicio=", initial_date, "&dataFim=", end_date, "&ordem=ASC&ordenarPor=dataHoraInicio")
-  json_proposicao <- .camara_api(url)
+  json_proposicao <- .camara_api(.AGENDA_CAMARA_PATH, query = list(
+    dataInicio = initial_date,
+    dataFim = end_date,
+    ordem = "ASC",
+    ordenarPor = "dataHoraInicio")
+  )
 
   descricoes_inuteis <- c('Seminario', 'Diligencia', 'Sessao Nao Deliberativa de Debates', 'Reuniao de Instalacao e Eleicao',
                           'Outro Evento', 'Mesa Redonda', 'Sessao Nao Deliberativa Solene')
