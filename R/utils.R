@@ -411,11 +411,11 @@ rename_table_to_underscore <- function(df) {
 
 #' @title Renames the cols of the bill's passage on Senate
 #' @description Renames each item from vector with the pattern: split by underscore and lowercase
-#' @param df Dataframe
+#' @param tramitacao_df Dataframe
 #' @return Dataframe containing the renamed strings.
 #' @export
-.rename_tramitacao_df <- function(df) {
-  new_names = names(df) %>%
+.rename_tramitacao_df <- function(tramitacao_df) {
+  new_names = names(tramitacao_df) %>%
     .to_underscore() %>%
     stringr::str_replace(
       "identificacao_tramitacao_|
@@ -425,9 +425,9 @@ rename_table_to_underscore <- function(df) {
       ""
     )
 
-  names(df) <- new_names
+  names(tramitacao_df) <- new_names
 
-  df
+  tramitacao_df
 }
 
 #' @title Get the author on Chamber

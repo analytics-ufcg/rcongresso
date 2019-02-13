@@ -108,8 +108,8 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     if ("partes_parte" %in% names(agenda)) {
       agenda <-
         agenda %>%
-        dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .pega_id_proposicao(.))) %>%
-        dplyr::mutate(nome = purrr::map(partes_parte, ~ .pega_nome_proposicao(.))) %>%
+        dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .pega_id_proposicao_agenda_senado_comissoes(.))) %>%
+        dplyr::mutate(nome = purrr::map(partes_parte, ~ .pega_nome_proposicao_agenda_senado_comissoes(.))) %>%
         dplyr::filter(id_proposicao != "")
 
       if (nrow(agenda) != 0) {
@@ -161,49 +161,54 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 
 #' @title Extract proposition name
 #' @description Receive as param a list from the Senate schedule and return the propositions name that are in 'pauta'
-#' @param l list that has the id
+#' @param lista_com_nome list that has the name
 #' @return char
-.pega_nome_proposicao <- function(l){
+.pega_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
   nome <- ""
-  if(length(l$Tipo) == 1) {
-    if (l$Tipo == "Deliberativa") {
-      nome <- paste(l$Itens$Item$Nome, collapse = ",")
+  if(length(lista_com_nome$Tipo) == 1) {
+    if (lista_com_nome$Tipo == "Deliberativa") {
+      nome <- paste(lista_com_nome$Itens$Item$Nome, collapse = ",")
     }
   }else {
-    if ("Deliberativa" %in% l$Tipo) {
-      if(!is.null(l$Itens.Item)) {
-        nome <- paste(l$Nome, collapse = ",")
+    if ("Deliberativa" %in% lista_com_nome$Tipo) {
+      if(!is.null(lista_com_nome$Itens.Item)) {
+        nome <- paste(lista_com_nome$Nome, collapse = ",")
       }
     }
   }
-
   nome
 }
 
 #' @title Extract the proposition id
 #' @description Receive as param a list from the Senate schedule and return the propositions ids that are in 'pauta'
-#' @param l list that has the id
+#' @param lista_com_id list that has the id
 #' @return char
-.pega_id_proposicao <- function(l){
+.pega_id_proposicao_agenda_senado_comissoes <- function(lista_com_id){
   id <- ""
-  if(length(l$Tipo) == 1 ) {
-    if (l$Tipo == "Deliberativa") {
-      id <- paste(l$Itens$Item$Codigo, collapse = ",")
+  if(length(lista_com_id$Tipo) == 1 ) {
+    if (lista_com_id$Tipo == "Deliberativa") {
+      id <- paste(lista_com_id$Itens$Item$Codigo, collapse = ",")
     }
   }else {
-    if ("Deliberativa" %in% l$Tipo) {
-      if(!is.null(l$Itens.Item)) {
-        paste(l$Itens.Item$Codigo, collapse = ",")
+    if ("Deliberativa" %in% lista_com_id$Tipo) {
+      if(!is.null(lista_com_id$Itens.Item)) {
+        paste(lista_com_id$Itens.Item$Codigo, collapse = ",")
       }
     }
   }
   id
 }
 
+#' @title Get the schedule of Deputies' Chamber
+#' @description Return a dataframe with the meetings and sessions schedule of Deputies' Chamber
+#' @param initial_date initial date yyyy-mm-dd
+#' @param end_date end date yyyy-mm-dd
+#' @return Dataframe
+#' @examples
 #' fetch_agenda_camara('2018-07-03', '2018-07-10')
 #' @rdname fetch_agenda_camara
 #' @export
-fetch_agenda_camara <- function(initial_date, end_date) {
+  fetch_agenda_camara <- function(initial_date, end_date) {
   json_proposicao <- .camara_api(.AGENDA_CAMARA_PATH, query = list(
     dataInicio = initial_date,
     dataFim = end_date,

@@ -2,21 +2,10 @@
 % Please edit documentation in R/agenda.R
 \name{fetch_agenda_camara}
 \alias{fetch_agenda_camara}
-\title{Get the schedule of Deputies' Chamber}
+\title{fetch_agenda_camara('2018-07-03', '2018-07-10')}
 \usage{
 fetch_agenda_camara(initial_date, end_date)
 }
-\arguments{
-\item{initial_date}{initial date yyyy-mm-dd}
-
-\item{end_date}{end date yyyy-mm-dd}
-}
-\value{
-Dataframe
-}
 \description{
-Return a dataframe with the meetings and sessions schedule of Deputies' Chamber
-}
-\examples{
 fetch_agenda_camara('2018-07-03', '2018-07-10')
 }

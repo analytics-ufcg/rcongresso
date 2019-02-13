@@ -20,7 +20,7 @@ Dataframe containing detailed information about relatorias of a proposição
 Returns a dataframe containing the relatoria's historic, with date and relator's name.
 }
 \details{
-Senado contains details about the end of each relatoria and camara contains initials of local 
+Senado contains details about the end of each relatoria and camara contains initials of local
 from relatoria
 }
 \examples{
