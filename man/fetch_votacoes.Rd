@@ -19,5 +19,5 @@ Returns all the votings related to a proposition by its id.
 votacoes_pec241 <- fetch_votacoes(2088351)
 }
 \seealso{
-\code{\link[rcongresso]{fetch_id_proposicao}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
+\code{\link[rcongresso]{fetch_id_proposicao_camara}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
 }

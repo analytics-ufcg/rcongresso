@@ -49,7 +49,7 @@ fetch_partido <- function(id = NULL, sigla = NULL, dataInicio = NULL,
 #' @examples
 #' p <- fetch_id_partido(c("PT","PSDB","PP","PMDB"))
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_id_partido
 #' @export
 fetch_id_partido <- function(sigla) {

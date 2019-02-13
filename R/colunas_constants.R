@@ -25,10 +25,10 @@
                          )
 
 # Proposições
-.COLNAMES_PROPOSICAO <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
+.COLNAMES_PROPOSICAO_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                      "numero"="integer","ano"="integer","ementa"="character")
 
-.COLNAMES_PROPOSICAO_POR_ID <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
+.COLNAMES_PROPOSICAO_POR_ID_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                             "numero"="numeric","ano"="numeric","ementa"="character","dataApresentacao"="character",
                             "descricaoTipo"="character",
                             "keywords"="character", "urlInteiroTeor"="character",
@@ -41,6 +41,14 @@
                             "ementaDetalhada"="character","uriPropPrincipal"="character", "uriPropPosterior"="character"
                             ## "uriOrgaoNumerador"="character","tipoAutor"="character","idTipoAutor"="numeric","uriUltimoRelator"="character","uriPropPrincipal"="character","uriPropAnterior"="character", "urnFinal"="character","texto"="character","justificativa"="character",
                             )
+.COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character", 
+                                  "data_apresentacao"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character", 
+                                  "codigo_materia"="character", "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character",
+                                  "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character","numero_materia"="character", "ano_materia"="character",                     
+                                  "descricao_objetivo_processo"="character", "descricao_identificacao_materia"="character", "indicador_tramitando"="character", 
+                                  "codigo_assunto_especifico"="character", "assunto_especifico"="character", "codigo_assunto_geral"="character", "assunto_geral"="character",
+                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
+                                  "proposicoes_apensadas"="character")
 
 .COLNAMES_VOTACOES <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
@@ -132,7 +140,10 @@
 .COLNAMES_EMENDAS_SENADO <- c("codigo_emenda"="character", "numero"="integer", "data_apresentacao"="character", "local"="character",
                        "descricao_turno"="character", "descricao_tipo_emenda"="character", "autor"="character", "id_autor"="character",
                        "partido"="character", "casa"="character", "tipo_documento"="character", "inteiro_teor"="character")
-.COLNAMES_EMENDAS_CAMARA <- c("CodProposicao"="integer", "Descricao"="character")
+.COLNAMES_EMENDAS_CAMARA <- c("codigo_emenda"="integer","data_apresentacao"="character","numero"="numeric","local"="chraracter",
+                              "autor"="chraracter","casa"="chraracter","tipo_documento"="chraracter","inteiro_teor"="chraracter")
+.COLNAMES_EMENDAS_GERAL <-c("prop_id"="numeric","codigo_emenda"="integer","data_apresentacao"="character","numero"="numeric",
+                            "local"="character","autor"="character","casa"="character","tipo_documento"="character","inteiro_teor"="character")
 
 # Autores
 .COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")

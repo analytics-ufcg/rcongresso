@@ -19,5 +19,5 @@ The function can be used to fetch a vector of ids as well, in case of many parti
 p <- fetch_id_partido(c("PT","PSDB","PP","PMDB"))
 }
 \seealso{
-\code{\link[rcongresso]{fetch_id_proposicao}}
+\code{\link[rcongresso]{fetch_id_proposicao_camara}}
 }
