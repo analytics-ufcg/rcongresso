@@ -21,7 +21,9 @@
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
+.AGENDA_CAMARA_PATH <- "/api/v2/eventos"
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
+.PAUTAS_CAMARA <- "/api/v2/eventos/"
 
 # Path site Câmara
 .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"

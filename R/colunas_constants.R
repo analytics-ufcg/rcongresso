@@ -168,6 +168,15 @@
                                      "ementa"="character","parecer"="character","apreciacao"="character","apreciacao_papeleta"="character","ementa_papeleta"="character","cabecalho"="character",
                                      "nome_autor"="character","tipo_pauta"="character","descricao_tipo_pauta"="character","sequencia_ordem"="character","origem"="character","codigo_sessao"="character")
 
+.COLNAMES_AGENDA_CAMARA <- c("hora_inicio"="character","hora_fim"="character","sigla_orgao"="character","nome_orgao"="character","regime"="character",
+                      "codRegime"="integer","ordem"="integer","uriProposicaoRelacionada"="character","situacaoItem"="character","uriVotacao"="character",
+                      "proposicao_.id"="integer","proposicao_.uri"="character","proposicao_.siglaTipo"="character","proposicao_.codTipo"="integer","proposicao_.numero"="integer",
+                      "proposicao_.ano"="integer","proposicao_.ementa"="character")
+
+.COLNAMES_PAUTA_CAMARA <- c("regime"="character","codRegime"="integer","ordem"="integer","uriProposicaoRelacionada"="character","situacaoItem"="character","uriVotacao"="character",
+                            "proposicao_.id"="integer","proposicao_.uri"="character","proposicao_.siglaTipo"="character","proposicao_.codTipo"="integer","proposicao_.numero"="integer",
+                            "proposicao_.ano"="integer","proposicao_.ementa"="character","hora_inicio"="character","hora_fim"="character","sigla_orgao"="character","nome_orgao"="character")
+
 # Órgãos
 # Endpoint: {/api/v2/orgaos/{id}}
 .COLNAMES_ORGAO <- c(
@@ -186,6 +195,5 @@
 # Comissões
 .COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
                                 "PARLAMENTAR.x"="character")
-
 # Deferimento
 .COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")
