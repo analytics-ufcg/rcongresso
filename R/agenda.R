@@ -108,7 +108,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
       agenda <-
         agenda %>%
         dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .pega_id_proposicao(.))) %>%
-        dplyr::mutate(nome = purrr::map(partes_parte, ~ .pega_nome(.))) %>%
+        dplyr::mutate(nome = purrr::map(partes_parte, ~ .pega_nome_proposicao(.))) %>%
         dplyr::filter(id_proposicao != "")
 
       if (nrow(agenda) != 0) {
@@ -162,24 +162,21 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @description Receive as param a list from the Senate schedule and return the propositions name that are in 'pauta'
 #' @param l list that has the id
 #' @return char
-.pega_nome <- function(l){
+.pega_nome_proposicao <- function(l){
+  nome <- ""
   if(length(l$Tipo) == 1) {
     if (l$Tipo == "Deliberativa") {
-      paste(l$Itens$Item$Nome, collapse = ",")
-    }else {
-      ""
+      nome <- paste(l$Itens$Item$Nome, collapse = ",")
     }
   }else {
     if ("Deliberativa" %in% l$Tipo) {
       if(!is.null(l$Itens.Item)) {
-        paste(l$Nome, collapse = ",")
-      }else {
-        ""
+        nome <- paste(l$Nome, collapse = ",")
       }
-    }else {
-      ""
     }
   }
+
+  nome
 }
 
 #' @title Extract the proposition id
@@ -187,21 +184,17 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @param l list that has the id
 #' @return char
 .pega_id_proposicao <- function(l){
+  id <- ""
   if(length(l$Tipo) == 1 ) {
     if (l$Tipo == "Deliberativa") {
-      paste(l$Itens$Item$Codigo, collapse = ",")
-    }else {
-      ""
+      id <- paste(l$Itens$Item$Codigo, collapse = ",")
     }
   }else {
     if ("Deliberativa" %in% l$Tipo) {
       if(!is.null(l$Itens.Item)) {
         paste(l$Itens.Item$Codigo, collapse = ",")
-      }else {
-        ""
       }
-    }else {
-      ""
     }
   }
+  id
 }
