@@ -2,18 +2,18 @@
 % Please edit documentation in R/eventos.R
 \name{fetch_eventos_camara}
 \alias{fetch_eventos_camara}
-\title{Recupera os eventos (sessões/reuniões) de uma proposição na Câmara}
+\title{Fetch events about a proposition in the Câmara}
 \usage{
 fetch_eventos_camara(prop_id)
 }
 \arguments{
-\item{prop_id}{ID da proposição}
+\item{prop_id}{Proposition ID}
 }
 \value{
-Dataframe contendo o timestamp, o local e a descrição do evento.
+Dataframe
 }
 \description{
-Retorna um dataframe contendo o timestamp, o local e a descrição do evento
+Returns a dataframe with timestamp, origen and description about each event
 }
 \examples{
 fetch_eventos_camara(2121442)

@@ -1,10 +1,10 @@
 ---
-title: "Entendendo os parâmetros utilizados na função fetch_proposicao()"
+title: "Entendendo os parâmetros utilizados na função fetch_proposicao_camara()"
 author: "Paulo Vinícius Soares"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Entendendo os parâmetros utilizados na função fetch_proposicao()}
+  %\VignetteIndexEntry{Entendendo os parâmetros utilizados na função fetch_proposicao_camara()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,7 +19,7 @@ library(ggplot2)
 
 # Introdução
 
-Na versão 0.2 do `rcongresso`, a função `fetch_proposicao()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes sobre os parâmetros, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
+Na versão 0.2 do `rcongresso`, a função `fetch_proposicao_camara()` agora dá suporte à consultas mais complexas utilizando o endpoint `/proposicoes`. Para mais detalhes sobre os parâmetros, visite a página dos [Dados Abertos](https://dadosabertos.camara.leg.br/swagger/api.html).
 
 # Conhecendo os parâmetros
 
@@ -57,8 +57,8 @@ Caso o ID da proposição não seja conhecido, utilizar a função `fetch_id_pro
 frame_data(
   ~tipo, ~numero, ~ano,
   "PEC", 241, 2016) %>% # PEC dos gastos públicos
-  pmap(fetch_id_proposicao) %>%
-  map_df(fetch_proposicao) %>%
+  pmap(fetch_id_proposicao_camara) %>%
+  map_df(fetch_proposicao_camara) %>%
   glimpse()
 ```
 
@@ -70,8 +70,8 @@ frame_data(
   "PL", 4474, 2016, # PL dos correios
   "PL", 3722, 2012, # PL do estatuto do desarmamento
   "PL", 158, 2015) %>% # PL da proibição do porte e consumo de drogas
-  pmap(fetch_id_proposicao) %>%
-  map_df(fetch_proposicao) %>%
+  pmap(fetch_id_proposicao_camara) %>%
+  map_df(fetch_proposicao_camara) %>%
   glimpse()
 ```
 
@@ -80,7 +80,7 @@ frame_data(
 Nesse caso fazemos uma chamada ao método utilizando o parêmetro `id`. Por exemplo, a PEC 241/2016 tem o id = 2088351, então fazemos:
 
 ```{r}
-fetch_proposicao(id = 2088351) %>%
+fetch_proposicao_camara(id = 2088351) %>%
   glimpse()
 ```
 
@@ -88,7 +88,7 @@ Podemos utilizar também uma lista de IDs:
 ```{r}
 ids <- c(611966, 291906, 333205, 458609, 517924, 1999440, 2090343)
 
-fetch_proposicao(ids) %>%
+fetch_proposicao_camara(ids) %>%
   glimpse()
 ```
 
@@ -107,7 +107,7 @@ Os parâmetros utilizados nessa busca são `dataApresentacaoInicio` e `dataApres
 Vejamos quais proposições foram apresentadas no mês de Janeiro de 2017:
 
 ```{r}
-fetch_proposicao(dataApresentacaoInicio = "2017-01-01", dataApresentacaoFim = "2017-01-31") %>%
+fetch_proposicao_camara(dataApresentacaoInicio = "2017-01-01", dataApresentacaoFim = "2017-01-31") %>%
   glimpse()
 ```
 
@@ -118,7 +118,7 @@ Essa busca é feita quando se deseja recuperar proposições que sofreram mudan�
 Vamos ver quais proposições sofreram mudanças no mês de novembro:
 
 ```{r}
-fetch_proposicao(dataInicio = "2017-11-01", dataFim = "2017-11-30") %>%
+fetch_proposicao_camara(dataInicio = "2017-11-01", dataFim = "2017-11-30") %>%
   glimpse()
 ```
 
@@ -127,7 +127,7 @@ fetch_proposicao(dataInicio = "2017-11-01", dataFim = "2017-11-30") %>%
 Essa busca utiliza o parâmetro `siglaPartidoAutor` e retorna todas as proposições sugeridas por deputados de determinado partido. 
 
 ```{r}
-fetch_proposicao(siglaPartidoAutor = "PSC", itens = 100) %>%
+fetch_proposicao_camara(siglaPartidoAutor = "PSC", itens = 100) %>%
   glimpse()
 ```
 
@@ -138,7 +138,7 @@ Essa busca utiliza o parâmetro `siglaUfAutor` e retorna todas as proposições 
 ```{r}
 estados_nordeste <- c("RN", "PB", "CE", "PE", "SE", "AL", "BA", "PI", "MA")
 
-fetch_proposicao(siglaUfAutor = estados_nordeste, itens = 100) %>%
+fetch_proposicao_camara(siglaUfAutor = estados_nordeste, itens = 100) %>%
   glimpse()
 ```
 
@@ -150,7 +150,7 @@ Essa busca utiliza os parâmetros `autor` e `idAutor`. São retornadas as propos
 autores <- c("Luiza Erundina", "Pedro Fernandes", "Haroldo Lima", "Jandira")
 
 tryCatch(
-  fetch_proposicao(autor = autores) %>%
+  fetch_proposicao_camara(autor = autores) %>%
     glimpse(), error = function(e){}
 )
 ```

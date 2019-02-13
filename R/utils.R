@@ -1,9 +1,5 @@
 if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
-.HTTP_CACHE <- new.env(parent = emptyenv())
-.cache_dir_path <- file.path(system.file(package="rcongresso"), "extdata")
-.cache_file_path <- file.path(.cache_dir_path, "test_cache.rds")
-
 #' Extracts the JSON data from an HTTP response
 #' @param response The HTTP response
 #' @return The json
@@ -68,48 +64,6 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp
 }
 
-
-#' Save the cache to a file
-.save_cache <- function() {
-    dir.create(.cache_dir_path, showWarnings = FALSE)
-    saveRDS(.HTTP_CACHE, .cache_file_path)
-}
-
-#' Stores a value in the cache.
-#' @param key Key to store
-#' @param value Value to store
-.put_in_cache <- function(key, value) {
-    # Sometimes (after package installation) it's a locked list
-    if (typeof(.HTTP_CACHE) == "environment") {
-      assign(key, value, envir=.HTTP_CACHE)
-      .save_cache()
-    }
-}
-
-#' Gets a value from the cache.
-#' @param key Key to get
-.get_from_cache <- function(key) {
-    if (length(.HTTP_CACHE) == 0) {
-        tryCatch({
-            cache <- readRDS(.cache_file_path)
-            for( k in names(cache) ) assign(k, cache[[k]], envir=.HTTP_CACHE)
-        }, warning = function(w) {
-        }, error = function(error_condition) {
-        })
-    }
-    if (typeof(.HTTP_CACHE) == "environment") {
-        # Sometimes it's an environment
-        tryCatch({
-            get(key, envir=.HTTP_CACHE)
-        }, error = function(e) {
-            NULL
-        })
-    } else {
-        # Sometimes it's a list (when checking package)
-        .HTTP_CACHE[[key]]
-    }
-}
-
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
@@ -118,13 +72,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   if (is.null(resp)) {
       resp_in_cache <- FALSE
-      print(c("Not in cache", .cache_file_path))
       resp <- httr::GET(api_url, ua, httr::accept_json())
   } else {
       resp_in_cache <- TRUE
-      print(c("In cache", .cache_file_path))
   }
 
+  # Handle errors and retries
   if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
      httr::status_code(resp) < .COD_ERRO_SERV){
     if (!resp_in_cache) .put_in_cache(api_url, resp)
@@ -425,7 +378,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param df Dataframe
 #' @return Dataframe with renamed columns.
 .rename_df_columns <- function(df) {
-  names(df) <- names(df) %>% 
+  names(df) <- names(df) %>%
     .to_underscore
   df
 }
@@ -475,4 +428,37 @@ rename_table_to_underscore <- function(df) {
   names(df) <- new_names
 
   df
+}
+
+#' @title Get the author on Chamber
+#' @description Return a dataframe with the link, name, code, type and house
+#' @param prop_id Proposition ID
+#' @return Dataframe contendo o link, o nome, o código do tipo, o tipo e a casa de origem do autor.
+#' @examples
+#' extract_autor_in_camara(2121442)
+#' @export
+.extract_autor_in_camara <- function(prop_id) {
+  camara_exp <- "camara dos deputados"
+  senado_exp <- "senado federal"
+
+  url <- paste0(.CAMARA_PROPOSICOES_PATH, "/", prop_id, "/autores")
+  json_voting <- .camara_api(url, asList = T)
+
+  authors <- json_voting %>%
+    dplyr::rename(
+      autor.uri = uri,
+      autor.nome = nome,
+      autor.tipo = tipo,
+      autor.cod_tipo = codTipo) %>%
+    dplyr::mutate(casa_origem =
+                    dplyr::case_when(
+                      stringr::str_detect(iconv(c(tolower(autor.nome)), from="UTF-8", to="ASCII//TRANSLIT"), camara_exp) | autor.tipo == "Deputado" ~ "Camara dos Deputados",
+                      stringr::str_detect(tolower(autor.nome), senado_exp) | autor.tipo == "Senador" ~ "Senado Federal",
+                      autor.cod_tipo == 40000 ~ "Senado Federal",
+                      autor.cod_tipo == 2 ~ "Camara dos Deputados"))
+
+  partido_estado <- rcongresso::extract_partido_estado_autor(authors$autor.uri %>% tail(1))
+
+  authors %>%
+    dplyr::mutate(autor.nome = paste0(autor.nome, " ", partido_estado))
 }

@@ -29,7 +29,8 @@
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
-.SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/movimentacoes/"
+.SENADO_TRAMITACAO_PROPOSICAO_PATH <- "/dadosabertos/materia/movimentacoes/"
+.SENADO_PROPOSICAO_PATH <- "/dadosabertos/materia/"
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
 .DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"

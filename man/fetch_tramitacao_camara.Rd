@@ -19,5 +19,5 @@ Returns the tramitation of a proposition by its id.
 tramitacao_pec241 <- fetch_tramitacao_camara(2088351)
 }
 \seealso{
-\code{\link[rcongresso]{fetch_id_proposicao}}
+\code{\link[rcongresso]{fetch_id_proposicao_camara}}
 }
