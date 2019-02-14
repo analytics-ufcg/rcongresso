@@ -19,7 +19,7 @@ fetch_deputado <- function(id = NULL, nome = NULL, idLegislatura = NULL, siglaUf
   parametros <- as.list(environment(), all = TRUE)
 
   if(!length(.verifica_parametros_entrada(parametros))){
-    .congresso_api(.DEPUTADOS_PATH) %>%
+    .camara_api(.DEPUTADOS_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO) %>%
       .coerce_types(.COLNAMES_DEP_INFO)
   }
@@ -29,15 +29,9 @@ fetch_deputado <- function(id = NULL, nome = NULL, idLegislatura = NULL, siglaUf
       .coerce_types(.COLNAMES_DEP_INFO)
   }
   else{
-    data <- NULL
     .fetch_using_id(id, .DEPUTADOS_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
-      tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
-      dplyr::rename(redeSocial = data) %>%
-      .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
-      tidyr::nest(which(grepl("redeSocial", names(.)))) %>%
-      dplyr::rename(redeSocial = data)
-
+      .coerce_types(.COLNAMES_DEP_INFO_ID)
   }
 }
 
@@ -62,7 +56,32 @@ fetch_despesas_deputado <- function(id = NULL, idLegislatura = NULL, ano = NULL,
   parametros <- as.list(environment(), all = TRUE)
   path <- paste0(.DEPUTADOS_PATH, "/", id, "/despesas")
 
-  .fetch_using_queries(parametros, path) %>%
+  .camara_api(path) %>%
     .assert_dataframe_completo(.COLNAMES_DEP_GASTOS) %>%
     .coerce_types(.COLNAMES_DEP_GASTOS)
+}
+
+#' @title Get the state and party of an author
+#' @description Return state and party
+#' @param uri uri that contains data about the author
+#' @return State and party
+#' @export
+extract_partido_estado_autor <- function(uri) {
+  if (!is.na(uri)) {
+    resp <- .get_from_api(uri, NULL, NULL)
+    autor <- .get_json(resp)$dados
+
+    autor_uf <-
+      autor %>%
+      magrittr::extract2('ufNascimento')
+
+    autor_partido <-
+      autor %>%
+      magrittr::extract2('ultimoStatus') %>%
+      magrittr::extract2('siglaPartido')
+
+    paste0(autor_partido, '/', autor_uf)
+  } else {
+    ''
+  }
 }

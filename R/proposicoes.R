@@ -23,35 +23,106 @@
 #' @return Dataframe containing information about the proposition.
 #' @details Note that if you have the proposition's ID, it's not necessary to add any other parameter on the
 #' function call. The call to this function using the proposition's ID returns more details than using the
-#' others parameters. If you don't have the proposition's ID, the \code{\link[rcongresso]{fetch_id_proposicao}}
+#' others parameters. If you don't have the proposition's ID, the \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' function may be helpful.
 #' @examples
-#' pec241 <- fetch_proposicao(id = 2088351)
-#' pec241 <- fetch_proposicao(siglaTipo = "PEC", numero = 241, ano = 2016)
+#' pec241 <- fetch_proposicao_camara(id = 2088351)
+#' pec241 <- fetch_proposicao_camara(siglaTipo = "PEC", numero = 241, ano = 2016)
 #' @seealso
-#'  \code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao}}
-#' @rdname fetch_proposicao
+#'  \code{\link[rcongresso]{fetch_tipo_proposicao}}, \code{\link[rcongresso]{fetch_id_proposicao_camara}}
+#' @rdname fetch_proposicao_camara
 #' @export
-fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
+fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
                              siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
                              dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
                              dataInicio = NULL, dataFim = NULL, idAutor = NULL,
-                             autor = NULL, codPartido = NULL, itens = NULL){
-
+                             autor = NULL, codPartido = NULL, itens = NULL) {
+  
   parametros <- as.list(environment(), all=TRUE)
-
+  
   if(!length(.verifica_parametros_entrada(parametros)))
-    .congresso_api(.PROPOSICOES_PATH) %>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO)
+    .camara_api(.CAMARA_PROPOSICOES_PATH) %>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_CAMARA)
   else if(is.null(id))
-    .fetch_using_queries(parametros, .PROPOSICOES_PATH)%>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO)
+    .fetch_using_queries(parametros, .CAMARA_PROPOSICOES_PATH)%>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_CAMARA)
   else
-    .fetch_using_id(id, .PROPOSICOES_PATH)%>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_POR_ID)
+    .fetch_using_id(id, .CAMARA_PROPOSICOES_PATH)%>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID_CAMARA) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_POR_ID_CAMARA)
+}
+
+#' @title Fetches a proposition in the Senate
+#' @description Returns the proposition info
+#' @param id Proposition's ID
+#' @return Dataframe containing all the info about the proposition;
+#' @examples
+#' prop_pls229 <- fetch_proposicao_senado(91341)
+#' @rdname fetch_proposicao_senado
+#' @export
+fetch_proposicao_senado <- function(id) {
+  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
+  
+  proposicao_ids <-
+    proposicao_data %>%
+    magrittr::extract2("IdentificacaoMateria") %>%
+    tibble::as.tibble()
+  
+  proposicao_info <-
+    proposicao_data %>%
+    magrittr::extract2("DadosBasicosMateria") %>%
+    purrr::flatten() %>%
+    tibble::as.tibble()
+  
+  proposicao_author <-
+    proposicao_data %>%
+    magrittr::extract2("Autoria") %>%
+    magrittr::extract2("Autor") %>%
+    dplyr::transmute(autor = paste( paste(NomeAutor, IdentificacaoParlamentar.SiglaPartidoParlamentar), UfAutor, sep = "/" ))
+  
+  proposicao_specific_assunto <-
+    proposicao_data %>%
+    magrittr::extract2("Assunto") %>%
+    magrittr::extract2("AssuntoEspecifico") %>%
+    tibble::as.tibble() %>%
+    dplyr::rename(assunto_especifico = Descricao, codigo_assunto_especifico = Codigo)
+  
+  proposicao_general_assunto <-
+    proposicao_data %>%
+    magrittr::extract2("Assunto") %>%
+    magrittr::extract2("AssuntoGeral") %>%
+    tibble::as.tibble() %>%
+    dplyr::rename(assunto_geral = Descricao, codigo_assunto_geral = Codigo)
+  
+  proposicao_source <-
+    proposicao_data %>%
+    magrittr::extract2("OrigemMateria") %>%
+    tibble::as.tibble()
+  
+  anexadas <-
+    proposicao_data$MateriasAnexadas$MateriaAnexada$IdentificacaoMateria.CodigoMateria
+  relacionadas <-
+    proposicao_data$MateriasRelacionadas$MateriaRelacionada$IdentificacaoMateria.CodigoMateria
+  
+  proposicao_complete <-
+    proposicao_info %>%
+    tibble::add_column(
+      !!!proposicao_ids,
+      !!!proposicao_specific_assunto,
+      !!!proposicao_general_assunto,
+      !!!proposicao_source,
+      autor_nome = proposicao_author,
+      proposicoes_relacionadas = paste(relacionadas, collapse = " "),
+      proposicoes_apensadas = paste(anexadas, collapse = " ")
+    )
+  
+  proposicao_complete <-
+    proposicao_complete[,!sapply(proposicao_complete, is.list)] %>%
+    rename_table_to_underscore() %>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
 #' @title Fetches all the votings which a proposition went through
@@ -61,16 +132,16 @@ fetch_proposicao <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
 #' @examples
 #' votacoes_pec241 <- fetch_votacoes(2088351)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
 #' @rdname fetch_votacoes
 #' @export
 fetch_votacoes <- function(id_prop){
   id <- NULL
   tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)
+      .camara_api(.$path)
     ) %>%
     dplyr::ungroup() %>%
     .assert_dataframe_completo(.COLNAMES_VOTACOES) %>%
@@ -84,7 +155,7 @@ fetch_votacoes <- function(id_prop){
 #' @examples
 #' relacionadas_pec241 <- fetch_relacionadas(2088351)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas
 #' @export
 fetch_relacionadas <- function(id_prop){
@@ -92,41 +163,15 @@ fetch_relacionadas <- function(id_prop){
   unique(id_prop) %>%
     as.integer %>%
     tibble::tibble(id_prop = .) %>%
-    dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
     dplyr::group_by(id_prop, path) %>%
       dplyr::do(
-               .congresso_api(.$path)
+               .camara_api(.$path)
              ) %>%
       dplyr::ungroup() %>%
       dplyr::select(-path) %>%
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
-}
-
-#' @title Fetches the tramitation of a proposition
-#' @description Returns the tramitation of a proposition by its id.
-#' @param id_prop Proposition's ID
-#' @return Dataframe containing all the tramitation.
-#' @examples
-#' tramitacao_pec241 <- fetch_tramitacao(2088351)
-#' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
-#' @rdname fetch_tramitacao
-#' @export
-fetch_tramitacao <- function(id_prop){
-  path <- NULL
-  unique(id_prop) %>%
-    as.integer %>%
-    tibble::tibble(id_prop = .) %>%
-      dplyr::mutate(path = paste0(.PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
-        dplyr::group_by(id_prop, path) %>%
-        dplyr::do(
-                 .congresso_api(.$path)
-               ) %>%
-        dplyr::ungroup() %>%
-        dplyr::select(-path) %>%
-        .assert_dataframe_completo(.COLNAMES_TRAMITACOES) %>%
-        .coerce_types(.COLNAMES_TRAMITACOES)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
@@ -136,16 +181,16 @@ fetch_tramitacao <- function(id_prop){
 #' @param ano Proposition year
 #' @return Proposition's ID.
 #' @examples
-#' pec241_id <- fetch_id_proposicao("PEC", 241, 2016)
+#' pec241_id <- fetch_id_proposicao_camara("PEC", 241, 2016)
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_partido}}
-#' @rdname fetch_id_proposicao
+#' @rdname fetch_id_proposicao_camara
 #' @export
-fetch_id_proposicao <- function(tipo, numero, ano){
+fetch_id_proposicao_camara <- function(tipo, numero, ano){
   tibble::tibble(tipo, numero, ano) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.PROPOSICOES_PATH,
+      .camara_api(.CAMARA_PROPOSICOES_PATH,
                      list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
                           ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
         .verifica_id(.WARNING_PROPOSICAO_ID) %>%
@@ -159,12 +204,9 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #'
 #' @return Proposition types
 #'
-#' @examples
-#' tipos_proposicao <- fetch_tipos_proposicao()
-#'
 #' @export
 .fetch_tipos_proposicao <- function(){
-  .congresso_api(.TIPOS_PROPOSICOES_PATH)
+  .camara_api(.TIPOS_PROPOSICOES_PATH)
 }
 
 #' @title Fetches the type of the proposition from its id
@@ -177,10 +219,71 @@ fetch_id_proposicao <- function(tipo, numero, ano){
 #' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
   prop_types <- .fetch_tipos_proposicao() %>%
-    dplyr::mutate(id = as.numeric(.$id))
+    dplyr::mutate(cod = as.numeric(.$cod))
 
-  tibble::tibble(id = id_tipo_prop) %>%
-    dplyr::left_join(prop_types, by = "id") %>%
+  tibble::tibble(cod = id_tipo_prop) %>%
+    dplyr::left_join(prop_types, by = "cod") %>%
     .assert_dataframe_completo(.COLNAMES_TIPO_PROPOSICAO) %>%
     .coerce_types(.COLNAMES_TIPO_PROPOSICAO)
+}
+
+#' @title Fetches proposition's author
+#' @description Fetches a dataframe containing information about the author of the proposition
+#' @param proposicao_id Proposition's ID
+#' @return A dataframe containing details about the author of the proposition
+#' @examples
+#' fetch_autor_camara(2121442)
+#' @export
+fetch_autor_camara <- function (proposicao_id = NULL) {
+  autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
+  .camara_api(autor_uri) %>%
+    .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
+    .coerce_types(.COLNAMES_AUTORES)
+}
+
+#' @title Requirements's deferments
+#' @description Verify deferments to a id's list of requirements
+#' @param proposicao_id ID of requirements
+#' @return Dataframe
+#' @examples
+#' fetch_deferimento(c("102343", "109173", "115853"))
+#' @export
+fetch_deferimento <- function(proposicao_id) {
+  regexes <-
+    tibble::frame_data(
+      ~ deferimento,
+      ~ regex,
+      "indeferido",
+      .REGEX_DEFERIMENTO_INDEFERIDO,
+      "deferido",
+      .REGEX_DEFERIMENTO_DEFERIDO
+    )
+
+  fetch_one_deferimento <- function(proposicao_id) {
+    json <-
+      .senado_api(paste0(.DEFERIMENTO_SENADO_PATH,
+                         proposicao_id), asList = T)
+
+    resultados <-
+      json$MovimentacaoMateria$Materia$OrdensDoDia$OrdemDoDia$DescricaoResultado
+    # handle NULL
+    if (is.null(resultados))
+      resultados <- c('')
+
+    resultados %>%
+      tibble::as.tibble() %>%
+      dplyr::mutate(proposicao_id = proposicao_id) %>%
+      fuzzyjoin::regex_left_join(regexes, by = c(value = "regex")) %>%
+      tidyr::fill(deferimento) %>%
+      utils::tail(., n = 1) %>%
+      dplyr::select(proposicao_id, deferimento)
+  }
+
+  proposicao_id %>%
+    unlist %>%
+    unique %>%
+    lapply(fetch_one_deferimento) %>%
+    plyr::rbind.fill() %>%
+    .assert_dataframe_completo(.COLNAMES_DEFRIMENTO) %>%
+    .coerce_types(.COLNAMES_DEFRIMENTO)
 }

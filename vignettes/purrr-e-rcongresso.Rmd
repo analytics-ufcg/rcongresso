@@ -27,8 +27,8 @@ proposicoes = frame_data(
   "PEC", 171,     1993,
   "PL",  1057,    2007
 ) %>%
-  pmap(fetch_id_proposicao) %>%
-  map_df(fetch_proposicao)
+  pmap(fetch_id_proposicao_camara) %>%
+  map_df(fetch_proposicao_camara)
 
 glimpse(proposicoes)
 ```

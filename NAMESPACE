@@ -1,2 +1,5 @@
+
 exportPattern("^[[:alpha:]]+")
 importFrom(magrittr,"%>%")
+importFrom(magrittr,"%<>%")
+importFrom("utils", "timestamp")

@@ -14,7 +14,7 @@ fetch_votacao <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::rowwise() %>%
     dplyr::do(
-      .congresso_api(.$path)
+      .camara_api(.$path)
     ) %>%
     dplyr::select(-which(grepl("orientacoes", names(.)))) %>%
     .assert_dataframe_completo(.COLNAMES_VOTACAO) %>%
@@ -37,7 +37,7 @@ fetch_orientacoes <- function(id_votacao = NULL){
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path, asList = TRUE)$orientacoes
+      .camara_api(.$path, asList = TRUE)$orientacoes
     ) %>%
     dplyr::ungroup() %>%
     .assert_dataframe_completo(.COLNAMES_ORIENTACOES) %>%
@@ -63,14 +63,14 @@ fetch_votos <- function(id_votacao = NULL){
     dplyr::do(
       tibble::tibble(id_votacao = .$id_votacao,
               path = .$path,
-              query = paste0("pagina=", 1:5, "&itens=100"))
+              query = paste0("pagina=", 1:6, "&itens=100"))
     ) %>%
     dplyr::ungroup()
 
   queries %>%
     dplyr::group_by(id_votacao, path, query) %>%
     dplyr::do(
-      .congresso_api(.$path, .$query)
+      .camara_api(.$path, .$query)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::select(-path, -query) %>%
@@ -138,7 +138,7 @@ fetch_proposicao_from_votacao <- function(id_votacao = NULL) {
     dplyr::mutate(path = paste0(.VOTACOES_PATH, "/", id_votacao)) %>%
     dplyr::group_by(id_votacao) %>%
     dplyr::do(
-      .congresso_api(.$path, asList = TRUE)$proposicao %>%
+      .camara_api(.$path, asList = TRUE)$proposicao %>%
         .get_dataframe()
     ) %>%
     dplyr::ungroup() %>%
