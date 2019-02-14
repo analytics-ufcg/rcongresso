@@ -108,8 +108,8 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     if ("partes_parte" %in% names(agenda)) {
       agenda <-
         agenda %>%
-        dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .pega_id_proposicao_agenda_senado_comissoes(.))) %>%
-        dplyr::mutate(nome = purrr::map(partes_parte, ~ .pega_nome_proposicao_agenda_senado_comissoes(.))) %>%
+        dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .get_id_proposicao_agenda_senado_comissoes(.))) %>%
+        dplyr::mutate(nome = purrr::map(partes_parte, ~ .get_nome_proposicao_agenda_senado_comissoes(.))) %>%
         dplyr::filter(id_proposicao != "")
 
       if (nrow(agenda) != 0) {
@@ -163,7 +163,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @description Receive as param a list from the Senate schedule and return the propositions name that are in 'pauta'
 #' @param lista_com_nome list that has the name
 #' @return char
-.pega_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
+.get_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
   nome <- ""
   if(length(lista_com_nome$Tipo) == 1) {
     if (lista_com_nome$Tipo == "Deliberativa") {
@@ -183,7 +183,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @description Receive as param a list from the Senate schedule and return the propositions ids that are in 'pauta'
 #' @param lista_com_id list that has the id
 #' @return char
-.pega_id_proposicao_agenda_senado_comissoes <- function(lista_com_id){
+.get_id_proposicao_agenda_senado_comissoes <- function(lista_com_id){
   id <- ""
   if(length(lista_com_id$Tipo) == 1 ) {
     if (lista_com_id$Tipo == "Deliberativa") {
