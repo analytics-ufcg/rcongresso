@@ -36,8 +36,7 @@
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
                             "statusProposicao.descricaoSituacao"="character","statusProposicao.codSituacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "ementaDetalhada"="character","uriPropPrincipal"="character", "uriPropPosterior"="character"
-                            ## "uriOrgaoNumerador"="character","tipoAutor"="character","idTipoAutor"="numeric","uriUltimoRelator"="character","uriPropPrincipal"="character","uriPropAnterior"="character", "urnFinal"="character","texto"="character","justificativa"="character",
+                            "ementaDetalhada"="character", "uriPropPosterior"="character"
                             )
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character", 
                                   "data_apresentacao"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character", 
@@ -114,16 +113,14 @@
 .COLNAMES_PARTIDOS <- c("id"="integer","sigla"="character","nome"="character","uri"="character")
 .COLNAMES_PARTIDOS_ID <- c(
     "id"="integer", "nome"="character", "sigla"="character",
-    "status.data"="character", "status.idLegislatura"="integer",
-    "status.lider.idLegislatura"="integer", "status.lider.nome"="character",
-    "status.lider.siglaPartido"="character",
-    "status.lider.uriPartido"="character","status.lider.uf"="character",
+    "status.idLegislatura"="integer",
+    "status.lider.idLegislatura"="integer",
+    "status.lider.uriPartido"="character",
     "status.lider.urlFoto"="character","status.lider.uriPartido"="character",
     "status.lider.uri"="character", "urlLogo"="character",
     "status.situacao"="character", "status.totalMembros"="character",
     "status.totalPosse"="character", "status.uriMembros"="character",
     "uri"="character"
-    ## "numeroEleitoral"="integer",,"urlFacebook"="character","urlWebsite"="character"
 )
 
 # Relatorias
