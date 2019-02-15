@@ -293,7 +293,7 @@ fetch_deferimento <- function(proposicao_id) {
 #' @param prop_id Proposition's ID
 #' @return A vector of characters containing the ids of the appended propositions
 #' @examples
-#' fetch_apensadas(2121442)
+#' fetch_apensadas_camara(2121442)
 #' @export
 fetch_apensadas_camara <- function(prop_id) {
   .get_from_url(.CAMARA_WEBSITE_LINK, .APENSADAS_CAMARA_PATH, paste0('idProp=', prop_id)) %>%

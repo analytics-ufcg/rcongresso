@@ -16,5 +16,5 @@ A vector of characters containing the ids of the appended propositions
 Returns a vector containing the ids of the appended propositions
 }
 \examples{
-fetch_apensadas(2121442)
+fetch_apensadas_camara(2121442)
 }
