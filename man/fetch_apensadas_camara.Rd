@@ -2,18 +2,18 @@
 % Please edit documentation in R/proposicoes.R
 \name{fetch_apensadas_camara}
 \alias{fetch_apensadas_camara}
-\title{Recupera as proposições apensadas}
+\title{Fetch the propositions appended to a proposition in the Camara}
 \usage{
 fetch_apensadas_camara(prop_id)
 }
 \arguments{
-\item{prop_id}{ID da proposição}
+\item{prop_id}{Proposition's ID}
 }
 \value{
-Ventor contendo os IDs das proposições apensadas
+A vector of characters containing the ids of the appended propositions
 }
 \description{
-Retorna os IDs das proposições apensadas a uma determinada proposição
+Returns a vector containing the ids of the appended propositions
 }
 \examples{
 fetch_apensadas(2121442)
