@@ -1,5 +1,5 @@
 # Deputados
-.COLNAMES_DEP_INFO <- c("id"="integer","uri"="character","nome"="character","siglaPartido"="character","sigla"="character",
+.COLNAMES_DEP_INFO <- c("id"="integer","uri"="character","nome"="character","siglaPartido"="character",
                        "uriPartido"="character","siglaUf"="character","idLegislatura"="integer","urlFoto"="character")
 
 .COLNAMES_DEP_INFO_ID <- c(
@@ -8,9 +8,7 @@
     "ultimoStatus.uriPartido"="character","ultimoStatus.siglaUf"="character",
     "ultimoStatus.idLegislatura"="integer","ultimoStatus.urlFoto"="character",
     "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
-    "ultimoStatus.gabinete.nome"="numeric","ultimoStatus.gabinete.predio"="character",
-    "ultimoStatus.gabinete.sala"="numeric","ultimoStatus.gabinete.andar"="numeric",
-    "ultimoStatus.gabinete.telefone"="character","ultimoStatus.gabinete.email"="character",
+    "ultimoStatus.gabinete.email"="character",
     "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
     "sexo"="character","dataNascimento"="character",
     "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character"
