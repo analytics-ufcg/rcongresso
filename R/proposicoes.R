@@ -37,7 +37,7 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
                              dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
                              dataInicio = NULL, dataFim = NULL, idAutor = NULL,
                              autor = NULL, codPartido = NULL, itens = NULL) {
-  
+
   parametros <- as.list(environment(), all=TRUE)
   
   if ( !length(.verifica_parametros_entrada(parametros))) {
@@ -65,48 +65,48 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @export
 fetch_proposicao_senado <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
-  
+
   proposicao_ids <-
     proposicao_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
     tibble::as.tibble()
-  
+
   proposicao_info <-
     proposicao_data %>%
     magrittr::extract2("DadosBasicosMateria") %>%
     purrr::flatten() %>%
     tibble::as.tibble()
-  
+
   proposicao_author <-
     proposicao_data %>%
     magrittr::extract2("Autoria") %>%
     magrittr::extract2("Autor") %>%
     dplyr::transmute(autor = paste( paste(NomeAutor, IdentificacaoParlamentar.SiglaPartidoParlamentar), UfAutor, sep = "/" ))
-  
+
   proposicao_specific_assunto <-
     proposicao_data %>%
     magrittr::extract2("Assunto") %>%
     magrittr::extract2("AssuntoEspecifico") %>%
     tibble::as.tibble() %>%
     dplyr::rename(assunto_especifico = Descricao, codigo_assunto_especifico = Codigo)
-  
+
   proposicao_general_assunto <-
     proposicao_data %>%
     magrittr::extract2("Assunto") %>%
     magrittr::extract2("AssuntoGeral") %>%
     tibble::as.tibble() %>%
     dplyr::rename(assunto_geral = Descricao, codigo_assunto_geral = Codigo)
-  
+
   proposicao_source <-
     proposicao_data %>%
     magrittr::extract2("OrigemMateria") %>%
     tibble::as.tibble()
-  
+
   anexadas <-
     proposicao_data$MateriasAnexadas$MateriaAnexada$IdentificacaoMateria.CodigoMateria
   relacionadas <-
     proposicao_data$MateriasRelacionadas$MateriaRelacionada$IdentificacaoMateria.CodigoMateria
-  
+
   proposicao_complete <-
     proposicao_info %>%
     tibble::add_column(
@@ -118,7 +118,7 @@ fetch_proposicao_senado <- function(id) {
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
     )
-  
+
   proposicao_complete <-
     proposicao_complete[,!sapply(proposicao_complete, is.list)] %>%
     rename_table_to_underscore() %>%
@@ -287,4 +287,18 @@ fetch_deferimento <- function(proposicao_id) {
     plyr::rbind.fill() %>%
     .assert_dataframe_completo(.COLNAMES_DEFRIMENTO) %>%
     .coerce_types(.COLNAMES_DEFRIMENTO)
+}
+
+#' @title Fetch the propositions appended to a proposition in the Camara
+#' @description Returns a vector containing the ids of the appended propositions
+#' @param prop_id Proposition's ID
+#' @return A vector of characters containing the ids of the appended propositions
+#' @examples
+#' fetch_apensadas_camara(2121442)
+#' @export
+fetch_apensadas_camara <- function(prop_id) {
+  .get_from_url(.CAMARA_WEBSITE_LINK, .APENSADAS_CAMARA_PATH, paste0('idProp=', prop_id)) %>%
+    xml2::read_xml() %>%
+    xml2::xml_find_all('//apensadas/proposicao/codProposicao') %>%
+    xml2::xml_text()
 }
