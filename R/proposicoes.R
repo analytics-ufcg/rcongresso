@@ -40,18 +40,19 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
   
   parametros <- as.list(environment(), all=TRUE)
   
-  if(!length(.verifica_parametros_entrada(parametros)))
+  if ( !length(.verifica_parametros_entrada(parametros))) {
     .camara_api(.CAMARA_PROPOSICOES_PATH) %>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_CAMARA)
-  else if(is.null(id))
+      .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
+      .coerce_types(.COLNAMES_PROPOSICAO_CAMARA)
+  } else if ( is.null(id)) {
     .fetch_using_queries(parametros, .CAMARA_PROPOSICOES_PATH)%>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_CAMARA)
-  else
+      .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
+      .coerce_types(.COLNAMES_PROPOSICAO_CAMARA)
+  } else {
     .fetch_using_id(id, .CAMARA_PROPOSICOES_PATH)%>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID_CAMARA) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_POR_ID_CAMARA)
+      .assert_dataframe_completo(.COLNAMES_PROPOSICAO_POR_ID_CAMARA) %>%
+      .coerce_types(.COLNAMES_PROPOSICAO_POR_ID_CAMARA)
+  }
 }
 
 #' @title Fetches a proposition in the Senate

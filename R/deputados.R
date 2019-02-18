@@ -18,21 +18,20 @@ fetch_deputado <- function(id = NULL, nome = NULL, idLegislatura = NULL, siglaUf
 
   parametros <- as.list(environment(), all = TRUE)
 
-  if(!length(.verifica_parametros_entrada(parametros))){
+  if ( !length(.verifica_parametros_entrada(parametros))) {
     .camara_api(.DEPUTADOS_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO) %>%
       .coerce_types(.COLNAMES_DEP_INFO)
-  }
-  else if(is.null(id)){
+  } else if ( is.null(id)) {
     .fetch_using_queries(parametros, .DEPUTADOS_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO) %>%
       .coerce_types(.COLNAMES_DEP_INFO)
-  }
-  else{
+  } else {
     .fetch_using_id(id, .DEPUTADOS_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
       .coerce_types(.COLNAMES_DEP_INFO_ID)
   }
+
 }
 
 #' @title Fetches expenditures from deputy
