@@ -80,7 +80,12 @@ fetch_proposicao_senado <- function(id) {
     proposicao_data %>%
     magrittr::extract2("Autoria") %>%
     magrittr::extract2("Autor") %>%
-    dplyr::transmute(autor = paste( paste(NomeAutor, IdentificacaoParlamentar.SiglaPartidoParlamentar), UfAutor, sep = "/" ))
+    dplyr::transmute(
+      autor = paste(
+        paste(NomeAutor, 
+              ifelse("IdentificacaoParlamentar.SiglaPartidoParlamentar" %in% names(.), 
+                     IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
+          ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
   proposicao_specific_assunto <-
     proposicao_data %>%
