@@ -87,19 +87,27 @@ fetch_proposicao_senado <- function(id) {
                      IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
           ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
-  proposicao_specific_assunto <-
-    proposicao_data %>%
-    magrittr::extract2("Assunto") %>%
-    magrittr::extract2("AssuntoEspecifico") %>%
-    tibble::as.tibble() %>%
-    dplyr::rename(assunto_especifico = Descricao, codigo_assunto_especifico = Codigo)
-
+  if (nrow(proposicao_specific_assunto) == 0) {
+    proposicao_specific_assunto <- 
+      tibble::tribble(~ codigo_assunto_especifico, ~ assunto_especifico,
+                      0, "Não especificado")
+  }else {
+    proposicao_specific_assunto <- 
+      proposicao_specific_assunto %>%
+      dplyr::rename(assunto_especifico = Descricao, codigo_assunto_especifico = Codigo)
+  }
   proposicao_general_assunto <-
-    proposicao_data %>%
-    magrittr::extract2("Assunto") %>%
-    magrittr::extract2("AssuntoGeral") %>%
-    tibble::as.tibble() %>%
-    dplyr::rename(assunto_geral = Descricao, codigo_assunto_geral = Codigo)
+    proposicao_data$Assunto$AssuntoGeral %>%
+    tibble::as.tibble()
+  if (nrow(proposicao_general_assunto) == 0) {
+    proposicao_general_assunto <- 
+      tibble::tribble(~ codigo_assunto_geral, ~ assunto_geral,
+                      0, "Não especificado")
+  }else {
+    proposicao_general_assunto <- 
+      proposicao_general_assunto %>%
+      dplyr::rename(assunto_geral = Descricao, codigo_assunto_geral = Codigo)
+  }
 
   proposicao_source <-
     proposicao_data %>%
