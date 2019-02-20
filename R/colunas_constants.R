@@ -8,9 +8,7 @@
     "ultimoStatus.uriPartido"="character","ultimoStatus.siglaUf"="character",
     "ultimoStatus.idLegislatura"="integer","ultimoStatus.urlFoto"="character",
     "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
-    "ultimoStatus.gabinete.nome"="numeric","ultimoStatus.gabinete.predio"="character",
-    "ultimoStatus.gabinete.sala"="numeric","ultimoStatus.gabinete.andar"="numeric",
-    "ultimoStatus.gabinete.telefone"="character","ultimoStatus.gabinete.email"="character",
+    "ultimoStatus.gabinete.email"="character",
     "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
     "sexo"="character","dataNascimento"="character",
     "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character",
@@ -31,16 +29,14 @@
 
 .COLNAMES_PROPOSICAO_POR_ID_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                             "numero"="numeric","ano"="numeric","ementa"="character","dataApresentacao"="character",
-                            "descricaoTipo"="character",
-                            "keywords"="character", "urlInteiroTeor"="character",
-                            "statusProposicao.dataHora"="character",
+                            "descricaoTipo"="character", "ementaDetalhada"="character", "keywords"="character",
+                             "urlInteiroTeor"="character", "statusProposicao.codSituacao"="character",
+                            "statusProposicao.dataHora"="character", "statusProposicao.descricaoSituacao"="character",
                             "statusProposicao.sequencia"="numeric","statusProposicao.siglaOrgao"="character",
                             "statusProposicao.uriOrgao"="character","statusProposicao.regime"="character",
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
-                            "statusProposicao.descricaoSituacao"="character","statusProposicao.codSituacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "ementaDetalhada"="character","uriPropPrincipal"="character", "uriPropPosterior"="character"
-                            ## "uriOrgaoNumerador"="character","tipoAutor"="character","idTipoAutor"="numeric","uriUltimoRelator"="character","uriPropPrincipal"="character","uriPropAnterior"="character", "urnFinal"="character","texto"="character","justificativa"="character",
+                            "uriPropPosterior"="character", "uriPropPrincipal"="character"
                             )
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
                                  "data_apresentacao"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character",
@@ -117,16 +113,16 @@
 .COLNAMES_PARTIDOS <- c("id"="integer","sigla"="character","nome"="character","uri"="character")
 .COLNAMES_PARTIDOS_ID <- c(
     "id"="integer", "nome"="character", "sigla"="character",
-    "status.data"="character", "status.idLegislatura"="integer",
-    "status.lider.idLegislatura"="integer", "status.lider.nome"="character",
-    "status.lider.siglaPartido"="character",
-    "status.lider.uriPartido"="character","status.lider.uf"="character",
+    "status.data"="character", "status.lider.nome"="character",
+    "status.idLegislatura"="integer", "status.lider.siglaPartido"="character",
+    "status.lider.uf"="character",
+    "status.lider.idLegislatura"="integer",
+    "status.lider.uriPartido"="character",
     "status.lider.urlFoto"="character","status.lider.uriPartido"="character",
     "status.lider.uri"="character", "urlLogo"="character",
     "status.situacao"="character", "status.totalMembros"="character",
     "status.totalPosse"="character", "status.uriMembros"="character",
     "uri"="character"
-    ## "numeroEleitoral"="integer",,"urlFacebook"="character","urlWebsite"="character"
 )
 
 # Relatorias
