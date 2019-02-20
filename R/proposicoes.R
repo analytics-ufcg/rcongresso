@@ -88,6 +88,9 @@ fetch_proposicao_senado <- function(id) {
                      IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
           ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
+  proposicao_specific_assunto <-
+    proposicao_data$Assunto$AssuntoEspecifico %>%
+    tibble::as.tibble() 
   if (nrow(proposicao_specific_assunto) == 0) {
     proposicao_specific_assunto <- 
       tibble::tribble(~ codigo_assunto_especifico, ~ assunto_especifico,
