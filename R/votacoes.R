@@ -1,5 +1,5 @@
-#' @title Fetches details about a voting
-#' @description Fetches details about a voting.
+#' @title Fetches details about a voting on Chamber
+#' @description Fetches details about a voting on Chamber.
 #' @param id_votacao Voting's ID
 #' @return Dataframe containing details about a voting, including tittle,
 #'  start voting time, finish voting time, result and approval
@@ -19,6 +19,43 @@ fetch_votacao <- function(id_votacao = NULL){
     dplyr::select(-which(grepl("orientacoes", names(.)))) %>%
     .assert_dataframe_completo(.COLNAMES_VOTACAO) %>%
     .coerce_types(.COLNAMES_VOTACAO)
+}
+
+#' @title Fetches details about a voting on Senate
+#' @description Fetches details about a voting on Senate.
+#' Ao fim, a função retira todos as colunas que tenham tipo lista para uniformizar o dataframe.
+#' @param proposicao_id Proposition Id
+#' @return Dataframe containing details about a voting on Senate
+#' @examples
+#' fetch_votacoes_senado(91341)
+#' @rdname fetch_votacoes_senado
+#' @export
+fetch_votacoes_senado <- function(proposicao_id) {
+
+  json_votacoes <- .senado_api(paste0(.SENADO_VOTACOES_PATH, proposicao_id), asList = TRUE)
+  votacoes_data <-
+    json_votacoes %>%
+    magrittr::extract2("VotacaoMateria") %>%
+    magrittr::extract2("Materia")
+  votacoes_ids <-
+    votacoes_data %>%
+    magrittr::extract2("IdentificacaoMateria") %>%
+    tibble::as_tibble() %>%
+    unique()
+  votacoes_df <-
+    votacoes_data %>%
+    magrittr::extract2("Votacoes") %>%
+    purrr::map_df( ~ .) %>%
+    tidyr::unnest()
+  
+  votacoes_df <-
+    votacoes_df %>%
+    tibble::add_column(!!!votacoes_ids)
+  
+  votacoes_df <- votacoes_df[,!sapply(votacoes_df, is.list)]
+  
+  .rename_votacoes_df(votacoes_df) 
+  votacoes_df 
 }
 
 #' @title Fetches the positions of a group on a voting

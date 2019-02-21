@@ -7,6 +7,7 @@ orientacoes_pec241 <<- fetch_orientacoes(7252)
 ultima_votacao_pec241 <<- fetch_votacoes(2088351) %>% ultima_votacao()
 votos_partidos_pec241 <<- get_votos_partidos(7252)
 proposicao_votacao7252 <<- fetch_proposicao_from_votacao(7252)
+proposicao_votacao_senado <<- fetch_votacoes_senado(91341)
 
 
 # Testa erros
@@ -22,6 +23,7 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(ultima_votacao_pec241))
   expect_true(is.data.frame(votos_partidos_pec241))
   expect_true(is.data.frame(proposicao_votacao7252))
+  expect_true(is.data.frame(proposicao_votacao_senado))
 })
 
 test_that("Not Empty", {
@@ -31,6 +33,11 @@ test_that("Not Empty", {
   expect_true(nrow(ultima_votacao_pec241) != 0)
   expect_true(nrow(votos_partidos_pec241) != 0)
   expect_true(nrow(proposicao_votacao7252) != 0)
+  expect_true(nrow(proposicao_votacao_senado) != 0)
+})
+
+test_that("fetch_votos()", {
+  expect_true(all(sapply(proposicao_votacao_senado, class) %in% .COLNAMES_VOT_SEN))
 })
 
 test_that("fetch_votos()", {
