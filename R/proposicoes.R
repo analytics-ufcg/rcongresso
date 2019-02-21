@@ -142,29 +142,6 @@ fetch_proposicao_senado <- function(id) {
     .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
-#' @title Fetches all the votings which a proposition went through
-#' @description Returns all the votings related to a proposition by its id.
-#' @param id_prop Proposition's ID
-#' @return Dataframe containing all the votings.
-#' @examples
-#' votacoes_pec241 <- fetch_votacoes(2088351)
-#' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
-#' @rdname fetch_votacoes
-#' @export
-fetch_votacoes <- function(id_prop){
-  id <- NULL
-  tibble::tibble(id = id_prop) %>%
-    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
-    dplyr::rowwise() %>%
-    dplyr::do(
-      .camara_api(.$path)
-    ) %>%
-    dplyr::ungroup() %>%
-    .assert_dataframe_completo(.COLNAMES_VOTACOES) %>%
-    .coerce_types(.COLNAMES_VOTACOES)
-}
-
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID

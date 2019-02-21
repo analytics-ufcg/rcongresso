@@ -21,6 +21,29 @@ fetch_votacao <- function(id_votacao = NULL){
     .coerce_types(.COLNAMES_VOTACAO)
 }
 
+#' @title Fetches all the votings which a proposition went through
+#' @description Returns all the votings related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the votings.
+#' @examples
+#' votacoes_pec241 <- fetch_votacoes_camara(2088351)
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
+#' @rdname fetch_votacoes_camara
+#' @export
+fetch_votacoes_camara <- function(id_prop){
+  id <- NULL
+  tibble::tibble(id = id_prop) %>%
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .camara_api(.$path)
+    ) %>%
+    dplyr::ungroup() %>%
+    .assert_dataframe_completo(.COLNAMES_VOTACOES_CAMARA) %>%
+    .coerce_types(.COLNAMES_VOTACOES_CAMARA)
+}
+
 #' @title Fetches details about a voting on Senate
 #' @description Fetches details about a voting on Senate.
 #' Ao fim, a função retira todos as colunas que tenham tipo lista para uniformizar o dataframe.
@@ -120,7 +143,7 @@ fetch_votos <- function(id_votacao = NULL){
 #' @param votacoes Dataframe containing all the votings related to a proposition
 #' @return Dataframe containing only the last voting related to a proposition
 #' @examples
-#' votacoes_pec241 <- fetch_votacoes(2088351)
+#' votacoes_pec241 <- fetch_votacoes_camara(2088351)
 #' ultima_votacao <- ultima_votacao(votacoes_pec241)
 #' @rdname ultima_votacao
 #' @export

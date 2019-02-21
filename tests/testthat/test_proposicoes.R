@@ -5,7 +5,6 @@ pec_241_id <<- fetch_id_proposicao_camara("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao_camara(pec_241_id)
 pls_91341 <<- fetch_proposicao_senado(91341)
 pls_1489 <<- fetch_proposicao_senado(1489)
-votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
 relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
 deferimento <- fetch_deferimento(c("102343", "109173", "115853"))
 
@@ -29,14 +28,12 @@ test_that("GET proposição com ID inexistente", {expect_error(fetch_proposicao_
 test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(pec_241_por_id))
-  expect_true(is.data.frame(votacoes_pec_241))
   expect_true(is.data.frame(deferimento))
 })
 
 test_that("Not Empty", {
   expect_true(nrow(pec_241) != 0)
   expect_true(nrow(pec_241_por_id) != 0)
-  expect_true(nrow(votacoes_pec_241) != 0)
   expect_true(nrow(deferimento) != 0)
 })
 
@@ -63,10 +60,6 @@ test_that("fetch_proposicao_senado() not empty", {
 test_that("fetch_proposicao_senado() is dataframe", {
   expect_true(is.data.frame(pls_91341))
   expect_true(is.data.frame(pls_1489))
-})
-
-test_that("fetch_votacoes()", {
-  expect_true(all(sapply(votacoes_pec_241, class) %in% .COLNAMES_VOTACOES))
 })
 
 test_that("fetch_relacionadas()", {

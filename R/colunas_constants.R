@@ -47,7 +47,7 @@
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
                                  "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", "autor_nome"="character")
 
-.COLNAMES_VOTACOES <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
+.COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
                         "proposicao.id"="integer","proposicao.uri"="character","proposicao.siglaTipo"="character","proposicao.codTipo"="integer",
                         "proposicao.numero"="integer","proposicao.ano"="integer","proposicao.ementa"="character")
