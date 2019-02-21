@@ -4,6 +4,7 @@ pec_241 <<- fetch_proposicao_camara(siglaTipo = "PEC", numero = 241, ano = 2016,
 pec_241_id <<- fetch_id_proposicao_camara("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao_camara(pec_241_id)
 pls_91341 <<- fetch_proposicao_senado(91341)
+pls_1489 <<- fetch_proposicao_senado(1489)
 votacoes_pec_241 <<- fetch_votacoes(pec_241_id)
 relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
 deferimento <- fetch_deferimento(c("102343", "109173", "115853"))
@@ -50,14 +51,18 @@ test_that("fetch_proposicao_camara() usando ID", {
 test_that("fetch_proposicao_senado()", {
   expect_true(all(sapply(pls_91341, class) %in% .COLNAMES_PROPOSICAO_SENADO))
   expect_true(nrow(pls_91341) != 0)
+  expect_true(all(sapply(pls_1489, class) %in% .COLNAMES_PROPOSICAO_SENADO))
+  expect_true(nrow(pls_1489) != 0)
 })
 
 test_that("fetch_proposicao_senado() not empty", {
   expect_true(nrow(pls_91341) != 0)
+  expect_true(nrow(pls_1489) != 0)
 })
 
 test_that("fetch_proposicao_senado() is dataframe", {
   expect_true(is.data.frame(pls_91341))
+  expect_true(is.data.frame(pls_1489))
 })
 
 test_that("fetch_votacoes()", {
