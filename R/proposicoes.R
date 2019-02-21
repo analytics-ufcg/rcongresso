@@ -94,7 +94,7 @@ fetch_proposicao_senado <- function(id) {
   if (nrow(proposicao_specific_assunto) == 0) {
     proposicao_specific_assunto <- 
       tibble::tribble(~ codigo_assunto_especifico, ~ assunto_especifico,
-                      0, "Não especificado")
+                      0, "Nao especificado")
   }else {
     proposicao_specific_assunto <- 
       proposicao_specific_assunto %>%
@@ -106,7 +106,7 @@ fetch_proposicao_senado <- function(id) {
   if (nrow(proposicao_general_assunto) == 0) {
     proposicao_general_assunto <- 
       tibble::tribble(~ codigo_assunto_geral, ~ assunto_geral,
-                      0, "Não especificado")
+                      0, "Nao especificado")
   }else {
     proposicao_general_assunto <- 
       proposicao_general_assunto %>%
