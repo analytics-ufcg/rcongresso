@@ -89,3 +89,53 @@ fetch_tramitacao_senado <- function(id_prop){
 
   proposicao_tramitacoes_df
 }
+
+#' @title Fetch related requirements 
+#' @description Retorns a dataframe with data from related requirements of a proposition
+#' @param id Proposition's id
+#' @param mark_deferimento valor default true
+#' @return Dataframe
+#' @export
+fetch_related_requerimentos <- function(id, mark_deferimento = TRUE) {
+  regexes <-
+    tibble::tribble(
+      ~ deferimento,
+      ~ regex,
+      'indeferido',
+      '^Indefiro',
+      'deferido',
+      '^(Defiro)|(Aprovado)'
+    )
+  
+  related <-
+    rcongresso::fetch_relacionadas(id)$uri %>%
+    strsplit('/') %>%
+    vapply(dplyr::last, '') %>%
+    unique %>%
+    rcongresso::fetch_proposicao_camara()
+  
+  requerimentos <-
+    related %>%
+    dplyr::filter(stringr::str_detect(.$siglaTipo, '^REQ'))
+  
+  if (!mark_deferimento)
+    return(requerimentos)
+  
+  tramitacoes <- rcongresso::fetch_tramitacao(requerimentos$id, 'camara')
+  
+  related <-
+    tramitacoes %>%
+    # mark tramitacoes rows based on regexes
+    fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
+    dplyr::group_by(id_prop) %>%
+    # fill down marks
+    tidyr::fill(deferimento) %>%
+    # get last mark on each tramitacao
+    dplyr::do(tail(., n = 1)) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(id_prop, deferimento) %>%
+    # and mark proposicoes based on last tramitacao mark
+    dplyr::left_join(related, by = c('id_prop' = 'id')) %>%
+    .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS) %>%
+    .coerce_types(.COLNAMES_REQUERIMENTOS) 
+}

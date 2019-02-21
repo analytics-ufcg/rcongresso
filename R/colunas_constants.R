@@ -195,3 +195,13 @@
                                 "PARLAMENTAR.x"="character")
 # Deferimento
 .COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")
+
+# Requerimentos
+.COLNAMES_REQUERIMENTOS <- c("id_prop"="integer", "deferimento"="character", "ano"="numeric", "codTipo"="integer",
+                             "dataApresentacao"="character",  "descricaoTipo"="character", "ementa"="character", "ementaDetalhada"="character", 
+                             "keywords"="character", "numero"="numeric", "siglaTipo"="character", "statusProposicao.codSituacao"="character", 
+                             "statusProposicao.codTipoTramitacao"="integer", "statusProposicao.dataHora"="character", "statusProposicao.descricaoSituacao"="character",
+                             "statusProposicao.descricaoTramitacao"="character", "statusProposicao.despacho"="character", "statusProposicao.regime"="character", 
+                             "statusProposicao.sequencia"="numeric", "statusProposicao.siglaOrgao"="character", 
+                             "statusProposicao.uriOrgao"="character", "statusProposicao.url"="character", "uri"="character", "uriAutores"="character", 
+                             "uriPropPosterior"="character", "uriPropPrincipal"="character", "urlInteiroTeor"="character")
