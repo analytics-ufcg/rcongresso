@@ -191,7 +191,9 @@
 )
 
 # Comissões
-.COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
+.COLNAMES_COMISSOES <- c("id"="integer", "uri"="character", "sigla"="character", "nome"="character", "apelido"="character", "codTipoOrgao"="integer",
+                         "tipoOrgao"="character")
+.COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","@num.x"="character","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
                                 "PARLAMENTAR.x"="character")
 # Deferimento
 .COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")
