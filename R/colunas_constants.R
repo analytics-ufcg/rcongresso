@@ -47,7 +47,7 @@
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
                                  "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", "autor_nome"="character")
 
-.COLNAMES_VOTACOES <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
+.COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
                         "proposicao.id"="integer","proposicao.uri"="character","proposicao.siglaTipo"="character","proposicao.codTipo"="integer",
                         "proposicao.numero"="integer","proposicao.ano"="integer","proposicao.ementa"="character")
@@ -108,6 +108,64 @@
                             "ementa"="character"
                             ## "siglaTipo"="character","codTipo"="integer","numero"="numeric","ano"="numeric",
                             )
+.COLNAMES_VOT_SEN <-
+  c(
+    "descricao_identificacao_materia"="character",
+    "indicador_votacao_secreta"="character",
+    "descricao_votacao"="character",
+    "descricao_resultado"="character",
+    "codigo_sessao"="character",
+    "sigla_casa_sessao"="character",
+    "nome_casa_sessao"="character",
+    "codigo_sessao_legislativa"="character",
+    "sigla_tipo_sessao"="character",
+    "numero_sessao"="character",
+    "data_sessao"="character",
+    "hora_inicio_sessao"="character",
+    "codigo_tramitacao"="character",
+    "numero_autuacao"="character",
+    "data_tramitacao"="character",
+    "numero_ordem_tramitacao"="character",
+    "texto_tramitacao"="character",
+    "indicador_recebimento"="character",
+    "data_recebimento"="character",
+    "origem_tramitacao_local_codigo_local"="character",
+    "origem_tramitacao_local_tipo_local"="character",
+    "origem_tramitacao_local_sigla_casa_local"="character",
+    "origem_tramitacao_local_nome_casa_local"="character",
+    "origem_tramitacao_local_sigla_local"="character",
+    "origem_tramitacao_local_nome_local"="character",
+    "destino_tramitacao_local_codigo_local"="character",
+    "destino_tramitacao_local_tipo_local"="character",
+    "destino_tramitacao_local_sigla_casa_local"="character",
+    "destino_tramitacao_local_nome_casa_local"="character",
+    "destino_tramitacao_local_sigla_local"="character",
+    "destino_tramitacao_local_nome_local"="character",
+    "situacao_codigo_situacao"="character",
+    "situacao_sigla_situacao"="character",
+    "situacao_descricao_situacao"="character",
+    "descricao_voto"="character",
+    "codigo_parlamentar"="character",
+    "nome_parlamentar"="character",
+    "nome_completo_parlamentar"="character",
+    "sexo_parlamentar"="character",
+    "forma_tratamento"="character",
+    "url_foto_parlamentar"="character",
+    "url_pagina_parlamentar"="character",
+    "email_parlamentar"="character",
+    "sigla_partido_parlamentar"="character",
+    "uf_parlamentar"="character",
+    "codigo_materia"="character",
+    "sigla_casa_identificacao_materia"="character",
+    "nome_casa_identificacao_materia"="character",
+    "sigla_subtipo_materia"="character",
+    "descricao_subtipo_materia"="character",
+    "descricao_identificacao_materia"="character",
+    "numero_materia"="character",
+    "ano_materia"="character",
+    "indicador_tramitando"="character",
+    "descricao_objetivo_processo"="character"
+  )
 
 # Partidos
 .COLNAMES_PARTIDOS <- c("id"="integer","sigla"="character","nome"="character","uri"="character")

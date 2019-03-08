@@ -42,7 +42,7 @@ glimpse(pl4302)
 Com o ID da proposição você pode recuperar **todas as votações pelas quais aquela proposição já passou**:
 
 ```{r}
-votacoes_pl4302 <- fetch_votacoes(id_prop=pl4302_id)
+votacoes_pl4302 <- fetch_votacoes_camara(id_prop=pl4302_id)
 
 votacoes_pl4302 %>%
   select(id, titulo, placarSim, placarNao, placarAbstencao) %>%

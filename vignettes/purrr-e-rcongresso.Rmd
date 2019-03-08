@@ -39,7 +39,7 @@ Uma proposição pode ter várias votações no plenário da câmara. Aqui vamos
 
 ```{r}
 fetch_id_ultima_votacao = function(id_proposicao){
-  fetch_votacoes(id_proposicao) %>%
+  fetch_votacoes_camara(id_proposicao) %>%
     ultima_votacao() %>%
     pull(id)
 }

@@ -1,5 +1,5 @@
-#' @title Fetches details about a voting
-#' @description Fetches details about a voting.
+#' @title Fetches details about a voting on Chamber
+#' @description Fetches details about a voting on Chamber.
 #' @param id_votacao Voting's ID
 #' @return Dataframe containing details about a voting, including tittle,
 #'  start voting time, finish voting time, result and approval
@@ -19,6 +19,66 @@ fetch_votacao <- function(id_votacao = NULL){
     dplyr::select(-which(grepl("orientacoes", names(.)))) %>%
     .assert_dataframe_completo(.COLNAMES_VOTACAO) %>%
     .coerce_types(.COLNAMES_VOTACAO)
+}
+
+#' @title Fetches all the votings which a proposition went through
+#' @description Returns all the votings related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the votings.
+#' @examples
+#' votacoes_pec241 <- fetch_votacoes_camara(2088351)
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}, \code{\link[rcongresso]{fetch_proposicao_from_votacao}}
+#' @rdname fetch_votacoes_camara
+#' @export
+fetch_votacoes_camara <- function(id_prop){
+  id <- NULL
+  tibble::tibble(id = id_prop) %>%
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id, "/votacoes")) %>%
+    dplyr::rowwise() %>%
+    dplyr::do(
+      .camara_api(.$path)
+    ) %>%
+    dplyr::ungroup() %>%
+    .assert_dataframe_completo(.COLNAMES_VOTACOES_CAMARA) %>%
+    .coerce_types(.COLNAMES_VOTACOES_CAMARA)
+}
+
+#' @title Fetches details about a voting on Senate
+#' @description Fetches details about a voting on Senate.
+#' Ao fim, a função retira todos as colunas que tenham tipo lista para uniformizar o dataframe.
+#' @param proposicao_id Proposition Id
+#' @return Dataframe containing details about a voting on Senate
+#' @examples
+#' fetch_votacoes_senado(91341)
+#' @rdname fetch_votacoes_senado
+#' @export
+fetch_votacoes_senado <- function(proposicao_id) {
+
+  json_votacoes <- .senado_api(paste0(.SENADO_VOTACOES_PATH, proposicao_id), asList = TRUE)
+  votacoes_data <-
+    json_votacoes %>%
+    magrittr::extract2("VotacaoMateria") %>%
+    magrittr::extract2("Materia")
+  votacoes_ids <-
+    votacoes_data %>%
+    magrittr::extract2("IdentificacaoMateria") %>%
+    tibble::as_tibble() %>%
+    unique()
+  votacoes_df <-
+    votacoes_data %>%
+    magrittr::extract2("Votacoes") %>%
+    purrr::map_df( ~ .) %>%
+    tidyr::unnest()
+  
+  votacoes_df <-
+    votacoes_df %>%
+    tibble::add_column(!!!votacoes_ids)
+  
+  votacoes_df <- votacoes_df[,!sapply(votacoes_df, is.list)]
+  
+  .rename_votacoes_df(votacoes_df) 
+  votacoes_df 
 }
 
 #' @title Fetches the positions of a group on a voting
@@ -83,7 +143,7 @@ fetch_votos <- function(id_votacao = NULL){
 #' @param votacoes Dataframe containing all the votings related to a proposition
 #' @return Dataframe containing only the last voting related to a proposition
 #' @examples
-#' votacoes_pec241 <- fetch_votacoes(2088351)
+#' votacoes_pec241 <- fetch_votacoes_camara(2088351)
 #' ultima_votacao <- ultima_votacao(votacoes_pec241)
 #' @rdname ultima_votacao
 #' @export
