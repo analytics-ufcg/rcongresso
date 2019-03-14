@@ -4,8 +4,16 @@
 #' @param mark_deferimento whether to retrieve request status
 #' @return Dataframe
 #' @export
-fetch_related_requerimentos <- function(prop_id, mark_deferimento = TRUE) {
-  regexes <-
+fetch_related_requerimentos <- function(prop_id, mark_deferimento = FALSE) {
+  reqs <- fetch_relacionadas(prop_id) %>% 
+    dplyr::filter(siglaTipo == "REQ") %>%
+    dplyr::distinct()
+  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x))
+  
+  if (!mark_deferimento)
+    return(reqs_data)
+  else
+    regexes <-
     tibble::tribble(
       ~ deferimento,
       ~ regex,
@@ -17,29 +25,51 @@ fetch_related_requerimentos <- function(prop_id, mark_deferimento = TRUE) {
       '^Arquivado'
     )
   
-  reqs <- fetch_relacionadas(prop_id) %>% 
-    dplyr::filter(siglaTipo == "REQ") %>%
-    dplyr::distinct()
-  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x))
+    reqs_trams <- fetch_tramitacao(reqs_data$id, 'camara')
+    
+    related_reqs <-
+      reqs_trams %>%
+      # mark reqs_trams rows based on regexes
+      fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
+      dplyr::filter(!is.na(deferimento)) %>%
+      dplyr::mutate(id_req = id_prop) %>% 
+      dplyr::mutate(id_prop = prop_id,
+                    casa = .CAMARA) %>% #Adding proposition number to final dataframe
+      dplyr::select(id_prop, casa, id_req, deferimento) %>%
+      dplyr::left_join(reqs_data, by = c("id_req" = "id")) %>%
+      .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) #%>%
+      #.coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA) 
+}
+
+fetch_eventos_requerimento <- function(req_id) {
+  req_data <- fetch_proposicao_camara(req_id)
   
-  if (!mark_deferimento)
-    return(reqs_data)
+  regexes <-
+    tibble::tribble(
+      ~ evento,
+      ~ regex,
+      'req_apresentacao',
+      '^Apresentação',
+      'req_indeferido',
+      '^Indefiro',
+      'req_deferido',
+      '^(Defiro)|(Aprovado)',
+      'req_arquivado',
+      '^Arquivado')
   
-  reqs_trams <- fetch_tramitacao(reqs_data$id, 'camara')
+  req_tram <- fetch_tramitacao(req_data$id, 'camara')
   
-  related_reqs <-
-    reqs_trams %>%
+  eventos_reqs <-
+    req_tram %>%
     # mark reqs_trams rows based on regexes
     fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
-    dplyr::filter(!is.na(deferimento)) %>%
+    dplyr::filter(!is.na(evento)) %>%
     dplyr::mutate(id_req = id_prop) %>% 
     dplyr::mutate(id_prop = prop_id,
                   casa = .CAMARA) %>% #Adding proposition number to final dataframe
-    dplyr::rename(evento = deferimento) %>%
     dplyr::select(-regex) %>%
     dplyr::select(id_prop, casa, id_req, dplyr::everything()) %>%
-    .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
-    .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA) 
+    .assert_dataframe_completo(.COLNAMES_TRAMITACAO_REQUERIMENTOS_CAMARA) 
 }
 
 #' @title Requirements's deferments
