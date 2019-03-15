@@ -1,7 +1,7 @@
-#' @title Fetch related request 
-#' @description Returns a dataframe with data from requests related to a given proposition
-#' @param prop_id Proposition's id
-#' @param mark_deferimento whether to retrieve request status
+#' @title Fetch related requerimentos in Câmara 
+#' @description Returns a dataframe with data from requerimentos related to a given proposition in Câmara
+#' @param prop_id ID of a Proposição
+#' @param mark_deferimento whether to retrieve status of requerimento
 #' @return Dataframe
 #' @export
 fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE) {
@@ -10,14 +10,15 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
     dplyr::distinct()
   reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x))
   
-  if (!mark_deferimento)
+  if (!mark_deferimento) {
     reqs_data <- reqs_data %>% 
       dplyr::mutate(id_req = id,
                     id_prop = prop_id,
                     casa = .CAMARA) %>% #Adding proposition number to final dataframe
+      dplyr::select(-id) %>%
       dplyr::select(id_prop, casa, id_req, dplyr::everything())
     return(reqs_data)
-  else
+  } else {
     regexes <-
     tibble::tribble(
       ~ deferimento,
@@ -45,8 +46,14 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
       rename_table_to_underscore() %>%
       .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
       .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE) 
+  }
 }
 
+#' @title Fetch events of a requerimento
+#' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
+#' @param prop_id ID of a Proposição
+#' @return Dataframe
+#' @export
 fetch_eventos_requerimento_camara <- function(req_id) {
   req_data <- fetch_proposicao_camara(req_id)
   
