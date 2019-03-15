@@ -8,15 +8,14 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
   reqs <- fetch_relacionadas(prop_id) %>% 
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
-  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x))
+  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x)) %>% 
+    dplyr::mutate(id_req = id,
+                  id_prop = prop_id,
+                  casa = .CAMARA) %>% #Adding proposition number to final dataframe
+    dplyr::select(-id) %>%
+    dplyr::select(id_prop, casa, id_req, dplyr::everything())
   
   if (!mark_deferimento) {
-    reqs_data <- reqs_data %>% 
-      dplyr::mutate(id_req = id,
-                    id_prop = prop_id,
-                    casa = .CAMARA) %>% #Adding proposition number to final dataframe
-      dplyr::select(-id) %>%
-      dplyr::select(id_prop, casa, id_req, dplyr::everything())
     return(reqs_data)
   } else {
     regexes <-
@@ -31,18 +30,23 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
       '^Arquivado'
     )
   
-    reqs_trams <- fetch_tramitacao(reqs_data$id, 'camara')
+    reqs_trams <- fetch_tramitacao(reqs_data$id_req, .CAMARA)
     
     related_reqs <-
       reqs_trams %>%
       # mark reqs_trams rows based on regexes
       fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
-      dplyr::filter(!is.na(deferimento)) %>%
-      dplyr::mutate(id_req = id_prop) %>% 
-      dplyr::mutate(id_prop = prop_id,
-                    casa = .CAMARA) %>% #Adding proposition number to final dataframe
-      dplyr::select(id_prop, casa, id_req, deferimento) %>%
-      dplyr::left_join(reqs_data, by = c("id_req" = "id")) %>%
+      dplyr::group_by(id_prop) %>%
+      dplyr::arrange(data_hora) %>%
+      dplyr::summarise(deferimento_final = 
+                         dplyr::if_else(any(deferimento %in% c('req_deferido')),'deferido',
+                                        dplyr::if_else(any(deferimento %in% c('req_indeferido')),'indeferido',
+                                                       dplyr::if_else(any(deferimento %in% c('req_arquivado')),'arquivado',
+                                                                      'tramitando')))) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(id_req = id_prop, deferimento = deferimento_final) %>% 
+      dplyr::left_join(reqs_data, by = "id_req") %>%
+      dplyr::select(id_prop, casa, id_req, dplyr::everything()) %>%
       rename_table_to_underscore() %>%
       .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
       .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE) 
