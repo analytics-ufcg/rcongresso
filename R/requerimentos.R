@@ -80,10 +80,8 @@ fetch_events_requerimento_camara <- function(req_id) {
     fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
     dplyr::filter(!is.na(evento)) %>%
     dplyr::mutate(id_req = id_prop) %>% 
-    dplyr::mutate(id_prop = prop_id,
-                  casa = .CAMARA) %>% #Adding proposition number to final dataframe
-    dplyr::select(-regex) %>%
-    dplyr::select(id_prop, casa, id_req, data_hora, evento, dplyr::everything()) %>%
+    dplyr::select(-regex, -id_prop) %>%
+    dplyr::select(id_req, data_hora, evento, dplyr::everything()) %>%
     .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA)  %>%
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
