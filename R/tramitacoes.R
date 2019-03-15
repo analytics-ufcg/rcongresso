@@ -4,8 +4,8 @@
 #' @param casa Proposition's casa
 #' @return Dataframe containing all the tramitation.
 #' @examples
-#' tramitacao_pec241 <- fetch_sessoes(2088351,'camara')
-#' tramitacao_pls229 <- fetch_sessoes(91341,'senado')
+#' tramitacao_pec241 <- fetch_tramitacao(2088351,'camara')
+#' tramitacao_pls229 <- fetch_tramitacao(91341,'senado')
 #' @rdname fetch_tramitacao
 #' @export
 fetch_tramitacao <- function(id_prop, casa) {

@@ -1,4 +1,3 @@
-####### Relatorias ######
 #' @title Fetches proposição's relatoria historic
 #' @description Returns a dataframe containing the relatoria's historic, with date and relator's name.
 #' @details Senado contains details about the end of each relatoria and camara contains initials of local
@@ -17,12 +16,16 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
   else if(tolower(casa) == 'camara') {
     relatorias <- .fetch_relatorias_camara(proposicao_id)
   }
+  else {
+    stop("Param 'casa' is invalid, must be 'senado' or 'camara'")
+  }
 
   if(!is.null(last_n)){
     relatorias <-
       relatorias %>%
       utils::head(last_n)
   }
+  
   return(relatorias)
 }
 
@@ -73,5 +76,14 @@ fetch_relatorias <- function(proposicao_id, casa, last_n=NULL) {
 #' @return Dataframe containing detailed information about relatorias of a proposição from Camara
 #' @export
 .fetch_relatorias_camara <- function(proposicao_id) {
-  tibble::tibble()
+  fetch_tramitacao(proposicao_id, 'camara') %>%
+    dplyr::filter(descricao_tramitacao == "Designação de Relator") %>%
+    dplyr::transmute(
+      data_hora,
+      nome_parlamentar = stringr::str_extract(despacho, stringr::regex('Dep.?([^,(]*)', ignore_case=TRUE)),
+      partido = stringr::str_match(despacho,'[(](.*?)[)]')[,2],
+      sigla_orgao,
+      uri_orgao
+    ) %>% 
+    dplyr::arrange(desc(data_hora))
 }
