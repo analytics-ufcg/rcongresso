@@ -58,9 +58,7 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
 #' @param prop_id ID of a Proposição
 #' @return Dataframe
 #' @export
-fetch_eventos_requerimento_camara <- function(req_id) {
-  req_data <- fetch_proposicao_camara(req_id)
-  
+fetch_events_requerimento_camara <- function(req_id) {
   regexes <-
     tibble::tribble(
       ~ evento,
@@ -74,7 +72,7 @@ fetch_eventos_requerimento_camara <- function(req_id) {
       'req_arquivado',
       '^Arquivado')
   
-  req_tram <- fetch_tramitacao(req_data$id, 'camara')
+  req_tram <- fetch_tramitacao(req_id, .CAMARA)
   
   eventos_req <-
     req_tram %>%
