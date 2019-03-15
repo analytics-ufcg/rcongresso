@@ -197,6 +197,15 @@
 .COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")
 
 # Requerimentos
-.COLNAMES_REQUERIMENTOS_CAMARA <- c("id_prop"="integer","casa"="character","id_req"="integer","data_hora"="character","descricao_situacao"="character","descricao_tramitacao"="character",
-                                  "despacho"="character","cod_situacao"="integer","cod_tipo_tramitacao"="character","regime"="character",
-                                  "sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character","evento"="character")
+.COLNAMES_REQUERIMENTOS_CAMARA <- c("id_prop"="numeric","casa"="character","id_req"="integer","deferimento"="character", "ano"="numeric", "cod_tipo"="integer",
+                                    "data_apresentacao"="character",  "descricao_tipo"="character", "ementa"="character", "ementa_detalhada"="character", 
+                                    "keywords"="character", "numero"="numeric", "sigla_tipo"="character", "status_proposicao_cod_situacao"="character", 
+                                    "status_proposicao_cod_tipo_tramitacao"="integer", "status_proposicao_data_hora"="character", "status_proposicao_descricao_situacao"="character",
+                                    "status_proposicao_descricao_tramitacao"="character", "status_proposicao_despacho"="character", "status_proposicao_regime"="character", 
+                                    "status_proposicao_sequencia"="numeric", "status_proposicao_sigla_orgao"="character", 
+                                    "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character", "uri"="character", "uri_autores"="character", 
+                                    "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character")
+
+.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_prop"="numeric","casa"="character","id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
+                                            "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
+                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character")

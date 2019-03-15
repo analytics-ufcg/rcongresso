@@ -4,13 +4,18 @@
 #' @param mark_deferimento whether to retrieve request status
 #' @return Dataframe
 #' @export
-fetch_related_requerimentos <- function(prop_id, mark_deferimento = FALSE) {
+fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE) {
   reqs <- fetch_relacionadas(prop_id) %>% 
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
   reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x))
   
   if (!mark_deferimento)
+    reqs_data <- reqs_data %>% 
+      dplyr::mutate(id_req = id,
+                    id_prop = prop_id,
+                    casa = .CAMARA) %>% #Adding proposition number to final dataframe
+      dplyr::select(id_prop, casa, id_req, dplyr::everything())
     return(reqs_data)
   else
     regexes <-
@@ -37,11 +42,12 @@ fetch_related_requerimentos <- function(prop_id, mark_deferimento = FALSE) {
                     casa = .CAMARA) %>% #Adding proposition number to final dataframe
       dplyr::select(id_prop, casa, id_req, deferimento) %>%
       dplyr::left_join(reqs_data, by = c("id_req" = "id")) %>%
-      .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) #%>%
-      #.coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA) 
+      rename_table_to_underscore() %>%
+      .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
+      .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE) 
 }
 
-fetch_eventos_requerimento <- function(req_id) {
+fetch_eventos_requerimento_camara <- function(req_id) {
   req_data <- fetch_proposicao_camara(req_id)
   
   regexes <-
@@ -59,7 +65,7 @@ fetch_eventos_requerimento <- function(req_id) {
   
   req_tram <- fetch_tramitacao(req_data$id, 'camara')
   
-  eventos_reqs <-
+  eventos_req <-
     req_tram %>%
     # mark reqs_trams rows based on regexes
     fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
@@ -68,8 +74,9 @@ fetch_eventos_requerimento <- function(req_id) {
     dplyr::mutate(id_prop = prop_id,
                   casa = .CAMARA) %>% #Adding proposition number to final dataframe
     dplyr::select(-regex) %>%
-    dplyr::select(id_prop, casa, id_req, dplyr::everything()) %>%
-    .assert_dataframe_completo(.COLNAMES_TRAMITACAO_REQUERIMENTOS_CAMARA) 
+    dplyr::select(id_prop, casa, id_req, data_hora, evento, dplyr::everything()) %>%
+    .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA)  %>%
+    .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
 #' @title Requirements's deferments

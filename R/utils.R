@@ -183,10 +183,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Garantees that the dataframe obj has all the correct types passed by types.
 #' @param obj dataframe
 #' @param types named vector of the columns names and types
-.coerce_types <- function(obj, types){
+.coerce_types <- function(obj, types, order_cols=TRUE){
   if(nrow(obj) != 0){
-    obj <- obj[,order(colnames(obj))]
-    types <- unname(types[sort(names(types))])
+    if (order_cols) {
+      obj <- obj[,order(colnames(obj))]
+      types <- unname(types[sort(names(types))])
+    } else {
+      types <- unname(types[names(types)])
+    }
+  
     out <- lapply(1:length(obj),FUN = function(i){
       FUN1 <- .switch_types(types[i])
       suppressWarnings(obj[,i] %>% unlist() %>% FUN1)
