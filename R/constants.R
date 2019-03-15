@@ -22,18 +22,25 @@
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
+.AGENDA_CAMARA_PATH <- "/api/v2/eventos"
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
 .ORGAOS_SCHEDULE_CAMARA <- "/Orgaos.asmx/ObterPauta?IDOrgao="
+.PAUTAS_CAMARA <- "/api/v2/eventos/"
 
 # Path site Câmara
+.APENSADAS_CAMARA_PATH <- "/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID"
 .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"
+.EVENTOS_PROPOSICAO_CAMARA_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
-.SENADO_PROPOSICOES_PATH <- "/dadosabertos/materia/movimentacoes/"
+.SENADO_TRAMITACAO_PROPOSICAO_PATH <- "/dadosabertos/materia/movimentacoes/"
+.SENADO_PROPOSICAO_PATH <- "/dadosabertos/materia/"
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
 .DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
+.AGENDA_SENADO_COMISSOES <- "/dadosabertos/agenda/"
+.SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"

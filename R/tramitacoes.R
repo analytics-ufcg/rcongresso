@@ -26,23 +26,21 @@ fetch_tramitacao <- function(id_prop, casa) {
 #' @examples
 #' tramitacao_pec241 <- fetch_tramitacao_camara(2088351)
 #' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_tramitacao_camara
 #' @export
 fetch_tramitacao_camara <- function(id_prop){
-  path <- NULL
   unique(id_prop) %>%
     as.integer %>%
     tibble::tibble(id_prop = .) %>%
-      dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
-        dplyr::group_by(id_prop, path) %>%
-        dplyr::do(
-                 .camara_api(.$path)
-               ) %>%
-        dplyr::ungroup() %>%
-        dplyr::select(-path) %>%
-        .assert_dataframe_completo(.COLNAMES_TRAMITACOES_CAMARA) %>%
-        .coerce_types(.COLNAMES_TRAMITACOES_CAMARA)
+    dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
+    dplyr::group_by(id_prop, path) %>%
+      dplyr::do(.camara_api(.$path)) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-path) %>%
+    .assert_dataframe_completo(.COLNAMES_TRAMITACOES_CAMARA) %>%
+    .coerce_types(.COLNAMES_TRAMITACOES_CAMARA) %>%
+    .rename_df_columns()
 }
 
 #' @title Fetches the tramitation of a proposition in the Senate
@@ -51,13 +49,11 @@ fetch_tramitacao_camara <- function(id_prop){
 #' @return Dataframe containing all the tramitation.
 #' @examples
 #' tramitacao_pls229 <- fetch_tramitacao_senado(91341)
-#' @seealso
-#'   \code{\link[rcongresso]{fetch_id_proposicao}}
 #' @rdname fetch_tramitacao_senado
 #' @export
 fetch_tramitacao_senado <- function(id_prop){
   url <-
-    paste0(.SENADO_PROPOSICOES_PATH,
+    paste0(.SENADO_TRAMITACAO_PROPOSICAO_PATH,
            id_prop)
 
   json_tramitacao <- .senado_api(url, asList = T)

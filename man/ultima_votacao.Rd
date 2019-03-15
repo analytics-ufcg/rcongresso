@@ -16,6 +16,6 @@ Dataframe containing only the last voting related to a proposition
 Filters only the last voting from each proposition in the dataframe.
 }
 \examples{
-votacoes_pec241 <- fetch_votacoes(2088351)
+votacoes_pec241 <- fetch_votacoes_camara(2088351)
 ultima_votacao <- ultima_votacao(votacoes_pec241)
 }

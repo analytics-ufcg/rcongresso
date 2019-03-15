@@ -18,6 +18,3 @@ Returns the tramitation of a proposition by its id.
 \examples{
 tramitacao_pls229 <- fetch_tramitacao_senado(91341)
 }
-\seealso{
-\code{\link[rcongresso]{fetch_id_proposicao}}
-}
