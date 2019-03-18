@@ -3,11 +3,13 @@
 #' @param sigla Comissao's id
 #' @return Returns a dataframe containing information about the comission requested
 #' fetch_composicao_comissoes_camara('cmads')
-fetch_composicao_comissoes_camara <- function(sigla_comissao) {
+fetch_composicao_comissoes_camara <- function(sigla_comissao, apelido_comissao) {
+  print(sigla_comissao)
   orgaos_camara <-
     fetch_orgaos_camara() %>%
     dplyr::mutate_all(as.character) %>%
-    dplyr::filter(trimws(sigla) == toupper(sigla_comissao)) %>%
+    dplyr::filter(trimws(sigla) == toupper(sigla_comissao) &
+                    trimws(apelido) == toupper(apelido_comissao)) %>%
     dplyr::select(uri) %>% head(1)
   
   column_names <- names(.COLNAMES_COMPOSICAO_CAMARA)
