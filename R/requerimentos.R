@@ -8,6 +8,10 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
   reqs <- fetch_relacionadas(prop_id) %>% 
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
+  
+  if(nrow(reqs) == 0)
+    return(tibble::tibble())
+  
   reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x)) %>% 
     dplyr::mutate(id_req = id,
                   id_prop = prop_id,
