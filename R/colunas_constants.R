@@ -251,5 +251,9 @@
 # Comissões
 .COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
                                 "PARLAMENTAR.x"="character")
+# Composição Camara
+.COLNAMES_COMPOSICAO_CAMARA <- c("cargo"="character","id"="character","nome"="character","partido"="character",
+                                 "uf"="character","situacao"="character")
+
 # Deferimento
 .COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")
