@@ -45,7 +45,9 @@
                                  "descricao_objetivo_processo"="character", "descricao_identificacao_materia"="character", "indicador_tramitando"="character",
                                  "codigo_assunto_especifico"="character", "assunto_especifico"="character", "codigo_assunto_geral"="character", "assunto_geral"="character",
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
-                                 "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", "autor_nome"="character")
+                                 "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", 
+                                 "autor_nome"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character",
+                                 "descricao_objetivo_processo"="character", "nome_poder_origem"="character")
 
 .COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
