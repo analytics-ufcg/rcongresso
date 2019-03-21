@@ -1,3 +1,7 @@
+#Casas
+.CAMARA <- 'camara'
+.SENADO <- 'senado'
+
 # Link default da API
 .CAMARA_API_LINK <- "https://dadosabertos.camara.leg.br"
 .SENADO_API_LINK <- "http://legis.senado.leg.br"
