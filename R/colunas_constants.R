@@ -276,6 +276,8 @@
                                     "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character", "uri"="character", "uri_autores"="character", 
                                     "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character")
 
+.COLNAMES_REQUERIMENTOS <- c("req_id"="character", "data_apresentacao"="character", "sigla"="character", "ementa"="character", "descricao"="character")
+
 .COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
                                             "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
                                             "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character")

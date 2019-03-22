@@ -4,12 +4,15 @@
 \alias{fetch_related_requerimentos_camara}
 \title{Fetch related requerimentos in Camara}
 \usage{
-fetch_related_requerimentos_camara(prop_id, mark_deferimento = FALSE)
+fetch_related_requerimentos_camara(prop_id, mark_deferimento = FALSE,
+  normalized = FALSE)
 }
 \arguments{
 \item{prop_id}{ID of a Proposicao}
 
 \item{mark_deferimento}{whether to retrieve status of requerimento}
+
+\item{normalized}{True or False}
 }
 \value{
 Dataframe

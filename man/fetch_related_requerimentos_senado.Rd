@@ -4,10 +4,12 @@
 \alias{fetch_related_requerimentos_senado}
 \title{Fetch related requerimentos in Senado}
 \usage{
-fetch_related_requerimentos_senado(prop_id)
+fetch_related_requerimentos_senado(prop_id, normalized = FALSE)
 }
 \arguments{
 \item{prop_id}{ID of a Proposicao}
+
+\item{normalized}{True or False}
 }
 \value{
 Dataframe

@@ -2,9 +2,10 @@
 #' @description Returns a dataframe with data from requerimentos related to a given proposition in Camara
 #' @param prop_id ID of a Proposicao
 #' @param mark_deferimento whether to retrieve status of requerimento
+#' @param normalized True or False
 #' @return Dataframe
 #' @export
-fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE) {
+fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE, normalized = FALSE) {
   reqs <- fetch_relacionadas(prop_id) %>% 
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
@@ -20,6 +21,12 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
     dplyr::select(id_prop, casa, id_req, dplyr::everything())
   
   if (!mark_deferimento) {
+    if (normalized) {
+      reqs_data <- 
+        reqs_data %>% 
+        dplyr::mutate(descricao_identificacao_materia = paste0(siglaTipo, "/", statusProposicao.codSituacao)) %>% 
+        dplyr::select(c(id_req, dataApresentacao, descricao_identificacao_materia, ementa, descricaoTipo))
+    }
     return(reqs_data)
   } else {
     regexes <-
@@ -36,7 +43,8 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
   
     reqs_trams <- fetch_tramitacao(reqs_data$id_req, .CAMARA)
     
-    related_reqs <-
+    related_reqs <- 
+      related_reqs <-
       reqs_trams %>%
       # mark reqs_trams rows based on regexes
       fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
@@ -54,20 +62,51 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
       rename_table_to_underscore() %>%
       .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
       .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE) 
+    
   }
 }
 
 #' @title Fetch related requerimentos in Senado 
 #' @description Returns a dataframe with data from requerimentos related to a given proposition in Senado
 #' @param prop_id ID of a Proposicao
+#' @param normalized True or False
 #' @return Dataframe
 #' @export
-fetch_related_requerimentos_senado <- function(prop_id) {
+fetch_related_requerimentos_senado <- function(prop_id, normalized = FALSE) {
   proposicao_data <- 
     .senado_api(paste0(.SENADO_PROPOSICAO_PATH, prop_id), asList = TRUE)$DetalheMateria$Materia$MateriasRelacionadas %>% 
     tibble::as_tibble()
     
-  purrr::map_df(proposicao_data$MateriaRelacionada$IdentificacaoMateria.CodigoMateria, ~ fetch_proposicao_senado(.x, T))
+  requerimentos <- 
+    purrr::map_df(proposicao_data$MateriaRelacionada$IdentificacaoMateria.CodigoMateria, ~ fetch_proposicao_senado(.x, T))
+  
+  if (normalized) {
+    requerimentos <-
+      requerimentos %>% 
+        dplyr::select(c(codigo_materia, data_apresentacao, descricao_identificacao_materia, ementa_materia, descricao_natureza))
+  }
+
+  return(requerimentos)
+}
+
+#' @title Fetch related requerimentos 
+#' @description Returns a dataframe with data from requerimentos related to a given proposition 
+#' @param prop_id ID of a Proposicao
+#' @param casa camara or senado
+#' @return Dataframe
+#' @export
+fetch_related_requerimentos <- function(prop_id, casa) {
+  if (tolower(casa) == "senado") {
+    req <- fetch_related_requerimentos_senado(prop_id, normalized = T)
+  }else {
+    req <- fetch_related_requerimentos_camara(prop_id, normalized = T)
+  }
+  new_names <- c("req_id", "data_apresentacao", "sigla", "ementa", "descricao")
+  names(req) <- new_names
+  
+  return(req %>% 
+           .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS) %>% 
+           .coerce_types(.COLNAMES_REQUERIMENTOS))
 }
 
 
