@@ -58,12 +58,13 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @title Fetches a proposition in the Senate
 #' @description Returns the proposition info
 #' @param id Proposition's ID
+#' @param is_requerimento If the ID is from a requerimento
 #' @return Dataframe containing all the info about the proposition;
 #' @examples
 #' prop_pls229 <- fetch_proposicao_senado(91341)
 #' @rdname fetch_proposicao_senado
 #' @export
-fetch_proposicao_senado <- function(id) {
+fetch_proposicao_senado <- function(id, is_requerimento = FALSE) {
   proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
 
   proposicao_ids <-
@@ -139,9 +140,15 @@ fetch_proposicao_senado <- function(id) {
     proposicao_complete[,!sapply(proposicao_complete, is.list)] %>%
     rename_table_to_underscore() 
   
-  proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>% 
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
+  if(is_requerimento) {
+    proposicao_complete %>% 
+      .assert_dataframe_completo(.COLNAMES_REQ_SENADO) %>% 
+      .coerce_types(.COLNAMES_REQ_SENADO)
+  }else {
+    proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>% 
+      .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
+      .coerce_types(.COLNAMES_PROPOSICAO_SENADO) 
+  }
 }
 
 #' @title Fetches all propositions related to a proposition

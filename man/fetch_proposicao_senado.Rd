@@ -4,10 +4,12 @@
 \alias{fetch_proposicao_senado}
 \title{Fetches a proposition in the Senate}
 \usage{
-fetch_proposicao_senado(id)
+fetch_proposicao_senado(id, is_requerimento = FALSE)
 }
 \arguments{
 \item{id}{Proposition's ID}
+
+\item{is_requerimento}{If the ID is from a requerimento}
 }
 \value{
 Dataframe containing all the info about the proposition;

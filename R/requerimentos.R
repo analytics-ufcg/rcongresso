@@ -1,6 +1,6 @@
-#' @title Fetch related requerimentos in Câmara 
-#' @description Returns a dataframe with data from requerimentos related to a given proposition in Câmara
-#' @param prop_id ID of a Proposição
+#' @title Fetch related requerimentos in Camara 
+#' @description Returns a dataframe with data from requerimentos related to a given proposition in Camara
+#' @param prop_id ID of a Proposicao
 #' @param mark_deferimento whether to retrieve status of requerimento
 #' @return Dataframe
 #' @export
@@ -57,9 +57,23 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
   }
 }
 
+#' @title Fetch related requerimentos in Senado 
+#' @description Returns a dataframe with data from requerimentos related to a given proposition in Senado
+#' @param prop_id ID of a Proposicao
+#' @return Dataframe
+#' @export
+fetch_related_requerimentos_senado <- function(prop_id) {
+  proposicao_data <- 
+    .senado_api(paste0(.SENADO_PROPOSICAO_PATH, prop_id), asList = TRUE)$DetalheMateria$Materia$MateriasRelacionadas %>% 
+    tibble::as_tibble()
+    
+  purrr::map_df(proposicao_data$MateriaRelacionada$IdentificacaoMateria.CodigoMateria, ~ fetch_proposicao_senado(.x, T))
+}
+
+
 #' @title Fetch events of a requerimento
 #' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
-#' @param prop_id ID of a Proposição
+#' @param req_id ID of a requerimento
 #' @return Dataframe
 #' @export
 fetch_events_requerimento_camara <- function(req_id) {
@@ -68,7 +82,7 @@ fetch_events_requerimento_camara <- function(req_id) {
       ~ evento,
       ~ regex,
       'req_apresentacao',
-      '^Apresentação',
+      '^Apresentacao',
       'req_indeferido',
       '^Indefiro',
       'req_deferido',
@@ -76,7 +90,9 @@ fetch_events_requerimento_camara <- function(req_id) {
       'req_arquivado',
       '^Arquivado')
   
-  req_tram <- fetch_tramitacao(req_id, .CAMARA)
+  req_tram <- 
+    fetch_tramitacao(req_id, .CAMARA) %>% 
+    dplyr::mutate(despacho = iconv(despacho, from="UTF-8", to="ASCII//TRANSLIT"))
   
   eventos_req <-
     req_tram %>%

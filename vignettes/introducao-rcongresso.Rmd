@@ -42,26 +42,26 @@ glimpse(pl4302)
 Com o ID da proposição você pode recuperar **todas as votações pelas quais aquela proposição já passou**:
 
 ```{r}
-votacoes_pl4302 <- fetch_votacoes_camara(id_prop=pl4302_id)
-
-votacoes_pl4302 %>%
-  select(id, titulo, placarSim, placarNao, placarAbstencao) %>%
-  kable()
+# votacoes_pl4302 <- fetch_votacoes_camara(id_prop=pl4302_id)
+# 
+# votacoes_pl4302 %>%
+#   select(id, titulo, placarSim, placarNao, placarAbstencao) %>%
+#   kable()
 ```
 
 Para focar em uma votação usamos seu ID:
 
 ```{r}
-fetch_votacao(id_votacao=7431) %>%
-  glimpse()
+# fetch_votacao(id_votacao=7431) %>%
+#   glimpse()
 ```
 
 Cada votação tem registrada também as orientações das bancadas:
 
 ```{r}
-fetch_orientacoes(id_votacao=7431) %>%
-  select(nomeBancada, voto) %>%
-  datatable()
+# fetch_orientacoes(id_votacao=7431) %>%
+#   select(nomeBancada, voto) %>%
+#   datatable()
 ```
 
 ## Votos dos deputados
@@ -69,12 +69,12 @@ fetch_orientacoes(id_votacao=7431) %>%
 Podemos recuperar todas os **votos dos deputados que participaram daquela votação**:
 
 ```{r}
-fetch_votos(id_votacao=7431) %>%
-  select(parlamentar.id,
-         parlamentar.nome,
-         parlamentar.siglaPartido,
-         voto) %>%
-  datatable()
+# fetch_votos(id_votacao=7431) %>%
+#   select(parlamentar.id,
+#          parlamentar.nome,
+#          parlamentar.siglaPartido,
+#          voto) %>%
+#   datatable()
 ```
 
 ## Informações sobre um deputado

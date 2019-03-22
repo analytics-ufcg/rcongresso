@@ -42,6 +42,3 @@ PMB <- fetch_partido(id = 36887)
 PT <- fetch_partido(sigla = "PT")
 partidos2010a2014 <- fetch_partido(dataInicio = "2010-01-01", dataFim = "2014-12-31", itens = 100)
 }
-\seealso{
-\code{\link[rcongresso]{get_votos_partidos}}, \code{\link[rcongresso]{fetch_orientacoes}}
-}
