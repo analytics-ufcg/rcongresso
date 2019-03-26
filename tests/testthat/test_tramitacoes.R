@@ -5,6 +5,7 @@ PROPOSICOES_ID <<- c(91341, 257161, 2121442, 127753)
 tramitacao_pec_241 <<- fetch_tramitacao_camara(pec_241_id)
 tramitacao_pec_241_x2 <<- fetch_tramitacao_camara(replicate(2, pec_241_id))
 pls229 <- fetch_tramitacao_senado(91341)
+pl_2121442 <- fetch_related_requerimentos(2121442)
 
 test_that("fetch_tramitacao_camara()", {
     expect_true(all(sapply(tramitacao_pec_241, class) %in% .COLNAMES_TRAMITACOES_CAMARA))
@@ -13,6 +14,14 @@ test_that("fetch_tramitacao_camara()", {
 
 test_that("fetch_tramitacao_senado()", {
     expect_true(all(sapply(pls229, class) %in% .COLNAMES_TRAMITACOES_SENADO))
+})
+
+test_that("fetch_related_requerimentos()", {	
+  expect_true(all(sapply(pl_2121442, class) %in% .COLNAMES_REQUERIMENTOS))	
+})	
+
+test_that("fetch_related_requerimentos() returns dataframe", {	
+  expect_true(is.data.frame(pl_2121442))	
 })
 
 test_that("fetch_tramitacao() returns dataframe", {
