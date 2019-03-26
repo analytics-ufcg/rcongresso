@@ -17,7 +17,7 @@ test_that("fetch_tramitacao_senado()", {
 })
 
 test_that("fetch_related_requerimentos_camara()", {	
-  expect_true(all(sapply(pl_2121442, class) %in% .COLNAMES_REQUERIMENTOS))	
+  expect_true(all(sapply(pl_2121442, class) %in% .COLNAMES_REQUERIMENTOS_CAMARA))	
 })	
 
 test_that("fetch_related_requerimentos_camara() returns dataframe", {	
