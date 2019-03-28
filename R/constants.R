@@ -18,9 +18,6 @@
 .CAMARA_PROPOSICOES_PATH <- "/api/v2/proposicoes"
 .VOTACOES_PATH <- "/api/v2/votacoes"
 .DEPUTADOS_PATH <- "/api/v2/deputados"
-.SENADO_PATH <- "/dadosabertos/materia"
-.RELATORIA_SENADO_PATH <- "/relatorias/"
-.EMENDAS_SENADO_PATH <- "/emendas/"
 .PARTIDOS_PATH <- "/api/v2/partidos"
 .CAMARA_SESSOES_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .TIPOS_PROPOSICOES_PATH <- "/api/v2/referencias/proposicoes/siglaTipo"
@@ -43,6 +40,9 @@
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 .AGENDA_SENADO_COMISSOES <- "/dadosabertos/agenda/"
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
+.SENADO_PATH <- "/dadosabertos/materia"
+.RELATORIA_SENADO_PATH <- "/relatorias/"
+.EMENDAS_SENADO_PATH <- "/emendas/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"

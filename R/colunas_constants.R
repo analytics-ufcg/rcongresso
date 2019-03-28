@@ -186,13 +186,17 @@
 )
 
 # Relatorias
-.COLNAMES_RELATORIAS <- c("codigo_tipo_relator"="character", "descricao_tipo_relator"="character", "data_designacao"="character",
+.COLNAMES_RELATORIAS_SENADO <- c("codigo_tipo_relator"="character", "descricao_tipo_relator"="character", "data_designacao"="character",
                           "data_destituicao"="character", "descricao_motivo_destituicao"="character", "codigo_parlamentar"="character",
                           "nome_parlamentar"="character", "nome_completo_parlamentar"="character","sexo_parlamentar"="character",
                           "forma_tratamento"="character", "url_foto_parlamentar"="character", "url_pagina_parlamentar"="character",
                           "email_parlamentar"="character", "sigla_partido_parlamentar"="character", "uf_parlamentar"="character",
                           "codigo_comissao"="character", "sigla_comissao"="character", "nome_comissao"="character",
                           "sigla_casa_comissao"="character", "nome_casa_comissao"="character")
+
+.COLNAMES_RELATORIAS_CAMARA <- c("data_hora"="character", "nome_parlamentar"="character", "partido"="character", "sigla_orgao"="character", 
+                                 "uri_orgao"="character")
+
 # Emendas
 .COLNAMES_EMENDAS_SENADO <- c("codigo_emenda"="character", "numero"="integer", "data_apresentacao"="character", "local"="character",
                        "descricao_turno"="character", "descricao_tipo_emenda"="character", "autor"="character", "id_autor"="character",
