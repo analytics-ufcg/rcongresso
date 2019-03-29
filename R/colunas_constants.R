@@ -38,6 +38,7 @@
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
                             "uriPropPosterior"="character", "uriPropPrincipal"="character"
                             )
+
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
                                  "data_apresentacao"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character",
                                  "codigo_materia"="character", "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character",
@@ -45,7 +46,8 @@
                                  "descricao_objetivo_processo"="character", "descricao_identificacao_materia"="character", "indicador_tramitando"="character",
                                  "codigo_assunto_especifico"="character", "assunto_especifico"="character", "codigo_assunto_geral"="character", "assunto_geral"="character",
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
-                                 "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", "autor_nome"="character")
+                                 "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", 
+                                 "autor_nome"="character")
 
 .COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
@@ -254,5 +256,20 @@
 # Comissões
 .COLNAMES_COMISSOES_SENADO <- c("CARGO"="character","num.x"="integer","PARTIDO"="character","UF"="character","TIPO_VAGA"="character",
                                 "PARLAMENTAR.x"="character")
+
 # Deferimento
 .COLNAMES_DEFRIMENTO <- c("proposicao_id"="character","deferimento"="character")
+
+# Requerimentos
+.COLNAMES_REQUERIMENTOS_CAMARA <- c("id_prop"="numeric","casa"="character","id_req"="integer","deferimento"="character", "ano"="numeric", "cod_tipo"="integer",
+                                    "data_apresentacao"="character",  "descricao_tipo"="character", "ementa"="character", "ementa_detalhada"="character", 
+                                    "keywords"="character", "numero"="numeric", "sigla_tipo"="character", "status_proposicao_cod_situacao"="character", 
+                                    "status_proposicao_cod_tipo_tramitacao"="integer", "status_proposicao_data_hora"="character", "status_proposicao_descricao_situacao"="character",
+                                    "status_proposicao_descricao_tramitacao"="character", "status_proposicao_despacho"="character", "status_proposicao_regime"="character", 
+                                    "status_proposicao_sequencia"="numeric", "status_proposicao_sigla_orgao"="character", 
+                                    "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character", "uri"="character", "uri_autores"="character", 
+                                    "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character")
+
+.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
+                                            "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
+                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character")
