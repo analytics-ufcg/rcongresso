@@ -440,8 +440,6 @@ rename_table_to_underscore <- function(df) {
 #' @param df Dataframe
 #' @return Dataframe containing the renamed strings.
 #' @export
-#' @rdname fetch_votacoes_senado
-#' @export
 .rename_votacoes_df <- function(df) {
   new_names = names(df) %>%
     .to_underscore() %>%

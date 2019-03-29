@@ -1,6 +1,6 @@
-#' @title Fetch related requerimentos in Câmara 
-#' @description Returns a dataframe with data from requerimentos related to a given proposition in Câmara
-#' @param prop_id ID of a Proposição
+#' @title Fetch related requerimentos in Camara 
+#' @description Returns a dataframe with data from requerimentos related to a given proposition in Camara
+#' @param prop_id ID of a Proposicao
 #' @param mark_deferimento whether to retrieve status of requerimento
 #' @return Dataframe
 #' @export
@@ -36,7 +36,7 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
   
     reqs_trams <- fetch_tramitacao(reqs_data$id_req, .CAMARA)
     
-    related_reqs <-
+    related_reqs <- 
       reqs_trams %>%
       # mark reqs_trams rows based on regexes
       fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
@@ -54,12 +54,13 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
       rename_table_to_underscore() %>%
       .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
       .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE) 
+    
   }
 }
 
 #' @title Fetch events of a requerimento
 #' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
-#' @param prop_id ID of a Proposição
+#' @param req_id ID of a requerimento
 #' @return Dataframe
 #' @export
 fetch_events_requerimento_camara <- function(req_id) {
@@ -68,7 +69,7 @@ fetch_events_requerimento_camara <- function(req_id) {
       ~ evento,
       ~ regex,
       'req_apresentacao',
-      '^Apresentação',
+      '^Apresentacao',
       'req_indeferido',
       '^Indefiro',
       'req_deferido',
@@ -76,7 +77,9 @@ fetch_events_requerimento_camara <- function(req_id) {
       'req_arquivado',
       '^Arquivado')
   
-  req_tram <- fetch_tramitacao(req_id, .CAMARA)
+  req_tram <- 
+    fetch_tramitacao(req_id, .CAMARA) %>% 
+    dplyr::mutate(despacho = iconv(despacho, from="UTF-8", to="ASCII//TRANSLIT"))
   
   eventos_req <-
     req_tram %>%

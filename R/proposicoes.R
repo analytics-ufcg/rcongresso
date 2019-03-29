@@ -139,9 +139,9 @@ fetch_proposicao_senado <- function(id) {
     proposicao_complete[,!sapply(proposicao_complete, is.list)] %>%
     rename_table_to_underscore() 
   
-  proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>% 
+  proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
+      .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
 #' @title Fetches all propositions related to a proposition

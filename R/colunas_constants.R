@@ -38,6 +38,7 @@
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
                             "uriPropPosterior"="character", "uriPropPrincipal"="character"
                             )
+
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
                                  "data_apresentacao"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character",
                                  "codigo_materia"="character", "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character",
@@ -46,8 +47,7 @@
                                  "codigo_assunto_especifico"="character", "assunto_especifico"="character", "codigo_assunto_geral"="character", "assunto_geral"="character",
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
                                  "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", 
-                                 "autor_nome"="character", "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character",
-                                 "descricao_objetivo_processo"="character", "nome_poder_origem"="character")
+                                 "autor_nome"="character")
 
 .COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
