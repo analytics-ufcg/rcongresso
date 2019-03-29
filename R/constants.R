@@ -1,3 +1,7 @@
+#Casas
+.CAMARA <- 'camara'
+.SENADO <- 'senado'
+
 # Link default da API
 .CAMARA_API_LINK <- "https://dadosabertos.camara.leg.br"
 .SENADO_API_LINK <- "http://legis.senado.leg.br"
@@ -38,6 +42,7 @@
 .DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 .AGENDA_SENADO_COMISSOES <- "/dadosabertos/agenda/"
+.SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
