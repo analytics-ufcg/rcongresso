@@ -240,7 +240,6 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
   } else {
     autores <- purrr::map_df(autor_info$uri, ~.auxiliary_fetch_autor_camara(.x)) %>%
       dplyr::left_join(
-        autores,
         autor_info %>% dplyr::select(-nome),
         by = "uri")
   }
