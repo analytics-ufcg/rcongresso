@@ -232,14 +232,17 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 #' @export
 fetch_autor_camara <- function (proposicao_id = NULL) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
-  dep_info_url <- .camara_api(autor_uri)
-  if(any(is.na(dep_info_url$uri))){
+  autor_info <- .camara_api(autor_uri)
+  if(any(is.na(autor_info$uri))){
     autores <- .camara_api(autor_uri) %>%
       .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
       .coerce_types(.COLNAMES_AUTORES)
   } else {
-    autores <-purrr::map_df(dep_info_url$uri, ~.auxiliary_fetch_autor_camara(.x)) %>%
-      .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID)
+    autores <- purrr::map_df(autor_info$uri, ~.auxiliary_fetch_autor_camara(.x)) %>%
+      dplyr::left_join(
+        autores,
+        autor_info %>% dplyr::select(-nome),
+        by = "uri")
   }
 
   return(autores)
