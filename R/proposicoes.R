@@ -39,7 +39,7 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
                              autor = NULL, codPartido = NULL, itens = NULL) {
 
   parametros <- as.list(environment(), all=TRUE)
-  
+
   if ( !length(.verifica_parametros_entrada(parametros))) {
     .camara_api(.CAMARA_PROPOSICOES_PATH) %>%
       .assert_dataframe_completo(.COLNAMES_PROPOSICAO_CAMARA) %>%
@@ -90,13 +90,13 @@ fetch_proposicao_senado <- function(id) {
 
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
-    tibble::as.tibble() 
+    tibble::as.tibble()
   if (nrow(proposicao_specific_assunto) == 0) {
-    proposicao_specific_assunto <- 
+    proposicao_specific_assunto <-
       tibble::tribble(~ codigo_assunto_especifico, ~ assunto_especifico,
                       0, "Nao especificado")
   }else {
-    proposicao_specific_assunto <- 
+    proposicao_specific_assunto <-
       proposicao_specific_assunto %>%
       dplyr::rename(assunto_especifico = Descricao, codigo_assunto_especifico = Codigo)
   }
@@ -104,11 +104,11 @@ fetch_proposicao_senado <- function(id) {
     proposicao_data$Assunto$AssuntoGeral %>%
     tibble::as.tibble()
   if (nrow(proposicao_general_assunto) == 0) {
-    proposicao_general_assunto <- 
+    proposicao_general_assunto <-
       tibble::tribble(~ codigo_assunto_geral, ~ assunto_geral,
                       0, "Nao especificado")
   }else {
-    proposicao_general_assunto <- 
+    proposicao_general_assunto <-
       proposicao_general_assunto %>%
       dplyr::rename(assunto_geral = Descricao, codigo_assunto_geral = Codigo)
   }
@@ -137,8 +137,8 @@ fetch_proposicao_senado <- function(id) {
 
   proposicao_complete <-
     proposicao_complete[,!sapply(proposicao_complete, is.list)] %>%
-    rename_table_to_underscore() 
-  
+    rename_table_to_underscore()
+
   proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
@@ -232,9 +232,31 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 #' @export
 fetch_autor_camara <- function (proposicao_id = NULL) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
-  .camara_api(autor_uri) %>%
-    .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
-    .coerce_types(.COLNAMES_AUTORES)
+  autor_info <- .camara_api(autor_uri)
+  if(any(is.na(autor_info$uri))){
+    autores <- .camara_api(autor_uri) %>%
+      .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
+      .coerce_types(.COLNAMES_AUTORES)
+  } else {
+    autores <- purrr::map_df(autor_info$uri, ~.auxiliary_fetch_autor_camara(.x)) %>%
+      dplyr::left_join(
+        autor_info %>% dplyr::select(-nome),
+        by = "uri")
+  }
+
+  return(autores)
+
+}
+
+#' @title Retrieves details about an author of a proposition
+#' @description Fetches a dataframe containing detailed information about the author of the proposition
+#' @param uri URL relative to the Deputy url
+#' @return A dataframe containing details about the author of a proposition
+#' @examples
+#' .auxiliary_fetch_autor_camara('https://dadosabertos.camara.leg.br/api/v2/deputados/178854')
+.auxiliary_fetch_autor_camara <- function(uri) {
+  strsplit(uri, '/')[[1]] %>% tail(1) %>%
+    .fetch_using_id(.DEPUTADOS_PATH)
 }
 
 #' @title Fetch the propositions appended to a proposition in the Camara
