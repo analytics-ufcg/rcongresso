@@ -117,13 +117,13 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           agenda %>%
           dplyr::rowwise() %>%
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::select(c(data, nome, id_proposicao, local)) %>%
+          dplyr::select(c(data, hora, nome, id_proposicao, local)) %>%
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest() %>%
-          dplyr::select(c(data, nome, id_proposicao, local))
+          dplyr::select(c(data, hora, nome, id_proposicao, local))
       }else {
-        return(tibble::tibble(data = character(), sigla = character(), id_proposicao = character(), local = character()))
+        return(tibble::tibble(data = character(), hora = character(), sigla = character(), id_proposicao = character(), local = character()))
       }
 
     }else {
@@ -136,17 +136,17 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
       if (nrow(agenda) != 0) {
         agenda <-
           agenda %>%
-          dplyr::select(data, id_proposicao, nome, titulo_da_reuniao) %>%
+          dplyr::select(data, hora, id_proposicao, nome, titulo_da_reuniao) %>%
           tidyr::unnest() %>%
           dplyr::rowwise() %>%
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::select(c(data, nome, id_proposicao, local))
+          dplyr::select(c(data, hora, nome, id_proposicao, local))
       }else {
-        return(tibble::tibble(data = character(), sigla = character(), id_proposicao = character(), local = character()))
+        return(tibble::tibble(data = character(), hora = character(), sigla = character(), id_proposicao = character(), local = character()))
       }
     }
 
-    new_names <- c("data", "sigla", "id_proposicao", "local")
+    new_names <- c("data", "hora", "sigla", "id_proposicao", "local")
     names(agenda) <- new_names
 
     agenda %>%
@@ -154,7 +154,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
       dplyr::arrange(data)
 
   }else {
-    tibble::tibble(data = character(), sigla = character(), id_proposicao = character(), local = character())
+    tibble::tibble(data = character(), hora = character(), sigla = character(), id_proposicao = character(), local = character())
   }
 
 }
