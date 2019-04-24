@@ -93,3 +93,10 @@ test_that("Quantidade de itens por requisição",{
 test_that("Quantidade default por requisição, atualmente 15",{
   expect_equal(dim(fetch_proposicao_camara()), TAM_DF_DEFAULT)
 })
+
+test_that("fetch_autor_camara()",{
+  expect_true(is.data.frame(fetch_autor_camara(257161)))
+  expect_true(is.data.frame(fetch_autor_camara(2192352)))
+  expect_true(nrow(fetch_autor_camara(257161)) != 0)
+  expect_true(nrow(fetch_autor_camara(2192352)) != 0)
+})
