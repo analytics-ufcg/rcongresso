@@ -121,9 +121,10 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest() %>%
-          dplyr::select(c(data, hora, nome, id_proposicao, local))
+          dplyr::mutate(data = lubridate::ymd_hms(paste(data, hora))) %>% 
+          dplyr::select(c(data, nome, id_proposicao, local))
       }else {
-        return(tibble::tibble(data = character(), hora = character(), sigla = character(), id_proposicao = character(), local = character()))
+        return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
       }
 
     }else {
@@ -140,21 +141,21 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           tidyr::unnest() %>%
           dplyr::rowwise() %>%
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::select(c(data, hora, nome, id_proposicao, local))
+          dplyr::mutate(data =  lubridate::ymd_hms(paste(data, hora))) %>% 
+          dplyr::select(c(data, nome, id_proposicao, local))
       }else {
-        return(tibble::tibble(data = character(), hora = character(), sigla = character(), id_proposicao = character(), local = character()))
+        return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
       }
     }
 
-    new_names <- c("data", "hora", "sigla", "id_proposicao", "local")
+    new_names <- c("data", "sigla", "id_proposicao", "local")
     names(agenda) <- new_names
 
     agenda %>%
-      dplyr::mutate(data = lubridate::dmy(data)) %>%
       dplyr::arrange(data)
 
   }else {
-    tibble::tibble(data = character(), hora = character(), sigla = character(), id_proposicao = character(), local = character())
+    tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character())
   }
 
 }
