@@ -47,7 +47,7 @@ fetch_agenda_senado <- function(initial_date) {
   }
 
   oradores <- tibble::tibble()
-  if('oradores_tipo_orador_orador_sessao_orador' %in% names(agenda)) {
+  if(nrow(agenda) != 0 && 'oradores_tipo_orador_orador_sessao_orador' %in% names(agenda)) {
     oradores <- purrr::map_df(agenda$oradores_tipo_orador_orador_sessao_orador, dplyr::bind_rows, .id = "codigo_sessao")
 
     oradores_not_null <-
@@ -130,13 +130,13 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     }else {
       agenda <-
         agenda %>%
-        dplyr::mutate(id_proposicao = purrr::map(partes_parte_itens_item, ~ .$Codigo)) %>%
-        dplyr::mutate(nome = purrr::map(partes_parte_itens_item, ~ .$Nome)) %>%
-        dplyr::filter(partes_parte_tipo == "Deliberativa")
+        dplyr::filter(partes_parte_tipo == "Deliberativa") 
 
       if (nrow(agenda) != 0) {
         agenda <-
           agenda %>%
+          dplyr::mutate(id_proposicao = purrr::map(partes_parte_itens_item, ~ .$Codigo)) %>%
+          dplyr::mutate(nome = purrr::map(partes_parte_itens_item, ~ .$Nome)) %>% 
           dplyr::select(data, hora, id_proposicao, nome, titulo_da_reuniao) %>%
           tidyr::unnest() %>%
           dplyr::rowwise() %>%
