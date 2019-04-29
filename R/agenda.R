@@ -117,7 +117,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           agenda %>%
           dplyr::rowwise() %>%
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::select(c(data, nome, id_proposicao, local)) %>%
+          dplyr::select(c(data, hora, nome, id_proposicao, local)) %>%
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest() %>%
