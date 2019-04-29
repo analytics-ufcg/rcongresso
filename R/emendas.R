@@ -70,8 +70,8 @@ fetch_emendas_senado <- function(bill_id) {
           autoria$identificacao_parlamentar_sigla_partido_parlamentar,
           "/",
           autoria$identificacao_parlamentar_uf_parlamentar
+          )
         )
-      )
 
     emendas_df <- emendas_df %>%
       dplyr::mutate("autor" = autoria$nome_autor,
