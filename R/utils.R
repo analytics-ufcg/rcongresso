@@ -65,14 +65,16 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
-  ua <- httr::user_agent(.RCONGRESSO_LINK)
+  #ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
+  print(paste("URL:",api_url))
 
   resp <- .get_from_cache(api_url)
 
   if (is.null(resp)) {
       resp_in_cache <- FALSE
-      resp <- httr::GET(api_url, ua, httr::accept_json())
+      #resp <- httr::GET(api_url, ua, httr::accept_json())
+      resp <- httr::GET(api_url, httr::accept_json())
   } else {
       resp_in_cache <- TRUE
   }
