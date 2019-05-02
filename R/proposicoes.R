@@ -129,9 +129,9 @@ fetch_proposicao_senado <- function(id) {
       !!!proposicao_specific_assunto,
       !!!proposicao_general_assunto,
       !!!proposicao_source,
-      autor_nome = proposicao_author[[1]],
-      autor_partido =  proposicao_author[[2]],
-      autor_uf = proposicao_author[[3]],
+      autor_nome = proposicao_author[[1]] %>% tail(1),
+      autor_partido =  proposicao_author[[2]] %>% tail(1),
+      autor_uf = proposicao_author[[3]] %>% tail(1),
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
     )
