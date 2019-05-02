@@ -82,11 +82,10 @@ fetch_proposicao_senado <- function(id) {
     magrittr::extract2("Autoria") %>%
     magrittr::extract2("Autor") %>%
     dplyr::transmute(
-      autor = paste(
-        paste(NomeAutor,
-              ifelse("IdentificacaoParlamentar.SiglaPartidoParlamentar" %in% names(.),
-                     IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
-          ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
+      autor = NomeAutor,
+      partido = ifelse("IdentificacaoParlamentar.SiglaPartidoParlamentar" %in% names(.),
+                     IdentificacaoParlamentar.SiglaPartidoParlamentar, ""),
+      uf = ifelse("UfAutor" %in% names(.),  UfAutor, ""))
 
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
@@ -130,7 +129,9 @@ fetch_proposicao_senado <- function(id) {
       !!!proposicao_specific_assunto,
       !!!proposicao_general_assunto,
       !!!proposicao_source,
-      autor_nome = proposicao_author[[1]] %>% tail(1),
+      autor_nome = proposicao_author[[1]],
+      autor_partido =  proposicao_author[[2]],
+      autor_uf = proposicao_author[[3]],
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
     )
