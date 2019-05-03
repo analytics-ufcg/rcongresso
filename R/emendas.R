@@ -59,8 +59,7 @@ fetch_emendas_senado <- function(bill_id) {
       )
 
   } else if (num_emendas == 1) {
-    texto <- .generate_dataframe(emendas_df$textos_emenda) %>%
-      dplyr::select("tipo_documento", "url_texto")
+    texto <- .generate_dataframe(emendas_df$textos_emenda) 
 
     autoria <- .generate_dataframe(emendas_df$autoria_emenda)
 
@@ -73,15 +72,29 @@ fetch_emendas_senado <- function(bill_id) {
           )
         )
 
-    emendas_df <- emendas_df %>%
-      dplyr::mutate("autor" = autoria$nome_autor,
-                    "partido" = autoria$partido,
-                    "tipo_documento" = texto$tipo_documento,
-                    "inteiro_teor" = texto$url_texto,
-                    "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
-                    "casa" = 'senado') %>%
-      dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
-
+    if ("tipo_documento" %in% names(texto)) {
+      texto <- 
+        texto %>%
+        dplyr::select("tipo_documento", "url_texto")
+      
+      emendas_df <- emendas_df %>%
+        dplyr::mutate("autor" = autoria$nome_autor,
+                      "partido" = autoria$partido,
+                      "tipo_documento" = texto$tipo_documento,
+                      "inteiro_teor" = texto$url_texto,
+                      "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
+                      "casa" = 'senado') %>%
+        dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
+    }else {
+      emendas_df <- emendas_df %>%
+        dplyr::mutate("autor" = autoria$nome_autor,
+                      "partido" = autoria$partido,
+                      "tipo_documento" = "",
+                      "inteiro_teor" = "",
+                      "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
+                      "casa" = 'senado') %>%
+        dplyr::select(-"autoria_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
+    }
 
   } else {
     emendas_df <- emendas_df %>%
