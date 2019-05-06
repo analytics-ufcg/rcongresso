@@ -121,7 +121,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest() %>%
-          dplyr::mutate(data = lubridate::ymd_hms(paste(data, hora))) %>% 
+          dplyr::mutate(data = lubridate::dmy_hm(paste(data, hora))) %>% 
           dplyr::select(c(data, nome, id_proposicao, local))
       }else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
@@ -141,7 +141,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           tidyr::unnest() %>%
           dplyr::rowwise() %>%
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::mutate(data =  lubridate::ymd_hms(paste(data, hora))) %>% 
+          dplyr::mutate(data =  lubridate::dmy_hm(paste(data, hora))) %>% 
           dplyr::select(c(data, nome, id_proposicao, local))
       }else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
