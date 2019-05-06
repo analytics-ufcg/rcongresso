@@ -1,24 +1,24 @@
-#' @title Fetch related requerimentos in Camara 
+#' @title Fetch related requerimentos in Camara
 #' @description Returns a dataframe with data from requerimentos related to a given proposition in Camara
 #' @param prop_id ID of a Proposicao
 #' @param mark_deferimento whether to retrieve status of requerimento
 #' @return Dataframe
 #' @export
 fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE) {
-  reqs <- fetch_relacionadas(prop_id) %>% 
+  reqs <- fetch_relacionadas(prop_id) %>%
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
-  
+
   if(nrow(reqs) == 0)
     return(tibble::tibble())
-  
-  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x)) %>% 
+
+  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao_camara(.x)) %>%
     dplyr::mutate(id_req = id,
                   id_prop = prop_id,
                   casa = .CAMARA) %>% #Adding proposition number to final dataframe
     dplyr::select(-id) %>%
     dplyr::select(id_prop, casa, id_req, dplyr::everything())
-  
+
   if (!mark_deferimento) {
     return(reqs_data)
   } else {
@@ -33,28 +33,28 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
       'req_arquivado',
       '^Arquivado'
     )
-  
+
     reqs_trams <- fetch_tramitacao(reqs_data$id_req, .CAMARA)
-    
-    related_reqs <- 
+
+    related_reqs <-
       reqs_trams %>%
       # mark reqs_trams rows based on regexes
       fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
       dplyr::group_by(id_prop) %>%
       dplyr::arrange(data_hora) %>%
-      dplyr::summarise(deferimento_final = 
+      dplyr::summarise(deferimento_final =
                          dplyr::if_else(any(deferimento %in% c('req_deferido')),'deferido',
                                         dplyr::if_else(any(deferimento %in% c('req_indeferido')),'indeferido',
                                                        dplyr::if_else(any(deferimento %in% c('req_arquivado')),'arquivado',
                                                                       'tramitando')))) %>%
       dplyr::ungroup() %>%
-      dplyr::select(id_req = id_prop, deferimento = deferimento_final) %>% 
+      dplyr::select(id_req = id_prop, deferimento = deferimento_final) %>%
       dplyr::left_join(reqs_data, by = "id_req") %>%
       dplyr::select(id_prop, casa, id_req, dplyr::everything()) %>%
       rename_table_to_underscore() %>%
       .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_CAMARA) %>%
-      .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE) 
-    
+      .coerce_types(.COLNAMES_REQUERIMENTOS_CAMARA, order_cols = FALSE)
+
   }
 }
 
@@ -76,21 +76,38 @@ fetch_events_requerimento_camara <- function(req_id) {
       '^(Defiro)|(Aprovado)',
       'req_arquivado',
       '^Arquivado')
-  
-  req_tram <- 
-    fetch_tramitacao(req_id, .CAMARA) %>% 
+
+  req_tram <-
+    fetch_tramitacao(req_id, .CAMARA) %>%
     dplyr::mutate(despacho = iconv(despacho, from="UTF-8", to="ASCII//TRANSLIT"))
-  
+
   eventos_req <-
     req_tram %>%
     # mark reqs_trams rows based on regexes
     fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
     dplyr::filter(!is.na(evento)) %>%
-    dplyr::mutate(id_req = id_prop) %>% 
+    dplyr::mutate(id_req = id_prop) %>%
     dplyr::select(-regex, -id_prop) %>%
     dplyr::select(id_req, data_hora, evento, dplyr::everything()) %>%
     .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA)  %>%
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
+}
+
+fetch_requerimento_senado(prop_id) {
+  url <- paste0(.SENADO_LEGISLATURAATUAL_PATH, prop_id)
+
+  json_requerimento <- .senado_api(url, asList = T)
+
+  requerimento_data <-
+    json_requerimento %>%
+    magrittr::extract2("MovimentacaoMateria") %>%
+    magrittr::extract2("Materia")
+
+  requerimento_ids <-
+    requerimento_data %>%
+    magrittr::extract2("IdentificacaoMateria") %>%
+    tibble::as.tibble()
+
 }
 
 #' @title Requirements's deferments
@@ -110,18 +127,18 @@ fetch_deferimento <- function(proposicao_id) {
       "deferido",
       .REGEX_DEFERIMENTO_DEFERIDO
     )
-  
+
   fetch_one_deferimento <- function(proposicao_id) {
     json <-
       .senado_api(paste0(.DEFERIMENTO_SENADO_PATH,
                          proposicao_id), asList = T)
-    
+
     resultados <-
       json$MovimentacaoMateria$Materia$OrdensDoDia$OrdemDoDia$DescricaoResultado
     # handle NULL
     if (is.null(resultados))
       resultados <- c('')
-    
+
     resultados %>%
       tibble::as.tibble() %>%
       dplyr::mutate(proposicao_id = proposicao_id) %>%
@@ -130,7 +147,7 @@ fetch_deferimento <- function(proposicao_id) {
       utils::tail(., n = 1) %>%
       dplyr::select(proposicao_id, deferimento)
   }
-  
+
   proposicao_id %>%
     unlist %>%
     unique %>%
