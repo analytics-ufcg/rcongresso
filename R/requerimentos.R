@@ -98,6 +98,16 @@ fetch_requerimento_senado(prop_id) {
 
   json_requerimento <- .senado_api(url, asList = T)
 
+  # selecionar requerimentos antes
+  #requerimento_data <-
+  #  json_requerimento %>%
+  #  if(requerimento_data$MovimentacaoMateria$Materia$IdentificacaoMateria$SiglaSubtipoMateria
+  #                %in% c("RQS", "RCS", "RMA", "RRE", "RQN", "RDR", "RTG", "RQJ", "RQI", "ROS", "REQ")) {
+  #    magrittr::extract2("MovimentacaoMateria") %>%
+  #    magrittr::extract2("Materia")
+
+  #  }
+
   requerimento_data <-
     json_requerimento %>%
     magrittr::extract2("MovimentacaoMateria") %>%
@@ -106,7 +116,15 @@ fetch_requerimento_senado(prop_id) {
   requerimento_ids <-
     requerimento_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
+
+  requerimento_actual_situation <-
+    requerimento_data %>%
+    magrittr::extract2("SituacaoAtual") %>%
+    magrittr::extract2("Autuacoes") %>%
+    magrittr::extract2("Autuacao") %>%
+    magrittr::extract2("Situacao") %>%
+    tibble::as_tibble()
 
 }
 
