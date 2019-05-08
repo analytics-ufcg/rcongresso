@@ -97,7 +97,7 @@ fetch_agenda_senado <- function(initial_date) {
 #' @examples
 #' fetch_agenda_senado_comissoes('2016-05-15', '2016-05-25')
 fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
-  tipos_inuteis <- c('Outros eventos', 'Reuniao', 'Reuniao de Subcomissao')
+  tipos_inuteis <- c('Outros eventos', 'Reuniao de Subcomissao')
 
   agenda <-
     .get_data_frame_agenda_senado(initial_date, end_date) %>%
