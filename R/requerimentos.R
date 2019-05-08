@@ -93,6 +93,10 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
+#' @title Fetch info of a requerimento
+#' @description Returns a dataframe with data of a given requerimento (ids, year, description, etc.)
+#' @return Dataframe
+#' @export
 fetch_requerimento_senado <- function() {
   url <- paste0(.SENADO_LEGISLATURAATUAL_PATH)
   json_requerimento <- .senado_api(url, asList = T)
@@ -106,9 +110,7 @@ fetch_requerimento_senado <- function() {
                     c("RQS", "RCS", "RMA", "RRE", "RQN",
                       "RDR", "RTG", "RQJ", "RQI", "ROS", "REQ"))
 
-  requerimento_ultima_data <-
-    requerimento_data %>%
-    magrittr::extract2("DataUltimaAtualizacao")
+  requerimento_data
 }
 
 #' @title Requirements's deferments
