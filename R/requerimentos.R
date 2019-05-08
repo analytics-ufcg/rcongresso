@@ -93,39 +93,22 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
-fetch_requerimento_senado(prop_id) {
-  url <- paste0(.SENADO_LEGISLATURAATUAL_PATH, prop_id)
-
+fetch_requerimento_senado <- function() {
+  url <- paste0(.SENADO_LEGISLATURAATUAL_PATH)
   json_requerimento <- .senado_api(url, asList = T)
-
-  # selecionar requerimentos antes
-  #requerimento_data <-
-  #  json_requerimento %>%
-  #  if(requerimento_data$MovimentacaoMateria$Materia$IdentificacaoMateria$SiglaSubtipoMateria
-  #                %in% c("RQS", "RCS", "RMA", "RRE", "RQN", "RDR", "RTG", "RQJ", "RQI", "ROS", "REQ")) {
-  #    magrittr::extract2("MovimentacaoMateria") %>%
-  #    magrittr::extract2("Materia")
-
-  #  }
 
   requerimento_data <-
     json_requerimento %>%
-    magrittr::extract2("MovimentacaoMateria") %>%
-    magrittr::extract2("Materia")
+    magrittr::extract2("ListaMateriasLegislaturaAtual") %>%
+    magrittr::extract2("Materias") %>%
+    magrittr::extract2("Materia") %>%
+    dplyr::filter(IdentificacaoMateria.SiglaSubtipoMateria %in%
+                    c("RQS", "RCS", "RMA", "RRE", "RQN",
+                      "RDR", "RTG", "RQJ", "RQI", "ROS", "REQ"))
 
-  requerimento_ids <-
+  requerimento_ultima_data <-
     requerimento_data %>%
-    magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as_tibble()
-
-  requerimento_actual_situation <-
-    requerimento_data %>%
-    magrittr::extract2("SituacaoAtual") %>%
-    magrittr::extract2("Autuacoes") %>%
-    magrittr::extract2("Autuacao") %>%
-    magrittr::extract2("Situacao") %>%
-    tibble::as_tibble()
-
+    magrittr::extract2("DataUltimaAtualizacao")
 }
 
 #' @title Requirements's deferments
