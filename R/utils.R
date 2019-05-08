@@ -44,6 +44,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   status_code = -1
 
   while(!.req_succeeded(status_code) && (tries < .MAX_TENTATIVAS_REQ)) {
+    #print(paste("URL:",url))
     resp <- httr::GET(url, ...)
     status_code = httr::status_code(resp)
     Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
@@ -73,6 +74,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   if (is.null(resp)) {
       resp_in_cache <- FALSE
+      #print(paste("URL:",api_url))
       resp <- httr::GET(api_url, ua, httr::accept_json())
       Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
   } else {
