@@ -93,6 +93,16 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
+fetch_descricao_requerimento_senado <- function(comissao) {
+  requerimento_df <- fetch_requerimento_senado()
+  descricao_req <- requerimento_df %>%
+    dplyr::select(IdentificacaoMateria.CodigoMateria,
+                  IdentificacaoMateria.DescricaoIdentificacaoMateria) %>%
+    tibble::as_tibble()
+
+  descricao_req
+}
+
 #' @title Fetch info of a requerimento
 #' @description Returns a dataframe with data of a given requerimento (ids, year, description, etc.)
 #' @return Dataframe
