@@ -61,4 +61,5 @@
 .COD_ERRO_CLIENTE <- 400
 .COD_ERRO_SERV <- 500
 .MAX_TENTATIVAS_REQ <- 5
+.DEF_POST_REQ_SLEEP_TIME <- 0.05
 .MENSAGEM_ERRO_REQ <- "Falha na requisicao a API dos Dados Abertos. Erro %s ao tentar acessar: %s"
