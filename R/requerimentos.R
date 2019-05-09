@@ -93,7 +93,13 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
-fetch_eventos_requerimentos_senado <- function(req_id) {
+
+#' @title Fetch events of a requerimento
+#' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
+#' @param req_id ID of a requerimento
+#' @return Dataframe
+#' @export
+fetch_eventos_requerimento_senado <- function(req_id) {
   regexes <-
     tibble::tribble(
       ~ evento,
@@ -113,7 +119,6 @@ fetch_eventos_requerimentos_senado <- function(req_id) {
 
   eventos_req <-
     req_tram %>%
-    # mark reqs_trams rows based on rege  xes
     fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
     dplyr::filter(!is.na(evento)) %>%
     dplyr::mutate(id_req = id_prop) %>%
