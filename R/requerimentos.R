@@ -93,11 +93,11 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
-
 #' @title Fetch events of a requerimento
 #' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
 #' @param req_id ID of a requerimento
 #' @return Dataframe
+#' @example event_senado <- fetch_eventos_requerimento_senado(129081)
 #' @export
 fetch_eventos_requerimento_senado <- function(req_id) {
   regexes <-
