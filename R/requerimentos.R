@@ -83,7 +83,7 @@ fetch_events_requerimento_camara <- function(req_id) {
 
   eventos_req <-
     req_tram %>%
-    # mark reqs_trams rows based on regexes
+    # mark reqs_trams rows based on rege  xes
     fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
     dplyr::filter(!is.na(evento)) %>%
     dplyr::mutate(id_req = id_prop) %>%
@@ -91,6 +91,36 @@ fetch_events_requerimento_camara <- function(req_id) {
     dplyr::select(id_req, data_hora, evento, dplyr::everything()) %>%
     .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA)  %>%
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
+}
+
+fetch_eventos_requerimentos_senado <- function(req_id) {
+  regexes <-
+    tibble::tribble(
+      ~ evento,
+      ~ regex,
+      'req_apresentacao',
+      '^Apresentacao',
+      'req_indeferido',
+      '^Indefiro',
+      'req_deferido',
+      '^(Defiro)|(Aprovado)',
+      'req_arquivado',
+      '^Arquivado')
+
+  req_tram <-
+    fetch_tramitacao(req_id, .SENADO) %>%
+    dplyr::mutate(despacho = iconv(despacho, from="UTF-8", to="ASCII//TRANSLIT"))
+
+  eventos_req <-
+    req_tram %>%
+    # mark reqs_trams rows based on rege  xes
+    fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
+    dplyr::filter(!is.na(evento)) %>%
+    dplyr::mutate(id_req = id_prop) %>%
+    dplyr::select(-regex, -id_prop) %>%
+    dplyr::select(id_req, data_hora, evento, dplyr::everything()) %>%
+    .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_SENADO)  %>%
+    .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_SENADO, order_cols = F)
 }
 
 #' @title Fetch requerimentos
