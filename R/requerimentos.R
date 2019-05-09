@@ -93,10 +93,15 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
+#' @title Fetch requerimentos
+#' @description Returns a dataframe with data of a given requerimento (author, year, etc.)
+#' @param ID of a requerimento
+#' @return Dataframe
+#' @export
 fetch_requerimento_senado <- function(req_id) {
-  prop <- fetch_proposicao_senado(req_id)
+  proposicoes <- fetch_proposicao_senado(req_id)
 
-  requerimento <- prop %>%
+  requerimento <- proposicoes %>%
     dplyr::filter(sigla_subtipo_materia %in%
                     c("RQS", "RCS", "RMA", "RRE",
                       "RQN", "RDR", "RTG", "RQJ", "RQI", "ROS", "REQ"))
