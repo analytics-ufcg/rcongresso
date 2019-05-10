@@ -200,26 +200,6 @@ fetch_eventos_requerimento_senado <- function(req_id) {
   requerimento
 }
 
-#' @title Fetch info of a requerimento
-#' @description Returns a dataframe with data of a given requerimento (ids, year, description, etc.)
-#' @return Dataframe
-#' @export
-fetch_requerimentos_senado <- function() {
-  url <- paste0(.SENADO_LEGISLATURAATUAL_PATH)
-  json_requerimento <- .senado_api(url, asList = T)
-
-  requerimento_data <-
-    json_requerimento %>%
-    magrittr::extract2("ListaMateriasLegislaturaAtual") %>%
-    magrittr::extract2("Materias") %>%
-    magrittr::extract2("Materia") %>%
-    dplyr::filter(IdentificacaoMateria.SiglaSubtipoMateria %in%
-                    c("RQS", "RCS", "RMA", "RRE", "RQN",
-                      "RDR", "RTG", "RQJ", "RQI", "ROS", "REQ"))
-
-  requerimento_data
-}
-
 #' @title Requirements's deferments
 #' @description Verify deferments to a id's list of requirements
 #' @param proposicao_id ID of requirements
