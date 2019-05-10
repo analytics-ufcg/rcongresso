@@ -39,3 +39,4 @@ Suggests: testthat,
     ggplot2
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
+StagedInstall: opt-out
