@@ -2,9 +2,6 @@ language: R
 sudo: false
 cache:
   packages: true
-
-script:
-  - R CMD build . --no-staged-install
   
 addons:
   apt:
