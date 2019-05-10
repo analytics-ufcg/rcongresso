@@ -93,9 +93,14 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
-
+#' @title Fetch related requerimentos in Senado
+#' @description Returns a dataframe with data from requerimentos related to a given proposition in Senado
+#' @param prop_id ID of a Proposicao
+#' @param mark_deferimento whether to retrieve status of requerimento
+#' @return Dataframe
+#' @export
 fetch_related_requerimentos_senado <- function(prop_id, mark_deferimento = FALSE) {
-  reqs <- fetch_requerimento_senado(prop_id)
+  reqs <- .filter_requerimento_senado(prop_id)
 
   if(nrow(reqs) == 0)
     return(tibble::as_tibble())
@@ -179,12 +184,12 @@ fetch_eventos_requerimento_senado <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_SENADO, order_cols = F)
 }
 
-#' @title Fetch requerimentos
+#' @title Filter requerimentos
 #' @description Returns a dataframe with data of a given requerimento (author, year, etc.)
 #' @param ID of a requerimento
 #' @return Dataframe
 #' @export
-fetch_requerimento_senado <- function(req_id) {
+.filter_requerimento_senado <- function(req_id) {
   proposicoes <- fetch_proposicao_senado(req_id)
 
   requerimento <- proposicoes %>%
