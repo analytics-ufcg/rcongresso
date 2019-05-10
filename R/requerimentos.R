@@ -93,6 +93,57 @@ fetch_events_requerimento_camara <- function(req_id) {
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
 }
 
+
+fetch_related_requerimentos_senado <- function(prop_id, mark_deferimento = FALSE) {
+  reqs <- fetch_requerimento_senado(prop_id)
+
+  if(nrow(reqs) == 0)
+    return(tibble::as_tibble())
+
+  reqs_data <- purrr::map_df(reqs$codigo_materia, ~ fetch_proposicao_senado(.x)) %>%
+    dplyr::mutate(id_req = codigo_materia,
+                  id_prop = prop_id,
+                  casa = .SENADO) %>%
+    dplyr::select(-codigo_materia) %>%
+    dplyr::select(id_prop, casa, id_req, dplyr::everything())
+
+  if (!mark_deferimento) {
+    return(reqs_data)
+  } else {
+    regexes <-
+      tibble::tribble(
+        ~ deferimento,
+        ~ regex,
+        'req_indeferido',
+        '^Indefiro',
+        'req_deferido',
+        '^(Defiro)|(Aprovado)',
+        'req_arquivado',
+        '^Arquivado'
+      )
+
+    reqs_trams <- fetch_tramitacao(reqs_data$id_req, .SENADO)
+
+    related_reqs <-
+      reqs_trams %>%
+      fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
+      dplyr::group_by(id_prop) %>%
+      dplyr::arrange(data_hora) %>%
+      dplyr::summarise(deferimento_final =
+                         dplyr::if_else(any(deferimento %in% c('req_deferido')),'deferido',
+                                        dplyr::if_else(any(deferimento %in% c('req_indeferido')),'indeferido',
+                                                       dplyr::if_else(any(deferimento %in% c('req_arquivado')),'arquivado',
+                                                                      'tramitando')))) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(id_req = id_prop, deferimento = deferimento_final) %>%
+      dplyr::left_join(reqs_data, by = "id_req") %>%
+      dplyr::select(id_prop, casa, id_req, dplyr::everything()) %>%
+      rename_table_to_underscore() %>%
+      .assert_dataframe_completo(.COLNAMES_REQUERIMENTOS_SENADO) %>%
+      .coerce_types(.COLNAMES_REQUERIMENTOS_SENADO, order_cols = FALSE)
+  }
+}
+
 #' @title Fetch events of a requerimento
 #' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
 #' @param req_id ID of a requerimento
