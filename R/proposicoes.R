@@ -170,6 +170,12 @@ fetch_relacionadas <- function(id_prop){
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
+fetch_relacionadas_senado <- function(id_prop) {
+  proposicao <- fetch_proposicao_senado(id_prop)
+  relacionadas <- proposicao$proposicoes_relacionadas
+  relacionadas <- unlist(strsplit(relacionadas, " "))
+}
+
 #' @title Retrieves the proposition ID from its type, number and year
 #' @description The function can be used to fetch a vector of ids as well, in case of many propositions.
 #' @param tipo Proposition type (i.e., PEC, PL, PDC)
