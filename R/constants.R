@@ -43,7 +43,6 @@
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 .AGENDA_SENADO_COMISSOES <- "/dadosabertos/agenda/"
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
-.SENADO_LEGISLATURAATUAL_PATH <- "/dadosabertos/materia/legislaturaatual"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
