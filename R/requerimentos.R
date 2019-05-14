@@ -190,7 +190,11 @@ fetch_eventos_requerimento_senado <- function(req_id) {
 #' @return Dataframe
 #' @export
 .filter_requerimento_senado <- function(req_id) {
+  prop_rela <- fetch_relacionadas_senado(req_id)
+
   proposicoes <- fetch_proposicao_senado(req_id)
+
+  df_merge <- merge.data.frame(proposicoes, prop_rela)
 
   requerimento <- proposicoes %>%
     dplyr::filter(sigla_subtipo_materia %in%
