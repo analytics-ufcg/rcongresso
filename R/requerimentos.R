@@ -188,7 +188,6 @@ fetch_eventos_requerimento_senado <- function(req_id) {
 #' @description Returns a dataframe with data of a given requerimento (author, year, etc.)
 #' @param ID of a requerimento
 #' @return Dataframe
-#' @export
 .filter_requerimento_senado <- function(req_id) {
   prop_relacionadas <- fetch_relacionadas_senado(req_id)
 
