@@ -61,10 +61,6 @@ test <- function(){
     expect_true(all(sapply(agenda_senado, class) %in% .COLNAMES_AGENDA_SENADO))
     expect_true(all(sapply(materias_senado, class) %in% .COLNAMES_AGENDA_MATERIA_SENADO))
     expect_true(all(sapply(oradores_senado, class) %in% .COLNAMES_AGENDA_ORADORES_SENADO))
-    expect_true(all(sapply(agenda_comissoes_senado, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
-    expect_true(all(sapply(agenda_comissoes_senado_1, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
-    expect_true(all(sapply(agenda_comissoes_senado_2, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
-    expect_true(all(sapply(agenda_comissoes_senado_3, class) %in% .COLNAMES_AGENDA_COMISSOES_SENADO))
   })
 
   test_that("Have many rows", {
