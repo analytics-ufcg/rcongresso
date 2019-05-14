@@ -181,7 +181,7 @@ fetch_relacionadas_senado <- function(id_prop) {
   proposicao <- fetch_proposicao_senado(id_prop)
   relacionadas <- proposicao$proposicoes_relacionadas
 
-  proposicoes_relacionadas <-  unlist(strsplit(proposicoes$proposicoes_relacionadas, " "))
+  proposicoes_relacionadas <-  unlist(strsplit(proposicao$proposicoes_relacionadas, " "))
   df_relacionadas <- data.frame(proposicoes_relacionadas)
 
   df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x))
