@@ -170,10 +170,24 @@ fetch_relacionadas <- function(id_prop){
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
+
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the related propositions.
+#' @examples
+#' relacionadas_senado <- fetch_relacionadas_senado(91341)
+#' @export
 fetch_relacionadas_senado <- function(id_prop) {
   proposicao <- fetch_proposicao_senado(id_prop)
   relacionadas <- proposicao$proposicoes_relacionadas
-  relacionadas <- unlist(strsplit(relacionadas, " "))
+
+  proposicoes_relacionadas <-  unlist(strsplit(proposicoes$proposicoes_relacionadas, " "))
+  df_relacionadas <- data.frame(proposicoes_relacionadas)
+
+  df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x))
+  df_relacionadas <- df_relacionadas %>% dplyr::select(-proposicoes_relacionadas)
+  df_relacionadas
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
