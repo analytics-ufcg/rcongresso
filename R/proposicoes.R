@@ -170,7 +170,6 @@ fetch_relacionadas <- function(id_prop){
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
-
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
