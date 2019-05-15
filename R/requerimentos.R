@@ -155,7 +155,7 @@ fetch_related_requerimentos_senado <- function(prop_id, mark_deferimento = FALSE
 #' @return Dataframe
 #' @example event_senado <- fetch_eventos_requerimento_senado(91341)
 #' @export
-fetch_eventos_requerimento_senado <- function(req_id) {
+fetch_events_requerimento_senado <- function(req_id) {
   regexes <-
     tibble::tribble(
       ~ evento,
