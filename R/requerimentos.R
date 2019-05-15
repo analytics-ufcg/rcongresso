@@ -153,33 +153,63 @@ fetch_related_requerimentos_senado <- function(prop_id, mark_deferimento = FALSE
 #' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
 #' @param req_id ID of a requerimento
 #' @return Dataframe
-#' @example event_senado <- fetch_eventos_requerimento_senado(129081)
+#' @example event_senado <- fetch_eventos_requerimento_senado(91341)
 #' @export
 fetch_eventos_requerimento_senado <- function(req_id) {
   regexes <-
     tibble::tribble(
       ~ evento,
       ~ regex,
-      'req_apresentacao',
-      '^Apresentacao',
-      'req_indeferido',
-      '^Indefiro',
-      'req_deferido',
-      '^(Defiro)|(Aprovado)',
-      'req_arquivado',
-      '^Arquivado')
+      'req_remetida_camara',
+      '^REMETIDA',
+      'req_aprov_substituto',
+      '^APROVADO O SUBSTITUTO',
+      'req_incluida_ordem_dia',
+      '^INCLUIDA EM ORDEM',
+      'req_pronto_deliberacao',
+      '^PRONTO PARA DELIBERACAO',
+      'req_aguardando_recebimento',
+      '^AGUARDANDO RECEBIMENTO',
+      'req_aguardando_leitura_parecer',
+      '^AGUARDANDO LEITURA PARECER',
+      'req_aprov_parecer_comissao',
+      '^APROVADO PARECER DA COMISSAO',
+      'req_incluida_pauta_reuniao',
+      '^INCLUIDA NA PAUTA DA REUNIAO',
+      'req_pronta_pauta_reuniao',
+      '^PRONTA PARA A PAUTA DA REUNIAO',
+      'req_pedido',
+      '^PEDIDO',
+      'req_pronta_pauta_comissao',
+      '^PRONTA PARA A PAUTA DA COMISSAO',
+      'req_audiencia',
+      '^AUDIENCIA',
+      'req_materia',
+      '^MATERIA',
+      'req_aguardando_designacao',
+      '^AGUARDANDO DESIGNACAO',
+      'req_aguardando_inclusao',
+      '^AGUARDANDO INCLUSAO',
+      'req_incluido',
+      '^INCLUIDO',
+      'req_agendado',
+      '^AGENDADO',
+      'req_aguardando_leitura',
+      '^AGUARDANDO LEITURA',
+      'req_aguardando_decisao_mesa',
+      '^AGUARDANDO DECISAO')
 
-  req_tram <-
-    fetch_tramitacao(req_id, .SENADO) %>%
-    dplyr::mutate(despacho = iconv(despacho, from="UTF-8", to="ASCII//TRANSLIT"))
+  req_tram <- fetch_tramitacao(req_id, .SENADO) %>%
+    dplyr::mutate(situacao_descricao_situacao = iconv(situacao_descricao_situacao,
+                                                      from="UTF-8",
+                                                      to="ASCII//TRANSLIT"))
 
   eventos_req <-
     req_tram %>%
-    fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
+    fuzzyjoin::regex_left_join(regexes, by = c(situacao_descricao_situacao = 'regex')) %>%
     dplyr::filter(!is.na(evento)) %>%
-    dplyr::mutate(id_req = id_prop) %>%
-    dplyr::select(-regex, -id_prop) %>%
-    dplyr::select(id_req, data_hora, evento, dplyr::everything()) %>%
+    dplyr::select(-regex) %>%
+    dplyr::select(codigo_materia, data_hora, dplyr::everything()) %>%
     .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_SENADO)  %>%
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_SENADO, order_cols = F)
 }
