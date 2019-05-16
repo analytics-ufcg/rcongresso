@@ -123,6 +123,10 @@ fetch_proposicao_senado <- function(id) {
   relacionadas <-
     proposicao_data$MateriasRelacionadas$MateriaRelacionada$IdentificacaoMateria.CodigoMateria
 
+  if (is.null(relacionadas)) {
+    relacionadas <- .extract_texto_relacionadas(id)
+  }
+
   proposicao_complete <-
     proposicao_info %>%
     tibble::add_column(
@@ -142,6 +146,18 @@ fetch_proposicao_senado <- function(id) {
   proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
+}
+
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Array de character containing all the related propositions.
+#' @examples
+#' relacionadas <- fetch_relacionadas(129808)
+.extract_texto_relacionadas <- function(id) {
+  proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
+  relacionadas <- proposicao_data$TextoMateria$Materia$Textos$Texto$CodigoTexto
+  relacionadas
 }
 
 #' @title Fetches all propositions related to a proposition
@@ -185,8 +201,9 @@ fetch_relacionadas_senado <- function(id_prop) {
   df_relacionadas <- data.frame(proposicoes_relacionadas)
 
   df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x))
-  df_relacionadas <- df_relacionadas %>% dplyr::select(-proposicoes_relacionadas)
-  df_relacionadas
+  df_relacionadas <- df_relacionadas %>% dplyr::select(-proposicoes_relacionadas) %>%
+    .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+    .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
