@@ -63,17 +63,17 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' prop_pls229 <- fetch_proposicao_senado(91341)
 #' @rdname fetch_proposicao_senado
 #' @export
-fetch_proposicao_senado <- function(id) {
+fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
   #print(id)
-  #  = NULL, tipo_req = NULL, num_req = NULL, ano_req = NULL, comissao = NULL
-  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
-  #proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)
+  #proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
+  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)
 
-  #if (is.null(proposicao_data$DetalheMateria$Materia)) {
-  #  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, tipo_req, "/", num_req, "/", ano_req, "?comissao=", comissao), asList = TRUE)
-  #}
+  if (is.null(proposicao_data$DetalheMateria$Materia)) {
+    proposicao_data <- .senado_api(paste0(.SENADO_TEXTO_MATERIA, descricao), asList = TRUE)
+  }
 
-  #proposicao_data <- proposicao_data$DetalheMateria$Materia
+  proposicao_data <- proposicao_data$DetalheMateria$Materia
+
   proposicao_ids <-
     proposicao_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
@@ -168,6 +168,37 @@ fetch_proposicao_senado <- function(id) {
   relacionadas
 }
 
+.extract_descricao_requerimento <- function(id) {
+  proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
+  proposicao_data <- proposicao_data$TextoMateria$Materia
+
+  cod_texto <-
+    proposicao_data %>%
+    magrittr::extract2("Textos") %>%
+    magrittr::extract2("Texto") %>%
+    magrittr::extract2("CodigoTexto")
+
+  req_numero <-
+    proposicao_data %>%
+    magrittr::extract2("Textos") %>%
+    magrittr::extract2("Texto") %>%
+    magrittr::extract2("DescricaoTexto")
+
+  comissao <-
+    proposicao_data %>%
+    magrittr::extract2("Textos") %>%
+    magrittr::extract2("Texto") %>%
+    magrittr::extract2("IdentificacaoComissao.SiglaComissao")
+
+  #Provisório
+  #req_numero <- unlist(strsplit(req_numero, " "))
+
+  #descricao <- paste0(req_numero[1], "/", req_numero[2], "/", comissao)
+  #descricao <- data.frame(cod_texto, descricao)
+
+  #return(descricao)
+}
+
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
@@ -203,16 +234,14 @@ fetch_relacionadas <- function(id_prop){
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
   proposicao <- fetch_proposicao_senado(id_prop)
-  relacionadas <- proposicao$proposicoes_relacionadas
+  descricao <- .extract_descricao_requerimento(id_prop)
 
-  proposicoes_relacionadas <-  unlist(strsplit(proposicao$proposicoes_relacionadas, " "))
-  df_relacionadas <- data.frame(proposicoes_relacionadas)
+  #df_relacionadas <- purrr::map_df(descricao$cod_texto, ~ fetch_proposicao_senado(.x, descricao))
 
-  # extrair tipo, numero, ano dos requerimentos e comissao
-  df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x))
-  df_relacionadas <- df_relacionadas %>% dplyr::select(-proposicoes_relacionadas) %>%
-    .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-    .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  #df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x, descricao))
+  #df_relacionadas <- df_relacionadas %>% dplyr::select(-proposicoes_relacionadas) %>%
+   # .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+    #.coerce_types(.COLNAMES_RELACIONADAS_SENADO)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
