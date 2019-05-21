@@ -63,16 +63,8 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' prop_pls229 <- fetch_proposicao_senado(91341)
 #' @rdname fetch_proposicao_senado
 #' @export
-fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
-  #print(id)
-  #proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
-  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)
-
-  #if (is.null(proposicao_data$DetalheMateria$Materia)) {
-    #proposicao_data <- .senado_api(paste0(.SENADO_TEXTO_MATERIA, descricao), asList = TRUE)
-  #}
-
-  proposicao_data <- proposicao_data$DetalheMateria$Materia
+fetch_proposicao_senado <- function(id = NULL) {
+  proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
 
   proposicao_ids <-
     proposicao_data %>%
@@ -131,10 +123,6 @@ fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
   relacionadas <-
     proposicao_data$MateriasRelacionadas$MateriaRelacionada$IdentificacaoMateria.CodigoMateria
 
-  if (is.null(relacionadas)) {
-    relacionadas <- .extract_texto_relacionadas(id)
-  }
-
   proposicao_complete <-
     proposicao_info %>%
     tibble::add_column(
@@ -156,18 +144,6 @@ fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
-#' @title Fetches all propositions related to a proposition
-#' @description Returns all propositions related to a proposition by its id.
-#' @param id_prop Proposition's ID
-#' @return Array de character containing all the related propositions.
-#' @examples
-#' relacionadas <- fetch_relacionadas(129808)
-.extract_texto_relacionadas <- function(id) {
-  proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
-  relacionadas <- proposicao_data$TextoMateria$Materia$Textos$Texto$CodigoTexto
-  relacionadas
-}
-
 fetch_textos_proposicao <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
 
@@ -186,6 +162,11 @@ fetch_textos_proposicao <- function(id) {
     proposicao_texto %>%
     tibble::add_column(
       proposicao_ids)
+
+  proposicao_complete <-
+    proposicao_complete %>%
+    dplyr::filter(DescricaoTipoTexto %in% c("Avulso de requerimento", "Requerimento")) %>%
+    tibble::as_tibble()
 }
 
 .extract_descricao_requerimento <- function(id) {
@@ -231,7 +212,7 @@ fetch_textos_proposicao <- function(id) {
     paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2) %>%
     tibble::as_tibble()
 
-  return(descricao_df$descricao_req)
+  return(descricao_df)
 }
 
 #' @title Fetches all propositions related to a proposition
@@ -269,6 +250,10 @@ fetch_relacionadas <- function(id_prop){
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
   relacionadas <- fetch_textos_proposicao(id_prop)
+  endpoint <- .extract_descricao_requerimento(id_prop) %>%
+    dplyr::select(CodigoTexto = value,
+                  endpoint = descricao_req)
+  relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto")
    #%>%  .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
     #.coerce_types(.COLNAMES_RELACIONADAS_SENADO)
 }
@@ -342,7 +327,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
       .coerce_types(.COLNAMES_AUTORES)
   } else {
     autores <- purrr::map_df(autor_info$uri, ~.auxiliary_fetch_autor_camara(.x)) %>%
-      dplyr::left_join(
+      dplyr::left_join(View(endpoint)
         autor_info %>% dplyr::select(-nome),
         by = "uri")
   }
