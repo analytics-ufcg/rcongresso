@@ -269,9 +269,9 @@ fetch_relacionadas_senado <- function(id_prop) {
   endpoint <- .extract_descricao_requerimento(id_prop) %>%
     dplyr::select(CodigoTexto = value,
                   endpoint = descricao_req)
-  relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto")
-   #%>%  .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-    #.coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
+    .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+    .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
