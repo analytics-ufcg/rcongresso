@@ -144,6 +144,14 @@ fetch_proposicao_senado <- function(id = NULL) {
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the related propositions.
+#' @examples
+#' relacionadas_texto <- fetch_textos_proposicao(129808)
+#' @rdname fetch_textos_proposicao
+#' @export
 fetch_textos_proposicao <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
 
@@ -169,6 +177,14 @@ fetch_textos_proposicao <- function(id) {
     tibble::as_tibble()
 }
 
+#' @title Extract new part of endpoint of the Senado
+#' @description Returns all endpoint
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all endpoints
+#' @examples
+#' endpoint <- .extract_descricao_requerimento(129808)
+#' @rdname .extract_descricao_requerimento
+#' @export
 .extract_descricao_requerimento <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
   proposicao_data <- proposicao_data$TextoMateria$Materia
@@ -327,7 +343,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
       .coerce_types(.COLNAMES_AUTORES)
   } else {
     autores <- purrr::map_df(autor_info$uri, ~.auxiliary_fetch_autor_camara(.x)) %>%
-      dplyr::left_join(View(endpoint)
+      dplyr::left_join(
         autor_info %>% dplyr::select(-nome),
         by = "uri")
   }
