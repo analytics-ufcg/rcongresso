@@ -176,27 +176,41 @@ fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
     proposicao_data %>%
     magrittr::extract2("Textos") %>%
     magrittr::extract2("Texto") %>%
-    magrittr::extract2("CodigoTexto")
+    magrittr::extract2("CodigoTexto") %>%
+    tibble::as_tibble()
 
   req_numero <-
     proposicao_data %>%
     magrittr::extract2("Textos") %>%
     magrittr::extract2("Texto") %>%
-    magrittr::extract2("DescricaoTexto")
+    magrittr::extract2("DescricaoTexto") %>%
+    tibble::as_tibble()
 
   comissao <-
     proposicao_data %>%
     magrittr::extract2("Textos") %>%
     magrittr::extract2("Texto") %>%
-    magrittr::extract2("IdentificacaoComissao.SiglaComissao")
+    magrittr::extract2("IdentificacaoComissao.SiglaComissao") %>%
+    tibble::as_tibble()
 
-  #Provisório
-  #req_numero <- unlist(strsplit(req_numero, " "))
+  descricao_texto <-
+    proposicao_data %>%
+    magrittr::extract2("Textos") %>%
+    magrittr::extract2("Texto") %>%
+    magrittr::extract2("DescricaoTipoTexto") %>%
+    tibble::as_tibble()
 
-  #descricao <- paste0(req_numero[1], "/", req_numero[2], "/", comissao)
-  #descricao <- data.frame(cod_texto, descricao)
+  descricao_df <- data.frame(cod_texto, req_numero, comissao, descricao_texto)
+  descricao_df <- descricao_df %>%
+    dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento"))
 
-  #return(descricao)
+  descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
+  descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
+
+  descricao_df$descricao_req <-
+    paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
+
+  return(descricao_df$descricao_req)
 }
 
 #' @title Fetches all propositions related to a proposition
@@ -236,6 +250,7 @@ fetch_relacionadas_senado <- function(id_prop) {
   proposicao <- fetch_proposicao_senado(id_prop)
   descricao <- .extract_descricao_requerimento(id_prop)
 
+  df_relacionadas <- purrr::map_df(descricao, ~ fetch_proposicao_senado(.x, descricao))
   #df_relacionadas <- purrr::map_df(descricao$cod_texto, ~ fetch_proposicao_senado(.x, descricao))
 
   #df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x, descricao))
