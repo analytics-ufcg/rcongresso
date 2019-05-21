@@ -59,15 +59,12 @@
 .COLNAMES_RELACIONADAS <- c("id_prop"="integer","id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
 
-.COLNAMES_RELACIONADAS_SENADO <- c("explicacao_ementa_materia"="character", "apelido_materia"="character", "data_leitura"="character",
-                                   "sigla_casa_leitura"="character", "descricao_objetivo_processo"="character", "ano_materia"="character",
-                                   "assunto_especifico"="character", "assunto_geral"="character", "autor_nome"="character", "codigo_assunto_especifico"="character",
-                                   "codigo_assunto_geral"="character", "codigo_materia"="character", "codigo_natureza"="character", "data_apresentacao"="character",
-                                   "descricao_identificacao_materia"="character", "descricao_natureza"="character", "descricao_subtipo_materia"="character",
-                                   "ementa_materia"="character", "indicador_complementar"="character", "indicador_tramitando"="character",
-                                   "nome_casa_identificacao_materia"="character", "nome_casa_leitura"="character", "nome_casa_origem"="character", "nome_natureza"="character",
-                                   "nome_poder_origem"="character", "numero_materia"="character", "proposicoes_apensadas"="character", "sigla_casa_identificacao_materia"="character",
-                                   "sigla_casa_origem"="character", "sigla_subtipo_materia"="character")
+.COLNAMES_RELACIONADAS_SENADO <- c("CodigoTexto"="character", "DescricaoTipoTexto"="character", "TipoDocumento"="character",
+                                   "FormatoTexto"="character", "DataTexto"="character", "UrlTexto"="character", "DescricaoTexto"="character",
+                                   "IdentificacaoComissao.CodigoComissao"="character", "IdentificacaoComissao.SiglaComissao"="character",
+                                   "IdentificacaoComissao.NomeComissao"="character", "IdentificacaoComissao.SiglaCasaComissao"="character",
+                                   "IdentificacaoComissao.NomeCasaComissao"="character", "proposicao_ids"="character", "endpoint"="character")
+
 
 .COLNAMES_TRAMITACOES_CAMARA <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
                            "despacho"="character","codSituacao"="integer","codTipoTramitacao"="character","regime"="character",
