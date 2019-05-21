@@ -68,9 +68,9 @@ fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
   #proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)$DetalheMateria$Materia
   proposicao_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, id), asList = TRUE)
 
-  if (is.null(proposicao_data$DetalheMateria$Materia)) {
-    proposicao_data <- .senado_api(paste0(.SENADO_TEXTO_MATERIA, descricao), asList = TRUE)
-  }
+  #if (is.null(proposicao_data$DetalheMateria$Materia)) {
+    #proposicao_data <- .senado_api(paste0(.SENADO_TEXTO_MATERIA, descricao), asList = TRUE)
+  #}
 
   proposicao_data <- proposicao_data$DetalheMateria$Materia
 
@@ -168,6 +168,26 @@ fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
   relacionadas
 }
 
+fetch_textos_proposicao <- function(id) {
+  proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
+
+  proposicao_ids <-
+    proposicao_data %>%
+    magrittr::extract2("IdentificacaoMateria") %>%
+    tibble::as_tibble()
+
+  proposicao_texto <-
+    proposicao_data %>%
+    magrittr::extract2("Textos") %>%
+    magrittr::extract2("Texto") %>%
+    tibble::as_tibble()
+
+  proposicao_complete <-
+    proposicao_texto %>%
+    tibble::add_column(
+      proposicao_ids)
+}
+
 .extract_descricao_requerimento <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
   proposicao_data <- proposicao_data$TextoMateria$Materia
@@ -208,7 +228,8 @@ fetch_proposicao_senado <- function(id = NULL, descricao = NULL) {
   descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
 
   descricao_df$descricao_req <-
-    paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
+    paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2) %>%
+    tibble::as_tibble()
 
   return(descricao_df$descricao_req)
 }
@@ -247,15 +268,8 @@ fetch_relacionadas <- function(id_prop){
 #' relacionadas_senado <- fetch_relacionadas_senado(91341)
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
-  proposicao <- fetch_proposicao_senado(id_prop)
-  descricao <- .extract_descricao_requerimento(id_prop)
-
-  df_relacionadas <- purrr::map_df(descricao, ~ fetch_proposicao_senado(.x, descricao))
-  #df_relacionadas <- purrr::map_df(descricao$cod_texto, ~ fetch_proposicao_senado(.x, descricao))
-
-  #df_relacionadas <- purrr::map_df(df_relacionadas$proposicoes_relacionadas, ~ fetch_proposicao_senado(.x, descricao))
-  #df_relacionadas <- df_relacionadas %>% dplyr::select(-proposicoes_relacionadas) %>%
-   # .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+  relacionadas <- fetch_textos_proposicao(id_prop)
+   #%>%  .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
     #.coerce_types(.COLNAMES_RELACIONADAS_SENADO)
 }
 
