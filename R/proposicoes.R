@@ -155,26 +155,33 @@ fetch_proposicao_senado <- function(id = NULL) {
 fetch_textos_proposicao <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
 
-  proposicao_ids <-
-    proposicao_data %>%
-    magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as_tibble()
+  if (is.null(proposicao_data$Textos)) {
+    proposicao_complete <-
+      proposicao_data %>%
+      magrittr::extract2("IdentificacaoMateria") %>%
+      tibble::as_tibble()
+  } else {
+    proposicao_ids <-
+      proposicao_data %>%
+      magrittr::extract2("IdentificacaoMateria") %>%
+      tibble::as_tibble()
 
-  proposicao_texto <-
-    proposicao_data %>%
-    magrittr::extract2("Textos") %>%
-    magrittr::extract2("Texto") %>%
-    tibble::as_tibble()
+    proposicao_texto <-
+      proposicao_data %>%
+      magrittr::extract2("Textos") %>%
+      magrittr::extract2("Texto") %>%
+      tibble::as_tibble()
 
-  proposicao_complete <-
-    proposicao_texto %>%
-    tibble::add_column(
-      !!!proposicao_ids)
+    proposicao_complete <-
+      proposicao_texto %>%
+      tibble::add_column(
+        !!!proposicao_ids)
 
-  proposicao_complete <-
-    proposicao_complete %>%
-    dplyr::filter(DescricaoTipoTexto %in% c("Avulso de requerimento", "Requerimento")) %>%
-    tibble::as_tibble()
+    proposicao_complete <-
+      proposicao_complete %>%
+      dplyr::filter(DescricaoTipoTexto %in% c("Avulso de requerimento", "Requerimento")) %>%
+      tibble::as_tibble()
+  }
 }
 
 #' @title Extract new part of endpoint of the Senado
@@ -189,48 +196,52 @@ fetch_textos_proposicao <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
   proposicao_data <- proposicao_data$TextoMateria$Materia
 
-  cod_texto <-
-    proposicao_data %>%
-    magrittr::extract2("Textos") %>%
-    magrittr::extract2("Texto") %>%
-    magrittr::extract2("CodigoTexto") %>%
-    tibble::as_tibble()
+  if (is.null(proposicao_data$Textos)) {
+    descricao_df <-
+      proposicao_data %>%
+      magrittr::extract2("IdentificacaoMateria") %>%
+      tibble::as_tibble()
 
-  req_numero <-
-    proposicao_data %>%
-    magrittr::extract2("Textos") %>%
-    magrittr::extract2("Texto") %>%
-    magrittr::extract2("DescricaoTexto") %>%
-    tibble::as_tibble()
-
-  comissao <-
-    proposicao_data %>%
-    magrittr::extract2("Textos") %>%
-    magrittr::extract2("Texto") %>%
-    magrittr::extract2("IdentificacaoComissao.SiglaComissao") %>%
-    tibble::as_tibble()
-
-  descricao_texto <-
-    proposicao_data %>%
-    magrittr::extract2("Textos") %>%
-    magrittr::extract2("Texto") %>%
-    magrittr::extract2("DescricaoTipoTexto") %>%
-    tibble::as_tibble()
-
-  descricao_df <- data.frame(cod_texto, req_numero, comissao, descricao_texto)
-  descricao_df <- descricao_df %>%
-    dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento"))
-
-  descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
-  descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
-
-  if (is.na(descricao_df$value.2)) {
-    descricao_df$descricao_req <-
-      paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano)
   } else {
+    cod_texto <-
+      proposicao_data %>%
+      magrittr::extract2("Textos") %>%
+      magrittr::extract2("Texto") %>%
+      magrittr::extract2("CodigoTexto") %>%
+      tibble::as_tibble()
+
+    req_numero <-
+      proposicao_data %>%
+      magrittr::extract2("Textos") %>%
+      magrittr::extract2("Texto") %>%
+      magrittr::extract2("DescricaoTexto") %>%
+      tibble::as_tibble()
+
+    comissao <-
+      proposicao_data %>%
+      magrittr::extract2("Textos") %>%
+      magrittr::extract2("Texto") %>%
+      magrittr::extract2("IdentificacaoComissao.SiglaComissao") %>%
+      tibble::as_tibble()
+
+    descricao_texto <-
+      proposicao_data %>%
+      magrittr::extract2("Textos") %>%
+      magrittr::extract2("Texto") %>%
+      magrittr::extract2("DescricaoTipoTexto") %>%
+      tibble::as_tibble()
+
+    descricao_df <- data.frame(cod_texto, req_numero, comissao, descricao_texto)
+    descricao_df <- descricao_df %>%
+      dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento"))
+
+    descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
+    descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
+
     descricao_df$descricao_req <-
       paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
   }
+
   return(descricao_df)
 }
 
@@ -269,16 +280,13 @@ fetch_relacionadas <- function(id_prop){
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
   relacionadas <- fetch_textos_proposicao(id_prop)
-  if (is.null(relacionadas)) {
-    return("Não possui informações sobre a proposição.")
-  } else {
-    endpoint <- .extract_descricao_requerimento(id_prop) %>%
-      dplyr::select(CodigoTexto = value,
-                    endpoint = descricao_req)
-    relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
-      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
-  }
+  endpoint <- .extract_descricao_requerimento(id_prop)
+  #%>%
+    #dplyr::select(CodigoTexto = value,
+     #             endpoint = descricao_req)
+  relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
+    .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+    .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
