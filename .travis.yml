@@ -2,7 +2,7 @@ language: R
 sudo: false
 cache:
   packages: true
-
+  
 addons:
   apt:
     packages:
