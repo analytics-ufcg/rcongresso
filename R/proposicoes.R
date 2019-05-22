@@ -280,13 +280,19 @@ fetch_relacionadas <- function(id_prop){
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
   relacionadas <- fetch_textos_proposicao(id_prop)
-  endpoint <- .extract_descricao_requerimento(id_prop)
-  #%>%
-    #dplyr::select(CodigoTexto = value,
-     #             endpoint = descricao_req)
-  relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
-    .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-    .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  if (relacionadas$NumeroMateria[1] != "S/NRO") {
+    endpoint <- .extract_descricao_requerimento(id_prop) %>%
+      dplyr::select(CodigoTexto = value,
+                    endpoint = descricao_req)
+    relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
+      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  } else {
+    relacionadas <- relacionadas %>%
+      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  }
+
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
