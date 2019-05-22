@@ -224,9 +224,13 @@ fetch_textos_proposicao <- function(id) {
   descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
   descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
 
-  descricao_df$descricao_req <-
-    paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
-
+  if (is.na(descricao_df$value.2)) {
+    descricao_df$descricao_req <-
+      paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano)
+  } else {
+    descricao_df$descricao_req <-
+      paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
+  }
   return(descricao_df)
 }
 
@@ -265,12 +269,16 @@ fetch_relacionadas <- function(id_prop){
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
   relacionadas <- fetch_textos_proposicao(id_prop)
-  endpoint <- .extract_descricao_requerimento(id_prop) %>%
-    dplyr::select(CodigoTexto = value,
-                  endpoint = descricao_req)
-  relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
-    .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-    .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  if (is.null(relacionadas)) {
+    return("Não possui informações sobre a proposição.")
+  } else {
+    endpoint <- .extract_descricao_requerimento(id_prop) %>%
+      dplyr::select(CodigoTexto = value,
+                    endpoint = descricao_req)
+    relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
+      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+  }
 }
 
 #' @title Retrieves the proposition ID from its type, number and year
