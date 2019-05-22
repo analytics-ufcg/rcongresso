@@ -169,7 +169,7 @@ fetch_textos_proposicao <- function(id) {
   proposicao_complete <-
     proposicao_texto %>%
     tibble::add_column(
-      proposicao_ids)
+      !!!proposicao_ids)
 
   proposicao_complete <-
     proposicao_complete %>%
@@ -225,8 +225,7 @@ fetch_textos_proposicao <- function(id) {
   descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
 
   descricao_df$descricao_req <-
-    paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2) %>%
-    tibble::as_tibble()
+    paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
 
   return(descricao_df)
 }
