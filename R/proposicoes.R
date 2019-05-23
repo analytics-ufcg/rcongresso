@@ -233,7 +233,7 @@ fetch_textos_proposicao <- function(id) {
 
     descricao_df <- data.frame(cod_texto, req_numero, comissao, descricao_texto)
     descricao_df <- descricao_df %>%
-      dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento"))
+      dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento", "Requerimento."))
 
     descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
     descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
@@ -279,17 +279,27 @@ fetch_relacionadas <- function(id_prop){
 #' relacionadas_senado <- fetch_relacionadas_senado(91341)
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
-  relacionadas <- fetch_textos_proposicao(id_prop)
+  relacionadas_textos <- fetch_textos_proposicao(id_prop)
+  relacionadas_prop <- fetch_proposicao_senado(id_prop)
+
+  relacionadas_textos <- .rename_df_columns(relacionadas_textos)
+
+  relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
+  relacionadas_req <- purrr::map_df(relacionadas_ids, ~ fetch_proposicao_senado(.x))
+
+  if (nrow(relacionadas_req) == 0) {
+    relacionadas <- relacionadas_textos
+  } else {
+    relacionadas_textos <- relacionadas_textos %>%
+      dplyr::select(-codigo_materia) %>%
+      dplyr::rename(codigo_materia = codigo_texto)
+
+    relacionadas <-
+      dplyr::full_join(relacionadas_req, relacionadas_textos, by = "codigo_materia")
+  }
+
   if (nrow(relacionadas) == 0) {
     print("A proposição não possui requerimentos relacionados.")
-  }
-  else if (relacionadas$NumeroMateria[1] != "S/NRO" & relacionadas$SiglaSubtipoMateria != "RMA") {
-    endpoint <- .extract_descricao_requerimento(id_prop) %>%
-      dplyr::select(CodigoTexto = value,
-                    endpoint = descricao_req)
-    relacionadas <- dplyr::left_join(relacionadas, endpoint, by = "CodigoTexto") %>%
-      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
   } else {
     relacionadas <- relacionadas %>%
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
