@@ -59,14 +59,14 @@
 .COLNAMES_RELACIONADAS <- c("id_prop"="integer","id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
 
-.COLNAMES_RELACIONADAS_SENADO <- c("CodigoMateria"="character", "CodigoTexto"="character","DescricaoTipoTexto"="character", "TipoDocumento"="character",
-                                   "FormatoTexto"="character", "DataTexto"="character", "UrlTexto"="character", "DescricaoTexto"="character",
-                                   "IdentificacaoComissao.CodigoComissao"="character", "IdentificacaoComissao.SiglaComissao"="character",
-                                   "IdentificacaoComissao.NomeComissao"="character", "IdentificacaoComissao.SiglaCasaComissao"="character",
-                                   "IdentificacaoComissao.NomeCasaComissao"="character", "endpoint"="character", "SiglaCasaIdentificacaoMateria"="character",
-                                   "NomeCasaIdentificacaoMateria"="character", "SiglaSubtipoMateria"="character", "DescricaoSubtipoMateria"="character",
-                                   "NumeroMateria"="character", "AnoMateria"="character", "DescricaoObjetivoProcesso"="character",
-                                   "DescricaoIdentificacaoMateria"="character", "IndicadorTramitando"="character", "NumeroEmenda"="character")
+.COLNAMES_RELACIONADAS_SENADO <- c("codigo_texto"="character", "descricao_tipo_texto"="character","tipo_documento"="character",
+                                   "formato_texto"="character", "data_texto"="character", "url_texto"="character", "descricao_texto"="character",
+                                   "identificacao_comissao_codigo_comissao"="character", "identificacao_comissao_sigla_comissao"="character",
+                                   "identificacao_comissao_nome_comissao"="character", "identificacao_comissao_sigla_casa_comissao"="character",
+                                   "identificacao_comissao_nome_casa_comissao"="character", "codigo_materia"="character", "sigla_casa_identificacao_materia"="character",
+                                   "nome_casa_identificacao_materia"="character", "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character",
+                                   "numero_materia"="character", "ano_materia"="character", "descricao_objetivo_processo"="character",
+                                   "descricao_identificacao_materia"="character", "indicador_tramitando"="character")
 
 
 .COLNAMES_TRAMITACOES_CAMARA <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",

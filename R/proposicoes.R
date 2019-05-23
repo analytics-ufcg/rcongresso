@@ -301,7 +301,7 @@ fetch_relacionadas_senado <- function(id_prop) {
   if (nrow(relacionadas) == 0) {
     print("A proposição não possui requerimentos relacionados.")
   } else {
-    relacionadas <- relacionadas %>%
+    relacionadas_complete <- relacionadas %>%
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
       .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
   }
