@@ -280,7 +280,10 @@ fetch_relacionadas <- function(id_prop){
 #' @export
 fetch_relacionadas_senado <- function(id_prop) {
   relacionadas <- fetch_textos_proposicao(id_prop)
-  if (relacionadas$NumeroMateria[1] != "S/NRO") {
+  if (nrow(relacionadas) == 0) {
+    print("A proposição não possui requerimentos relacionados.")
+  }
+  else if (relacionadas$NumeroMateria[1] != "S/NRO" & relacionadas$SiglaSubtipoMateria != "RMA") {
     endpoint <- .extract_descricao_requerimento(id_prop) %>%
       dplyr::select(CodigoTexto = value,
                     endpoint = descricao_req)
