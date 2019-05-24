@@ -7,6 +7,9 @@ pls_91341 <<- fetch_proposicao_senado(91341)
 pls_1489 <<- fetch_proposicao_senado(1489)
 relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
 deferimento <- fetch_deferimento(c("102343", "109173", "115853"))
+relacionadas_91341 <<- fetch_relacionadas_senado(91341)
+relacionadas_58276 <<- fetch_relacionadas_senado(58276)
+relacionadas_120143 <<- fetch_relacionadas_senado(120143)
 
 # Constantes
 PEC241_ID <- 2088351
@@ -50,6 +53,11 @@ test_that("fetch_proposicao_senado()", {
   expect_true(nrow(pls_91341) != 0)
   expect_true(all(sapply(pls_1489, class) %in% .COLNAMES_PROPOSICAO_SENADO))
   expect_true(nrow(pls_1489) != 0)
+})
+
+test_that("fetch_relacionadas_senado()", {
+  expect_true(all(sapply(relacionadas_91341, class) %in% .COLNAMES_RELACIONADAS_SENADO))
+  expect_true(all(sapply(relacionadas_58276, class) %in% .COLNAMES_RELACIONADAS_SENADO))
 })
 
 test_that("fetch_proposicao_senado() not empty", {
@@ -99,4 +107,11 @@ test_that("fetch_autor_camara()",{
   expect_true(is.data.frame(fetch_autor_camara(2192352)))
   expect_true(nrow(fetch_autor_camara(257161)) != 0)
   expect_true(nrow(fetch_autor_camara(2192352)) != 0)
+})
+
+test_that("fetch_relacionadas_senado()", {
+  expect_true(is.data.frame(fetch_relacionadas_senado(91341)))
+  expect_true(is.data.frame(fetch_relacionadas_senado(129808)))
+  expect_true(!is.data.frame(fetch_relacionadas_senado(58276)))
+  expect_true(is.character(fetch_relacionadas_senado(120143)))
 })
