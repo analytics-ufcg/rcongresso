@@ -157,8 +157,6 @@ fetch_textos_proposicao <- function(id) {
 
   if (is.null(proposicao_data$Textos)) {
     proposicao_complete <-
-      proposicao_data %>%
-      magrittr::extract2("IdentificacaoMateria") %>%
       tibble::as_tibble()
   } else {
     proposicao_ids <-
@@ -198,8 +196,6 @@ fetch_textos_proposicao <- function(id) {
 
   if (is.null(proposicao_data$Textos)) {
     descricao_df <-
-      proposicao_data %>%
-      magrittr::extract2("IdentificacaoMateria") %>%
       tibble::as_tibble()
 
   } else {
