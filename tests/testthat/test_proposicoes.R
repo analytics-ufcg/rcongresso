@@ -112,6 +112,6 @@ test_that("fetch_autor_camara()",{
 test_that("fetch_relacionadas_senado()", {
   expect_true(is.data.frame(fetch_relacionadas_senado(91341)))
   expect_true(is.data.frame(fetch_relacionadas_senado(129808)))
-  expect_true(is.data.frame(fetch_relacionadas_senado(58276)))
+  expect_true(!is.data.frame(fetch_relacionadas_senado(58276)))
   expect_true(is.character(fetch_relacionadas_senado(120143)))
 })

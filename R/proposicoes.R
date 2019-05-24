@@ -146,7 +146,7 @@ fetch_proposicao_senado <- function(id = NULL) {
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
-#' @param id_prop Proposition's ID
+#' @param id Proposition's ID
 #' @return Dataframe containing all the related propositions.
 #' @examples
 #' relacionadas_texto <- fetch_textos_proposicao(129808)
@@ -295,7 +295,7 @@ fetch_relacionadas_senado <- function(id_prop) {
   }
 
   if (nrow(relacionadas) == 0) {
-    print("A proposição não possui requerimentos relacionados.")
+    print("A proposicao nao possui requerimentos relacionados.")
   } else {
     relacionadas_complete <- relacionadas %>%
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%

@@ -7,7 +7,7 @@
 fetch_textos_proposicao(id)
 }
 \arguments{
-\item{id_prop}{Proposition's ID}
+\item{id}{Proposition's ID}
 }
 \value{
 Dataframe containing all the related propositions.
