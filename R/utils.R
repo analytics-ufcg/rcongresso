@@ -195,10 +195,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     } else {
       types <- unname(types[names(types)])
     }
-  
+    
     out <- lapply(1:length(obj),FUN = function(i){
-      FUN1 <- .switch_types(types[i])
-      suppressWarnings(obj[,i] %>% unlist() %>% FUN1)
+      dynamic_cast <<-.switch_types(types[i])
+      obj[,i] %>% unlist() %>% dynamic_cast
     })
     names(out) <- colnames(obj)
     as.data.frame(out,stringsAsFactors = FALSE)
