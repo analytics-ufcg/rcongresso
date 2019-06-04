@@ -170,11 +170,12 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 #' @title Auxiliar function for fetch_emendas_camara
 #' @description Return the author's name
 .get_autor_nome <- function(df_autores) {
+  autor_nome_sigla <- paste0(df_autores$nome[[1]], " ", df_autores$ultimoStatus.siglaPartido[[1]], "/", df_autores$ultimoStatus.siglaUf[[1]])
   if (nrow(df_autores) > 1) {
-    paste0(df_autores$nome[[1]], " ", df_autores$ultimoStatus.siglaPartido[[1]], "/", df_autores$ultimoStatus.siglaUf[[1]], " e outros")
-  } else {
-    paste0(df_autores$nome[[1]], " ", df_autores$ultimoStatus.siglaPartido[[1]], "/", df_autores$ultimoStatus.siglaUf[[1]])
+    autor_nome_sigla <- paste0(autor_nome_sigla, " e outros")
   }
+  
+  autor_nome_sigla
 }
 
 #' @title Auxiliar function for fetch_emendas_camara
