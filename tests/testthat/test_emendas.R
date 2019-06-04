@@ -62,6 +62,6 @@ test_that("fetch_emendas()", {
 })
 
 test_that(".fetch_emendas_camara_auxiliar()", {
-  expect_true(unico$autor[[1]] == "MOREIRA MENDES PSD/RO")
-  expect_true(varios$autor[[1]] == "FAUSTO PINATO PP/SP e outros")
+  expect_true(emenda_pl6299$autor[[1]] == "MOREIRA MENDES PSD/RO")
+  expect_true(emenda_pec6$autor[[1]] == "FAUSTO PINATO PP/SP e outros")
 })
