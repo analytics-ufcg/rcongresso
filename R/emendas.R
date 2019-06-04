@@ -168,10 +168,28 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 }
 
 #' @title Auxiliar function for fetch_emendas_camara
+#' @description Return the author's name
+.get_autor_nome <- function(df_autores) {
+  if (nrow(df_autores) > 1) {
+    paste0(df_autores$nome[[1]], " ", df_autores$ultimoStatus.siglaPartido[[1]], "/", df_autores$ultimoStatus.siglaUf[[1]], " e outros")
+  } else {
+    paste0(df_autores$nome[[1]], " ", df_autores$ultimoStatus.siglaPartido[[1]], "/", df_autores$ultimoStatus.siglaUf[[1]])
+  }
+}
+
+#' @title Auxiliar function for fetch_emendas_camara
 #' @description Return dataframe with data of an emenda
 .fetch_emendas_camara_auxiliar <- function(id) {
+  autor_df <- rcongresso::fetch_autor_camara(id)
+  if("ultimoStatus.nomeEleitoral" %in% names(autor_df)) {
+    autor_df <-
+      autor_df %>% 
+      dplyr::rename('nome' = 'ultimoStatus.nomeEleitoral')
+  }
   rcongresso::fetch_proposicao_camara(id) %>%
-    dplyr::mutate(autor = .extract_autor_in_camara(.$id)[1,]$autor.nome, casa = "camara") %>%
+    dplyr::mutate(
+      autor = .get_autor_nome(autor_df),
+      casa = "camara") %>%
     dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, ementa))
 }
 
