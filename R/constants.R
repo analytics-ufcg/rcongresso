@@ -8,6 +8,7 @@
 
 # Links Alternativos
 .CAMARA_WEBSITE_LINK <- "http://www.camara.gov.br"
+.CAMARA_WEBSITE_LINK_2 <- "https://www.camara.leg.br"
 
 # Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
@@ -33,6 +34,8 @@
 .APENSADAS_CAMARA_PATH <- "/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID"
 .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"
 .EVENTOS_PROPOSICAO_CAMARA_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
+.AUTORES_CAMARA_PATH <- "/proposicoesWeb/prop_autores"
+
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"

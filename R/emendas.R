@@ -171,7 +171,7 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 #' @description Return dataframe with data of an emenda
 .fetch_emendas_camara_auxiliar <- function(id) {
   rcongresso::fetch_proposicao_camara(id) %>%
-    dplyr::mutate(autor = .extract_autor_in_camara(.$id)[1,]$autor.nome, casa = "camara") %>%
+    dplyr::mutate(autor = .scrapping_autores_emendas(.$id), casa = "camara") %>%
     dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, ementa))
 }
 
@@ -183,4 +183,19 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
   as.data.frame(column) %>%
     tidyr::unnest() %>%
     .rename_df_columns()
+}
+
+#' @title Auxiliar function for fetch_emendas_camara
+#' @description Return the author's name
+.scrapping_autores_emendas <- function(id_emenda) {
+  emenda_text_autores <- 
+    .get_from_url(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_emenda))%>%
+    httr::content('text', encoding = 'utf-8') %>%
+    xml2::read_html()  %>%
+    rvest::html_nodes('#content') %>% 
+    rvest::html_nodes('span') %>% 
+    rvest::html_text()
+  Sys.sleep(2)
+  
+  paste0(emenda_text_autores[3:length(emenda_text_autores)], collapse = ", ")  
 }
