@@ -24,9 +24,8 @@
                          )
 
 # Legislaturas senadores
-.COLNAMES_LEGISLATURA_SENADORES <- c("id"="character", "nomeEleitoral"="character", "nomeCompleto"="character", "genero"="character",
-                                     "partido"="character", "uf"="character", "casa"="character", "condicaoEleitoral"="character",
-                                     "ultimaLegislatura"="numeric")
+.COLNAMES_LEGISLATURA_SENADORES <- c("id_parlamentar"="character", "nome_eleitoral"="character", "nome_completo"="character", "genero"="character",
+                                     "partido"="character", "uf"="character", "casa"="character")
 
 # Proposições
 .COLNAMES_PROPOSICAO_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
