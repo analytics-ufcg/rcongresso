@@ -1,4 +1,13 @@
-fetch_legislatura <- function(legis_initial, legis_final) {
+#' @title Fetches info of the senators
+#' @description Returns its id, name, uf, gender.
+#' @param legis_initial Initial legisture
+#' @param legis_final Final legisture
+#' @return Dataframe containing the senators info.
+#' @examples
+#' senators <- fetch_senadores(40, 60)
+#' @rdname fetch_senadores
+#' @export
+fetch_senadores <- function(legis_initial, legis_final) {
   senator_data <- .senado_api(paste0(.SENADORES_PATH, legis_initial, "/", legis_final), asList = TRUE)
   senator_data <- senator_data$ListaParlamentarLegislatura$Parlamentares
 
@@ -6,38 +15,18 @@ fetch_legislatura <- function(legis_initial, legis_final) {
     senator_data %>%
     magrittr::extract2("Parlamentar")
 
-  mandatos <-
-    senator_ids %>%
-    dplyr::select("Mandatos.Mandato") %>%
-    dplyr::transmute(mandato = Mandatos.Mandato)
-
-  #a <- mandatos$mandato[[2]]$UfParlamentar
-
-  #mandatos <-
-  #  dplyr::mutate(uf = purrr::map(mandatos$mandato[[.auxiliary_cont(0)]]$UfParlamentar, ~.auxiliary_ufParlamentar(.x)))
-
-  #a <-
-  #  mandatos %>%
-  #  dplyr::mutate(uf = purrr::map(numero_da_coluna, ~))
-
   legislatura <-
     senator_ids %>%
-    dplyr::mutate(casa = 'senado') %>%
+    dplyr::mutate(casa = 'senado')
+
+  legislatura <- legislatura %>%
     dplyr::select(id_parlamentar = IdentificacaoParlamentar.CodigoParlamentar,
-                    nome_eleitoral = IdentificacaoParlamentar.NomeParlamentar,
-                    nome_completo = IdentificacaoParlamentar.NomeCompletoParlamentar,
-                    genero = IdentificacaoParlamentar.SexoParlamentar,
-                    partido = IdentificacaoParlamentar.SiglaPartidoParlamentar,
-                    uf = IdentificacaoParlamentar.UfParlamentar)
-
-  return(legislatura)
+                  nome_eleitoral = IdentificacaoParlamentar.NomeParlamentar,
+                  nome_completo = IdentificacaoParlamentar.NomeCompletoParlamentar,
+                  genero = IdentificacaoParlamentar.SexoParlamentar,
+                  partido = IdentificacaoParlamentar.SiglaPartidoParlamentar,
+                  uf = IdentificacaoParlamentar.UfParlamentar,
+                  casa = casa) %>%
+    .assert_dataframe_completo(.COLNAMES_LEGISLATURA_SENADORES) %>%
+    .coerce_types(.COLNAMES_LEGISLATURA_SENADORES)
 }
-
-#.auxiliary_ufParlamentar <- function(ufParlamentar) {
-#  return(ufParlamentar)
-#}
-
-#.auxiliary_cont <- function(cont) {
-#  cont = cont + 1
-#  return(cont)
-#}
