@@ -25,6 +25,13 @@
     ## "dataFalecimento"="character", "ultimoStatus.descricaoStatus"="character","redeSocial"="list","urlWebsite"="character"
 )
 
+.COLNAMES_TAB_DEP <- c("id"="character", "nome"="character", "nomeCivil"="character", "idLegislaturaInicial"="character",
+                       "idLegislaturaFinal"="character", "cpf"="character", "siglaSexo"="character",
+                       "urlRedeSocial"="character", "urlWebsite"="character", "dataNascimento"="character",
+                       "dataFalecimento"="character", "ufNascimento"="character", "municipioNascimento"="character",
+                       "uri"="character")
+
+
 .COLNAMES_DEP_GASTOS <- c("ano"="numeric","mes"="numeric","tipoDespesa"="character","codDocumento"="integer","tipoDocumento"="numeric",
                          "codTipoDocumento"="integer","dataDocumento"="character","numDocumento"="numeric","valorDocumento"="numeric",
                          "urlDocumento"="character","nomeFornecedor"="character","cnpjCpfFornecedor"="character","valorLiquido"="numeric",
