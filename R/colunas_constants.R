@@ -9,10 +9,19 @@
     "ultimoStatus.idLegislatura"="integer","ultimoStatus.urlFoto"="character",
     "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
     "ultimoStatus.gabinete.email"="character",
+    "ultimoStatus.gabinete.nome"="character",
+    "ultimoStatus.gabinete.predio"="character",
+    "ultimoStatus.gabinete.sala"="character",
+    "ultimoStatus.gabinete.andar"="character",
+    "ultimoStatus.gabinete.telefone"="character",
     "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
     "sexo"="character","dataNascimento"="character",
-    "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character",
-    "redeSocial"="character"
+    "redeSocial1"="character",
+    "redeSocial2"="character",
+    "redeSocial3"="character",
+    "redeSocial4"="character",
+    "redeSocial5"="character",
+    "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character"
     ## "dataFalecimento"="character", "ultimoStatus.descricaoStatus"="character","redeSocial"="list","urlWebsite"="character"
 )
 
