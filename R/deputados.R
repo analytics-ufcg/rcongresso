@@ -84,3 +84,32 @@ extract_partido_estado_autor <- function(uri) {
     ''
   }
 }
+
+#' @title Retrieves details about all deputy
+#' @description ID, name, birth date, birth city among other informations are returned.
+#' @return Dataframe containing details about all deputys.
+#' @examples
+#' deps <- fetch_all_deputados()
+#' @rdname fetch_all_deputados
+#' @export
+fetch_all_deputados <- function() {
+  url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
+  tabela_deputados <- read.csv(url, sep = ";")
+
+  ids_dep <-
+    tabela_deputados %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id = .get_id(as.character(uri))) %>%
+
+    .assert_dataframe_completo(.COLNAMES_TAB_DEP) %>%
+    .coerce_types(.COLNAMES_TAB_DEP)
+}
+
+#' @title Get the ids of the uri
+#' @description Return id of deputy
+#' @param uri uri that contains data about the author
+#' @return id of deputy
+#' @export
+.get_id <- function(uri) {
+  return(unlist(strsplit(uri, "/"))[7])
+}
