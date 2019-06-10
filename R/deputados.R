@@ -94,7 +94,9 @@ extract_partido_estado_autor <- function(uri) {
 #' @export
 fetch_all_deputados <- function() {
   url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
-  tabela_deputados <- read.csv(url, sep = ";")
+  tabela_deputados <- readr::read_delim(url, delim = ";") %>%
+    dplyr::mutate(dataFalecimento = as.character(dataFalecimento),
+                     dataNascimento = as.character(dataNascimento))
 
   ids_dep <-
     tabela_deputados %>%

@@ -318,7 +318,7 @@
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
                                             "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
-                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character", 
+                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character",
                                             "uri_ultimo_relator" = "character")
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_SENADO <- c("codigo_materia"="character","codigo_tramitacao"="character", "numero_autuacao"="character", "texto_tramitacao"="character",
