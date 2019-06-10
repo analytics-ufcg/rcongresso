@@ -195,7 +195,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     } else {
       types <- unname(types[names(types)])
     }
-    
+
     out <- lapply(1:length(obj),FUN = function(i){
       dynamic_cast <<-.switch_types(types[i])
       obj[,i] %>% unlist() %>% dynamic_cast
@@ -451,9 +451,9 @@ rename_table_to_underscore <- function(df) {
       "sessao_plenaria_|tramitacao_identificacao_tramitacao_|identificacao_parlamentar_",
       ""
     )
-  
+
   names(df) <- new_names
-  
+
   df
 }
 
@@ -462,7 +462,7 @@ rename_table_to_underscore <- function(df) {
 #' @param prop_id Proposition ID
 #' @return Dataframe contendo o link, o nome, o código do tipo, o tipo e a casa de origem do autor.
 #' @examples
-#' extract_autor_in_camara(2121442)
+#' .extract_autor_in_camara(2121442)
 #' @export
 .extract_autor_in_camara <- function(prop_id) {
   camara_exp <- "camara dos deputados"
