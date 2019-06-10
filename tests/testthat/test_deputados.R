@@ -5,7 +5,7 @@ dep_info <<- fetch_deputado(siglaUf = "RR", siglaSexo = "M")
 dep_info_por_id <<- fetch_deputado(178957)
 dep_gastos <<- fetch_despesas_deputado(178957)
 dep_partido_estado <<- extract_partido_estado_autor("https://dadosabertos.camara.leg.br/api/v2/deputados/178957")
-
+all_deputados <- fetch_all_deputados()
 
 # Testa erros
 test_that("GET deputado inexistente", {
@@ -53,6 +53,11 @@ test_that("Nome do deputado", {expect_equal(dep_info_por_id$nomeCivil, NOME_ESPE
 test_that("Data de nascimento do deputado", {expect_equal(dep_info_por_id$dataNascimento, ABEL_MESQUITA_DN)})
 test_that("UF de nascimento do deputado", {expect_equal(dep_info_por_id$ufNascimento, ABEL_MESQUITA_UF)})
 test_that("Partido + UF do deputado", {expect_equal(dep_partido_estado,paste0(ABEL_MESQUITA_PARTIDO, "/", ABEL_MESQUITA_UF))})
+
+test_that("fetch_all_deputados()", {
+  expect_true(is.data.frame(all_deputados))
+  expect_true(all(sapply(all_deputados, class) %in% .COLNAMES_TAB_DEP))
+})
 
 ## test_that("Quantidade default por requisição, atualmente 15",{
 ##   expect_equal(dim(fetch_deputado()), TAM_DF_DEFAULT)
