@@ -102,7 +102,7 @@ fetch_all_deputados <- function() {
     tabela_deputados %>%
     dplyr::rowwise() %>%
     dplyr::mutate(id = .get_id(as.character(uri))) %>%
-
+    .rename_df_columns() %>%
     .assert_dataframe_completo(.COLNAMES_TAB_DEP) %>%
     .coerce_types(.COLNAMES_TAB_DEP)
 }
