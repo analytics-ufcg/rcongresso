@@ -4,7 +4,7 @@
 #' @param legis_final Final legisture
 #' @return Dataframe containing the senators info.
 #' @examples
-#' senators <- fetch_senadores(40, 60)
+#' senators <- fetch_senadores(40, 56)
 #' @rdname fetch_senadores
 #' @export
 fetch_senadores <- function(legis_initial, legis_final) {
