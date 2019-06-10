@@ -9,10 +9,19 @@
     "ultimoStatus.idLegislatura"="integer","ultimoStatus.urlFoto"="character",
     "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
     "ultimoStatus.gabinete.email"="character",
+    "ultimoStatus.gabinete.nome"="character",
+    "ultimoStatus.gabinete.predio"="character",
+    "ultimoStatus.gabinete.sala"="character",
+    "ultimoStatus.gabinete.andar"="character",
+    "ultimoStatus.gabinete.telefone"="character",
     "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
     "sexo"="character","dataNascimento"="character",
-    "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character",
-    "redeSocial"="character"
+    "redeSocial1"="character",
+    "redeSocial2"="character",
+    "redeSocial3"="character",
+    "redeSocial4"="character",
+    "redeSocial5"="character",
+    "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character"
     ## "dataFalecimento"="character", "ultimoStatus.descricaoStatus"="character","redeSocial"="list","urlWebsite"="character"
 )
 
@@ -40,7 +49,8 @@
                             "statusProposicao.uriOrgao"="character","statusProposicao.regime"="character",
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "uriPropPosterior"="character", "uriPropPrincipal"="character","uriUltimoRelator"="character"
+                            "uriPropPosterior"="character", "uriPropPrincipal"="character","uriUltimoRelator"="character",
+                            "statusProposicao.uriUltimoRelator" = "character"
                             )
 
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
@@ -88,7 +98,7 @@
 
 .COLNAMES_TRAMITACOES_CAMARA <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
                            "despacho"="character","codSituacao"="integer","codTipoTramitacao"="character","regime"="character",
-                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character")
+                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character", "uriUltimoRelator" = "character")
 
 .COLNAMES_TRAMITACOES_SENADO <- c("codigo_tramitacao"="character","numero_autuacao"="character","data_hora"="character","sequencia"="character",
                            "data_recebimento"="character","origem_tramitacao_local_codigo_local"="character","origem_tramitacao_local_tipo_local"="character",
@@ -292,7 +302,8 @@
                                     "status_proposicao_descricao_tramitacao"="character", "status_proposicao_despacho"="character", "status_proposicao_regime"="character",
                                     "status_proposicao_sequencia"="numeric", "status_proposicao_sigla_orgao"="character",
                                     "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character", "uri"="character", "uri_autores"="character",
-                                    "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character")
+                                    "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character", "uri_ultimo_relator" = "character",
+                                    "status_proposicao_uri_ultimo_relator" = "character")
 
 .COLNAMES_REQUERIMENTOS_SENADO <- c("id_prop"="numeric","casa"="character","id_req"="integer","deferimento"="character", "ano"="numeric", "cod_tipo"="integer",
                                     "data_apresentacao"="character",  "descricao_tipo"="character", "ementa"="character", "ementa_detalhada"="character",
@@ -304,7 +315,8 @@
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
                                             "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
-                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character")
+                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character", 
+                                            "uri_ultimo_relator" = "character")
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_SENADO <- c("codigo_materia"="character","codigo_tramitacao"="character", "numero_autuacao"="character", "texto_tramitacao"="character",
                                             "indicador_recebimento"="character", "data_recebimento"="character", "origem_tramitacao_local_codigo_local"="character",
