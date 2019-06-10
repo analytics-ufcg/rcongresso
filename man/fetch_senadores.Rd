@@ -18,5 +18,5 @@ Dataframe containing the senators info.
 Returns its id, name, uf, gender.
 }
 \examples{
-senators <- fetch_senadores(40, 60)
+senators <- fetch_senadores(40, 56)
 }
