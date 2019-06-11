@@ -4,11 +4,11 @@
 \alias{fetch_proposicao_camara}
 \title{Fetches proposition from API using a query}
 \usage{
-fetch_proposicao_camara(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
-  siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
-  dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
-  dataInicio = NULL, dataFim = NULL, idAutor = NULL, autor = NULL,
-  codPartido = NULL, itens = NULL)
+fetch_proposicao_camara(id = NULL, siglaUfAutor = NULL,
+  siglaTipo = NULL, siglaPartidoAutor = NULL, numero = NULL,
+  ano = NULL, dataApresentacaoInicio = NULL,
+  dataApresentacaoFim = NULL, dataInicio = NULL, dataFim = NULL,
+  idAutor = NULL, autor = NULL, codPartido = NULL, itens = NULL)
 }
 \arguments{
 \item{id}{Proposition's ID}
