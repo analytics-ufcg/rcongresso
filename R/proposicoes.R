@@ -262,7 +262,7 @@ fetch_relacionadas <- function(casa, id_casa){
   }
 }
 
-filtra_relacionadas <- function(id) {
+fetch_ids_relacionadas <- function(id) {
   .fetch_relacionadas_camara(id) %>%
     dplyr::select(id_relacionada = id, id_prop) %>%
     dplyr::mutate(casa = "camara")
