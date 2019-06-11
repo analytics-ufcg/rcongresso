@@ -5,7 +5,7 @@ pec_241_id <<- fetch_id_proposicao_camara("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao_camara(pec_241_id)
 pls_91341 <<- fetch_proposicao_senado(91341)
 pls_1489 <<- fetch_proposicao_senado(1489)
-relacionadas_pec_241 <<- fetch_relacionadas(pec_241_id)
+relacionadas_pec_241 <<- fetch_relacionadas_camara(pec_241_id)
 deferimento <- fetch_deferimento(c("102343", "109173", "115853"))
 relacionadas_91341 <<- fetch_relacionadas_senado(91341)
 relacionadas_58276 <<- fetch_relacionadas_senado(58276)
@@ -70,7 +70,7 @@ test_that("fetch_proposicao_senado() is dataframe", {
   expect_true(is.data.frame(pls_1489))
 })
 
-test_that("fetch_relacionadas()", {
+test_that("fetch_relacionadas_camara()", {
   expect_true(all(sapply(relacionadas_pec_241, class) %in% .COLNAMES_RELACIONADAS))
 })
 
