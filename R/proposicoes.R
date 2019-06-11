@@ -418,7 +418,12 @@ fetch_autores_camara <- function (proposicao_id = NULL) {
                                               as.numeric(),-1)) %>%
     dplyr::ungroup() %>% 
     dplyr::select(id_autor, nome, cod_tipo = codTipo, tipo, uri)
-  
+  scrap_df <- tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
+    tidyr::separate_rows(nome, sep=", ") %>%
+    tidyr::separate(nome, c("nome","partido_uf"),sep=' - ')
+    
+  autores_info <- autores_info %>%
+    inner_join(scrap_df, by = "nome")
   return(autores_info)
 }
 
