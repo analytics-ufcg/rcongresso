@@ -262,6 +262,12 @@ fetch_relacionadas <- function(casa, id_casa){
   }
 }
 
+filtra_relacionadas <- function(id) {
+  .fetch_relacionadas_camara(id) %>%
+    dplyr::select(id_relacionada = id, id_prop) %>%
+    dplyr::mutate(casa = "camara")
+}
+
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
@@ -286,6 +292,8 @@ fetch_relacionadas <- function(casa, id_casa){
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
+
+
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
