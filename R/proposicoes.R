@@ -408,7 +408,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @examples
 #' fetch_autores_camara(2121442)
 #' @export
-fetch_autores_camara <- function (proposicao_id = NULL) {
+fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autores_info <- .camara_api(autor_uri) %>%
     dplyr::rowwise() %>%
@@ -418,12 +418,14 @@ fetch_autores_camara <- function (proposicao_id = NULL) {
                                               as.numeric(),-1)) %>%
     dplyr::ungroup() %>% 
     dplyr::select(id_autor, nome, cod_tipo = codTipo, tipo, uri)
-  scrap_df <- tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
-    tidyr::separate_rows(nome, sep=", ") %>%
-    tidyr::separate(nome, c("nome","partido_uf"),sep=' - ')
-    
-  autores_info <- autores_info %>%
-    inner_join(scrap_df, by = "nome")
+  if(sigla_tipo %in% c("EMC","PEC", "EMR", "ESB", "EMD")){
+    scrap_df <- tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
+      tidyr::separate_rows(nome, sep=", ") %>%
+      tidyr::separate(nome, c("nome","partido_uf"),sep=' - ')
+    autores_info <- autores_info %>%
+      inner_join(scrap_df, by = "nome")
+  }
+  
   return(autores_info)
 }
 
