@@ -246,7 +246,9 @@ fetch_textos_proposicao <- function(id) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
 #' @examples
-#' relacionadas_pec241 <- fetch_relacionadas_camara(2088351)
+#' \dontrun{
+#' relacionadas_pec241 <- fetch_relacionadas("camara",2088351)
+#' } 
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas_camara
@@ -272,8 +274,6 @@ fetch_ids_relacionadas <- function(id) {
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_pec241 <- .fetch_relacionadas_camara(2088351)
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas_camara
@@ -289,6 +289,7 @@ fetch_ids_relacionadas <- function(id) {
              ) %>%
       dplyr::ungroup() %>%
       dplyr::select(-path) %>%
+      dplyr::distinct() %>% #Remove duplicate relacionadas
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
@@ -299,8 +300,6 @@ fetch_ids_relacionadas <- function(id) {
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_senado <- .fetch_relacionadas_senado(91341)
 .fetch_relacionadas_senado <- function(id_prop) {
   relacionadas_textos <- fetch_textos_proposicao(id_prop)
   relacionadas_prop <- fetch_proposicao_senado(id_prop)

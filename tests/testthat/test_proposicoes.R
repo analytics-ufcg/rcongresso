@@ -5,20 +5,20 @@ pec_241_id <<- fetch_id_proposicao_camara("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao_camara(pec_241_id)
 pls_91341 <<- fetch_proposicao_senado(91341)
 pls_1489 <<- fetch_proposicao_senado(1489)
-relacionadas_pec_241 <<- fetch_relacionadas_camara(pec_241_id)
+relacionadas_pec_241 <<- .fetch_relacionadas_camara(pec_241_id)
 deferimento <- fetch_deferimento(c("102343", "109173", "115853"))
-relacionadas_91341 <<- fetch_relacionadas_senado(91341)
-relacionadas_58276 <<- fetch_relacionadas_senado(58276)
-relacionadas_120143 <<- fetch_relacionadas_senado(120143)
+relacionadas_91341 <<- .fetch_relacionadas_senado(91341)
+relacionadas_58276 <<- .fetch_relacionadas_senado(58276)
+relacionadas_120143 <<- .fetch_relacionadas_senado(120143)
 
 # Constantes
 PEC241_ID <- 2088351
 TIPO_PROP_PEC <- 136
 TIPO_PROP_PL <- 139
-TAM_DF_10REQ <- c(10, 7)
-TAM_DF_100REQ <- c(100, 7)
-TAM_DF_386REQ <- c(386, 7)
-TAM_DF_DEFAULT <- c(15, 7)
+TAM_DF_10REQ <- 10
+TAM_DF_100REQ <- 100
+TAM_DF_386REQ <- 386
+TAM_DF_DEFAULT <- 15
 
 
 # Testa erros
@@ -55,7 +55,7 @@ test_that("fetch_proposicao_senado()", {
   expect_true(nrow(pls_1489) != 0)
 })
 
-test_that("fetch_relacionadas_senado()", {
+test_that(".fetch_relacionadas_senado()", {
   expect_true(all(sapply(relacionadas_91341, class) %in% .COLNAMES_RELACIONADAS_SENADO))
   expect_true(all(sapply(relacionadas_58276, class) %in% .COLNAMES_RELACIONADAS_SENADO))
 })
@@ -70,7 +70,7 @@ test_that("fetch_proposicao_senado() is dataframe", {
   expect_true(is.data.frame(pls_1489))
 })
 
-test_that("fetch_relacionadas_camara()", {
+test_that(".fetch_relacionadas_camara()", {
   expect_true(all(sapply(relacionadas_pec_241, class) %in% .COLNAMES_RELACIONADAS))
 })
 
@@ -93,13 +93,13 @@ test_that("Tipo de proposição", {expect_true(r$result)})
 
 # Testa quantidade de itens por requisição
 test_that("Quantidade de itens por requisição",{
-  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 10)), TAM_DF_10REQ)
-  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100)), TAM_DF_100REQ)
-  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386)), TAM_DF_386REQ)
+  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 10))[1], TAM_DF_10REQ)
+  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100))[1], TAM_DF_100REQ)
+  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386))[1], TAM_DF_386REQ)
 })
 
 test_that("Quantidade default por requisição, atualmente 15",{
-  expect_equal(dim(fetch_proposicao_camara()), TAM_DF_DEFAULT)
+  expect_equal(dim(fetch_proposicao_camara())[1], TAM_DF_DEFAULT)
 })
 
 test_that("fetch_autor_camara()",{
@@ -109,9 +109,9 @@ test_that("fetch_autor_camara()",{
   expect_true(nrow(fetch_autor_camara(2192352)) != 0)
 })
 
-test_that("fetch_relacionadas_senado()", {
-  expect_true(is.data.frame(fetch_relacionadas_senado(91341)))
-  expect_true(is.data.frame(fetch_relacionadas_senado(129808)))
-  expect_true(!is.data.frame(fetch_relacionadas_senado(58276)))
-  expect_true(is.character(fetch_relacionadas_senado(120143)))
+test_that(".fetch_relacionadas_senado()", {
+  expect_true(is.data.frame(.fetch_relacionadas_senado(91341)))
+  expect_true(is.data.frame(.fetch_relacionadas_senado(129808)))
+  expect_true(!is.data.frame(.fetch_relacionadas_senado(58276)))
+  expect_true(is.character(.fetch_relacionadas_senado(120143)))
 })
