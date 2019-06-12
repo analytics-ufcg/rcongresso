@@ -414,6 +414,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @param uri URL relative to the Deputy url
 #' @return A dataframe containing details about the author of a proposition
 #' @examples
+#' @export
 #' .auxiliary_fetch_autor_camara('https://dadosabertos.camara.leg.br/api/v2/deputados/178854')
 .auxiliary_fetch_autor_camara <- function(uri) {
   strsplit(uri, '/')[[1]] %>% tail(1) %>%
