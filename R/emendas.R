@@ -65,7 +65,11 @@ fetch_emendas_senado <- function(bill_id) {
 
     autoria <- autoria %>%
       dplyr::mutate(
-        partido = paste0(
+        partido =
+          ifelse(
+          is.na(autoria$identificacao_parlamentar_uf_parlamentar),
+          autoria$identificacao_parlamentar_sigla_partido_parlamentar,
+          paste0(
           autoria$identificacao_parlamentar_sigla_partido_parlamentar,
           "/",
           autoria$identificacao_parlamentar_uf_parlamentar
@@ -110,7 +114,7 @@ fetch_emendas_senado <- function(bill_id) {
           id_autor = "autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar"
         )%>%
       dplyr::mutate(
-        "partido" = paste0(partido, "/", uf),
+        "partido" = dplyr::if_else(is.na(uf), partido, paste0(partido, "/", uf)),
         "casa" = "senado"
       )
 
