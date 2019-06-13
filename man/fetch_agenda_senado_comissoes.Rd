@@ -18,5 +18,7 @@ Dataframe
 Return a dataframe with the Senate's Comissions schedule
 }
 \examples{
+\dontrun{
 fetch_agenda_senado_comissoes('2016-05-15', '2016-05-25')
+}
 }

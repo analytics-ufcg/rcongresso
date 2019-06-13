@@ -18,5 +18,7 @@ Dataframe
 Return a dataframe with the meetings and sessions schedule of Deputies' Chamber
 }
 \examples{
+\dontrun{
 fetch_agenda_camara('2018-07-03', '2018-07-10')
+}
 }

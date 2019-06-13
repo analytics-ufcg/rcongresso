@@ -17,5 +17,7 @@ Return a list with 3 dataframes: schedule, bills and speakers. All the dfs conta
 codigo_sessao
 }
 \examples{
+\dontrun{
 fetch_agenda_senado('2018-07-03')
+}
 }

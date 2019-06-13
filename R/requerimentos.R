@@ -5,7 +5,7 @@
 #' @return Dataframe
 #' @export
 fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE) {
-  reqs <- fetch_relacionadas_camara(prop_id) %>%
+  reqs <- fetch_relacionadas("camara",prop_id) %>%
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
 

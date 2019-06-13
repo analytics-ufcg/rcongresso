@@ -32,9 +32,13 @@
                          ## "idDep"="integer"
                          )
 
+# Legislaturas senadores
+.COLNAMES_LEGISLATURA_SENADORES <- c("id_parlamentar"="character", "nome_eleitoral"="character", "nome_completo"="character", "genero"="character",
+                                     "partido"="character", "uf"="character", "casa"="character")
+
 # Proposições
 .COLNAMES_PROPOSICAO_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
-                     "numero"="integer","ano"="integer","ementa"="character")
+                     "numero"="integer","ano"="integer","ementa"="character", "statusProposicao.uriUltimoRelator"="character")
 
 .COLNAMES_PROPOSICAO_POR_ID_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                             "numero"="numeric","ano"="numeric","ementa"="character","dataApresentacao"="character",
@@ -46,7 +50,7 @@
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
                             "uriPropPosterior"="character", "uriPropPrincipal"="character","uriUltimoRelator"="character",
-                            "statusProposicao.uriUltimoRelator" = "character"
+                            "statusProposicao.uriUltimoRelator"="character"
                             )
 
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",

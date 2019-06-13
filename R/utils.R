@@ -461,9 +461,6 @@ rename_table_to_underscore <- function(df) {
 #' @description Return a dataframe with the link, name, code, type and house
 #' @param prop_id Proposition ID
 #' @return Dataframe contendo o link, o nome, o código do tipo, o tipo e a casa de origem do autor.
-#' @examples
-#' extract_autor_in_camara(2121442)
-#' @export
 .extract_autor_in_camara <- function(prop_id) {
   camara_exp <- "camara dos deputados"
   senado_exp <- "senado federal"
