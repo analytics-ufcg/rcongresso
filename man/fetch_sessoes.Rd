@@ -18,6 +18,8 @@ Dataframe containing all the sessions.
 Returns all the sessions when a proposition was/is going to be discussed in a Congress House.
 }
 \examples{
+\dontrun{
 sessoes_pec_241_2016 <- fetch_sessoes(2088351,'camara')
 sessoes_lei_qualidade_fiscal <- fetch_sessoes(91341,'senado')
+}
 }

@@ -246,12 +246,38 @@ fetch_textos_proposicao <- function(id) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
 #' @examples
-#' relacionadas_pec241 <- fetch_relacionadas(2088351)
+#' \dontrun{
+#' relacionadas_pec241 <- fetch_relacionadas("camara",2088351)
+#' } 
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
-#' @rdname fetch_relacionadas
+#' @rdname fetch_relacionadas_camara
 #' @export
-fetch_relacionadas <- function(id_prop){
+fetch_relacionadas <- function(casa, id_casa){
+  casa <- tolower(casa)
+  if (casa == "camara") {
+    .fetch_relacionadas_camara(id_casa)
+  } else if (casa == "senado") {
+    .fetch_relacionadas_senado(id_casa)
+  } else {
+    return("Parâmetro 'casa' não identificado.")
+  }
+}
+
+fetch_ids_relacionadas <- function(id) {
+  .fetch_relacionadas_camara(id) %>%
+    dplyr::select(id_relacionada = id, id_prop) %>%
+    dplyr::mutate(casa = "camara")
+}
+
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the related propositions.
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
+#' @rdname fetch_relacionadas_camara
+.fetch_relacionadas_camara <- function(id_prop){
   path <- NULL
   unique(id_prop) %>%
     as.integer %>%
@@ -263,18 +289,18 @@ fetch_relacionadas <- function(id_prop){
              ) %>%
       dplyr::ungroup() %>%
       dplyr::select(-path) %>%
+      dplyr::distinct() %>% #Remove duplicate relacionadas
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
+
+
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_senado <- fetch_relacionadas_senado(91341)
-#' @export
-fetch_relacionadas_senado <- function(id_prop) {
+.fetch_relacionadas_senado <- function(id_prop) {
   relacionadas_textos <- fetch_textos_proposicao(id_prop)
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
 
