@@ -24,5 +24,7 @@ Dataframe
 Return a dataframe with data about the agenda
 }
 \examples{
+\dontrun{
 fetch_pauta_camara('53184', '2018-07-03T10:00', '2018-07-03T12:37', 'CVT', 'Comissão de Viação e Transportes VIAÇÃO E TRANSPORTES')
+}
 }
