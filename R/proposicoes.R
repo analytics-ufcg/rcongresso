@@ -413,7 +413,9 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @param proposicao_id Proposition's ID
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
+#' \dontrun{
 #' fetch_autores_camara(2121442)
+#' } 
 #' @export
 fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
@@ -427,12 +429,12 @@ fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
     dplyr::ungroup() %>% 
     dplyr::select(id_autor, nome, cod_tipo = codTipo, tipo, uri)
   if(sigla_tipo %in% c("EMC","PEC")){
-    scrap_df <- tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
+    scrap_df <- tibble::tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
       tidyr::separate_rows(nome, sep=", ") %>%
       tidyr::separate(nome, c("nome","partido_uf"), sep=' - ', extra = "drop", fill = "right") %>% 
       dplyr::select(-partido_uf)
     autores_info <- autores_info %>%
-      inner_join(scrap_df, by = "nome")
+      dplyr::inner_join(scrap_df, by = "nome")
   }
   
   return(autores_info)
