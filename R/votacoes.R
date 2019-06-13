@@ -3,7 +3,9 @@
 #' @param proposicao_id Proposition Id
 #' @return Dataframe containing details about a voting on Senate
 #' @examples
+#' \dontrun{
 #' votacoes_senado <- fetch_votacoes_senado(91341)
+#' }
 #' @rdname fetch_votacoes_senado
 #' @export
 fetch_votacoes_senado <- function(proposicao_id) {
