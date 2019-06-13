@@ -16,5 +16,7 @@ Dataframe containing all the sessions.
 Returns all the sessions when a proposition was/is going to be discussed in the Senate.
 }
 \examples{
+\dontrun{
 sessoes_lei_qualidade_fiscal <- fetch_sessoes_senado(91341)
+}
 }
