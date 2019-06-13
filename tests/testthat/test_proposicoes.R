@@ -130,7 +130,7 @@ test_that("fetch_autores_camara()",{
     bind_rows(tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>% 
     bind_rows(tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>% 
     bind_rows(tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ fetch_autores_camara(.x, .y)))))
-  expect_true(all(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0)))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
   
 })
