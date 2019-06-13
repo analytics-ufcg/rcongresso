@@ -39,6 +39,10 @@
                          ## "idDep"="integer"
                          )
 
+# Legislaturas senadores
+.COLNAMES_LEGISLATURA_SENADORES <- c("id_parlamentar"="character", "nome_eleitoral"="character", "nome_completo"="character", "genero"="character",
+                                     "partido"="character", "uf"="character", "casa"="character")
+
 # Proposições
 .COLNAMES_PROPOSICAO_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                      "numero"="integer","ano"="integer","ementa"="character")
