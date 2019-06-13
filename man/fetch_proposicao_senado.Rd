@@ -4,7 +4,7 @@
 \alias{fetch_proposicao_senado}
 \title{Fetches a proposition in the Senate}
 \usage{
-fetch_proposicao_senado(id)
+fetch_proposicao_senado(id = NULL)
 }
 \arguments{
 \item{id}{Proposition's ID}

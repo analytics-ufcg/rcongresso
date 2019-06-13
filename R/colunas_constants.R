@@ -9,10 +9,19 @@
     "ultimoStatus.idLegislatura"="integer","ultimoStatus.urlFoto"="character",
     "ultimoStatus.data"="character","ultimoStatus.nomeEleitoral"="character",
     "ultimoStatus.gabinete.email"="character",
+    "ultimoStatus.gabinete.nome"="character",
+    "ultimoStatus.gabinete.predio"="character",
+    "ultimoStatus.gabinete.sala"="character",
+    "ultimoStatus.gabinete.andar"="character",
+    "ultimoStatus.gabinete.telefone"="character",
     "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
     "sexo"="character","dataNascimento"="character",
-    "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character",
-    "redeSocial"="character"
+    "redeSocial1"="character",
+    "redeSocial2"="character",
+    "redeSocial3"="character",
+    "redeSocial4"="character",
+    "redeSocial5"="character",
+    "ufNascimento"="character","municipioNascimento"="character","escolaridade"="character"
     ## "dataFalecimento"="character", "ultimoStatus.descricaoStatus"="character","redeSocial"="list","urlWebsite"="character"
 )
 
@@ -22,6 +31,10 @@
                          "valorGlosa"="numeric","numRessarcimento"="numeric","codLote"="integer","parcela"="numeric"
                          ## "idDep"="integer"
                          )
+
+# Legislaturas senadores
+.COLNAMES_LEGISLATURA_SENADORES <- c("id_parlamentar"="character", "nome_eleitoral"="character", "nome_completo"="character", "genero"="character",
+                                     "partido"="character", "uf"="character", "casa"="character")
 
 # Proposições
 .COLNAMES_PROPOSICAO_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
@@ -36,7 +49,8 @@
                             "statusProposicao.uriOrgao"="character","statusProposicao.regime"="character",
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "uriPropPosterior"="character", "uriPropPrincipal"="character"
+                            "uriPropPosterior"="character", "uriPropPrincipal"="character","uriUltimoRelator"="character",
+                            "statusProposicao.uriUltimoRelator" = "character"
                             )
 
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
@@ -46,7 +60,7 @@
                                  "descricao_objetivo_processo"="character", "descricao_identificacao_materia"="character", "indicador_tramitando"="character",
                                  "codigo_assunto_especifico"="character", "assunto_especifico"="character", "codigo_assunto_geral"="character", "assunto_geral"="character",
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
-                                 "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character", 
+                                 "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character",
                                  "autor_nome"="character")
 
 .COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
@@ -59,9 +73,32 @@
 .COLNAMES_RELACIONADAS <- c("id_prop"="integer","id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
 
+.COLNAMES_RELACIONADAS_SENADO <- c("codigo_texto"="character", "descricao_tipo_texto"="character","tipo_documento"="character",
+                                   "formato_texto"="character", "data_texto"="character", "url_texto"="character", "descricao_texto"="character",
+                                   "identificacao_comissao_codigo_comissao"="character", "identificacao_comissao_sigla_comissao"="character",
+                                   "identificacao_comissao_nome_comissao"="character", "identificacao_comissao_sigla_casa_comissao"="character",
+                                   "identificacao_comissao_nome_casa_comissao"="character", "codigo_materia"="character", "sigla_casa_identificacao_materia"="character",
+                                   "nome_casa_identificacao_materia"="character", "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character",
+                                   "numero_materia"="character", "ano_materia"="character", "descricao_objetivo_processo"="character",
+                                   "descricao_identificacao_materia"="character", "indicador_tramitando"="character",
+                                   "apelido_materia"="character", "assunto_especifico"="character", "assunto_geral"="character", "autor_nome"="character",
+                                   "codigo_assunto_geral"="character", "codigo_natureza"="character", "data_apresentacao"="character",
+                                   "data_leitura"="character", "descricao_identificacao_materia.x"="character", "descricao_natureza"="character",
+                                   "descricao_objetivo_processo.x"="character", "descricao_subtipo_materia.x"="character", "ementa_materia"="character",
+                                   "explicacao_ementa_materia"="character", "indicador_complementar"="character", "indicador_tramitando.x"="character",
+                                   "nome_casa_identificacao_materia.x"="character", "nome_casa_leitura"="character", "nome_casa_origem"="character",
+                                   "nome_natureza"="character", "nome_poder_origem"="character", "numero_materia.x"="character", "proposicoes_apensadas"="character",
+                                   "proposicoes_relacionadas"="character", "sigla_casa_identificacao_materia.x"="character", "sigla_casa_leitura"="character",
+                                   "sigla_casa_origem"="character", "sigla_subtipo_materia.x"="character", "numero_emenda"="character",
+                                   "sigla_casa_identificacao_materia.y"="character", "nome_casa_identificacao_materia.y"="character",
+                                   "sigla_subtipo_materia.y"="character", "descricao_subtipo_materia.y"="character", "numero_materia.y"="character",
+                                   "ano_materia.y"="character", "descricao_objetivo_processo.y"="character", "descricao_identificacao_materia.y"="character",
+                                   "indicador_tramitando.y"="character", "ano_materia.x"="character", "codigo_assunto_especifico"="character")
+
+
 .COLNAMES_TRAMITACOES_CAMARA <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
                            "despacho"="character","codSituacao"="integer","codTipoTramitacao"="character","regime"="character",
-                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character")
+                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character", "uriUltimoRelator" = "character")
 
 .COLNAMES_TRAMITACOES_SENADO <- c("codigo_tramitacao"="character","numero_autuacao"="character","data_hora"="character","sequencia"="character",
                            "data_recebimento"="character","origem_tramitacao_local_codigo_local"="character","origem_tramitacao_local_tipo_local"="character",
@@ -259,14 +296,38 @@
 
 # Requerimentos
 .COLNAMES_REQUERIMENTOS_CAMARA <- c("id_prop"="numeric","casa"="character","id_req"="integer","deferimento"="character", "ano"="numeric", "cod_tipo"="integer",
-                                    "data_apresentacao"="character",  "descricao_tipo"="character", "ementa"="character", "ementa_detalhada"="character", 
-                                    "keywords"="character", "numero"="numeric", "sigla_tipo"="character", "status_proposicao_cod_situacao"="character", 
+                                    "data_apresentacao"="character",  "descricao_tipo"="character", "ementa"="character", "ementa_detalhada"="character",
+                                    "keywords"="character", "numero"="numeric", "sigla_tipo"="character", "status_proposicao_cod_situacao"="character",
                                     "status_proposicao_cod_tipo_tramitacao"="integer", "status_proposicao_data_hora"="character", "status_proposicao_descricao_situacao"="character",
-                                    "status_proposicao_descricao_tramitacao"="character", "status_proposicao_despacho"="character", "status_proposicao_regime"="character", 
-                                    "status_proposicao_sequencia"="numeric", "status_proposicao_sigla_orgao"="character", 
-                                    "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character", "uri"="character", "uri_autores"="character", 
-                                    "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character")
+                                    "status_proposicao_descricao_tramitacao"="character", "status_proposicao_despacho"="character", "status_proposicao_regime"="character",
+                                    "status_proposicao_sequencia"="numeric", "status_proposicao_sigla_orgao"="character",
+                                    "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character", "uri"="character", "uri_autores"="character",
+                                    "uri_prop_posterior"="character", "uri_prop_principal"="character", "url_inteiro_teor"="character", "uri_ultimo_relator" = "character",
+                                    "status_proposicao_uri_ultimo_relator" = "character")
+
+.COLNAMES_REQUERIMENTOS_SENADO <- c("id_prop"="numeric","casa"="character","id_req"="integer","deferimento"="character", "ano"="numeric", "cod_tipo"="integer",
+                                    "data_apresentacao"="character",  "descricao_tipo"="character", "ementa"="character", "ementa_detalhada"="character",
+                                    "keywords"="character", "numero"="numeric", "sigla_tipo"="character", "status_proposicao_cod_situacao"="character",
+                                    "status_proposicao_cod_tipo_tramitacao"="integer", "status_proposicao_data_hora"="character", "status_proposicao_descricao_situacao"="character",
+                                    "status_proposicao_descricao_tramitacao"="character", "status_proposicao_despacho"="character", "status_proposicao_regime"="character",
+                                    "status_proposicao_sequencia"="numeric", "status_proposicao_sigla_orgao"="character",
+                                    "status_proposicao_uri_orgao"="character", "status_proposicao_url"="character")
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
                                             "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
-                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character")
+                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character", 
+                                            "uri_ultimo_relator" = "character")
+
+.COLNAMES_EVENTOS_REQUERIMENTOS_SENADO <- c("codigo_materia"="character","codigo_tramitacao"="character", "numero_autuacao"="character", "texto_tramitacao"="character",
+                                            "indicador_recebimento"="character", "data_recebimento"="character", "origem_tramitacao_local_codigo_local"="character",
+                                            "origem_tramitacao_local_tipo_local"="character", "origem_tramitacao_local_sigla_casa_local"="character",
+                                            "origem_tramitacao_local_nome_casa_local"="character", "origem_tramitacao_local_sigla_local"="character",
+                                            "origem_tramitacao_local_nome_local"="character", "destino_tramitacao_local_codigo_local"="character",
+                                            "destino_tramitacao_local_tipo_local"="character", "destino_tramitacao_local_sigla_casa_local"="character",
+                                            "destino_tramitacao_local_nome_casa_local"="character", "destino_tramitacao_local_sigla_local"="character",
+                                            "destino_tramitacao_local_nome_local"="character", "situacao_codigo_situacao"="character",
+                                            "situacao_sigla_situacao"="character", "situacao_descricao_situacao"="character", "sigla_casa_identificacao_materia"="character",
+                                            "nome_casa_identificacao_materia"="character", "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character",
+                                            "numero_materia"="character", "ano_materia"="character", "descricao_objetivo_processo"="character",
+                                            "descricao_identificacao_materia"="character", "indicador_tramitando"="character", "data_hora"="character", "sequencia"="character",
+                                            "evento"="character")

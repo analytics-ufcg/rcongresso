@@ -8,6 +8,7 @@
 
 # Links Alternativos
 .CAMARA_WEBSITE_LINK <- "http://www.camara.gov.br"
+.CAMARA_WEBSITE_LINK_2 <- "https://www.camara.leg.br"
 
 # Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
@@ -33,6 +34,8 @@
 .APENSADAS_CAMARA_PATH <- "/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID"
 .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH <- "/SitCamaraWS/Orgaos.asmx/ObterEmendasSubstitutivoRedacaoFinal"
 .EVENTOS_PROPOSICAO_CAMARA_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
+.AUTORES_CAMARA_PATH <- "/proposicoesWeb/prop_autores"
+
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
@@ -43,6 +46,8 @@
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
 .AGENDA_SENADO_COMISSOES <- "/dadosabertos/agenda/"
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
+.SENADO_TEXTOS_MATERIA <- "dadosabertos/materia/textos/"
+.SENADORES_PATH <- "dadosabertos/senador/lista/legislatura/"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
@@ -60,4 +65,5 @@
 .COD_ERRO_CLIENTE <- 400
 .COD_ERRO_SERV <- 500
 .MAX_TENTATIVAS_REQ <- 5
+.DEF_POST_REQ_SLEEP_TIME <- 0.05
 .MENSAGEM_ERRO_REQ <- "Falha na requisicao a API dos Dados Abertos. Erro %s ao tentar acessar: %s"
