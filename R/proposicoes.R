@@ -408,6 +408,57 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 
 }
 
+#' @title Fetches proposition's authors
+#' @description Fetches a dataframe containing basic information about the authors of the proposition
+#' @param proposicao_id Proposition's ID
+#' @return A dataframe containing the basic information about the authors of the proposition
+#' @examples
+#' \dontrun{
+#' fetch_autores_camara(2121442)
+#' } 
+#' @export
+fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
+  autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
+  autores_info <- .camara_api(autor_uri) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id_autor = dplyr::if_else(!is.na(uri),
+                                            stringr::str_split(uri, '/')[[1]] %>% 
+                                              dplyr::last() %>%
+                                              as.numeric(),-1),
+                  uri = dplyr::if_else(!is.na(uri), as.character(uri), "")) %>%
+    dplyr::ungroup() %>% 
+    dplyr::select(id_autor, nome, cod_tipo = codTipo, tipo, uri)
+  if(sigla_tipo %in% c("EMC","PEC")){
+    scrap_df <- tibble::tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
+      tidyr::separate_rows(nome, sep=", ") %>%
+      tidyr::separate(nome, c("nome","partido_uf"), sep=' - ', extra = "drop", fill = "right") %>% 
+      dplyr::select(-partido_uf)
+    autores_info <- autores_info %>%
+      dplyr::inner_join(scrap_df, by = "nome")
+  }
+  
+  return(autores_info)
+}
+
+#' @title Scraps autores da proposição from website
+#' @description Return the author(s) name(s)
+#' @param id_prop proposição's ID
+#' @return String with authors names separated by comma
+#' @export
+scrap_autores_from_website <- function(id_prop) {
+  autores_prop_text <- 
+    .get_from_url(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_prop))%>%
+    httr::content('text', encoding = 'utf-8') %>%
+    xml2::read_html()  %>%
+    rvest::html_nodes('#content') %>% 
+    rvest::html_nodes('span') %>% 
+    rvest::html_text()
+  Sys.sleep(2)
+  
+  paste0(autores_prop_text[3:length(autores_prop_text)], collapse = ", ")  
+}
+
+
 #' @title Retrieves details about an author of a proposition
 #' @description Fetches a dataframe containing detailed information about the author of the proposition
 #' @param uri URL relative to the Deputy url

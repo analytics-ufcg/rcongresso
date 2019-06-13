@@ -7,8 +7,8 @@ emendas_variadas <<- fetch_emendas_senado(133943)
 emendas_camara <<- fetch_emendas_camara('pl', 6726, 2016)
 emendas_senado_geral <<- fetch_emendas(id = 91341, casa='senado')
 emendas_camara_geral <<- fetch_emendas(id = 2121442, casa='camara',sigla='pl', numero = 6726, ano = 2016)
-emendas_pl_6621 <<- .scrapping_autores_emendas(2171808)
-emendas_pec_6 <<- .scrapping_autores_emendas(2203549)
+emendas_pl_6621 <<- scrap_autores_from_website(2171808)
+emendas_pec_6 <<- scrap_autores_from_website(2203549)
 
 # Testa erros
 test_that("GET proposição inexistente", {expect_error(fetch_emendas_senado(-1))})
@@ -56,7 +56,7 @@ test_that("fetch_emendas()", {
   expect_true(all(sapply(emendas_camara_geral, class) %in% .COLNAMES_EMENDAS_GERAL))
 })
 
-test_that(".scrapping_autores_emendas()", {
+test_that("scrap_autores_from_website()", {
   expect_true(emendas_pl_6621 == "Juscelino Filho - DEM/MA")
   expect_true(emendas_pec_6 ==
                 "Delegado Marcelo Freitas - PSL/MG, Aluisio Mendes - PODE/MA, Carla Zambelli - PSL/SP, Delegado Antônio Furtado - PSL/RJ, Delegado Pablo - PSL/AM, Delegado Waldir - PSL/GO, Felício Laterça - PSL/RJ, José Medeiros - PODE/MT, Nicoletti - PSL/RR, Sanderson - PSL/RS, Felipe Francischini - PSL/PR, João Campos - PRB/GO")
