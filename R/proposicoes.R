@@ -246,7 +246,9 @@ fetch_textos_proposicao <- function(id) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
 #' @examples
-#' relacionadas_pec241 <- fetch_relacionadas_camara(2088351)
+#' \dontrun{
+#' relacionadas_pec241 <- fetch_relacionadas("camara",2088351)
+#' } 
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas_camara
@@ -262,12 +264,16 @@ fetch_relacionadas <- function(casa, id_casa){
   }
 }
 
+fetch_ids_relacionadas <- function(id) {
+  .fetch_relacionadas_camara(id) %>%
+    dplyr::select(id_relacionada = id, id_prop) %>%
+    dplyr::mutate(casa = "camara")
+}
+
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_pec241 <- .fetch_relacionadas_camara(2088351)
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas_camara
@@ -283,16 +289,17 @@ fetch_relacionadas <- function(casa, id_casa){
              ) %>%
       dplyr::ungroup() %>%
       dplyr::select(-path) %>%
+      dplyr::distinct() %>% #Remove duplicate relacionadas
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
+
+
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_senado <- .fetch_relacionadas_senado(91341)
 .fetch_relacionadas_senado <- function(id_prop) {
   relacionadas_textos <- fetch_textos_proposicao(id_prop)
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
@@ -446,6 +453,7 @@ scrap_autores_from_website <- function(id_prop) {
 #' @param uri URL relative to the Deputy url
 #' @return A dataframe containing details about the author of a proposition
 #' @examples
+#' @export
 #' .auxiliary_fetch_autor_camara('https://dadosabertos.camara.leg.br/api/v2/deputados/178854')
 .auxiliary_fetch_autor_camara <- function(uri) {
   strsplit(uri, '/')[[1]] %>% tail(1) %>%
