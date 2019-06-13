@@ -115,3 +115,22 @@ test_that(".fetch_relacionadas_senado()", {
   expect_true(!is.data.frame(.fetch_relacionadas_senado(58276)))
   expect_true(is.character(.fetch_relacionadas_senado(120143)))
 })
+
+
+test_that("fetch_autores_camara()",{
+  pl_ids <- c(257161, 604557, 2170839, 604888, 2192352)
+  pec_ids <- c(2192459, 1198512)
+  emr_ids <- c(2201520, 2204664)
+  emd_ids <- c(2199697, 2169806, 2172604, 2141565, 275584)
+  emc_ids <- c(2206183, 2206181, 2206181, 2202452)
+  emp_ids <- c(2193064, 2193062, 2193059 )
+  
+  proposicoes_df <- tibble(prop_ids = pl_ids, sigla_tipo = "PL") %>% 
+    bind_rows(tibble(prop_ids = pec_ids, sigla_tipo = "PEC")) %>% 
+    bind_rows(tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>% 
+    bind_rows(tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>% 
+    bind_rows(tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
+  
+})
