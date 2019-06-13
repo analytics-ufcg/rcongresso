@@ -132,5 +132,13 @@ test_that("fetch_autores_camara()",{
     bind_rows(tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
   expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
   expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
-  
+  emc_2206183 <- fetch_autores_camara(2206183, "EMC")
+  expect_equal(tibble(
+    id_autor = c(204371, 204534),
+    nome = c("Felipe Rigoni", "Tabata Amaral"), 
+    cod_tipo = c(as.integer(10000),as.integer(10000)), 
+    tipo = c("Deputado", "Deputado"), 
+    uri = c("https://dadosabertos.camara.leg.br/api/v2/deputados/204371", 
+            "https://dadosabertos.camara.leg.br/api/v2/deputados/204534")
+    ), emc_2206183)
 })
