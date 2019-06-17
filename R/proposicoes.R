@@ -361,7 +361,7 @@ fetch_id_proposicao_camara <- function(tipo, numero, ano){
 #' @return Proposition types
 #'
 #' @export
-.fetch_tipos_proposicao <- function(){
+fetch_tipos_proposicao <- function(){
   .camara_api(.TIPOS_PROPOSICOES_PATH)
 }
 
@@ -374,7 +374,7 @@ fetch_id_proposicao_camara <- function(tipo, numero, ano){
 #' @rdname fetch_tipo_proposicao
 #' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
-  prop_types <- .fetch_tipos_proposicao() %>%
+  prop_types <- fetch_tipos_proposicao() %>%
     dplyr::mutate(cod = as.numeric(.$cod))
 
   tibble::tibble(cod = id_tipo_prop) %>%
