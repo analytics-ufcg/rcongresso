@@ -4,8 +4,10 @@
 #' @param casa Proposition's casa
 #' @return Dataframe containing all the sessions.
 #' @examples
+#' \dontrun{
 #' sessoes_pec_241_2016 <- fetch_sessoes(2088351,'camara')
 #' sessoes_lei_qualidade_fiscal <- fetch_sessoes(91341,'senado')
+#' }
 #' @rdname fetch_sessoes
 #' @export
 fetch_sessoes <- function(id_prop, casa) {
@@ -27,7 +29,9 @@ fetch_sessoes <- function(id_prop, casa) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the sessions.
 #' @examples
+#' \dontrun{
 #' sessoes_lei_qualidade_fiscal <- fetch_sessoes_senado(91341)
+#' }
 #' @rdname fetch_sessoes_senado
 #' @export
 fetch_sessoes_senado <- function(id_prop) {
@@ -53,7 +57,9 @@ fetch_sessoes_senado <- function(id_prop) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the sessions.
 #' @examples
+#' \dontrun{
 #' sessoes_pec_241_2016 <- fetch_sessoes_camara(2088351)
+#' }
 #' @rdname fetch_sessoes_camara
 #' @export
 fetch_sessoes_camara <- function(id_prop) {

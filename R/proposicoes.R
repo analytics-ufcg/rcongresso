@@ -246,12 +246,38 @@ fetch_textos_proposicao <- function(id) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
 #' @examples
-#' relacionadas_pec241 <- fetch_relacionadas(2088351)
+#' \dontrun{
+#' relacionadas_pec241 <- fetch_relacionadas("camara",2088351)
+#' } 
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
-#' @rdname fetch_relacionadas
+#' @rdname fetch_relacionadas_camara
 #' @export
-fetch_relacionadas <- function(id_prop){
+fetch_relacionadas <- function(casa, id_casa){
+  casa <- tolower(casa)
+  if (casa == "camara") {
+    .fetch_relacionadas_camara(id_casa)
+  } else if (casa == "senado") {
+    .fetch_relacionadas_senado(id_casa)
+  } else {
+    return("Parâmetro 'casa' não identificado.")
+  }
+}
+
+fetch_ids_relacionadas <- function(id) {
+  .fetch_relacionadas_camara(id) %>%
+    dplyr::select(id_relacionada = id, id_prop) %>%
+    dplyr::mutate(casa = "camara")
+}
+
+#' @title Fetches all propositions related to a proposition
+#' @description Returns all propositions related to a proposition by its id.
+#' @param id_prop Proposition's ID
+#' @return Dataframe containing all the related propositions.
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
+#' @rdname fetch_relacionadas_camara
+.fetch_relacionadas_camara <- function(id_prop){
   path <- NULL
   unique(id_prop) %>%
     as.integer %>%
@@ -263,18 +289,18 @@ fetch_relacionadas <- function(id_prop){
              ) %>%
       dplyr::ungroup() %>%
       dplyr::select(-path) %>%
+      dplyr::distinct() %>% #Remove duplicate relacionadas
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
+
+
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_senado <- fetch_relacionadas_senado(91341)
-#' @export
-fetch_relacionadas_senado <- function(id_prop) {
+.fetch_relacionadas_senado <- function(id_prop) {
   relacionadas_textos <- fetch_textos_proposicao(id_prop)
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
 
@@ -335,7 +361,7 @@ fetch_id_proposicao_camara <- function(tipo, numero, ano){
 #' @return Proposition types
 #'
 #' @export
-.fetch_tipos_proposicao <- function(){
+fetch_tipos_proposicao <- function(){
   .camara_api(.TIPOS_PROPOSICOES_PATH)
 }
 
@@ -348,7 +374,7 @@ fetch_id_proposicao_camara <- function(tipo, numero, ano){
 #' @rdname fetch_tipo_proposicao
 #' @export
 fetch_tipo_proposicao <- function(id_tipo_prop){
-  prop_types <- .fetch_tipos_proposicao() %>%
+  prop_types <- fetch_tipos_proposicao() %>%
     dplyr::mutate(cod = as.numeric(.$cod))
 
   tibble::tibble(cod = id_tipo_prop) %>%
@@ -381,6 +407,57 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
   return(autores)
 
 }
+
+#' @title Fetches proposition's authors
+#' @description Fetches a dataframe containing basic information about the authors of the proposition
+#' @param proposicao_id Proposition's ID
+#' @return A dataframe containing the basic information about the authors of the proposition
+#' @examples
+#' \dontrun{
+#' fetch_autores_camara(2121442)
+#' } 
+#' @export
+fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
+  autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
+  autores_info <- .camara_api(autor_uri) %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id_autor = dplyr::if_else(!is.na(uri),
+                                            stringr::str_split(uri, '/')[[1]] %>% 
+                                              dplyr::last() %>%
+                                              as.numeric(),-1),
+                  uri = dplyr::if_else(!is.na(uri), as.character(uri), "")) %>%
+    dplyr::ungroup() %>% 
+    dplyr::select(id_autor, nome, cod_tipo = codTipo, tipo, uri)
+  if(sigla_tipo %in% c("EMC","PEC")){
+    scrap_df <- tibble::tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
+      tidyr::separate_rows(nome, sep=", ") %>%
+      tidyr::separate(nome, c("nome","partido_uf"), sep=' - ', extra = "drop", fill = "right") %>% 
+      dplyr::select(-partido_uf)
+    autores_info <- autores_info %>%
+      dplyr::inner_join(scrap_df, by = "nome")
+  }
+  
+  return(autores_info)
+}
+
+#' @title Scraps autores da proposição from website
+#' @description Return the author(s) name(s)
+#' @param id_prop proposição's ID
+#' @return String with authors names separated by comma
+#' @export
+scrap_autores_from_website <- function(id_prop) {
+  autores_prop_text <- 
+    .get_from_url(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_prop))%>%
+    httr::content('text', encoding = 'utf-8') %>%
+    xml2::read_html()  %>%
+    rvest::html_nodes('#content') %>% 
+    rvest::html_nodes('span') %>% 
+    rvest::html_text()
+  Sys.sleep(2)
+  
+  paste0(autores_prop_text[3:length(autores_prop_text)], collapse = ", ")  
+}
+
 
 #' @title Retrieves details about an author of a proposition
 #' @description Fetches a dataframe containing detailed information about the author of the proposition
