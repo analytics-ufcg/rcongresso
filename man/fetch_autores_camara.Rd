@@ -8,6 +8,8 @@ fetch_autores_camara(proposicao_id = NULL, sigla_tipo = "")
 }
 \arguments{
 \item{proposicao_id}{Proposition's ID}
+
+\item{sigla_tipo}{Proposition's initials}
 }
 \value{
 A dataframe containing the basic information about the authors of the proposition

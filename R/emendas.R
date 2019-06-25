@@ -138,8 +138,8 @@ fetch_emendas_senado <- function(bill_id) {
   emendas_df %>%
     dplyr::mutate("autor" = paste0(autor, " ", partido),
                   "numero" = as.integer(numero),
-                  "tipo_documento" = as.character(tipo_documento),
-                  "inteiro_teor" = as.character(inteiro_teor)) %>%
+                  "tipo_documento" = ifelse("tipo_documento" %in% names(.), as.character(tipo_documento), ""),
+                  "inteiro_teor" = ifelse("inteiro_teor" %in% names(.), as.character(inteiro_teor), "")) %>%
       dplyr::select(-dplyr::starts_with("autoria_emenda"),
                     -dplyr::starts_with("textos_emenda"),
                     -dplyr::starts_with("uf")) %>%
