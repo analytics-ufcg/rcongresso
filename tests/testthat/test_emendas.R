@@ -4,6 +4,7 @@ context("Emendas")
 emendas_unica <<- fetch_emendas_senado(91341)
 emendas_ausentes <<- fetch_emendas_senado(126364)
 emendas_variadas <<- fetch_emendas_senado(133943)
+emendas_reforma_setor <<- fetch_emendas_senado(126049)
 emendas_camara <<- fetch_emendas_camara('pl', 6726, 2016)
 emendas_senado_geral <<- fetch_emendas(id = 91341, casa='senado')
 emendas_camara_geral <<- fetch_emendas(id = 2121442, casa='camara',sigla='pl', numero = 6726, ano = 2016)
@@ -19,6 +20,7 @@ test_that("Is tibble", {
   expect_true(tibble::is_tibble(emendas_unica))
   expect_true(tibble::is_tibble(emendas_ausentes))
   expect_true(tibble::is_tibble(emendas_variadas))
+  expect_true(tibble::is_tibble(emendas_reforma_setor))
 })
 
 test_that("Is dataframe", {
@@ -37,6 +39,7 @@ test_that("Not Empty", {
   expect_true(nrow(emendas_camara) != 0)
   expect_true(nrow(emendas_senado_geral) != 0)
   expect_true(nrow(emendas_camara_geral) != 0)
+  expect_true(nrow(emendas_reforma_setor) != 0)
 })
 
 test_that("Várias - fetch_emendas_senado()", {

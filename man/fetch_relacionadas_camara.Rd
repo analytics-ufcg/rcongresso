@@ -10,7 +10,9 @@ fetch_relacionadas(casa, id_casa)
 .fetch_relacionadas_camara(id_prop)
 }
 \arguments{
-\item{id_prop}{Proposition's ID}
+\item{casa}{senado or camara}
+
+\item{id_casa}{Proposition's ID}
 
 \item{id_prop}{Proposition's ID}
 }

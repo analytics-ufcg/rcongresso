@@ -243,7 +243,8 @@ fetch_textos_proposicao <- function(id) {
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
-#' @param id_prop Proposition's ID
+#' @param id_casa Proposition's ID
+#' @param casa senado or camara
 #' @return Dataframe containing all the related propositions.
 #' @examples
 #' \dontrun{
@@ -260,10 +261,15 @@ fetch_relacionadas <- function(casa, id_casa){
   } else if (casa == "senado") {
     .fetch_relacionadas_senado(id_casa)
   } else {
-    return("Parâmetro 'casa' não identificado.")
+    return("Parametro 'casa' nao identificado.")
   }
 }
 
+#' @title Fetches all propositions'ids related to a proposition
+#' @description Returns all propositions'ids related to a proposition.
+#' @param id Proposition's ID
+#' @return Dataframe containing all the related propositions'ids.
+#' @rdname fetch_ids_relacionadas
 fetch_ids_relacionadas <- function(id) {
   .fetch_relacionadas_camara(id) %>%
     dplyr::select(id_relacionada = id, id_prop) %>%
@@ -411,6 +417,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @title Fetches proposition's authors
 #' @description Fetches a dataframe containing basic information about the authors of the proposition
 #' @param proposicao_id Proposition's ID
+#' @param sigla_tipo Proposition's initials
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
 #' \dontrun{
