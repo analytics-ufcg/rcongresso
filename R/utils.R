@@ -163,7 +163,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' Garantees that the dataframe x has all the columns passed by y.
 #' @param x dataframe
 #' @param y vector of characters containing the names of columns.
-.assert_dataframe_completo <- function(x, y){
+#' @param warning boolean to show the prints
+.assert_dataframe_completo <- function(x, y, warning = FALSE){
   if(nrow(x) != 0){
     colnames_x <- colnames(x)
     colnames_y <- names(y)
@@ -171,11 +172,15 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     indexes <- !(colnames_y %in% colnames_x)
 
     if (any(indexes)) {
-      .print_warning_and_list("Not found columns:", colnames_y[indexes])
+      if (warning) {
+        .print_warning_and_list("Not found columns:", colnames_y[indexes])
+      }
     }
     nao_esperadas = colnames_x[!(colnames_x %in% colnames_y)]
     if (length(nao_esperadas)) {
-      .print_warning_and_list("Unexpected columns:", nao_esperadas)
+      if (warning) {
+        .print_warning_and_list("Unexpected columns:", nao_esperadas)
+      }
     }
 
     x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
