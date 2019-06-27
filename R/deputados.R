@@ -84,3 +84,25 @@ extract_partido_estado_autor <- function(uri) {
     ''
   }
 }
+
+get_all_deputados <- function() {
+  url <- paste0(.CAMARA_API_LINK, "/arquivos/deputados/csv/deputados.csv")
+  tabela_deputados <- readr::read_delim(url, delim = ";") %>%
+    dplyr::filter(idLegislaturaInicial >= 40)
+
+  ids_dep <-
+    tabela_deputados %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id = as.character(.get_id(as.character(uri)))) %>%
+    dplyr::select(id)
+
+
+  test_deps <- ids_dep %>% dplyr::sample_n(100)
+
+  deputados <- purrr::map_df(test_deps$id, ~(fetch_deputado(.x) %>%
+                               dplyr::mutate_all(~ as.character(.))))
+}
+
+.get_id <- function(uri) {
+  return(unlist(strsplit(uri, "/"))[7])
+}
