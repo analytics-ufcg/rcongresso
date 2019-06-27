@@ -31,6 +31,7 @@ test_that("Is dataframe", {
 
 test_that("Empty", {
   expect_true(nrow(emendas_ausentes) == 0)
+  expect_true(nrow(emendas_reforma_setor) == 0)
 })
 
 test_that("Not Empty", {
@@ -39,7 +40,6 @@ test_that("Not Empty", {
   expect_true(nrow(emendas_camara) != 0)
   expect_true(nrow(emendas_senado_geral) != 0)
   expect_true(nrow(emendas_camara_geral) != 0)
-  expect_true(nrow(emendas_reforma_setor) != 0)
 })
 
 test_that("Várias - fetch_emendas_senado()", {
