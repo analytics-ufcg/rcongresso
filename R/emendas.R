@@ -45,11 +45,28 @@ fetch_emendas_senado <- function(bill_id) {
 
   json_emendas <- .senado_api(path = path, asList = TRUE)
 
-  emendas_df <- json_emendas %>%
+  emendas_df <- 
+    json_emendas %>%
     magrittr::extract2("EmendaMateria") %>%
     magrittr::extract2("Materia") %>%
     magrittr::extract2("Emendas") %>%
-    purrr::map_df( ~ .) %>% .rename_df_columns()
+    magrittr::extract2("Emenda") 
+  
+  if ('Decisao' %in% names(emendas_df)) {
+    decisao_emendas <-
+      .generate_dataframe(emendas_df$Decisao) 
+    emendas_df$Decisao <- NULL
+    emendas_df <- 
+      emendas_df %>%
+      purrr::map_df( ~ .) %>% .rename_df_columns() %>% 
+      dplyr::bind_cols(decisao_emendas)
+  }else {
+    emendas_df <- 
+      emendas_df %>%
+      purrr::map_df( ~ .) %>% .rename_df_columns()
+  }
+  
+
 
   num_emendas = nrow(emendas_df)
 
@@ -99,16 +116,18 @@ fetch_emendas_senado <- function(bill_id) {
   } else {
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
-      dplyr::rename(
-          numero = "numero_emenda",
-          local = "colegiado_apresentacao",
-          autor = "autoria_emenda_autor_nome_autor",
-          inteiro_teor = "textos_emenda_texto_emenda_url_texto",
-          tipo_documento = "textos_emenda_texto_emenda_tipo_documento",
-          partido = "autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar",
-          uf = "autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar",
-          id_autor = "autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar"
-        )%>%
+      plyr::rename(
+        replace = c(
+          numero_emenda = "numero",
+          colegiado_apresentacao = "local",
+          autoria_emenda_autor_nome_autor = "autor",
+          textos_emenda_texto_emenda_url_texto = "inteiro_teor",
+          textos_emenda_texto_emenda_tipo_documento = "tipo_documento",
+          autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar = "partido",
+          autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar = "uf",
+          autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar = "id_autor"),
+        warn_missing = FALSE
+      ) %>%
       dplyr::mutate(
         "partido" = paste0(partido, "/", uf),
         "casa" = "senado"
@@ -119,8 +138,8 @@ fetch_emendas_senado <- function(bill_id) {
   emendas_df %>%
     dplyr::mutate("autor" = paste0(autor, " ", partido),
                   "numero" = as.integer(numero),
-                  "tipo_documento" = as.character(tipo_documento),
-                  "inteiro_teor" = as.character(inteiro_teor)) %>%
+                  "tipo_documento" = ifelse("tipo_documento" %in% names(.), as.character(tipo_documento), ""),
+                  "inteiro_teor" = ifelse("inteiro_teor" %in% names(.), as.character(inteiro_teor), "")) %>%
       dplyr::select(-dplyr::starts_with("autoria_emenda"),
                     -dplyr::starts_with("textos_emenda"),
                     -dplyr::starts_with("uf")) %>%
@@ -171,7 +190,7 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 #' @description Return dataframe with data of an emenda
 .fetch_emendas_camara_auxiliar <- function(id) {
   rcongresso::fetch_proposicao_camara(id) %>%
-    dplyr::mutate(autor = .scrapping_autores_emendas(.$id), casa = "camara") %>%
+    dplyr::mutate(autor = rcongresso::scrap_autores_from_website(.$id), casa = "camara") %>%
     dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, ementa))
 }
 
@@ -183,19 +202,4 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
   as.data.frame(column) %>%
     tidyr::unnest() %>%
     .rename_df_columns()
-}
-
-#' @title Auxiliar function for fetch_emendas_camara
-#' @description Return the author's name
-.scrapping_autores_emendas <- function(id_emenda) {
-  emenda_text_autores <- 
-    .get_from_url(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_emenda))%>%
-    httr::content('text', encoding = 'utf-8') %>%
-    xml2::read_html()  %>%
-    rvest::html_nodes('#content') %>% 
-    rvest::html_nodes('span') %>% 
-    rvest::html_text()
-  Sys.sleep(2)
-  
-  paste0(emenda_text_autores[3:length(emenda_text_autores)], collapse = ", ")  
 }

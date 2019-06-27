@@ -16,5 +16,7 @@ Dataframe containing details about a voting on Senate
 Fetches details about a voting on Senate.
 }
 \examples{
-fetch_votacoes_senado(91341)
+\dontrun{
+votacoes_senado <- fetch_votacoes_senado(91341)
+}
 }

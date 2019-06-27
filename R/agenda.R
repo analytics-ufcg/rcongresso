@@ -4,7 +4,9 @@
 #' @param initial_date inital date yyyy-mm-dd
 #' @return list
 #' @examples
+#' \dontrun{
 #' fetch_agenda_senado('2018-07-03')
+#' }
 #' @rdname fetch_agenda_senado
 fetch_agenda_senado <- function(initial_date) {
   url <- paste0(.AGENDA_SENADO_PATH, gsub('-','', initial_date))
@@ -77,7 +79,9 @@ fetch_agenda_senado <- function(initial_date) {
 #' @param end_date end date yyyy-mm-dd
 #' @return Dataframe
 #' @examples
+#' \dontrun{
 #' .get_data_frame_agenda_senado('2016-05-15', '2016-05-25')
+#' }
 .get_data_frame_agenda_senado <- function(initial_date, end_date) {
   url <-
     paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date), "/detalhe")
@@ -95,7 +99,9 @@ fetch_agenda_senado <- function(initial_date) {
 #' @param end_date end date yyyy-mm-dd
 #' @return Dataframe
 #' @examples
+#' \dontrun{
 #' fetch_agenda_senado_comissoes('2016-05-15', '2016-05-25')
+#' }
 fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
   tipos_inuteis <- c('Outros eventos', 'Reuniao de Subcomissao')
 
@@ -206,7 +212,9 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @param end_date end date yyyy-mm-dd
 #' @return Dataframe
 #' @examples
+#' \dontrun{
 #' fetch_agenda_camara('2018-07-03', '2018-07-10')
+#' }
 #' @rdname fetch_agenda_camara
 #' @export
   fetch_agenda_camara <- function(initial_date, end_date) {
@@ -244,7 +252,9 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @param nome_orgao  Name of the organ
 #' @return Dataframe
 #' @examples
+#' \dontrun{
 #' fetch_pauta_camara('53184', '2018-07-03T10:00', '2018-07-03T12:37', 'CVT', 'Comissão de Viação e Transportes VIAÇÃO E TRANSPORTES')
+#' }
 #' @rdname fetch_pauta_camara
 fetch_pauta_camara <- function(id, hora_inicio, hora_fim, sigla_orgao, nome_orgao) {
   url <- paste0(.PAUTAS_CAMARA, id, "/pauta")

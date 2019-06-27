@@ -16,5 +16,7 @@ Dataframe containing all the sessions.
 Returns all the sessions when a proposition was/is going to be discussed in the Chamber of Deputies.
 }
 \examples{
+\dontrun{
 sessoes_pec_241_2016 <- fetch_sessoes_camara(2088351)
+}
 }
