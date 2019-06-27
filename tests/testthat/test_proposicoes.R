@@ -116,6 +116,13 @@ test_that(".fetch_relacionadas_senado()", {
   expect_true(is.character(.fetch_relacionadas_senado(120143)))
 })
 
+test_that("fetch_ids_relacionadas()", {
+  expect_true(is.data.frame(fetch_ids_relacionadas(91341, 'senado')))
+  expect_true(is.data.frame(fetch_ids_relacionadas(129808, 'senado')))
+  expect_true(!is.data.frame(fetch_ids_relacionadas(58276, 'senado')))
+  expect_true(is.character(fetch_ids_relacionadas(1430, 'senado')))
+  expect_true(is.data.frame(fetch_ids_relacionadas(257161, 'camara')))
+})
 
 test_that("fetch_autores_camara()",{
   pl_ids <- c(257161, 604557, 2170839, 604888, 2192352)
@@ -124,21 +131,21 @@ test_that("fetch_autores_camara()",{
   emd_ids <- c(2199697, 2169806, 2172604, 2141565, 275584)
   emc_ids <- c(2206183, 2206181, 2206181, 2202452)
   emp_ids <- c(2193064, 2193062, 2193059 )
-  
-  proposicoes_df <- tibble::tibble(prop_ids = pl_ids, sigla_tipo = "PL") %>% 
-    dplyr::bind_rows(tibble::tibble(prop_ids = pec_ids, sigla_tipo = "PEC")) %>% 
-    dplyr::bind_rows(tibble::tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>% 
-    dplyr::bind_rows(tibble::tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>% 
+
+  proposicoes_df <- tibble::tibble(prop_ids = pl_ids, sigla_tipo = "PL") %>%
+    dplyr::bind_rows(tibble::tibble(prop_ids = pec_ids, sigla_tipo = "PEC")) %>%
+    dplyr::bind_rows(tibble::tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>%
+    dplyr::bind_rows(tibble::tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
   expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
   expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
   emc_2206183 <- fetch_autores_camara(2206183, "EMC")
   expect_equal(tibble::tibble(
     id_autor = c(204371, 204534),
-    nome = c("Felipe Rigoni", "Tabata Amaral"), 
-    cod_tipo = c(as.integer(10000),as.integer(10000)), 
-    tipo = c("Deputado", "Deputado"), 
-    uri = c("https://dadosabertos.camara.leg.br/api/v2/deputados/204371", 
+    nome = c("Felipe Rigoni", "Tabata Amaral"),
+    cod_tipo = c(as.integer(10000),as.integer(10000)),
+    tipo = c("Deputado", "Deputado"),
+    uri = c("https://dadosabertos.camara.leg.br/api/v2/deputados/204371",
             "https://dadosabertos.camara.leg.br/api/v2/deputados/204534")
     ), emc_2206183)
 })
