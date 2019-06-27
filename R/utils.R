@@ -200,6 +200,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     length(types) <- length(names(obj))
     types <- replace(types, is.na(types), "character")
 
+    length(types) <- length(names(obj))
+    types <- replace(types, is.na(types), "character")
+
     out <- lapply(1:length(obj),FUN = function(i){
       dynamic_cast <<-.switch_types(types[i])
       obj[,i] %>% unlist() %>% dynamic_cast

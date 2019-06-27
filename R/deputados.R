@@ -93,8 +93,24 @@ extract_partido_estado_autor <- function(uri) {
 #' @rdname fetch_all_deputados
 #' @export
 fetch_all_deputados <- function() {
+  col_types <-
+    readr::cols(
+      uri = readr::col_character(),
+      nome = readr::col_character(),
+      idLegislaturaInicial = readr::col_double(),
+      idLegislaturaFinal = readr::col_double(),
+      nomeCivil = readr::col_character(),
+      cpf = readr::col_logical(),
+      siglaSexo = readr::col_character(),
+      urlRedeSocial = readr::col_logical(),
+      urlWebsite = readr::col_logical(),
+      dataNascimento = readr::col_date(format = ""),
+      dataFalecimento = readr::col_date(format = ""),
+      ufNascimento = readr::col_character(),
+      municipioNascimento = readr::col_character()
+    )
   url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
-  tabela_deputados <- readr::read_delim(url, delim = ";") %>%
+  tabela_deputados <- readr::read_delim(url, delim = ";", col_types = col_types) %>%
     dplyr::mutate(dataFalecimento = as.character(dataFalecimento),
                      dataNascimento = as.character(dataNascimento))
 
