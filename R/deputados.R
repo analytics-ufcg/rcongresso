@@ -103,6 +103,9 @@ fetch_all_deputados <- function() {
     dplyr::rowwise() %>%
     dplyr::mutate(id = .get_id(as.character(uri))) %>%
     .rename_df_columns() %>%
+    dplyr::select(-cpf,
+                  -url_rede_social,
+                  -url_website) %>%
     .assert_dataframe_completo(.COLNAMES_TAB_DEP) %>%
     .coerce_types(.COLNAMES_TAB_DEP)
 }

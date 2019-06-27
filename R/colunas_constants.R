@@ -26,8 +26,7 @@
 )
 
 .COLNAMES_TAB_DEP <- c("id"="character", "nome"="character", "nome_civil"="character", "id_legislatura_inicial"="character",
-                       "id_legislatura_final"="character", "cpf"="character", "sigla_sexo"="character",
-                       "url_rede_social"="character", "url_website"="character", "data_nascimento"="character",
+                       "id_legislatura_final"="character", "sigla_sexo"="character", "data_nascimento"="character",
                        "data_falecimento"="character", "uf_nascimento"="character", "municipio_nascimento"="character",
                        "uri"="character")
 
