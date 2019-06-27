@@ -341,7 +341,7 @@ fetch_ids_relacionadas <- function(id, casa) {
   }
 
   if (nrow(relacionadas) == 0) {
-    print("A proposicao nao possui requerimentos relacionados.")
+    print("A proposição não possui documentos relacionados.")
   } else {
     relacionadas_complete <- relacionadas %>%
       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
