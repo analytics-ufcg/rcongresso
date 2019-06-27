@@ -171,16 +171,12 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     types_y <- unname(y)
     indexes <- !(colnames_y %in% colnames_x)
 
-    if (any(indexes)) {
-      if (warning) {
-        .print_warning_and_list("Not found columns:", colnames_y[indexes])
-      }
+    if (any(indexes) & warning) {
+      .print_warning_and_list("Not found columns:", colnames_y[indexes])
     }
     nao_esperadas = colnames_x[!(colnames_x %in% colnames_y)]
-    if (length(nao_esperadas)) {
-      if (warning) {
-        .print_warning_and_list("Unexpected columns:", nao_esperadas)
-      }
+    if (length(nao_esperadas) & warning) {
+      .print_warning_and_list("Unexpected columns:", nao_esperadas)
     }
 
     x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
