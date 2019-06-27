@@ -242,6 +242,11 @@
 # Autores
 .COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")
 
+.COLNAMES_AUTORES_SENADO <- c("nome_autor"="character", "sigla_tipo_autor"="character", "descricao_tipo_autor"="character",
+                              "uf_autor"="character", "num_ordem_autor"="character", "indicador_outros_autores"="character",
+                              "id_parlamentar"="character", "nome_completo"="character", "sexo"="character",
+                              "forma_de_tratamento"="character", "url_foto"="character", "url_pagina"="character",
+                              "email"="character", "sigla_partido"="character", "uf_parlamentar"="character")
 # Sessões
 .COLNAMES_SESSOES_CAMARA <- c("timestamp"="character", "origem"="character", "descricao"="character")
 .COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",
@@ -315,7 +320,7 @@
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA <- c("id_req"="integer","data_hora"="character", "evento"="character","cod_situacao"="integer",
                                             "cod_tipo_tramitacao"="character","descricao_situacao"="character","descricao_tramitacao"="character","despacho"="character",
-                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character", 
+                                            "regime"="character","sequencia"="integer","sigla_orgao"="character","uri_orgao"="character","url"="character",
                                             "uri_ultimo_relator" = "character")
 
 .COLNAMES_EVENTOS_REQUERIMENTOS_SENADO <- c("codigo_materia"="character","codigo_tramitacao"="character", "numero_autuacao"="character", "texto_tramitacao"="character",
