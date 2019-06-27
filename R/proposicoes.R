@@ -414,6 +414,16 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 
 }
 
+#' @title Fetches proposition's authors
+#' @description Fetches a dataframe containing basic information about the authors of the proposition
+#' @param proposicao_id Proposition's ID
+#' @return A dataframe containing the basic information about the authors of the proposition
+#' @examples
+#' \dontrun{
+#' .fetch_autores(2121442, 'camara')
+#' .fetch_autores(91341, 'senado')
+#' }
+#' @export
 fetch_autores <- function(proposicao_id = NULL, casa) {
   if (casa == "camara") {
     .fetch_autores_camara(proposicao_id)
@@ -424,9 +434,34 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
   }
 }
 
+#' @title Fetches proposition's authors
+#' @description Fetches a dataframe containing basic information about the authors of the proposition
+#' @param proposicao_id Proposition's ID
+#' @return A dataframe containing the basic information about the authors of the proposition
+#' @examples
+#' \dontrun{
+#' .fetch_autores_senado(91341)
+#' }
+#' @export
 .fetch_autores_senado <- function(proposicao_id) {
   autor_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, proposicao_id),
                             asList = TRUE)$DetalheMateria$Materia$Autoria$Autor
+
+  autores_complete <-
+    .rename_df_columns(autor_data) %>%
+    dplyr::rename(id_parlamentar = identificacao_parlamentar_codigo_parlamentar,
+                  nome = identificacao_parlamentar_nome_parlamentar,
+                  nome_completo = identificacao_parlamentar_nome_completo_parlamentar,
+                  sexo = identificacao_parlamentar_sexo_parlamentar,
+                  forma_de_tratamento = identificacao_parlamentar_forma_tratamento,
+                  url_foto = identificacao_parlamentar_url_foto_parlamentar,
+                  url_pagina = identificacao_parlamentar_url_pagina_parlamentar,
+                  email = identificacao_parlamentar_email_parlamentar,
+                  sigla_partido = identificacao_parlamentar_sigla_partido_parlamentar,
+                  uf_parlamentar = identificacao_parlamentar_uf_parlamentar) %>%
+    dplyr::select(-nome) %>%
+    .assert_dataframe_completo(.COLNAMES_AUTORES_SENADO) %>%
+    .coerce_types(.COLNAMES_AUTORES_SENADO)
 }
 
 #' @title Fetches proposition's authors
