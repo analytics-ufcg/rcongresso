@@ -272,15 +272,21 @@ fetch_relacionadas <- function(casa, id_casa){
 #' @return Dataframe containing all the related propositions'ids.
 #' @rdname fetch_ids_relacionadas
 fetch_ids_relacionadas <- function(id, casa) {
+  relacionadas <- tibble::tibble()
   if (casa == "camara") {
-  .fetch_relacionadas_camara(id) %>%
+  relacionadas <- .fetch_relacionadas_camara(id) %>%
     dplyr::select(id_relacionada = id, id_prop) %>%
     dplyr::mutate(casa = "camara")
   } else if (casa == "senado") {
-    .fetch_relacionadas_senado(id) %>%
-      dplyr::select(id_relacionada = codigo_materia,
-                    id_prop) %>%
-      dplyr::mutate(casa = "senado")
+   relacionadas <- .fetch_relacionadas_senado(id)
+   if (is.character(relacionadas)) {
+     return("A proposição não há documentos relacionados")
+   } else {
+     relacionadas <- relacionadas %>%
+       dplyr::select(id_relacionada = codigo_materia) %>%
+       dplyr::mutate(id_prop = id,
+                     casa = "senado")
+   }
   } else {
     return("Parâmetro 'casa' não identificado")
   }
