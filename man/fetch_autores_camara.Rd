@@ -20,5 +20,5 @@ Fetches a dataframe containing basic information about the authors of the propos
 \examples{
 \dontrun{
 fetch_autores_camara(2121442)
-} 
+}
 }
