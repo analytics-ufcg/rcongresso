@@ -4,7 +4,7 @@
 \alias{fetch_ids_relacionadas}
 \title{Fetches all propositions'ids related to a proposition}
 \usage{
-fetch_ids_relacionadas(id)
+fetch_ids_relacionadas(id, casa)
 }
 \arguments{
 \item{id}{Proposition's ID}
