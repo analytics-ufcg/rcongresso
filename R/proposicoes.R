@@ -265,11 +265,10 @@ fetch_ids_relacionadas <- function(id, casa) {
     dplyr::mutate(casa = "camara")
   } else if (casa == "senado") {
    relacionadas <- .fetch_relacionadas_senado(id)
-   if (is.character(relacionadas)) {
-     return("A proposição não há documentos relacionados")
+   if (nrow(relacionadas) == 0) {
+     return("A proposição não possui documentos relacionados.")
    } else {
      relacionadas <- relacionadas %>%
-       dplyr::select(id_relacionada = codigo_materia) %>%
        dplyr::mutate(id_prop = id,
                      casa = "senado")
    }
@@ -309,12 +308,11 @@ fetch_ids_relacionadas <- function(id, casa) {
 .fetch_relacionadas_senado <- function(id_prop) {
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
   if (relacionadas_prop$proposicoes_relacionadas == "") {
-    return("A proposição não há documentos relacionados.")
+    return(tibble::tibble())
   } else {
     relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
-    relacionadas_complete <- purrr::map_df(relacionadas_ids, ~ fetch_proposicao_senado(.x)) %>%
-      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+    relacionadas_complete <- tibble::tibble(id_principal = relacionadas_ids)
+    return(relacionadas_complete)
   }
 }
 
