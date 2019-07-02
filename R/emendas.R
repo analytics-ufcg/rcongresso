@@ -63,11 +63,11 @@ fetch_emendas_senado <- function(bill_id) {
   }else {
     emendas_df <- 
       emendas_df %>%
-      purrr::map_df( ~ .) %>% .rename_df_columns()
+      purrr::map_df( ~ .) %>%
+      .rename_df_columns() %>% 
+      unique()
   }
   
-
-
   num_emendas = nrow(emendas_df)
 
   if (num_emendas == 0) {
