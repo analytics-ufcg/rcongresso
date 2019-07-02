@@ -63,11 +63,11 @@ fetch_emendas_senado <- function(bill_id) {
   }else {
     emendas_df <- 
       emendas_df %>%
-      purrr::map_df( ~ .) %>% .rename_df_columns()
+      purrr::map_df( ~ .) %>%
+      .rename_df_columns() %>% 
+      unique()
   }
   
-
-
   num_emendas = nrow(emendas_df)
 
   if (num_emendas == 0) {
@@ -135,15 +135,25 @@ fetch_emendas_senado <- function(bill_id) {
 
   }
 
+  if (!("tipo_documento" %in% names(emendas_df))) {
+    emendas_df <-
+      emendas_df %>% 
+      dplyr::mutate(tipo_documento = "")
+  }
+  if (!("inteiro_teor" %in% names(emendas_df))) {
+    emendas_df <-
+      emendas_df %>% 
+      dplyr::mutate(inteiro_teor = "")
+  }
   emendas_df %>%
     dplyr::mutate("autor" = paste0(autor, " ", partido),
                   "numero" = as.integer(numero),
-                  "tipo_documento" = ifelse("tipo_documento" %in% names(.), as.character(tipo_documento), ""),
-                  "inteiro_teor" = ifelse("inteiro_teor" %in% names(.), as.character(inteiro_teor), "")) %>%
-      dplyr::select(-dplyr::starts_with("autoria_emenda"),
-                    -dplyr::starts_with("textos_emenda"),
-                    -dplyr::starts_with("uf")) %>%
-    tibble::as_tibble()
+                  "tipo_documento" = as.character(tipo_documento),
+                  "inteiro_teor" = as.character(inteiro_teor)) %>%
+    dplyr::select(-dplyr::starts_with("autoria_emenda"),
+                  -dplyr::starts_with("textos_emenda"),
+                  -dplyr::starts_with("uf")) %>%
+    tibble::as_tibble() 
 }
 
 #' @title Fetches proposition's emendas
