@@ -256,6 +256,7 @@ fetch_relacionadas <- function(casa, id_casa){
 #' @param id Proposition's ID
 #' @return Dataframe containing all the related propositions'ids.
 #' @rdname fetch_ids_relacionadas
+#' @export
 fetch_ids_relacionadas <- function(id, casa) {
   relacionadas <- tibble::tibble()
   if (casa == "camara") {
