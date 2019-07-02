@@ -85,8 +85,13 @@ extract_partido_estado_autor <- function(uri) {
   }
 }
 
-get_all_deputados <- function() {
-  url <- paste0(.CAMARA_API_LINK, "/arquivos/deputados/csv/deputados.csv")
+#' @title Fetches details abaout all deputys
+#' @description Fetches details about deputys from the 40º legislature to the current
+#' @return Dataframe containing details about the deputy's
+#' @rdname fetch_all_deputados
+#' @export
+fetch_all_deputados <- function() {
+  url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
   tabela_deputados <- readr::read_delim(url, delim = ";") %>%
     dplyr::filter(idLegislaturaInicial >= 40)
 
@@ -96,11 +101,13 @@ get_all_deputados <- function() {
     dplyr::mutate(id = as.character(.get_id(as.character(uri)))) %>%
     dplyr::select(id)
 
-
-  test_deps <- ids_dep %>% dplyr::sample_n(100)
-
-  deputados <- purrr::map_df(test_deps$id, ~(fetch_deputado(.x) %>%
+  deputados <- purrr::map_df(ids_dep$id, ~(fetch_deputado(.x) %>%
                                dplyr::mutate_all(~ as.character(.))))
+
+  deputados <- deputados %>%
+    .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
+    .rename_df_columns()
+
 }
 
 .get_id <- function(uri) {
