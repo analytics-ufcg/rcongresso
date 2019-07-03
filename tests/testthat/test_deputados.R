@@ -22,7 +22,9 @@ ABEL_MESQUITA_PARTIDO <- "DEM"
 TAM_DF_DEFAULT <- c(15, 8)
 #TAM_DF_DEP_ATIVOS <- c(513, 8)
 
-all_deputados <- fetch_all_deputados()
+all_deputados_ids <- fetch_ids_deputados() %>% dplyr::sample_n(400)
+
+all_deputados <- fetch_all_deputados(all_deputados_ids)
 
 # Testes
 # Os nomes das colunas e os tipos estão definidos em colunas_constants.R

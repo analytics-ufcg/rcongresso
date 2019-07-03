@@ -87,19 +87,11 @@ extract_partido_estado_autor <- function(uri) {
 
 #' @title Fetches details abaout all deputys
 #' @description Fetches details about deputys from the 40º legislature to the current
+#' @param ids_dep Dataframe containing all deputys IDs
 #' @return Dataframe containing details about the deputy's
 #' @rdname fetch_all_deputados
 #' @export
-fetch_all_deputados <- function() {
-  url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
-  tabela_deputados <- readr::read_delim(url, delim = ";") %>%
-    dplyr::filter(idLegislaturaInicial >= 40)
-
-  ids_dep <-
-    tabela_deputados %>%
-    dplyr::rowwise() %>%
-    dplyr::mutate(id = as.character(.get_id(as.character(uri)))) %>%
-    dplyr::select(id)
+fetch_all_deputados <- function(ids_dep) {
 
   deputados <- purrr::map_df(ids_dep$id, ~(fetch_deputado(.x) %>%
                                dplyr::mutate_all(~ as.character(.))))
@@ -109,6 +101,24 @@ fetch_all_deputados <- function() {
     .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
     .rename_df_columns()
 
+}
+
+#' @title Fetches all deputys IDs
+#' @description Fetches all deputys IDs from the 40º legislature to the current
+#' @return Dataframe containing all deputys IDs
+#' @rdname fetch_all_deputados
+#' @export
+fetch_ids_deputados <- function() {
+  url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
+  tabela_deputados <- readr::read_delim(url, delim = ";") %>%
+    dplyr::filter(idLegislaturaInicial >= 40)
+
+  ids_dep <-
+    tabela_deputados %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id = as.character(.get_id(as.character(uri)))) %>%
+    dplyr::select(id)
+  ids_dep
 }
 
 .get_id <- function(uri) {
