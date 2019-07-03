@@ -417,6 +417,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @title Fetches proposition's authors
 #' @description Fetches a dataframe containing basic information about the authors of the proposition
 #' @param proposicao_id Proposition's ID
+#' @param casa senado or camara
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
 #' \dontrun{
