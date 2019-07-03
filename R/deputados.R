@@ -105,11 +105,12 @@ fetch_all_deputados <- function() {
                                dplyr::mutate_all(~ as.character(.))))
 
   deputados <- deputados %>%
+    .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
     .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
     .rename_df_columns()
 
 }
 
 .get_id <- function(uri) {
-  return(unlist(strsplit(uri, "/"))[7])
+  return(tail(unlist(strsplit(uri, "/")), 1))
 }

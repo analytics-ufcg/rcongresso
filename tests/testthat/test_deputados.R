@@ -22,6 +22,8 @@ ABEL_MESQUITA_PARTIDO <- "DEM"
 TAM_DF_DEFAULT <- c(15, 8)
 #TAM_DF_DEP_ATIVOS <- c(513, 8)
 
+all_deputados <- fetch_all_deputados()
+
 # Testes
 # Os nomes das colunas e os tipos estão definidos em colunas_constants.R
 test_that("Is dataframe", {
@@ -58,3 +60,7 @@ test_that("Partido + UF do deputado", {expect_equal(dep_partido_estado,paste0(AB
 ##   expect_equal(dim(fetch_deputado()), TAM_DF_DEFAULT)
 ## })
 
+test_that("fetch_all_deputados()", {
+  expect_true(is.data.frame(all_deputados))
+  expect_true(all(sapply(all_deputados, class) %in% .COLNAMES_DEP_INFO_ID))
+})
