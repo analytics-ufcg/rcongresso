@@ -266,8 +266,7 @@ fetch_ids_relacionadas <- function(id, casa) {
   } else if (casa == "senado") {
    relacionadas <- .fetch_relacionadas_senado(id)
    if (nrow(relacionadas) == 0) {
-     return(tibble::tibble())
-     #return("A proposição não possui documentos relacionados.")
+     return("A proposição não possui documentos relacionados.")
    } else {
      relacionadas <- relacionadas %>%
        dplyr::mutate(id_prop = id,
