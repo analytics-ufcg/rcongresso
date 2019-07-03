@@ -260,13 +260,19 @@ fetch_relacionadas <- function(casa, id_casa){
 fetch_ids_relacionadas <- function(id, casa) {
   relacionadas <- tibble::tibble()
   if (casa == "camara") {
-  relacionadas <- .fetch_relacionadas_camara(id) %>%
-    dplyr::select(id_relacionada = id, id_prop) %>%
-    dplyr::mutate(casa = "camara")
+  relacionadas <- .fetch_relacionadas_camara(id)
+    if (nrow(relacionadas) == 0) {
+      warning("A proposição não possui documentos relacionados.")
+    } else {
+      relacionadas <- relacionadas %>%
+        dplyr::select(id_relacionada = id, id_prop) %>%
+        dplyr::mutate(casa = "camara")
+    }
+
   } else if (casa == "senado") {
    relacionadas <- .fetch_relacionadas_senado(id)
    if (nrow(relacionadas) == 0) {
-     return("A proposição não possui documentos relacionados.")
+     warning("A proposição não possui documentos relacionados.")
    } else {
      relacionadas <- relacionadas %>%
        dplyr::mutate(id_prop = id,
@@ -275,7 +281,10 @@ fetch_ids_relacionadas <- function(id, casa) {
   } else {
     return("Parâmetro 'casa' não identificado")
   }
+
+  return(relacionadas)
 }
+
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
@@ -311,7 +320,7 @@ fetch_ids_relacionadas <- function(id, casa) {
     return(tibble::tibble())
   } else {
     relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
-    relacionadas_complete <- tibble::tibble(id_principal = relacionadas_ids)
+    relacionadas_complete <- tibble::tibble(id_relacionada = relacionadas_ids)
     return(relacionadas_complete)
   }
 }
