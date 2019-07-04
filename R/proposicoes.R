@@ -254,6 +254,7 @@ fetch_relacionadas <- function(casa, id_casa){
 #' @title Fetches all propositions'ids related to a proposition
 #' @description Returns all propositions'ids related to a proposition.
 #' @param id Proposition's ID
+#' @param casa Câmara or sendo
 #' @return Dataframe containing all the related propositions'ids.
 #' @rdname fetch_ids_relacionadas
 #' @export
@@ -265,7 +266,8 @@ fetch_ids_relacionadas <- function(id, casa) {
       warning("A proposição não possui documentos relacionados.")
     } else {
       relacionadas <- relacionadas %>%
-        dplyr::select(id_relacionada = id, id_prop) %>%
+        dplyr::select(id_relacionada = id,
+                      id_prop) %>%
         dplyr::mutate(casa = "camara")
     }
 
