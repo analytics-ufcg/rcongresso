@@ -110,7 +110,17 @@ fetch_all_deputados <- function(ids_dep) {
 #' @export
 fetch_ids_deputados <- function() {
   url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
-  tabela_deputados <- readr::read_delim(url, delim = ";") %>%
+  tabela_deputados <- readr::read_delim(
+    url,
+    delim = ";",
+    col_types = list(
+      .default = readr::col_character(),
+      idLegislaturaInicial = readr::col_double(),
+      idLegislaturaFinal = readr::col_double(),
+      dataNascimento = readr::col_date(format = ""),
+      dataFalecimento = readr::col_date(format = "")
+    )
+  ) %>%
     dplyr::filter(idLegislaturaInicial >= 40)
 
   ids_dep <-
