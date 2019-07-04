@@ -8,6 +8,8 @@ fetch_ids_relacionadas(id, casa)
 }
 \arguments{
 \item{id}{Proposition's ID}
+
+\item{casa}{Câmara or sendo}
 }
 \value{
 Dataframe containing all the related propositions'ids.

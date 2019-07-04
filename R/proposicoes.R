@@ -281,7 +281,7 @@ fetch_ids_relacionadas <- function(id, casa) {
                      casa = "senado")
    }
   } else {
-    return("Parâmetro 'casa' não identificado")
+    warning("Parâmetro 'casa' não identificado")
   }
 
   return(relacionadas)
