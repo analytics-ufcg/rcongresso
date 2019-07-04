@@ -70,7 +70,7 @@
 
 .COLNAMES_TIPO_PROPOSICAO <- c("cod"="integer","sigla"="character","nome"="character","descricao"="character")
 
-.COLNAMES_RELACIONADAS <- c("id_prop"="integer","id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
+.COLNAMES_RELACIONADAS <- c("id_prop"="character","id"="character","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
 
 .COLNAMES_RELACIONADAS_SENADO <- c("ano_materia"="character", "apelido_materia"="character", "assunto_especifico"="character", "assunto_geral"="character",
