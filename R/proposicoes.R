@@ -144,102 +144,88 @@ fetch_proposicao_senado <- function(id = NULL) {
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
-#' @title Fetches all propositions related to a proposition
-#' @description Returns all propositions related to a proposition by its id.
-#' @param id Proposition's ID
-#' @return Dataframe containing all the related propositions.
-#' @examples
-#' relacionadas_texto <- fetch_textos_proposicao(129808)
-#' @rdname fetch_textos_proposicao
-#' @export
-fetch_textos_proposicao <- function(id) {
-  proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
+# fetch_textos_proposicao <- function(id) {
+#   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
+#
+#   if (is.null(proposicao_data$Textos)) {
+#     proposicao_complete <-
+#       tibble::as_tibble()
+#   } else {
+#     proposicao_ids <-
+#       proposicao_data %>%
+#       magrittr::extract2("IdentificacaoMateria") %>%
+#       tibble::as_tibble()
+#
+#     proposicao_texto <-
+#       proposicao_data %>%
+#       magrittr::extract2("Textos") %>%
+#       magrittr::extract2("Texto") %>%
+#       tibble::as_tibble()
+#
+#     proposicao_complete <-
+#       proposicao_texto %>%
+#       tibble::add_column(
+#         !!!proposicao_ids)
+#
+#     proposicao_complete <-
+#       proposicao_complete %>%
+#       dplyr::filter(DescricaoTipoTexto %in% c("Avulso de requerimento", "Requerimento")) %>%
+#       tibble::as_tibble()
+#   }
+#   return(proposicao_complete)
+# }
 
-  if (is.null(proposicao_data$Textos)) {
-    proposicao_complete <-
-      tibble::as_tibble()
-  } else {
-    proposicao_ids <-
-      proposicao_data %>%
-      magrittr::extract2("IdentificacaoMateria") %>%
-      tibble::as_tibble()
 
-    proposicao_texto <-
-      proposicao_data %>%
-      magrittr::extract2("Textos") %>%
-      magrittr::extract2("Texto") %>%
-      tibble::as_tibble()
-
-    proposicao_complete <-
-      proposicao_texto %>%
-      tibble::add_column(
-        !!!proposicao_ids)
-
-    proposicao_complete <-
-      proposicao_complete %>%
-      dplyr::filter(DescricaoTipoTexto %in% c("Avulso de requerimento", "Requerimento")) %>%
-      tibble::as_tibble()
-  }
-}
-
-#' @title Extract new part of endpoint of the Senado
-#' @description Returns all endpoint
-#' @param id_prop Proposition's ID
-#' @return Dataframe containing all endpoints
-#' @examples
-#' endpoint <- .extract_descricao_requerimento(129808)
-#' @rdname .extract_descricao_requerimento
-#' @export
-.extract_descricao_requerimento <- function(id) {
-  proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
-  proposicao_data <- proposicao_data$TextoMateria$Materia
-
-  if (is.null(proposicao_data$Textos)) {
-    descricao_df <-
-      tibble::as_tibble()
-
-  } else {
-    cod_texto <-
-      proposicao_data %>%
-      magrittr::extract2("Textos") %>%
-      magrittr::extract2("Texto") %>%
-      magrittr::extract2("CodigoTexto") %>%
-      tibble::as_tibble()
-
-    req_numero <-
-      proposicao_data %>%
-      magrittr::extract2("Textos") %>%
-      magrittr::extract2("Texto") %>%
-      magrittr::extract2("DescricaoTexto") %>%
-      tibble::as_tibble()
-
-    comissao <-
-      proposicao_data %>%
-      magrittr::extract2("Textos") %>%
-      magrittr::extract2("Texto") %>%
-      magrittr::extract2("IdentificacaoComissao.SiglaComissao") %>%
-      tibble::as_tibble()
-
-    descricao_texto <-
-      proposicao_data %>%
-      magrittr::extract2("Textos") %>%
-      magrittr::extract2("Texto") %>%
-      magrittr::extract2("DescricaoTipoTexto") %>%
-      tibble::as_tibble()
-
-    descricao_df <- data.frame(cod_texto, req_numero, comissao, descricao_texto)
-    descricao_df <- descricao_df %>%
-      dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento", "Requerimento."))
-
-    descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
-    descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
-
-    descricao_df$descricao_req <-
-      paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
-  }
-
-  return(descricao_df)
-}
+# .extract_descricao_requerimento <- function(id) {
+#   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)
+#   proposicao_data <- proposicao_data$TextoMateria$Materia
+#
+#   if (is.null(proposicao_data$Textos)) {
+#     descricao_df <-
+#       tibble::as_tibble()
+#
+#   } else {
+#     cod_texto <-
+#       proposicao_data %>%
+#       magrittr::extract2("Textos") %>%
+#       magrittr::extract2("Texto") %>%
+#       magrittr::extract2("CodigoTexto") %>%
+#       tibble::as_tibble()
+#
+#     req_numero <-
+#       proposicao_data %>%
+#       magrittr::extract2("Textos") %>%
+#       magrittr::extract2("Texto") %>%
+#       magrittr::extract2("DescricaoTexto") %>%
+#       tibble::as_tibble()
+#
+#     comissao <-
+#       proposicao_data %>%
+#       magrittr::extract2("Textos") %>%
+#       magrittr::extract2("Texto") %>%
+#       magrittr::extract2("IdentificacaoComissao.SiglaComissao") %>%
+#       tibble::as_tibble()
+#
+#     descricao_texto <-
+#       proposicao_data %>%
+#       magrittr::extract2("Textos") %>%
+#       magrittr::extract2("Texto") %>%
+#       magrittr::extract2("DescricaoTipoTexto") %>%
+#       tibble::as_tibble()
+#
+#     descricao_df <- data.frame(cod_texto, req_numero, comissao, descricao_texto)
+#     descricao_df <- descricao_df %>%
+#       dplyr::filter(value.3 %in% c("Avulso de requerimento", "Requerimento", "Requerimento."))
+#
+#     descricao_df$SiglaRequerimento <- unlist(strsplit(descricao_df$value.1, " "))[1]
+#     descricao_df$numero_ano <- unlist(strsplit(descricao_df$value.1, " "))[2]
+#
+#     descricao_df$descricao_req <-
+#       paste0(descricao_df$SiglaRequerimento, "/", descricao_df$numero_ano, "?comissao=", descricao_df$value.2)
+#   }
+#
+#   return(descricao_df)
+# }
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
@@ -249,7 +235,7 @@ fetch_textos_proposicao <- function(id) {
 #' @examples
 #' \dontrun{
 #' relacionadas_pec241 <- fetch_relacionadas("camara",2088351)
-#' } 
+#' }
 #' @seealso
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_relacionadas_camara
@@ -268,13 +254,39 @@ fetch_relacionadas <- function(casa, id_casa){
 #' @title Fetches all propositions'ids related to a proposition
 #' @description Returns all propositions'ids related to a proposition.
 #' @param id Proposition's ID
+#' @param casa Câmara or sendo
 #' @return Dataframe containing all the related propositions'ids.
 #' @rdname fetch_ids_relacionadas
-fetch_ids_relacionadas <- function(id) {
-  .fetch_relacionadas_camara(id) %>%
-    dplyr::select(id_relacionada = id, id_prop) %>%
-    dplyr::mutate(casa = "camara")
+#' @export
+fetch_ids_relacionadas <- function(id, casa) {
+  relacionadas <- tibble::tibble()
+  if (casa == "camara") {
+  relacionadas <- .fetch_relacionadas_camara(id)
+    if (nrow(relacionadas) == 0) {
+      warning("A proposição não possui documentos relacionados.")
+    } else {
+      relacionadas <- relacionadas %>%
+        dplyr::select(id_relacionada = id,
+                      id_prop) %>%
+        dplyr::mutate(casa = "camara")
+    }
+
+  } else if (casa == "senado") {
+   relacionadas <- .fetch_relacionadas_senado(id)
+   if (nrow(relacionadas) == 0) {
+     warning("A proposição não possui documentos relacionados.")
+   } else {
+     relacionadas <- relacionadas %>%
+       dplyr::mutate(id_prop = id,
+                     casa = "senado")
+   }
+  } else {
+    warning("Parâmetro 'casa' não identificado")
+  }
+
+  return(relacionadas)
 }
+
 
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
@@ -300,41 +312,50 @@ fetch_ids_relacionadas <- function(id) {
       .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
-
-
 #' @title Fetches all propositions related to a proposition
 #' @description Returns all propositions related to a proposition by its id.
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
 .fetch_relacionadas_senado <- function(id_prop) {
-  relacionadas_textos <- fetch_textos_proposicao(id_prop)
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
-
-  relacionadas_textos <- .rename_df_columns(relacionadas_textos)
-
-  relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
-  relacionadas_req <- purrr::map_df(relacionadas_ids, ~ fetch_proposicao_senado(.x))
-
-  if (nrow(relacionadas_req) == 0) {
-    relacionadas <- relacionadas_textos
+  if (relacionadas_prop$proposicoes_relacionadas == "") {
+    return(tibble::tibble())
   } else {
-    relacionadas_textos <- relacionadas_textos %>%
-      dplyr::select(-codigo_materia) %>%
-      dplyr::rename(codigo_materia = codigo_texto)
-
-    relacionadas <-
-      dplyr::full_join(relacionadas_req, relacionadas_textos, by = "codigo_materia")
+    relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
+    relacionadas_complete <- tibble::tibble(id_relacionada = relacionadas_ids)
+    return(relacionadas_complete)
   }
-
-  if (nrow(relacionadas) == 0) {
-    print("A proposicao nao possui requerimentos relacionados.")
-  } else {
-    relacionadas_complete <- relacionadas %>%
-      .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
-      .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
-  }
-
 }
+
+# .fetch_relacionadas_senado <- function(id_prop) {
+#   relacionadas_textos <- fetch_textos_proposicao(id_prop)
+#   relacionadas_prop <- fetch_proposicao_senado(id_prop)
+#
+#   relacionadas_textos <- .rename_df_columns(relacionadas_textos)
+#
+#   relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
+#   relacionadas_req <- purrr::map_df(relacionadas_ids, ~ fetch_proposicao_senado(.x))
+#
+#   if (nrow(relacionadas_req) == 0) {
+#     relacionadas <- relacionadas_textos
+#   } else {
+#     relacionadas_textos <- relacionadas_textos %>%
+#       dplyr::select(-codigo_materia) %>%
+#       dplyr::rename(codigo_materia = codigo_texto)
+#
+#     relacionadas <-
+#       dplyr::full_join(relacionadas_req, relacionadas_textos, by = "codigo_materia")
+#   }
+#
+#   if (nrow(relacionadas) == 0) {
+#     print("A proposição não possui documentos relacionados.")
+#   } else {
+#     relacionadas_complete <- relacionadas %>%
+#       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
+#       .coerce_types(.COLNAMES_RELACIONADAS_SENADO)
+#   }
+#
+# }
 
 #' @title Retrieves the proposition ID from its type, number and year
 #' @description The function can be used to fetch a vector of ids as well, in case of many propositions.
@@ -422,28 +443,28 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @examples
 #' \dontrun{
 #' fetch_autores_camara(2121442)
-#' } 
+#' }
 #' @export
 fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autores_info <- .camara_api(autor_uri) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(id_autor = dplyr::if_else(!is.na(uri),
-                                            stringr::str_split(uri, '/')[[1]] %>% 
+                                            stringr::str_split(uri, '/')[[1]] %>%
                                               dplyr::last() %>%
                                               as.numeric(),-1),
                   uri = dplyr::if_else(!is.na(uri), as.character(uri), "")) %>%
-    dplyr::ungroup() %>% 
+    dplyr::ungroup() %>%
     dplyr::select(id_autor, nome, cod_tipo = codTipo, tipo, uri)
   if(sigla_tipo %in% c("EMC","PEC")){
-    scrap_df <- tibble::tibble(nome = scrap_autores_from_website(proposicao_id)) %>% 
+    scrap_df <- tibble::tibble(nome = scrap_autores_from_website(proposicao_id)) %>%
       tidyr::separate_rows(nome, sep=", ") %>%
-      tidyr::separate(nome, c("nome","partido_uf"), sep=' - ', extra = "drop", fill = "right") %>% 
+      tidyr::separate(nome, c("nome","partido_uf"), sep=' - ', extra = "drop", fill = "right") %>%
       dplyr::select(-partido_uf)
     autores_info <- autores_info %>%
       dplyr::inner_join(scrap_df, by = "nome")
   }
-  
+
   return(autores_info)
 }
 
@@ -453,16 +474,16 @@ fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
 #' @return String with authors names separated by comma
 #' @export
 scrap_autores_from_website <- function(id_prop) {
-  autores_prop_text <- 
+  autores_prop_text <-
     .get_from_url(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_prop))%>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
-    rvest::html_nodes('#content') %>% 
-    rvest::html_nodes('span') %>% 
+    rvest::html_nodes('#content') %>%
+    rvest::html_nodes('span') %>%
     rvest::html_text()
   Sys.sleep(2)
-  
-  paste0(autores_prop_text[3:length(autores_prop_text)], collapse = ", ")  
+
+  paste0(autores_prop_text[3:length(autores_prop_text)], collapse = ", ")
 }
 
 
