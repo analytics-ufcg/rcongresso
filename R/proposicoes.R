@@ -327,6 +327,22 @@ fetch_ids_relacionadas <- function(id, casa) {
   }
 }
 
+#' @title Scraps related of proposition from website
+#' @description Return the related propositions
+#' @param id_prop proposition's ID
+#' @return
+#' @export
+scrap_relacionadas_from_website <- function(id_prop) {
+  relacionadas_prop_text <-
+    .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop)) %>%
+    httr::content('text', encoding = 'utf-8') %>%
+    xml2::read_html()  %>%
+    rvest::html_nodes('#content') %>%
+    rvest::html_nodes('span') %>%
+    rvest::html_text()
+  Sys.sleep(2)
+}
+
 # .fetch_relacionadas_senado <- function(id_prop) {
 #   relacionadas_textos <- fetch_textos_proposicao(id_prop)
 #   relacionadas_prop <- fetch_proposicao_senado(id_prop)

@@ -9,6 +9,7 @@
 # Links Alternativos
 .CAMARA_WEBSITE_LINK <- "http://www.camara.gov.br"
 .CAMARA_WEBSITE_LINK_2 <- "https://www.camara.leg.br"
+.SENADO_WEBSITE_LINK <- "https://www25.senado.leg.br/"
 
 # Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
@@ -36,6 +37,8 @@
 .EVENTOS_PROPOSICAO_CAMARA_PATH <- "/proposicoesWeb/sessoes_e_reunioes"
 .AUTORES_CAMARA_PATH <- "/proposicoesWeb/prop_autores"
 
+# Path site Senado
+.MATERIA_SENADO_PATH <- "web/atividade/materias/-/materia/"
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
