@@ -68,3 +68,4 @@
 .MAX_TENTATIVAS_REQ <- 5
 .DEF_POST_REQ_SLEEP_TIME <- 0.05
 .MENSAGEM_ERRO_REQ <- "Falha na requisicao a API dos Dados Abertos. Erro %s ao tentar acessar: %s"
+.LEGISLATURA_INICIAL <- 40

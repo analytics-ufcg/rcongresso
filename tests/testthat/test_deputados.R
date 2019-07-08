@@ -23,6 +23,9 @@ TAM_DF_DEFAULT <- c(15, 8)
 #TAM_DF_DEP_ATIVOS <- c(513, 8)
 
 all_deputados_ids <- fetch_ids_deputados() %>% dplyr::sample_n(100)
+all_deputados_ids_vazio <- fetch_all_deputados(tibble::tibble())
+fetch_deputados_parametro_invalido <- fetch_all_deputados(11)
+
 
 all_deputados <- fetch_all_deputados(all_deputados_ids)
 
@@ -63,6 +66,10 @@ test_that("Partido + UF do deputado", {expect_equal(dep_partido_estado,paste0(AB
 ## })
 
 test_that("fetch_all_deputados()", {
-  expect_true(is.data.frame(all_deputados))
   expect_true(all(sapply(all_deputados, class) %in% .COLNAMES_DEP_INFO_ID))
+  expect_true(nrow(all_deputados_ids_vazio) == 0)
+  expect_true(nrow(fetch_deputados_parametro_invalido) == 0)
+  expect_true(all(all_deputados$ultimo_status_id_legislatura >= 40))
 })
+
+

@@ -93,22 +93,32 @@ extract_partido_estado_autor <- function(uri) {
 #' @export
 fetch_all_deputados <- function(ids_dep) {
 
-  deputados <- purrr::map_df(ids_dep$id, ~(fetch_deputado(.x) %>%
-                               dplyr::mutate_all(~ as.character(.))))
+  deputados <- tibble::tibble()
 
-  deputados <- deputados %>%
-    .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
-    .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
-    .rename_df_columns()
+  if (is.null(dim(ids_dep)) | !is.data.frame(ids_dep) ) {
+    warning(paste0(ids_dep," é um objeto inválido"))
+  } else if (nrow(ids_dep) == 0) {
+    warning("Dataframe vazio")
+  } else {
+    deputados <- purrr::map_df(ids_dep$id, ~(fetch_deputado(.x) %>%
+                                               dplyr::mutate_all(~ as.character(.))))
 
+    deputados <- deputados %>%
+      .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
+      .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
+      .rename_df_columns()
+  }
+
+  deputados
 }
 
 #' @title Fetches all deputys IDs
-#' @description Fetches all deputys IDs from the 40º legislature to the current
+#' @description Fetches all deputys IDs from the given legislature to the current
 #' @return Dataframe containing all deputys IDs
 #' @rdname fetch_all_deputados
 #' @export
-fetch_ids_deputados <- function() {
+fetch_ids_deputados <- function(legislatura_base = .LEGISLATURA_INICIAL) {
+
   url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
   tabela_deputados <- readr::read_delim(
     url,
@@ -121,7 +131,7 @@ fetch_ids_deputados <- function() {
       dataFalecimento = readr::col_date(format = "")
     )
   ) %>%
-    dplyr::filter(idLegislaturaInicial >= 40)
+    dplyr::filter(idLegislaturaInicial >= legislatura_base)
 
   ids_dep <-
     tabela_deputados %>%
