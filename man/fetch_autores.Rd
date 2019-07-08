@@ -8,6 +8,8 @@ fetch_autores(proposicao_id = NULL, casa)
 }
 \arguments{
 \item{proposicao_id}{Proposition's ID}
+
+\item{casa}{senado or camara}
 }
 \value{
 A dataframe containing the basic information about the authors of the proposition
