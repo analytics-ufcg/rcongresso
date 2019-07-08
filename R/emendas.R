@@ -114,6 +114,11 @@ fetch_emendas_senado <- function(bill_id) {
     }
 
   } else {
+    if ("subemendas_submenda" %in% names(emendas_df)) {
+      emendas_df <-
+        emendas_df %>% 
+        dplyr::filter(subemendas_submenda != 'NULL')
+    }
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
       plyr::rename(
@@ -145,7 +150,7 @@ fetch_emendas_senado <- function(bill_id) {
       emendas_df %>% 
       dplyr::mutate(inteiro_teor = "")
   }
-  emendas_df %>%
+ emendas_df %>%
     dplyr::mutate("autor" = paste0(autor, " ", partido),
                   "numero" = as.integer(numero),
                   "tipo_documento" = as.character(tipo_documento),
