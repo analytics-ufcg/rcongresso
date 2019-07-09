@@ -542,6 +542,12 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
   return(autores_info)
 }
 
+#' @export
+fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
+  .fetch_autores_camara(proposicao_id,sigla_tipo)
+}
+
+
 #' @title Scraps autores da proposição from website
 #' @description Return the author(s) name(s)
 #' @param id_prop proposição's ID
