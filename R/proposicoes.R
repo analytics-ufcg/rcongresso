@@ -442,8 +442,8 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
 #' \dontrun{
-#' .fetch_autores(2121442, 'camara')
-#' .fetch_autores(91341, 'senado')
+#' fetch_autores(2121442, 'camara')
+#' fetch_autores(91341, 'senado')
 #' }
 #' @export
 fetch_autores <- function(proposicao_id = NULL, casa) {
@@ -476,7 +476,6 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
     autores_complete <- autores_complete %>%
       dplyr::mutate(id_parlamentar = NA,
                     uf_autor = NA,
-                    codigo_publico_atual = NA,
                     nome = NA,
                     nome_completo = NA,
                     sexo = NA,
@@ -489,7 +488,6 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
   } else {
     autores_complete <- autores_complete %>%
       dplyr::rename(id_parlamentar = identificacao_parlamentar_codigo_parlamentar,
-                    codigo_publico_atual = identificacao_parlamentar_codigo_publico_na_leg_atual,
                     nome = identificacao_parlamentar_nome_parlamentar,
                     nome_completo = identificacao_parlamentar_nome_completo_parlamentar,
                     sexo = identificacao_parlamentar_sexo_parlamentar,

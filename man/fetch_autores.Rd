@@ -19,7 +19,7 @@ Fetches a dataframe containing basic information about the authors of the propos
 }
 \examples{
 \dontrun{
-.fetch_autores(2121442, 'camara')
-.fetch_autores(91341, 'senado')
+fetch_autores(2121442, 'camara')
+fetch_autores(91341, 'senado')
 }
 }
