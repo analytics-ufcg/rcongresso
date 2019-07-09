@@ -29,6 +29,7 @@
 .AGENDA_CAMARA_PATH <- "/api/v2/eventos"
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
 .PAUTAS_CAMARA <- "/api/v2/eventos/"
+.URL_TABELA_DEP <- "/arquivos/deputados/csv/deputados.csv"
 
 # Path site Câmara
 .APENSADAS_CAMARA_PATH <- "/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID"
@@ -67,3 +68,4 @@
 .MAX_TENTATIVAS_REQ <- 5
 .DEF_POST_REQ_SLEEP_TIME <- 0.05
 .MENSAGEM_ERRO_REQ <- "Falha na requisicao a API dos Dados Abertos. Erro %s ao tentar acessar: %s"
+.LEGISLATURA_INICIAL <- 40
