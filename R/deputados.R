@@ -96,7 +96,7 @@ fetch_all_deputados <- function(ids_dep) {
   deputados <- tibble::tibble()
 
   if (is.null(dim(ids_dep)) | !is.data.frame(ids_dep) ) {
-    warning(paste0(ids_dep," é um objeto inválido"))
+    warning("Objeto deve ser um dataframe não-nulo")
   } else if (nrow(ids_dep) == 0) {
     warning("Dataframe vazio")
   } else {
