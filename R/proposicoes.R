@@ -438,14 +438,88 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @title Fetches proposition's authors
 #' @description Fetches a dataframe containing basic information about the authors of the proposition
 #' @param proposicao_id Proposition's ID
+#' @param casa senado or camara
+#' @return A dataframe containing the basic information about the authors of the proposition
+#' @examples
+#' \dontrun{
+#' fetch_autores(2121442, 'camara')
+#' fetch_autores(91341, 'senado')
+#' }
+#' @export
+fetch_autores <- function(proposicao_id = NULL, casa) {
+  if (casa == "camara") {
+    .fetch_autores_camara(proposicao_id)
+  } else if (casa == "senado") {
+    .fetch_autores_senado(proposicao_id)
+  } else {
+    return("Parâmetro 'casa' não identificado.")
+  }
+}
+
+#' @title Fetches proposition's authors
+#' @description Fetches a dataframe containing basic information about the authors of the proposition
+#' @param proposicao_id Proposition's ID
+#' @return A dataframe containing the basic information about the authors of the proposition
+#' @examples
+#' \dontrun{
+#' .fetch_autores_senado(91341)
+#' }
+#' @export
+.fetch_autores_senado <- function(proposicao_id) {
+  autor_data <- .senado_api(paste0(.SENADO_PROPOSICAO_PATH, proposicao_id),
+                            asList = TRUE)$DetalheMateria$Materia$Autoria$Autor
+
+  autores_complete <-
+    .rename_df_columns(autor_data)
+
+  if(ncol(autores_complete) < 6) {
+    autores_complete <- autores_complete %>%
+      dplyr::mutate(id_parlamentar = NA,
+                    uf_autor = NA,
+                    nome = NA,
+                    nome_completo = NA,
+                    sexo = NA,
+                    forma_de_tratamento = NA,
+                    url_foto = NA,
+                    url_pagina = NA,
+                    email = NA,
+                    sigla_partido = NA,
+                    uf_parlamentar = NA)
+  } else {
+    autores_complete <- autores_complete %>%
+      dplyr::mutate(id_parlamentar = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_codigo_parlamentar'),
+                    nome = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_nome_parlamentar'),
+                    nome_completo = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_nome_completo_parlamentar'),
+                    sexo = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_sexo_parlamentar'),
+                    forma_de_tratamento = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_forma_tratamento'),
+                    url_foto = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_url_foto_parlamentar'),
+                    url_pagina = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_url_pagina_parlamentar'),
+                    email = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_email_parlamentar'),
+                    sigla_partido = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_sigla_partido_parlamentar'),
+                    uf_parlamentar = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_uf_parlamentar'))
+  }
+  
+  unwanted_cols <- names(autores_complete)[startsWith(names(autores_complete), 'identificacao_parlamentar')]
+  
+  # quebra aqui
+  autores_complete <- autores_complete %>%
+    dplyr::select(-unwanted_cols)
+
+  autores_complete %>%
+      .assert_dataframe_completo(.COLNAMES_AUTORES_SENADO) %>%
+      .coerce_types(.COLNAMES_AUTORES_SENADO)
+}
+
+#' @title Fetches proposition's authors
+#' @description Fetches a dataframe containing basic information about the authors of the proposition
+#' @param proposicao_id Proposition's ID
 #' @param sigla_tipo Proposition's initials
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
 #' \dontrun{
-#' fetch_autores_camara(2121442)
-#' }
+#' .fetch_autores_camara(2121442)
 #' @export
-fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
+.fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autores_info <- .camara_api(autor_uri) %>%
     dplyr::rowwise() %>%
