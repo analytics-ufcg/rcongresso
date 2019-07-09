@@ -153,7 +153,6 @@ fetch_related_requerimentos_senado <- function(prop_id, mark_deferimento = FALSE
 #' @description Returns a dataframe with events of a given requerimento (presentation, deferral, etc.)
 #' @param req_id ID of a requerimento
 #' @return Dataframe
-#' @example event_senado <- fetch_eventos_requerimento_senado(91341)
 #' @export
 fetch_events_requerimento_senado <- function(req_id) {
   regexes <-
