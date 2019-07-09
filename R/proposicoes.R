@@ -472,7 +472,7 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
   autores_complete <-
     .rename_df_columns(autor_data)
 
-  if(ncol(autor_data) < 6) {
+  if(ncol(autores_complete) < 6) {
     autores_complete <- autores_complete %>%
       dplyr::mutate(id_parlamentar = NA,
                     uf_autor = NA,
@@ -487,17 +487,23 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
                     uf_parlamentar = NA)
   } else {
     autores_complete <- autores_complete %>%
-      dplyr::rename(id_parlamentar = identificacao_parlamentar_codigo_parlamentar,
-                    nome = identificacao_parlamentar_nome_parlamentar,
-                    nome_completo = identificacao_parlamentar_nome_completo_parlamentar,
-                    sexo = identificacao_parlamentar_sexo_parlamentar,
-                    forma_de_tratamento = identificacao_parlamentar_forma_tratamento,
-                    url_foto = identificacao_parlamentar_url_foto_parlamentar,
-                    url_pagina = identificacao_parlamentar_url_pagina_parlamentar,
-                    email = identificacao_parlamentar_email_parlamentar,
-                    sigla_partido = identificacao_parlamentar_sigla_partido_parlamentar,
-                    uf_parlamentar = identificacao_parlamentar_uf_parlamentar)
-     }
+      dplyr::mutate(id_parlamentar = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_codigo_parlamentar'),
+                    nome = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_nome_parlamentar'),
+                    nome_completo = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_nome_completo_parlamentar'),
+                    sexo = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_sexo_parlamentar'),
+                    forma_de_tratamento = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_forma_tratamento'),
+                    url_foto = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_url_foto_parlamentar'),
+                    url_pagina = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_url_pagina_parlamentar'),
+                    email = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_email_parlamentar'),
+                    sigla_partido = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_sigla_partido_parlamentar'),
+                    uf_parlamentar = .safe_get_value_coluna(autores_complete,'identificacao_parlamentar_uf_parlamentar'))
+  }
+  
+  unwanted_cols <- names(autores_complete)[startsWith(names(autores_complete), 'identificacao_parlamentar')]
+  
+  # quebra aqui
+  autores_complete <- autores_complete %>%
+    dplyr::select(-unwanted_cols)
 
   autores_complete %>%
       .assert_dataframe_completo(.COLNAMES_AUTORES_SENADO) %>%
