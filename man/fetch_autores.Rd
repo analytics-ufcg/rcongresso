@@ -4,7 +4,7 @@
 \alias{fetch_autores}
 \title{Fetches proposition's authors}
 \usage{
-fetch_autores(proposicao_id = NULL, casa)
+fetch_autores(proposicao_id = NULL, casa, sigla_tipo = "")
 }
 \arguments{
 \item{proposicao_id}{Proposition's ID}
