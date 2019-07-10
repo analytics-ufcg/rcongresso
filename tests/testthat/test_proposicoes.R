@@ -136,9 +136,9 @@ test_that("fetch_autores_camara()",{
     dplyr::bind_rows(tibble::tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
-  emc_2206183 <- fetch_autores_camara(2206183, "EMC")
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(.fetch_autores_camara(.x, .y))))))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(.fetch_autores_camara(.x, .y)) != 0))))
+  emc_2206183 <- .fetch_autores_camara(2206183, "EMC")
   expect_equal(tibble::tibble(
     id_autor = c(204371, 204534),
     nome = c("Felipe Rigoni", "Tabata Amaral"),
@@ -148,3 +148,16 @@ test_that("fetch_autores_camara()",{
             "https://dadosabertos.camara.leg.br/api/v2/deputados/204534")
     ), emc_2206183)
 })
+
+test_that("fetch_autores_senado()", {
+  expect_true(is.data.frame(.fetch_autores_senado(91341)))
+  expect_true(is.data.frame(.fetch_autores_senado(1430)))
+})
+
+test_that("fetch_autores()", {
+  expect_true(is.character(fetch_autores(91341, "invalid")))
+  expect_true(is.character(fetch_autores(257161, "invalid")))
+  expect_true(is.data.frame(fetch_autores(91341, "senado")))
+  expect_true(is.data.frame(fetch_autores(257161, "camara")))
+})
+
