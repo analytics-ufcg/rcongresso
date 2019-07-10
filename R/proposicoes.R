@@ -501,7 +501,6 @@ fetch_autores <- function(proposicao_id = NULL, casa, sigla_tipo = "") {
 
   unwanted_cols <- names(autores_complete)[startsWith(names(autores_complete), 'identificacao_parlamentar')]
 
-  # quebra aqui
   autores_complete <- autores_complete %>%
     dplyr::select(-unwanted_cols)
 
