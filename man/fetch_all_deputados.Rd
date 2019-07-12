@@ -11,6 +11,8 @@ fetch_ids_deputados(legislatura_base = .LEGISLATURA_INICIAL)
 }
 \arguments{
 \item{ids_dep}{Dataframe containing all deputys IDs}
+
+\item{legislatura_base}{Legislatura inicial para retornar os deputados}
 }
 \value{
 Dataframe containing details about the deputy's

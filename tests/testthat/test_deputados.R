@@ -68,7 +68,7 @@ test_that("fetch_all_deputados()", {
   expect_true(all(sapply(all_deputados, class) %in% .COLNAMES_DEP_INFO_ID))
   expect_true(nrow(all_deputados_ids_vazio) == 0)
   expect_warning(fetch_all_deputados(all_deputados_ids_vazio), "Dataframe vazio")
-  expect_warning(fetch_all_deputados(fetch_deputados_parametro_invalido), "Objeto deve ser um dataframe não-nulo")
+  expect_warning(fetch_all_deputados(fetch_deputados_parametro_invalido), "Objeto deve ser um dataframe nao-nulo")
   expect_true(nrow(fetch_all_deputados(fetch_deputados_parametro_invalido)) == 0)
   expect_true(nrow(fetch_all_deputados(all_deputados_ids_vazio)) == 0)
   expect_true(all(all_deputados$ultimo_status_id_legislatura >= 40))
