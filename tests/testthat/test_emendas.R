@@ -10,7 +10,7 @@ emendas_senado_geral <<- fetch_emendas(id = 91341, casa='senado')
 emendas_camara_geral <<- fetch_emendas(id = 2121442, casa='camara',sigla='pl', numero = 6726, ano = 2016)
 emendas_pl_6621 <<- scrap_autores_from_website(2171808)
 emendas_pec_6 <<- scrap_autores_from_website(2203549)
-emendas_com_subemendas <<- fetch_emendas_senado(id = 103831, casa='senado') 
+emendas_com_subemendas <<- fetch_emendas_senado(103831) 
 
 # Testa erros
 test_that("GET proposição inexistente", {expect_error(fetch_emendas_senado(-1))})
