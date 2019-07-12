@@ -61,6 +61,13 @@ fetch_emendas_senado <- function(bill_id) {
       purrr::map_df( ~ .) %>% .rename_df_columns() %>% 
       dplyr::bind_cols(decisao_emendas)
   }else {
+    colunas_que_mudam_decisao = c("Decisao.Descricao", "Decisao.Data", "Decisao.LocalDeliberacao.CodigoLocal", "Decisao.LocalDeliberacao.SiglaLocal", "Decisao.LocalDeliberacao.NomeLocal")
+    if (all(colunas_que_mudam_decisao %in% names(emendas_df))) {
+      emendas_df <-
+        emendas_df %>% 
+        dplyr::select(-colunas_que_mudam_decisao) %>% 
+        unique()
+    }
     emendas_df <- 
       emendas_df %>%
       purrr::map_df( ~ .) %>%
@@ -117,7 +124,7 @@ fetch_emendas_senado <- function(bill_id) {
     if ("subemendas_submenda" %in% names(emendas_df)) {
       emendas_df <-
         emendas_df %>% 
-        dplyr::filter(subemendas_submenda != 'NULL')
+        dplyr::select(-subemendas_submenda)
     }
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
@@ -150,7 +157,7 @@ fetch_emendas_senado <- function(bill_id) {
       emendas_df %>% 
       dplyr::mutate(inteiro_teor = "")
   }
- emendas_df %>%
+  emendas_df %>%
     dplyr::mutate("autor" = paste0(autor, " ", partido),
                   "numero" = as.integer(numero),
                   "tipo_documento" = as.character(tipo_documento),
