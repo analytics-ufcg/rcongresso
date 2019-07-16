@@ -165,7 +165,8 @@ fetch_emendas_senado <- function(bill_id) {
     dplyr::select(-dplyr::starts_with("autoria_emenda"),
                   -dplyr::starts_with("textos_emenda"),
                   -dplyr::starts_with("uf")) %>%
-    tibble::as_tibble() 
+    tibble::as_tibble() %>% 
+    dplyr::filter(!is.na(numero))
 }
 
 #' @title Fetches proposition's emendas
