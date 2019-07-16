@@ -96,7 +96,7 @@ fetch_all_deputados <- function(ids_dep) {
   deputados <- tibble::tibble()
 
   if (is.null(dim(ids_dep)) | !is.data.frame(ids_dep) ) {
-    warning("Objeto deve ser um dataframe não-nulo")
+    warning("Objeto deve ser um dataframe nao-nulo")
   } else if (nrow(ids_dep) == 0) {
     warning("Dataframe vazio")
   } else {
@@ -114,6 +114,7 @@ fetch_all_deputados <- function(ids_dep) {
 
 #' @title Fetches all deputys IDs
 #' @description Fetches all deputys IDs from the given legislature to the current
+#' @param legislatura_base Legislatura inicial para retornar os deputados
 #' @return Dataframe containing all deputys IDs
 #' @rdname fetch_all_deputados
 #' @export

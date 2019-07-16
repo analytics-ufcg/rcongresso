@@ -10,6 +10,7 @@ emendas_senado_geral <<- fetch_emendas(id = 91341, casa='senado')
 emendas_camara_geral <<- fetch_emendas(id = 2121442, casa='camara',sigla='pl', numero = 6726, ano = 2016)
 emendas_pl_6621 <<- scrap_autores_from_website(2171808)
 emendas_pec_6 <<- scrap_autores_from_website(2203549)
+emendas_com_subemendas <<- fetch_emendas_senado(103831) 
 
 # Testa erros
 test_that("GET proposição inexistente", {expect_error(fetch_emendas_senado(-1))})
@@ -21,6 +22,7 @@ test_that("Is tibble", {
   expect_true(tibble::is_tibble(emendas_ausentes))
   expect_true(tibble::is_tibble(emendas_variadas))
   expect_true(tibble::is_tibble(emendas_reforma_setor))
+  expect_true(tibble::is_tibble(emendas_com_subemendas))
 })
 
 test_that("Is dataframe", {
@@ -40,10 +42,12 @@ test_that("Not Empty", {
   expect_true(nrow(emendas_camara) != 0)
   expect_true(nrow(emendas_senado_geral) != 0)
   expect_true(nrow(emendas_camara_geral) != 0)
+  expect_true(nrow(emendas_com_subemendas) != 0)
 })
 
 test_that("Várias - fetch_emendas_senado()", {
   expect_true(all(sapply(emendas_variadas, class) %in% .COLNAMES_EMENDAS_SENADO))
+  expect_true(all(sapply(emendas_com_subemendas, class) %in% .COLNAMES_EMENDAS_SENADO))
   })
 
 test_that("Is dataframe", {
