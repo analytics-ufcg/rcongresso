@@ -148,3 +148,27 @@ test_that("fetch_autores_camara()",{
             "https://dadosabertos.camara.leg.br/api/v2/deputados/204534")
     ), emc_2206183)
 })
+
+test_that("scrap_senado_relacionadas_from_website()", {
+  pls_ids <- c(96123, 91341, 112563, 104930, 90919)
+  
+  df_pls_ids_relacionadas <- purrr::map_df(pls_ids, ~.scrap_senado_relacionadas_from_website(.x))
+  
+  expect_true(is.data.frame(df_pls_ids_relacionadas))
+  
+  expect_true(nrow(df_pls_ids_relacionadas) > 0)
+  
+  pl_104930 <- .scrap_senado_relacionadas_from_website(104930)
+  
+  expect_true(nrow(pl_104930) == 5)
+  
+  # expect_equal(tibble::tibble(
+  #   id_autor = c(204371, 204534),
+  #   nome = c("Felipe Rigoni", "Tabata Amaral"),
+  #   cod_tipo = c(as.integer(10000),as.integer(10000)),
+  #   tipo = c("Deputado", "Deputado"),
+  #   uri = c("https://dadosabertos.camara.leg.br/api/v2/deputados/204371",
+  #           "https://dadosabertos.camara.leg.br/api/v2/deputados/204534")
+  # ), emc_2206183)
+  
+})

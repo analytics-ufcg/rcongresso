@@ -330,17 +330,25 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @title Scraps related of proposition from website
 #' @description Return the related propositions
 #' @param id_prop proposition's ID
-#' @return
-#' @export
-scrap_relacionadas_from_website <- function(id_prop) {
+#' @return dataframe containing related propositions ids
+.scrap_senado_relacionadas_from_website <- function(id_prop) {
   relacionadas_prop_text <-
     .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop)) %>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
-    rvest::html_nodes('#content') %>%
-    rvest::html_nodes('span') %>%
-    rvest::html_text()
+    rvest::html_nodes('#conteudoProjeto') %>%
+    rvest::html_nodes('#materias') %>%
+    rvest::html_nodes('tr') %>%
+    rvest::html_nodes('td') %>%
+    rvest::html_nodes('a') %>% 
+    rvest::html_attr('href') %>% 
+    tibble::enframe(value="url_relacionada")
   Sys.sleep(2)
+  
+  relacionadas_prop_text %>% 
+    dplyr::rowwise() %>% 
+    dplyr::mutate(id_relacionada = stringr::str_split(url_relacionada, "/") %>% 
+                    purrr::pluck(1,9))
 }
 
 # .fetch_relacionadas_senado <- function(id_prop) {
