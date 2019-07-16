@@ -125,7 +125,10 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
     proposicao_identificacao %>% 
     tibble::add_column(!!!proposicao_dados_basicos,
                        !!!proposicao_autores,
-                       !!!proposicao_natureza)
+                       !!!proposicao_natureza) %>% 
+    .rename_df_columns() %>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
     
 }
 
