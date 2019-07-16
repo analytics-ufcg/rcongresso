@@ -33,14 +33,12 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(pec_241))
   expect_true(is.data.frame(pec_241_por_id))
   expect_true(is.data.frame(deferimento))
-  expect_true(is.data.frame(pls_229_2009))
 })
 
 test_that("Not Empty", {
   expect_true(nrow(pec_241) != 0)
   expect_true(nrow(pec_241_por_id) != 0)
   expect_true(nrow(deferimento) != 0)
-  expect_true(nrow(pls_229_2009) != 0)
 })
 
 test_that("fetch_proposicao_camara()", {
@@ -58,8 +56,16 @@ test_that("fetch_proposicao_senado()", {
   expect_true(nrow(pls_1489) != 0)
 })
 
-test_that("fetch_proposicao_senado()", {
+test_that("fetch_proposicao_senado_sigla()", {
+  expect_true(nrow(pls_229_2009) != 0)
+  expect_true(is.data.frame(pls_229_2009))
   expect_true(all(sapply(pls_229_2009, class) %in% .COLNAMES_PROPOSICAO_SENADO_SIGLA))
+  expect_warning(fetch_proposicao_senado_sigla(NA, NA, NA))
+  expect_warning(fetch_proposicao_senado_sigla('pls', 100, NA))
+  expect_warning(fetch_proposicao_senado_sigla('', 100, 2019))
+  expect_warning(fetch_proposicao_senado_sigla('pls', 100, -2019))
+  expect_warning(fetch_proposicao_senado_sigla('pls', -100, 2019))
+  expect_true(nrow(fetch_proposicao_senado_sigla('pls', -100, 2019)) == 0)
 })
 
 test_that(".fetch_relacionadas_senado()", {

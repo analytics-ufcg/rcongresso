@@ -66,6 +66,8 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @rdname fetch_proposicao_senado_sigla
 #' @export
 fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
+  if (.warnings_props_sigla(sigla, numero, ano)) return(tibble::tibble())
+  
   proposicao_data <- .senado_api(.SENADO_PROPOSICAO_PATH_SIGLA, query = list(sigla = sigla, numero = numero, ano = ano), asList = TRUE)
   
   proposicao_infos <-
