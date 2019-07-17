@@ -1,3 +1,14 @@
+#' @export
+fetch_proposicao <- function(proposicao_id = NULL, casa) {
+  if (casa == "camara") {
+    fetch_proposicao_camara(proposicao_id)
+  } else if (casa == "senado") {
+    fetch_proposicao_senado(proposicao_id)
+  } else {
+    return("Parametro 'casa' nao identificado.")
+  }
+}
+
 #' @title Fetches proposition from API using a query
 #' @description Fetches information about law's projects, resolutions, provisional measures,
 #' law amendments, opinions and all the other propositions types on the
