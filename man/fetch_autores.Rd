@@ -10,6 +10,8 @@ fetch_autores(proposicao_id = NULL, casa, sigla_tipo = "")
 \item{proposicao_id}{Proposition's ID}
 
 \item{casa}{senado or camara}
+
+\item{sigla_tipo}{Proposition's initials}
 }
 \value{
 A dataframe containing the basic information about the authors of the proposition

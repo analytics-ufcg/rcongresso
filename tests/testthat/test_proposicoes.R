@@ -171,5 +171,20 @@ test_that("fetch_autores()", {
   expect_true(is.character(fetch_autores(91341, "invalid")))
   expect_true(is.character(fetch_autores(257161, "invalid")))
   expect_true(is.data.frame(fetch_autores(91341, "senado")))
+
+  pl_257161 <- fetch_autores(257161, "camara", "PL")
+  expect_true(nrow(pl_257161) == 15)
+
+  pl_532814 <- fetch_autores(532814, "camara", "PL")
+  expect_equal(pl_532814, tibble::tibble(
+    id_autor = 160567,
+    nome = "Nelson Marchezan Junior",
+    cod_tipo = as.integer(10000),
+    tipo = "Deputado",
+    uri = "https://dadosabertos.camara.leg.br/api/v2/deputados/160567"
+  ))
+
+  pl_91341 <- fetch_autores(91341, "senado", "")
+  expect_true(nrow(pl_91341) == 1)
 })
 
