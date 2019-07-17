@@ -506,17 +506,17 @@ rename_table_to_underscore <- function(df) {
 
 .warnings_props_sigla <- function(sigla, numero, ano) {
   if(is.na(sigla) | is.na(numero) | is.na(ano)) {
-    warning("Todos os parametros tem que ser diferente de NA")
+    warning("Todos os parametros devem ser diferentes de NA")
     return(T)
   }
   
   if(sigla == '') {
-    warning("Sigla não pode ser vazio")
+    warning("Sigla não pode ser vazia")
     return(T)
   }
   
   if(numero < 0 | ano < 0) {
-    warning("Numero e ano tem que ser positivos")
+    warning("Numero e ano devem ser positivos")
     return(T)
   }
   
