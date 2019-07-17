@@ -4,6 +4,7 @@ pec_241 <<- fetch_proposicao_camara(siglaTipo = "PEC", numero = 241, ano = 2016,
 pec_241_id <<- fetch_id_proposicao_camara("PEC", 241, 2016)
 pec_241_por_id <<- fetch_proposicao_camara(pec_241_id)
 pls_91341 <<- fetch_proposicao_senado(91341)
+pls_229_2009 <<- fetch_proposicao_senado_sigla('pls', 229, 2009)
 pls_1489 <<- fetch_proposicao_senado(1489)
 relacionadas_pec_241 <<- .fetch_relacionadas_camara(pec_241_id)
 deferimento <<- fetch_deferimento(c("102343", "109173", "115853"))
@@ -53,6 +54,18 @@ test_that("fetch_proposicao_senado()", {
   expect_true(nrow(pls_91341) != 0)
   expect_true(all(sapply(pls_1489, class) %in% .COLNAMES_PROPOSICAO_SENADO))
   expect_true(nrow(pls_1489) != 0)
+})
+
+test_that("fetch_proposicao_senado_sigla()", {
+  expect_true(nrow(pls_229_2009) != 0)
+  expect_true(is.data.frame(pls_229_2009))
+  expect_true(all(sapply(pls_229_2009, class) %in% .COLNAMES_PROPOSICAO_SENADO_SIGLA))
+  expect_warning(fetch_proposicao_senado_sigla(NA, NA, NA))
+  expect_warning(fetch_proposicao_senado_sigla('pls', 100, NA))
+  expect_warning(fetch_proposicao_senado_sigla('', 100, 2019))
+  expect_warning(fetch_proposicao_senado_sigla('pls', 100, -2019))
+  expect_warning(fetch_proposicao_senado_sigla('pls', -100, 2019))
+  expect_true(nrow(fetch_proposicao_senado_sigla('pls', -100, 2019)) == 0)
 })
 
 test_that(".fetch_relacionadas_senado()", {

@@ -57,6 +57,84 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 
 #' @title Fetches a proposition in the Senate
 #' @description Returns the proposition info
+#' @param sigla Proposition's sigla
+#' @param numero Proposition's numero
+#' @param ano Proposition's ano
+#' @return Dataframe containing all the info about the proposition;
+#' @examples
+#' prop_pls229 <- fetch_proposicao_senado(pls, 229, 2009)
+#' @rdname fetch_proposicao_senado_sigla
+#' @export
+fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
+  if (.warnings_props_sigla(sigla, numero, ano)) return(tibble::tibble())
+  
+  proposicao_data <- .senado_api(.SENADO_PROPOSICAO_PATH_SIGLA, query = list(sigla = sigla, numero = numero, ano = ano), asList = TRUE)
+  
+  proposicao_infos <-
+    proposicao_data %>% 
+    magrittr::extract2("PesquisaBasicaMateria") %>% 
+    magrittr::extract2("Materias") %>% 
+    magrittr::extract2("Materia") 
+  
+  proposicao_identificacao <-
+    proposicao_infos %>% 
+    magrittr::extract2("IdentificacaoMateria") %>% 
+    tibble::as_tibble()
+  
+  proposicao_dados_basicos <-
+    proposicao_infos %>% 
+    magrittr::extract2("DadosBasicosMateria") 
+  
+  if("IdentificacaoComissaoMpv" %in% names(proposicao_dados_basicos)) {
+    proposicao_dados_basicos$IdentificacaoComissaoMpv <- NULL
+  }
+  
+  proposicao_dados_basicos <-
+    proposicao_dados_basicos %>% 
+    tibble::as_tibble()
+  
+  proposicao_natureza <- tibble::tibble()
+  if ("NaturezaMateria" %in% names(proposicao_dados_basicos)) {
+    proposicao_dados_basicos <-
+      proposicao_dados_basicos %>% 
+      dplyr::select(-NaturezaMateria) %>% 
+      unique()
+    
+    proposicao_natureza <-
+      proposicao_infos %>% 
+      magrittr::extract2("DadosBasicosMateria") %>% 
+      magrittr::extract2("NaturezaMateria") %>% 
+      tibble::as_tibble() 
+  }
+  
+  proposicao_autores <-
+    proposicao_infos %>% 
+    magrittr::extract2("AutoresPrincipais") %>% 
+    magrittr::extract2("AutorPrincipal") %>%  
+    tibble::as_tibble() %>% 
+    head(1)
+  
+  if ("IdentificacaoParlamentar" %in% names(proposicao_autores)) {
+    proposicao_autores <-
+      proposicao_autores %>% 
+      dplyr::select(-IdentificacaoParlamentar) %>% 
+      unique() %>% 
+      head(1)
+  }
+  
+  proposicao_complete <-
+    proposicao_identificacao %>% 
+    tibble::add_column(!!!proposicao_dados_basicos,
+                       !!!proposicao_autores,
+                       !!!proposicao_natureza) %>% 
+    .rename_df_columns() %>%
+    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
+    .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
+    
+}
+
+#' @title Fetches a proposition in the Senate
+#' @description Returns the proposition info
 #' @param id Proposition's ID
 #' @return Dataframe containing all the info about the proposition;
 #' @examples
