@@ -63,6 +63,20 @@
                                  "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character",
                                  "autor_nome"="character")
 
+.COLNAMES_PROPOSICAO_SENADO_SIGLA <- c("codigo_materia"="character", "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character", 
+                                       "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character", "numero_materia"="character", "ano_materia"="character", 
+                                       "descricao_identificacao_materia"="character", "indicador_tramitando"="character", "ementa_materia"="character",
+                                        "indicador_complementar"="character", "data_apresentacao"="character", "nome_autor"="character" , "sigla_tipo_autor"="character" ,                                  
+                                        "indicador_outros_autores"="character" ,"codigo_natureza"="character" ,"nome_natureza"="character" , "descricao_natureza"="character",                                
+                                        "sim"="character", "nao"="character", "total"="character", "descricao_objetivo_processo"="character", "explicacao_ementa_materia"="character", 
+                                        "data_leitura"="character", "sigla_casa_leitura"="character", "nome_casa_leitura"="character", "uf_autor"="character", "indexacao_materia"="character",
+                                       "apelido_materia"="character", "identificacao_parlamentar_codigo_parlamentar"="character", "identificacao_parlamentar_nome_parlamentar"="character",
+                                       "identificacao_parlamentar_nome_completo_parlamentar"="character", "identificacao_parlamentar_sexo_parlamentar"="character",
+                                       "identificacao_parlamentar_forma_tratamento"="character", "identificacao_parlamentar_url_foto_parlamentar"="character",
+                                       "identificacao_parlamentar_url_pagina_parlamentar"="character" ,  
+                                        "identificacao_parlamentar_sigla_partido_parlamentar"="character", "identificacao_parlamentar_uf_parlamentar"="character",
+                                        "observacao_materia"="character", "data_assinatura"="character", "numero_republicacao_mpv"="character")
+
 .COLNAMES_VOTACOES_CAMARA <- c("id"="integer","uri"="character","titulo"="character","uriEvento"="character","uriProposicaoPrincipal"="character",
                         "tipoVotacao"="character","aprovada"="logical","placarSim"="integer","placarNao"="integer","placarAbstencao"="integer",
                         "proposicao.id"="integer","proposicao.uri"="character","proposicao.siglaTipo"="character","proposicao.codTipo"="integer",
@@ -230,6 +244,11 @@
 # Autores
 .COLNAMES_AUTORES <- c("uri"="character", "nome"="character", "codTipo"="integer", "tipo"="character")
 
+.COLNAMES_AUTORES_SENADO <- c("nome_autor"="character", "sigla_tipo_autor"="character", "descricao_tipo_autor"="character",
+                              "uf_autor"="character", "num_ordem_autor"="character", "indicador_outros_autores"="character",
+                              "id_parlamentar"="character", "nome_completo"="character", "sexo"="character",
+                              "forma_de_tratamento"="character", "url_foto"="character", "url_pagina"="character",
+                              "email"="character", "sigla_partido"="character", "uf_parlamentar"="character")
 # Sessões
 .COLNAMES_SESSOES_CAMARA <- c("timestamp"="character", "origem"="character", "descricao"="character")
 .COLNAMES_SESSOES_SENADO <- c("codigo_sessao"="character", "sigla_casa_sessao"="character", "nome_casa_sessao"="character", "codigo_sessao_legislativa"="character",

@@ -84,3 +84,64 @@ extract_partido_estado_autor <- function(uri) {
     ''
   }
 }
+
+#' @title Fetches details abaout all deputys
+#' @description Fetches details about deputys from the 40º legislature to the current
+#' @param ids_dep Dataframe containing all deputys IDs
+#' @return Dataframe containing details about the deputy's
+#' @rdname fetch_all_deputados
+#' @export
+fetch_all_deputados <- function(ids_dep) {
+
+  deputados <- tibble::tibble()
+
+  if (is.null(dim(ids_dep)) | !is.data.frame(ids_dep) ) {
+    warning("Objeto deve ser um dataframe nao-nulo")
+  } else if (nrow(ids_dep) == 0) {
+    warning("Dataframe vazio")
+  } else {
+    deputados <- purrr::map_df(ids_dep$id, ~(fetch_deputado(.x) %>%
+                                               dplyr::mutate_all(~ as.character(.))))
+
+    deputados <- deputados %>%
+      .assert_dataframe_completo(.COLNAMES_DEP_INFO_ID) %>%
+      .coerce_types(.COLNAMES_DEP_INFO_ID) %>%
+      .rename_df_columns()
+  }
+
+  deputados
+}
+
+#' @title Fetches all deputys IDs
+#' @description Fetches all deputys IDs from the given legislature to the current
+#' @param legislatura_base Legislatura inicial para retornar os deputados
+#' @return Dataframe containing all deputys IDs
+#' @rdname fetch_all_deputados
+#' @export
+fetch_ids_deputados <- function(legislatura_base = .LEGISLATURA_INICIAL) {
+
+  url <- paste0(.CAMARA_API_LINK, .URL_TABELA_DEP)
+  tabela_deputados <- readr::read_delim(
+    url,
+    delim = ";",
+    col_types = list(
+      .default = readr::col_character(),
+      idLegislaturaInicial = readr::col_double(),
+      idLegislaturaFinal = readr::col_double(),
+      dataNascimento = readr::col_date(format = ""),
+      dataFalecimento = readr::col_date(format = "")
+    )
+  ) %>%
+    dplyr::filter(idLegislaturaInicial >= legislatura_base)
+
+  ids_dep <-
+    tabela_deputados %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id = as.character(.get_id(as.character(uri)))) %>%
+    dplyr::select(id)
+  ids_dep
+}
+
+.get_id <- function(uri) {
+  return(tail(unlist(strsplit(uri, "/")), 1))
+}

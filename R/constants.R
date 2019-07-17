@@ -30,6 +30,7 @@
 .AGENDA_CAMARA_PATH <- "/api/v2/eventos"
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
 .PAUTAS_CAMARA <- "/api/v2/eventos/"
+.URL_TABELA_DEP <- "/arquivos/deputados/csv/deputados.csv"
 
 # Path site Câmara
 .APENSADAS_CAMARA_PATH <- "/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID"
@@ -51,6 +52,7 @@
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
 .SENADO_TEXTOS_MATERIA <- "dadosabertos/materia/textos/"
 .SENADORES_PATH <- "dadosabertos/senador/lista/legislatura/"
+.SENADO_PROPOSICAO_PATH_SIGLA <- "dadosabertos/materia/pesquisa/lista"
 
 # Link do repositório do rcongresso
 .RCONGRESSO_LINK <- "https://github.com/analytics-ufcg/rcongresso"
@@ -70,3 +72,4 @@
 .MAX_TENTATIVAS_REQ <- 5
 .DEF_POST_REQ_SLEEP_TIME <- 0.05
 .MENSAGEM_ERRO_REQ <- "Falha na requisicao a API dos Dados Abertos. Erro %s ao tentar acessar: %s"
+.LEGISLATURA_INICIAL <- 40

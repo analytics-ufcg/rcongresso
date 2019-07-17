@@ -490,3 +490,35 @@ rename_table_to_underscore <- function(df) {
   authors %>%
     dplyr::mutate(autor.nome = paste0(autor.nome, " ", partido_estado))
 }
+
+#' @title Safely returns column value from dataframe
+#' @description Returns column value if exists
+#' @param df Dataframe from whom column value will be retrieved
+#' @param col_name name of column whose value will be retrieved
+#' @return Column value if column exists, NA otherwise.
+.safe_get_value_coluna <- function(df, col_name) {
+  if (col_name %in% names(df)) {
+    return(df %>% dplyr::select((!!(col_name))) %>% dplyr::pull(!!(col_name)))
+  } else {
+    return(NA)
+  }
+}
+
+.warnings_props_sigla <- function(sigla, numero, ano) {
+  if(is.na(sigla) | is.na(numero) | is.na(ano)) {
+    warning("Todos os parametros devem ser diferentes de NA")
+    return(T)
+  }
+  
+  if(sigla == '') {
+    warning("Sigla não pode ser vazia")
+    return(T)
+  }
+  
+  if(numero < 0 | ano < 0) {
+    warning("Numero e ano devem ser positivos")
+    return(T)
+  }
+  
+  return(F)
+}
