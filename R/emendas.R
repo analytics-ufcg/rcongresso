@@ -82,7 +82,7 @@ fetch_emendas_senado <- function(bill_id) {
       data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), names(.COLNAMES_EMENDAS_SENADO)
       )
 
-  } else if (num_emendas == 1) {
+  } else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
     texto <- .generate_dataframe(emendas_df$textos_emenda) 
 
     autoria <- .generate_dataframe(emendas_df$autoria_emenda)
@@ -110,6 +110,11 @@ fetch_emendas_senado <- function(bill_id) {
                       "casa" = 'senado') %>%
         dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
     }else {
+      if ("subemendas_submenda" %in% names(emendas_df)) {
+        emendas_df <-
+          emendas_df %>% 
+          dplyr::select(-subemendas_submenda)
+      }
       emendas_df <- emendas_df %>%
         dplyr::mutate("autor" = autoria$nome_autor,
                       "partido" = autoria$partido,
@@ -126,6 +131,7 @@ fetch_emendas_senado <- function(bill_id) {
         emendas_df %>% 
         dplyr::select(-subemendas_submenda)
     }
+    
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
       plyr::rename(
