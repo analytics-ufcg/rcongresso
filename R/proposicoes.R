@@ -340,15 +340,18 @@ fetch_ids_relacionadas <- function(id, casa) {
     rvest::html_nodes('#materias') %>%
     rvest::html_nodes('tr') %>%
     rvest::html_nodes('td') %>%
-    rvest::html_nodes('a') %>% 
-    rvest::html_attr('href') %>% 
+    rvest::html_nodes('a') %>%
+    rvest::html_attr('href') %>%
     tibble::enframe(value="url_relacionada")
   Sys.sleep(2)
-  
-  relacionadas_prop_text %>% 
-    dplyr::rowwise() %>% 
-    dplyr::mutate(id_relacionada = stringr::str_split(url_relacionada, "/") %>% 
-                    purrr::pluck(1,9))
+
+  relacionadas_ids <- relacionadas_prop_text %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(id_relacionada = stringr::str_split(url_relacionada, "/") %>%
+                    purrr::pluck(1,9)) %>%
+    dplyr::select(-name)
+
+  return(relacionadas_ids)
 }
 
 # .fetch_relacionadas_senado <- function(id_prop) {
