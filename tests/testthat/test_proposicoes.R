@@ -124,13 +124,27 @@ test_that("fetch_autor_camara()",{
 
 test_that(".fetch_relacionadas_senado()", {
   expect_true(is.data.frame(.fetch_relacionadas_senado(91341)))
-  expect_true(nrow(.fetch_relacionadas_senado(129808)) == 0)
   expect_true(nrow(.fetch_relacionadas_senado(58276)) == 0)
+
+  pl_91341 <- .fetch_relacionadas_senado(91341)
+  expect_true(nrow(pl_91341) == 13)
+  expect_equal(pl_91341, tibble::tibble(
+    id_relacionada = c("96123", "96979", "111753", "112563", "112568", "112573",
+                       "113330", "114920", "116166", "116195", "119106", "122726", "120384")
+  ))
+
+  pl_120768 <- .fetch_relacionadas_senado(120768)
+  expect_true(nrow(pl_120768) == 2)
+  expect_equal(pl_120768, tibble::tibble(
+    id_relacionada = c("130202", "134953")
+  ))
+
+  pl_1430 <- .fetch_relacionadas_senado(1430)
+  expect_true(nrow(pl_1430) == 0)
 })
 
 test_that("fetch_ids_relacionadas()", {
   expect_true(is.data.frame(fetch_ids_relacionadas(91341, 'senado')))
-  expect_warning(fetch_ids_relacionadas(129808, 'senado'))
   expect_warning(fetch_ids_relacionadas(58276, 'senado'))
   expect_warning(fetch_ids_relacionadas(1430, 'senado'))
   expect_true(is.data.frame(fetch_ids_relacionadas(257161, 'camara')))
@@ -197,4 +211,3 @@ test_that("fetch_autores()", {
   expect_true(is.data.frame(fetch_autores(91341, "senado")))
   expect_true(is.data.frame(fetch_autores(257161, "camara")))
 })
-
