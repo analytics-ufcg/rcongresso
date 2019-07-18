@@ -395,21 +395,19 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @param id_prop Proposition's ID
 #' @return Dataframe containing all the related propositions.
 .fetch_relacionadas_senado <- function(id_prop) {
+  relacionadas_api <- tibble::tibble()
+  relacionadas_website <- .scrap_senado_relacionadas_from_website(id_prop) %>%
+    dplyr::select(-url_relacionada)
+  
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
-  relacionadas_complete <- tibble::tibble()
-  if (relacionadas_prop$proposicoes_relacionadas == "") {
-    relacionadas_complete <- .scrap_senado_relacionadas_from_website(id_prop) %>%
-      dplyr::select(-url_relacionada)
-    if (nrow(relacionadas_complete) == 0) {
-      return(tibble::tibble())
-    } else {
-      return(relacionadas_complete)
-    }
-  } else {
-    relacionadas_ids <- unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " "))
-    relacionadas_complete <- tibble::tibble(id_relacionada = relacionadas_ids)
-    return(relacionadas_complete)
+  if (relacionadas_prop$proposicoes_relacionadas != "") {
+    relacionadas_api <- tibble::tibble(id_relacionada = 
+                                         unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " ")))
   }
+  
+  relacionadas_all <- dplyr::bind_rows(relacionadas_api,relacionadas_website) %>% 
+    dplyr::distinct()
+  return(relacionadas_all)
 }
 
 #' @title Scraps related of proposition from website
