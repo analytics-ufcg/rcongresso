@@ -15,3 +15,6 @@ A dataframe containing details about the author of the proposition
 \description{
 Fetches a dataframe containing information about the author of the proposition
 }
+\examples{
+fetch_autor_camara(2121442)
+}

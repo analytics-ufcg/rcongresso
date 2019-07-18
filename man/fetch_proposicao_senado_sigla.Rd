@@ -19,3 +19,6 @@ Dataframe containing all the info about the proposition;
 \description{
 Returns the proposition info
 }
+\examples{
+prop_pls229 <- fetch_proposicao_senado(pls, 229, 2009)
+}

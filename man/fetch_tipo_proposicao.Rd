@@ -15,3 +15,6 @@ Dataframe containing the proposition's type info.
 \description{
 Returns its id, abbreviation, name and description.
 }
+\examples{
+tipo_prop129 <- fetch_tipo_proposicao(129)
+}

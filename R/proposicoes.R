@@ -61,7 +61,7 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @param numero Proposition's numero
 #' @param ano Proposition's ano
 #' @return Dataframe containing all the info about the proposition;
-#' @example
+#' @examples
 #' prop_pls229 <- fetch_proposicao_senado(pls, 229, 2009)
 #' @rdname fetch_proposicao_senado_sigla
 #' @export
@@ -137,7 +137,7 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
 #' @description Returns the proposition info
 #' @param id Proposition's ID
 #' @return Dataframe containing all the info about the proposition;
-#' @example
+#' @examples
 #' prop_pls229 <- fetch_proposicao_senado(91341)
 #' @rdname fetch_proposicao_senado
 #' @export
@@ -501,7 +501,7 @@ fetch_tipos_proposicao <- function(){
 #' @description Returns its id, abbreviation, name and description.
 #' @param id_tipo_prop Proposition's type ID
 #' @return Dataframe containing the proposition's type info.
-#' @example
+#' @examples
 #' tipo_prop129 <- fetch_tipo_proposicao(129)
 #' @rdname fetch_tipo_proposicao
 #' @export
@@ -519,7 +519,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 #' @description Fetches a dataframe containing information about the author of the proposition
 #' @param proposicao_id Proposition's ID
 #' @return A dataframe containing details about the author of the proposition
-#' @example
+#' @examples
 #' fetch_autor_camara(2121442)
 #' @export
 fetch_autor_camara <- function (proposicao_id = NULL) {
@@ -671,7 +671,7 @@ scrap_autores_from_website <- function(id_prop) {
 #' @description Fetches a dataframe containing detailed information about the author of the proposition
 #' @param uri URL relative to the Deputy url
 #' @return A dataframe containing details about the author of a proposition
-#' @example
+#' @examples
 #' .auxiliary_fetch_autor_camara('https://dadosabertos.camara.leg.br/api/v2/deputados/178854')
 #' @export
 .auxiliary_fetch_autor_camara <- function(uri) {
