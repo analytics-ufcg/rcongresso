@@ -1,3 +1,11 @@
+#' @title Fetches a proposition in a specific house
+#' @description Returns the proposition info
+#' @param id Proposition's ID
+#' @param casa 'camara' or 'senado'
+#' @return Dataframe containing all the info about the proposition;
+#' @examples
+#' prop_pls229 <- fetch_proposicao_senado(91341, 'senado')
+#' @rdname fetch_proposicao_senado
 #' @export
 fetch_proposicao <- function(proposicao_id = NULL, casa) {
   if (casa == "camara") {
