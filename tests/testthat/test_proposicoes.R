@@ -176,27 +176,27 @@ test_that("fetch_autores_camara()",{
     ), emc_2206183)
 })
 
-test_that("scrap_senado_relacionadas_from_website()", {
+test_that(".scrap_senado_relacionadas_ids_from_website()", {
   pls_ids <- c(96123, 91341, 112563, 104930, 90919)
 
-  df_pls_ids_relacionadas <- purrr::map_df(pls_ids, ~.scrap_senado_relacionadas_from_website(.x))
+  df_pls_ids_relacionadas <- purrr::map_df(pls_ids, ~.scrap_senado_relacionadas_ids_from_website(.x))
 
   expect_true(is.data.frame(df_pls_ids_relacionadas))
 
   expect_true(nrow(df_pls_ids_relacionadas) > 0)
 
-  pl_104930 <- .scrap_senado_relacionadas_from_website(104930)
+  pl_104930 <- .scrap_senado_relacionadas_ids_from_website(104930)
 
   expect_true(nrow(pl_104930) == 5)
 
-  pl_127753 <- .scrap_senado_relacionadas_from_website(127753)
+  pl_127753 <- .scrap_senado_relacionadas_ids_from_website(127753)
   expect_equal(pl_127753, tibble::tibble(
     url_relacionada = c("https://www25.senado.leg.br/web/atividade/materias/-/materia/127452",
                         "https://www25.senado.leg.br/web/atividade/materias/-/materia/127754",
                         "https://www25.senado.leg.br/web/atividade/materias/-/materia/127756"),
     id_relacionada = c("127452", "127754", "127756")))
 
-  pl_135060 <- .scrap_senado_relacionadas_from_website(135060)
+  pl_135060 <- .scrap_senado_relacionadas_ids_from_website(135060)
   expect_true(nrow(pl_135060) == 0)
 })
 

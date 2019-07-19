@@ -396,7 +396,7 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @return Dataframe containing all the related propositions.
 .fetch_relacionadas_senado <- function(id_prop) {
   relacionadas_api <- tibble::tibble()
-  relacionadas_website <- .scrap_senado_relacionadas_from_website(id_prop) %>%
+  relacionadas_website <- .scrap_senado_relacionadas_ids_from_website(id_prop) %>%
     dplyr::select(-url_relacionada)
   
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
@@ -414,8 +414,8 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @description Return the related propositions
 #' @param id_prop proposition's ID
 #' @return dataframe containing related propositions ids
-.scrap_senado_relacionadas_from_website <- function(id_prop) {
-  relacionadas_prop_text <-
+.scrap_senado_relacionadas_ids_from_website <- function(id_prop) {
+  relacionadas_urls <-
     .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop)) %>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
@@ -428,7 +428,7 @@ fetch_ids_relacionadas <- function(id, casa) {
     tibble::enframe(value="url_relacionada")
   Sys.sleep(2)
 
-  relacionadas_ids <- relacionadas_prop_text %>%
+  relacionadas_ids <- relacionadas_urls %>%
     dplyr::rowwise() %>%
     dplyr::mutate(id_relacionada = stringr::str_split(url_relacionada, "/") %>%
                     purrr::pluck(1,9)) %>%
@@ -677,7 +677,6 @@ scrap_autores_from_website <- function(id_prop) {
 #' @return A dataframe containing details about the author of a proposition
 #' @examples
 #' .auxiliary_fetch_autor_camara('https://dadosabertos.camara.leg.br/api/v2/deputados/178854')
-#' @export
 .auxiliary_fetch_autor_camara <- function(uri) {
   strsplit(uri, '/')[[1]] %>% tail(1) %>%
     .fetch_using_id(.DEPUTADOS_PATH)
