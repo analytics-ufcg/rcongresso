@@ -150,7 +150,7 @@ test_that("fetch_ids_relacionadas()", {
   expect_true(is.data.frame(fetch_ids_relacionadas(257161, 'camara')))
 })
 
-test_that("fetch_autores_camara()",{
+test_that(".fetch_autores_camara()",{
   pl_ids <- c(257161, 604557, 2170839, 604888, 2192352)
   pec_ids <- c(2192459, 1198512)
   emr_ids <- c(2201520, 2204664)
@@ -163,9 +163,9 @@ test_that("fetch_autores_camara()",{
     dplyr::bind_rows(tibble::tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
-  emc_2206183 <- fetch_autores_camara(2206183, "EMC")
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(.fetch_autores_camara(.x, .y))))))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(.fetch_autores_camara(.x, .y)) != 0))))
+  emc_2206183 <- .fetch_autores_camara(2206183, "EMC")
   expect_equal(tibble::tibble(
     id_autor = c(204371, 204534),
     nome = c("Felipe Rigoni", "Tabata Amaral"),
