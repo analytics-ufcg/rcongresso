@@ -124,13 +124,27 @@ test_that("fetch_autor_camara()",{
 
 test_that(".fetch_relacionadas_senado()", {
   expect_true(is.data.frame(.fetch_relacionadas_senado(91341)))
-  expect_true(nrow(.fetch_relacionadas_senado(129808)) == 0)
   expect_true(nrow(.fetch_relacionadas_senado(58276)) == 0)
+
+  pl_91341 <- .fetch_relacionadas_senado(91341)
+  expect_true(nrow(pl_91341) == 13)
+  expect_equal(pl_91341, tibble::tibble(
+    id_relacionada = c("96123", "96979", "111753", "112563", "112568", "112573",
+                       "113330", "114920", "116166", "116195", "119106", "122726", "120384")
+  ))
+
+  pl_120768 <- .fetch_relacionadas_senado(120768)
+  expect_true(nrow(pl_120768) == 2)
+  expect_equal(pl_120768, tibble::tibble(
+    id_relacionada = c("130202", "134953")
+  ))
+
+  pl_1430 <- .fetch_relacionadas_senado(1430)
+  expect_true(nrow(pl_1430) == 0)
 })
 
 test_that("fetch_ids_relacionadas()", {
   expect_true(is.data.frame(fetch_ids_relacionadas(91341, 'senado')))
-  expect_warning(fetch_ids_relacionadas(129808, 'senado'))
   expect_warning(fetch_ids_relacionadas(58276, 'senado'))
   expect_warning(fetch_ids_relacionadas(1430, 'senado'))
   expect_true(is.data.frame(fetch_ids_relacionadas(257161, 'camara')))
@@ -162,6 +176,30 @@ test_that("fetch_autores_camara()",{
     ), emc_2206183)
 })
 
+test_that(".scrap_senado_relacionadas_ids_from_website()", {
+  pls_ids <- c(96123, 91341, 112563, 104930, 90919)
+
+  df_pls_ids_relacionadas <- purrr::map_df(pls_ids, ~.scrap_senado_relacionadas_ids_from_website(.x))
+
+  expect_true(is.data.frame(df_pls_ids_relacionadas))
+
+  expect_true(nrow(df_pls_ids_relacionadas) > 0)
+
+  pl_104930 <- .scrap_senado_relacionadas_ids_from_website(104930)
+
+  expect_true(nrow(pl_104930) == 5)
+
+  pl_127753 <- .scrap_senado_relacionadas_ids_from_website(127753)
+  expect_equal(pl_127753, tibble::tibble(
+    url_relacionada = c("https://www25.senado.leg.br/web/atividade/materias/-/materia/127452",
+                        "https://www25.senado.leg.br/web/atividade/materias/-/materia/127754",
+                        "https://www25.senado.leg.br/web/atividade/materias/-/materia/127756"),
+    id_relacionada = c("127452", "127754", "127756")))
+
+  pl_135060 <- .scrap_senado_relacionadas_ids_from_website(135060)
+  expect_true(nrow(pl_135060) == 0)
+})
+
 test_that("fetch_autores_senado()", {
   expect_true(is.data.frame(.fetch_autores_senado(91341)))
   expect_true(is.data.frame(.fetch_autores_senado(1430)))
@@ -187,4 +225,3 @@ test_that("fetch_autores()", {
   pl_91341 <- fetch_autores(91341, "senado", "")
   expect_true(nrow(pl_91341) == 1)
 })
-
