@@ -1,3 +1,22 @@
+#' @title Fetches a proposition in a specific house
+#' @description Returns the proposition info
+#' @param id Proposition's ID
+#' @param casa 'camara' or 'senado'
+#' @return Dataframe containing all the info about the proposition;
+#' @examples
+#' prop_pls229 <- fetch_proposicao_senado(91341, 'senado')
+#' @rdname fetch_proposicao_senado
+#' @export
+fetch_proposicao <- function(proposicao_id = NULL, casa) {
+  if (casa == "camara") {
+    fetch_proposicao_camara(proposicao_id)
+  } else if (casa == "senado") {
+    fetch_proposicao_senado(proposicao_id)
+  } else {
+    return("Parametro 'casa' nao identificado.")
+  }
+}
+
 #' @title Fetches proposition from API using a query
 #' @description Fetches information about law's projects, resolutions, provisional measures,
 #' law amendments, opinions and all the other propositions types on the
@@ -33,10 +52,10 @@
 #' @rdname fetch_proposicao_camara
 #' @export
 fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = NULL,
-                             siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
-                             dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
-                             dataInicio = NULL, dataFim = NULL, idAutor = NULL,
-                             autor = NULL, codPartido = NULL, itens = NULL) {
+                                    siglaPartidoAutor = NULL, numero = NULL, ano = NULL,
+                                    dataApresentacaoInicio = NULL, dataApresentacaoFim = NULL,
+                                    dataInicio = NULL, dataFim = NULL, idAutor = NULL,
+                                    autor = NULL, codPartido = NULL, itens = NULL) {
 
   parametros <- as.list(environment(), all=TRUE)
 
@@ -164,7 +183,7 @@ fetch_proposicao_senado <- function(id = NULL) {
         paste(NomeAutor,
               ifelse("IdentificacaoParlamentar.SiglaPartidoParlamentar" %in% names(.),
                      IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
-          ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
+        ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
@@ -219,7 +238,7 @@ fetch_proposicao_senado <- function(id = NULL) {
 
   proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO) %>%
-      .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
+    .coerce_types(.COLNAMES_PROPOSICAO_SENADO)
 }
 
 # fetch_textos_proposicao <- function(id) {
@@ -339,7 +358,7 @@ fetch_relacionadas <- function(casa, id_casa){
 fetch_ids_relacionadas <- function(id, casa) {
   relacionadas <- tibble::tibble()
   if (casa == "camara") {
-  relacionadas <- .fetch_relacionadas_camara(id)
+    relacionadas <- .fetch_relacionadas_camara(id)
     if (nrow(relacionadas) == 0) {
       warning("A proposicao nao possui documentos relacionados.")
     } else {
@@ -350,14 +369,14 @@ fetch_ids_relacionadas <- function(id, casa) {
     }
 
   } else if (casa == "senado") {
-   relacionadas <- .fetch_relacionadas_senado(id)
-   if (nrow(relacionadas) == 0) {
-     warning("A proposicao nao possui documentos relacionados.")
-   } else {
-     relacionadas <- relacionadas %>%
-       dplyr::mutate(id_prop = id,
-                     casa = "senado")
-   }
+    relacionadas <- .fetch_relacionadas_senado(id)
+    if (nrow(relacionadas) == 0) {
+      warning("A proposição não possui documentos relacionados.")
+    } else {
+      relacionadas <- relacionadas %>%
+        dplyr::mutate(id_prop = id,
+                      casa = "senado")
+    }
   } else {
     warning("Parametro 'casa' nao identificado")
   }
@@ -380,14 +399,14 @@ fetch_ids_relacionadas <- function(id, casa) {
     tibble::tibble(id_prop = .) %>%
     dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/relacionadas")) %>%
     dplyr::group_by(id_prop, path) %>%
-      dplyr::do(
-               .camara_api(.$path)
-             ) %>%
-      dplyr::ungroup() %>%
-      dplyr::select(-path) %>%
-      dplyr::distinct() %>% #Remove duplicate relacionadas
-      .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
-      .coerce_types(.COLNAMES_RELACIONADAS)
+    dplyr::do(
+      .camara_api(.$path)
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(-path) %>%
+    dplyr::distinct() %>% #Remove duplicate relacionadas
+    .assert_dataframe_completo(.COLNAMES_RELACIONADAS) %>%
+    .coerce_types(.COLNAMES_RELACIONADAS)
 }
 
 #' @title Fetches all propositions related to a proposition
@@ -484,8 +503,8 @@ fetch_id_proposicao_camara <- function(tipo, numero, ano){
     dplyr::rowwise() %>%
     dplyr::do(
       .camara_api(.CAMARA_PROPOSICOES_PATH,
-                     list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
-                          ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
+                  list(siglaTipo = .$tipo, numero = .$numero, ano = .$ano,
+                       ordem = "ASC", ordenarPor = "id", dataInicio = paste0(ano,"-01-01")))$id %>%
         .verifica_id(.WARNING_PROPOSICAO_ID) %>%
         .to_tibble()
     ) %>%
@@ -549,6 +568,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' @description Fetches a dataframe containing basic information about the authors of the proposition
 #' @param proposicao_id Proposition's ID
 #' @param casa senado or camara
+#' @param sigla_tipo Proposition's initials
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
 #' \dontrun{
@@ -556,9 +576,9 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
 #' fetch_autores(91341, 'senado')
 #' }
 #' @export
-fetch_autores <- function(proposicao_id = NULL, casa) {
+fetch_autores <- function(proposicao_id = NULL, casa, sigla_tipo = "") {
   if (casa == "camara") {
-    fetch_autores_camara(proposicao_id)
+    .fetch_autores_camara(proposicao_id, sigla_tipo)
   } else if (casa == "senado") {
     .fetch_autores_senado(proposicao_id)
   } else {
@@ -615,8 +635,8 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
     dplyr::select(-unwanted_cols)
 
   autores_complete %>%
-      .assert_dataframe_completo(.COLNAMES_AUTORES_SENADO) %>%
-      .coerce_types(.COLNAMES_AUTORES_SENADO)
+    .assert_dataframe_completo(.COLNAMES_AUTORES_SENADO) %>%
+    .coerce_types(.COLNAMES_AUTORES_SENADO)
 }
 
 #' @title Fetches proposition's authors
@@ -626,9 +646,8 @@ fetch_autores <- function(proposicao_id = NULL, casa) {
 #' @return A dataframe containing the basic information about the authors of the proposition
 #' @examples
 #' \dontrun{
-#' fetch_autores_camara(2121442)
-#' @export
-fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
+#' .fetch_autores_camara(2121442)
+.fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autores_info <- .camara_api(autor_uri) %>%
     dplyr::rowwise() %>%
