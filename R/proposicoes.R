@@ -185,6 +185,14 @@ fetch_proposicao_senado <- function(id = NULL) {
                      IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
         ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
+  proposicao_situacao<-
+    proposicao_data %>%
+    magrittr::extract2("SituacaoAtual") %>%
+    magrittr::extract2("Autuacoes") %>%
+    magrittr::extract2("Autuacao") %>%
+    purrr::flatten() %>%
+    tibble::as_tibble()
+
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
     tibble::as.tibble()
@@ -227,6 +235,7 @@ fetch_proposicao_senado <- function(id = NULL) {
       !!!proposicao_specific_assunto,
       !!!proposicao_general_assunto,
       !!!proposicao_source,
+      !!!proposicao_situacao,
       autor_nome = proposicao_author[[1]] %>% tail(1),
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
@@ -417,14 +426,14 @@ fetch_ids_relacionadas <- function(id, casa) {
   relacionadas_api <- tibble::tibble()
   relacionadas_website <- .scrap_senado_relacionadas_ids_from_website(id_prop) %>%
     dplyr::select(-url_relacionada)
-  
+
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
   if (relacionadas_prop$proposicoes_relacionadas != "") {
-    relacionadas_api <- tibble::tibble(id_relacionada = 
+    relacionadas_api <- tibble::tibble(id_relacionada =
                                          unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " ")))
   }
-  
-  relacionadas_all <- dplyr::bind_rows(relacionadas_api,relacionadas_website) %>% 
+
+  relacionadas_all <- dplyr::bind_rows(relacionadas_api,relacionadas_website) %>%
     dplyr::distinct()
   return(relacionadas_all)
 }
