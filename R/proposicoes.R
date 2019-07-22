@@ -4,8 +4,8 @@
 #' @param casa 'camara' or 'senado'
 #' @return Dataframe containing all the info about the proposition;
 #' @examples
-#' prop_pls229 <- fetch_proposicao_senado(91341, 'senado')
-#' @rdname fetch_proposicao_senado
+#' prop_pls229 <- fetch_proposicao(91341, 'senado')
+#' @rdname fetch_proposicao
 #' @export
 fetch_proposicao <- function(proposicao_id = NULL, casa) {
   if (casa == "camara") {
@@ -185,13 +185,16 @@ fetch_proposicao_senado <- function(id = NULL) {
                      IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
         ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
-  proposicao_situacao<-
-    proposicao_data %>%
-    magrittr::extract2("SituacaoAtual") %>%
-    magrittr::extract2("Autuacoes") %>%
-    magrittr::extract2("Autuacao") %>%
-    purrr::flatten() %>%
-    tibble::as_tibble()
+  proposicao_situacao <- tibble::tibble()
+  if ("SituacaoAtual" %in% names(proposicao_data)) {
+    proposicao_situacao<-
+      proposicao_data %>%
+      magrittr::extract2("SituacaoAtual") %>%
+      magrittr::extract2("Autuacoes") %>%
+      magrittr::extract2("Autuacao") %>%
+      purrr::flatten() %>%
+      tibble::as_tibble()
+  }
 
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
