@@ -7,9 +7,9 @@
 fetch_proposicao(proposicao_id = NULL, casa)
 }
 \arguments{
-\item{casa}{'camara' or 'senado'}
+\item{proposicao_id}{Proposition's ID}
 
-\item{id}{Proposition's ID}
+\item{casa}{'camara' or 'senado'}
 }
 \value{
 Dataframe containing all the info about the proposition;

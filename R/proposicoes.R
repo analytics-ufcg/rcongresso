@@ -1,6 +1,6 @@
 #' @title Fetches a proposition in a specific house
 #' @description Returns the proposition info
-#' @param id Proposition's ID
+#' @param proposicao_id Proposition's ID
 #' @param casa 'camara' or 'senado'
 #' @return Dataframe containing all the info about the proposition;
 #' @examples
@@ -166,13 +166,13 @@ fetch_proposicao_senado <- function(id = NULL) {
   proposicao_ids <-
     proposicao_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   proposicao_info <-
     proposicao_data %>%
     magrittr::extract2("DadosBasicosMateria") %>%
     purrr::flatten() %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   proposicao_author <-
     proposicao_data %>%
@@ -198,7 +198,7 @@ fetch_proposicao_senado <- function(id = NULL) {
 
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
   if (nrow(proposicao_specific_assunto) == 0) {
     proposicao_specific_assunto <-
       tibble::tribble(~ codigo_assunto_especifico, ~ assunto_especifico,
@@ -210,7 +210,7 @@ fetch_proposicao_senado <- function(id = NULL) {
   }
   proposicao_general_assunto <-
     proposicao_data$Assunto$AssuntoGeral %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
   if (nrow(proposicao_general_assunto) == 0) {
     proposicao_general_assunto <-
       tibble::tribble(~ codigo_assunto_geral, ~ assunto_geral,
@@ -224,7 +224,7 @@ fetch_proposicao_senado <- function(id = NULL) {
   proposicao_source <-
     proposicao_data %>%
     magrittr::extract2("OrigemMateria") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   anexadas <-
     proposicao_data$MateriasAnexadas$MateriaAnexada$IdentificacaoMateria.CodigoMateria
