@@ -2,12 +2,12 @@
 % Please edit documentation in R/proposicoes.R
 \name{scrap_autores_from_website}
 \alias{scrap_autores_from_website}
-\title{Scraps autores da proposição from website}
+\title{Scraps autores da proposicao from website}
 \usage{
 scrap_autores_from_website(id_prop)
 }
 \arguments{
-\item{id_prop}{proposição's ID}
+\item{id_prop}{proposicao's ID}
 }
 \value{
 String with authors names separated by comma

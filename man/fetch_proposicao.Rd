@@ -12,7 +12,7 @@ fetch_proposicao(proposicao_id = NULL, casa)
 \item{casa}{'camara' or 'senado'}
 }
 \value{
-Dataframe containing all the info about the proposition;
+Dataframe containing all the info about the proposition
 }
 \description{
 Returns the proposition info

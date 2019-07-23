@@ -2,7 +2,7 @@
 #' @description Returns the proposition info
 #' @param proposicao_id Proposition's ID
 #' @param casa 'camara' or 'senado'
-#' @return Dataframe containing all the info about the proposition;
+#' @return Dataframe containing all the info about the proposition
 #' @examples
 #' prop_pls229 <- fetch_proposicao(91341, 'senado')
 #' @rdname fetch_proposicao
@@ -153,9 +153,9 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
 }
 
 #' @title Fetches a proposition in the Senate
-#' @description Returns the proposition info
+#' @description Returns the proposition info.
 #' @param id Proposition's ID
-#' @return Dataframe containing all the info about the proposition;
+#' @return Dataframe containing all the info about the proposition
 #' @examples
 #' prop_pls229 <- fetch_proposicao_senado(91341)
 #' @rdname fetch_proposicao_senado
@@ -363,7 +363,7 @@ fetch_relacionadas <- function(casa, id_casa){
 #' @title Fetches all propositions'ids related to a proposition
 #' @description Returns all propositions'ids related to a proposition.
 #' @param id Proposition's ID
-#' @param casa Câmara or sendo
+#' @param casa Camara or sendo
 #' @return Dataframe containing all the related propositions'ids.
 #' @rdname fetch_ids_relacionadas
 #' @export
@@ -383,7 +383,7 @@ fetch_ids_relacionadas <- function(id, casa) {
   } else if (casa == "senado") {
     relacionadas <- .fetch_relacionadas_senado(id)
     if (nrow(relacionadas) == 0) {
-      warning("A proposição não possui documentos relacionados.")
+      warning("A proposicao nao possui documentos relacionados.")
     } else {
       relacionadas <- relacionadas %>%
         dplyr::mutate(id_prop = id,
@@ -489,7 +489,7 @@ fetch_ids_relacionadas <- function(id, casa) {
 #   }
 #
 #   if (nrow(relacionadas) == 0) {
-#     print("A proposição não possui documentos relacionados.")
+#     print("A proposicao nao possui documentos relacionados.")
 #   } else {
 #     relacionadas_complete <- relacionadas %>%
 #       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
@@ -683,9 +683,9 @@ fetch_autores <- function(proposicao_id = NULL, casa, sigla_tipo = "") {
 }
 
 
-#' @title Scraps autores da proposição from website
+#' @title Scraps autores da proposicao from website
 #' @description Return the author(s) name(s)
-#' @param id_prop proposição's ID
+#' @param id_prop proposicao's ID
 #' @return String with authors names separated by comma
 #' @export
 scrap_autores_from_website <- function(id_prop) {

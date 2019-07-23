@@ -10,10 +10,10 @@ fetch_proposicao_senado(id = NULL)
 \item{id}{Proposition's ID}
 }
 \value{
-Dataframe containing all the info about the proposition;
+Dataframe containing all the info about the proposition
 }
 \description{
-Returns the proposition info
+Returns the proposition info.
 }
 \examples{
 prop_pls229 <- fetch_proposicao_senado(91341)
