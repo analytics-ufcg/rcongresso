@@ -1,11 +1,11 @@
 #' @title Fetches a proposition in a specific house
 #' @description Returns the proposition info
-#' @param id Proposition's ID
+#' @param proposicao_id Proposition's ID
 #' @param casa 'camara' or 'senado'
-#' @return Dataframe containing all the info about the proposition;
+#' @return Dataframe containing all the info about the proposition
 #' @examples
-#' prop_pls229 <- fetch_proposicao_senado(91341, 'senado')
-#' @rdname fetch_proposicao_senado
+#' prop_pls229 <- fetch_proposicao(91341, 'senado')
+#' @rdname fetch_proposicao
 #' @export
 fetch_proposicao <- function(proposicao_id = NULL, casa) {
   if (casa == "camara") {
@@ -81,7 +81,11 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @param ano Proposition's ano
 #' @return Dataframe containing all the info about the proposition;
 #' @examples
+#' \dontrun{
 #' prop_pls229 <- fetch_proposicao_senado(pls, 229, 2009)
+#' }
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_proposicao_senado_sigla}}
 #' @rdname fetch_proposicao_senado_sigla
 #' @export
 fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
@@ -153,9 +157,9 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
 }
 
 #' @title Fetches a proposition in the Senate
-#' @description Returns the proposition info
+#' @description Returns the proposition info.
 #' @param id Proposition's ID
-#' @return Dataframe containing all the info about the proposition;
+#' @return Dataframe containing all the info about the proposition
 #' @examples
 #' prop_pls229 <- fetch_proposicao_senado(91341)
 #' @rdname fetch_proposicao_senado
@@ -166,13 +170,13 @@ fetch_proposicao_senado <- function(id = NULL) {
   proposicao_ids <-
     proposicao_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   proposicao_info <-
     proposicao_data %>%
     magrittr::extract2("DadosBasicosMateria") %>%
     purrr::flatten() %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   proposicao_author <-
     proposicao_data %>%
@@ -185,9 +189,20 @@ fetch_proposicao_senado <- function(id = NULL) {
                      IdentificacaoParlamentar.SiglaPartidoParlamentar, "")),
         ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")))
 
+  proposicao_situacao <- tibble::tibble()
+  if ("SituacaoAtual" %in% names(proposicao_data)) {
+    proposicao_situacao<-
+      proposicao_data %>%
+      magrittr::extract2("SituacaoAtual") %>%
+      magrittr::extract2("Autuacoes") %>%
+      magrittr::extract2("Autuacao") %>%
+      purrr::flatten() %>%
+      tibble::as_tibble()
+  }
+
   proposicao_specific_assunto <-
     proposicao_data$Assunto$AssuntoEspecifico %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
   if (nrow(proposicao_specific_assunto) == 0) {
     proposicao_specific_assunto <-
       tibble::tribble(~ codigo_assunto_especifico, ~ assunto_especifico,
@@ -199,7 +214,7 @@ fetch_proposicao_senado <- function(id = NULL) {
   }
   proposicao_general_assunto <-
     proposicao_data$Assunto$AssuntoGeral %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
   if (nrow(proposicao_general_assunto) == 0) {
     proposicao_general_assunto <-
       tibble::tribble(~ codigo_assunto_geral, ~ assunto_geral,
@@ -213,7 +228,7 @@ fetch_proposicao_senado <- function(id = NULL) {
   proposicao_source <-
     proposicao_data %>%
     magrittr::extract2("OrigemMateria") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
 
   anexadas <-
     proposicao_data$MateriasAnexadas$MateriaAnexada$IdentificacaoMateria.CodigoMateria
@@ -227,6 +242,7 @@ fetch_proposicao_senado <- function(id = NULL) {
       !!!proposicao_specific_assunto,
       !!!proposicao_general_assunto,
       !!!proposicao_source,
+      !!!proposicao_situacao,
       autor_nome = proposicao_author[[1]] %>% tail(1),
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
@@ -351,7 +367,7 @@ fetch_relacionadas <- function(casa, id_casa){
 #' @title Fetches all propositions'ids related to a proposition
 #' @description Returns all propositions'ids related to a proposition.
 #' @param id Proposition's ID
-#' @param casa Câmara or sendo
+#' @param casa Camara or sendo
 #' @return Dataframe containing all the related propositions'ids.
 #' @rdname fetch_ids_relacionadas
 #' @export
@@ -371,7 +387,7 @@ fetch_ids_relacionadas <- function(id, casa) {
   } else if (casa == "senado") {
     relacionadas <- .fetch_relacionadas_senado(id)
     if (nrow(relacionadas) == 0) {
-      warning("A proposição não possui documentos relacionados.")
+      warning("A proposicao nao possui documentos relacionados.")
     } else {
       relacionadas <- relacionadas %>%
         dplyr::mutate(id_prop = id,
@@ -417,14 +433,14 @@ fetch_ids_relacionadas <- function(id, casa) {
   relacionadas_api <- tibble::tibble()
   relacionadas_website <- .scrap_senado_relacionadas_ids_from_website(id_prop) %>%
     dplyr::select(-url_relacionada)
-  
+
   relacionadas_prop <- fetch_proposicao_senado(id_prop)
   if (relacionadas_prop$proposicoes_relacionadas != "") {
-    relacionadas_api <- tibble::tibble(id_relacionada = 
+    relacionadas_api <- tibble::tibble(id_relacionada =
                                          unlist(strsplit(relacionadas_prop$proposicoes_relacionadas, " ")))
   }
-  
-  relacionadas_all <- dplyr::bind_rows(relacionadas_api,relacionadas_website) %>% 
+
+  relacionadas_all <- dplyr::bind_rows(relacionadas_api,relacionadas_website) %>%
     dplyr::distinct()
   return(relacionadas_all)
 }
@@ -529,7 +545,7 @@ scrap_senado_documentos <- function(id_prop, filter_texto_materia = F) {
 #   }
 #
 #   if (nrow(relacionadas) == 0) {
-#     print("A proposição não possui documentos relacionados.")
+#     print("A proposicao nao possui documentos relacionados.")
 #   } else {
 #     relacionadas_complete <- relacionadas %>%
 #       .assert_dataframe_completo(.COLNAMES_RELACIONADAS_SENADO) %>%
@@ -723,9 +739,9 @@ fetch_autores <- function(proposicao_id = NULL, casa, sigla_tipo = "") {
 }
 
 
-#' @title Scraps autores da proposição from website
+#' @title Scraps autores da proposicao from website
 #' @description Return the author(s) name(s)
-#' @param id_prop proposição's ID
+#' @param id_prop proposicao's ID
 #' @return String with authors names separated by comma
 #' @export
 scrap_autores_from_website <- function(id_prop) {

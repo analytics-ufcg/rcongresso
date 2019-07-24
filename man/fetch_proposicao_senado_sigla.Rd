@@ -20,5 +20,10 @@ Dataframe containing all the info about the proposition;
 Returns the proposition info
 }
 \examples{
+\dontrun{
 prop_pls229 <- fetch_proposicao_senado(pls, 229, 2009)
+}
+}
+\seealso{
+\code{\link[rcongresso]{fetch_proposicao_senado_sigla}}
 }
