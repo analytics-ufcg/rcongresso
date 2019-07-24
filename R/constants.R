@@ -10,6 +10,7 @@
 .CAMARA_WEBSITE_LINK <- "http://www.camara.gov.br"
 .CAMARA_WEBSITE_LINK_2 <- "https://www.camara.leg.br"
 .SENADO_WEBSITE_LINK <- "https://www25.senado.leg.br/"
+.CONGRESSO_WEBSITE_LINK <- "https://www.congressonacional.leg.br/"
 
 # Mensagens de erro
 .ERRO_RETORNO_JSON <- "API did not return json"
@@ -40,6 +41,9 @@
 
 # Path site Senado
 .MATERIA_SENADO_PATH <- "web/atividade/materias/-/materia/"
+
+# Path site Congresso
+.MATERIA_CONGRESSO_PATH <- "materias/medidas-provisorias/-/mpv/"
 
 # Paths Senado
 .SENADO_SESSOES_PATH <- "/dadosabertos/materia/ordia/"
