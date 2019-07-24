@@ -496,8 +496,8 @@ scrap_senado_documentos <- function(id_prop, filter_texto_materia = F) {
     documentos_df <-
       documentos_df %>% 
       dplyr::filter(!stringr::str_detect(
-        identificação, 
-        "Texto inicial|Avulso inicial da matéria|Redação Final de Plenário"))
+        .remove_special_character(identificacao), 
+        "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario"))
   }
   
   documentos_df %>% 
