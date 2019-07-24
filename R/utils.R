@@ -422,6 +422,32 @@ rename_table_to_underscore <- function(df) {
   df
 }
 
+#' @title Renames the cols of the document's df on Senate
+#' @description Renames each item from vector with the pattern: split by underscore and lowercase
+#' @param documentos_df Dataframe
+#' @return Dataframe containing the renamed strings.
+.rename_documentos_senado <- function(documentos_df) {
+  new_names = names(documentos_df) %>%
+    .to_underscore() %>%
+    stringr::str_replace(
+      "/| ",
+      "_") %>% 
+    .remove_special_character()
+  
+  names(documentos_df) <- new_names
+  
+  documentos_df
+}
+
+#' @title Replace special characters with it's normal value
+#' @description Replace special characters with it's normal value
+#' @param string_with_special String
+#' @return String
+.remove_special_character <- function(string_with_special) {
+  iconv(string_with_special, from="UTF-8",
+               to="ASCII//TRANSLIT")
+}
+
 #' @title Renames the cols of the bill's passage on Senate
 #' @description Renames each item from vector with the pattern: split by underscore and lowercase
 #' @param tramitacao_df Dataframe

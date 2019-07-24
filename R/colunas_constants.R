@@ -89,6 +89,9 @@
 .COLNAMES_RELACIONADAS <- c("id_prop"="character","id"="character","uri"="character","siglaTipo"="character","codTipo"="integer","numero"="integer",
                             "ano"="integer","ementa"="character")
 
+.COLNAMES_SCRAP <- c("identificacao"="character", "autor"="character", "data"="character",  "descricao_ementa"="character",
+                     "local"="character","acao_legislativa"="character")
+
 .COLNAMES_RELACIONADAS_SENADO <- c("ano_materia"="character", "apelido_materia"="character", "assunto_especifico"="character", "assunto_geral"="character",
                                    "autor_nome"="character", "codigo_assunto_especifico"="character", "codigo_assunto_geral"="character", "codigo_materia"="character",
                                    "codigo_natureza"="character", "data_apresentacao"="character", "data_leitura"="character", "descricao_identificacao_materia"="character",

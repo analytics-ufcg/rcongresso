@@ -11,6 +11,8 @@ deferimento <<- fetch_deferimento(c("102343", "109173", "115853"))
 relacionadas_91341 <<- .fetch_relacionadas_senado(91341)
 relacionadas_58276 <<- .fetch_relacionadas_senado(58276)
 relacionadas_120143 <<- .fetch_relacionadas_senado(120143)
+documentos_completos_115926 <<- scrap_senado_documentos(115926)
+documentos_filtrados_115926 <<- scrap_senado_documentos(115926, T)
 
 # Constantes
 PEC241_ID <- 2088351
@@ -39,6 +41,18 @@ test_that("Not Empty", {
   expect_true(nrow(pec_241) != 0)
   expect_true(nrow(pec_241_por_id) != 0)
   expect_true(nrow(deferimento) != 0)
+})
+
+test_that("scrap_senado_documentos()", {
+  expect_true(is.data.frame(documentos_completos_115926))
+  expect_true(is.data.frame(documentos_filtrados_115926))
+  
+  expect_true(nrow(documentos_completos_115926) != 0)
+  expect_true(nrow(documentos_filtrados_115926) != 0)
+  expect_true(nrow(documentos_filtrados_115926) < nrow(documentos_completos_115926))
+  
+  expect_true(all(sapply(documentos_completos_115926, class) %in% .COLNAMES_SCRAP))
+  expect_true(all(sapply(documentos_filtrados_115926, class) %in% .COLNAMES_SCRAP))
 })
 
 test_that("fetch_proposicao_camara()", {
