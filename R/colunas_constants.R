@@ -61,7 +61,9 @@
                                  "codigo_assunto_especifico"="character", "assunto_especifico"="character", "codigo_assunto_geral"="character", "assunto_geral"="character",
                                  "nome_poder_origem"="character", "sigla_casa_origem"="character", "nome_casa_origem"="character", "proposicoes_relacionadas"="character",
                                  "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character",
-                                 "autor_nome"="character")
+                                 "autor_nome"="character", "numero_autuacao"="integer", "data_situacao"="character",  "codigo_situacao"="integer", "sigla_situacao"="character",
+                                 "descricao_situacao"="character", "data_local"="character", "codigo_local"="integer", "tipo_local"="character", "sigla_casa_local"="character",
+                                 "nome_casa_local"="character", "sigla_local"="character", "nome_local"="character")
 
 .COLNAMES_PROPOSICAO_SENADO_SIGLA <- c("codigo_materia"="character", "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character",
                                        "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character", "numero_materia"="character", "ano_materia"="character",

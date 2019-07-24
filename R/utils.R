@@ -196,10 +196,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     } else {
       types <- unname(types[names(types)])
     }
-    
+
     length(types) <- length(names(obj))
     types <- replace(types, is.na(types), "character")
-    
+
     out <- lapply(1:length(obj),FUN = function(i){
       dynamic_cast <<-.switch_types(types[i])
       obj[,i] %>% unlist() %>% dynamic_cast
@@ -455,9 +455,9 @@ rename_table_to_underscore <- function(df) {
       "sessao_plenaria_|tramitacao_identificacao_tramitacao_|identificacao_parlamentar_",
       ""
     )
-  
+
   names(df) <- new_names
-  
+
   df
 }
 
@@ -509,16 +509,16 @@ rename_table_to_underscore <- function(df) {
     warning("Todos os parametros devem ser diferentes de NA")
     return(T)
   }
-  
+
   if(sigla == '') {
-    warning("Sigla não pode ser vazia")
+    warning("Sigla nao pode ser vazia")
     return(T)
   }
-  
+
   if(numero < 0 | ano < 0) {
     warning("Numero e ano devem ser positivos")
     return(T)
   }
-  
+
   return(F)
 }
