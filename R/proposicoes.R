@@ -81,7 +81,11 @@ fetch_proposicao_camara <- function(id = NULL, siglaUfAutor = NULL, siglaTipo = 
 #' @param ano Proposition's ano
 #' @return Dataframe containing all the info about the proposition;
 #' @examples
+#' \dontrun{
 #' prop_pls229 <- fetch_proposicao_senado(pls, 229, 2009)
+#' }
+#' @seealso
+#'   \code{\link[rcongresso]{fetch_proposicao_senado_sigla}}
 #' @rdname fetch_proposicao_senado_sigla
 #' @export
 fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
