@@ -124,19 +124,33 @@ test_that("fetch_autor_camara()",{
 
 test_that(".fetch_relacionadas_senado()", {
   expect_true(is.data.frame(.fetch_relacionadas_senado(91341)))
-  expect_true(nrow(.fetch_relacionadas_senado(129808)) == 0)
   expect_true(nrow(.fetch_relacionadas_senado(58276)) == 0)
+
+  pl_91341 <- .fetch_relacionadas_senado(91341)
+  expect_true(nrow(pl_91341) == 13)
+  expect_equal(pl_91341, tibble::tibble(
+    id_relacionada = c("96123", "96979", "111753", "112563", "112568", "112573",
+                       "113330", "114920", "116166", "116195", "119106", "122726", "120384")
+  ))
+
+  pl_120768 <- .fetch_relacionadas_senado(120768)
+  expect_true(nrow(pl_120768) == 2)
+  expect_equal(pl_120768, tibble::tibble(
+    id_relacionada = c("130202", "134953")
+  ))
+
+  pl_1430 <- .fetch_relacionadas_senado(1430)
+  expect_true(nrow(pl_1430) == 0)
 })
 
 test_that("fetch_ids_relacionadas()", {
   expect_true(is.data.frame(fetch_ids_relacionadas(91341, 'senado')))
-  expect_warning(fetch_ids_relacionadas(129808, 'senado'))
   expect_warning(fetch_ids_relacionadas(58276, 'senado'))
   expect_warning(fetch_ids_relacionadas(1430, 'senado'))
   expect_true(is.data.frame(fetch_ids_relacionadas(257161, 'camara')))
 })
 
-test_that("fetch_autores_camara()",{
+test_that(".fetch_autores_camara()",{
   pl_ids <- c(257161, 604557, 2170839, 604888, 2192352)
   pec_ids <- c(2192459, 1198512)
   emr_ids <- c(2201520, 2204664)
@@ -149,9 +163,9 @@ test_that("fetch_autores_camara()",{
     dplyr::bind_rows(tibble::tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(fetch_autores_camara(.x, .y))))))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(fetch_autores_camara(.x, .y)) != 0))))
-  emc_2206183 <- fetch_autores_camara(2206183, "EMC")
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(.fetch_autores_camara(.x, .y))))))
+  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(.fetch_autores_camara(.x, .y)) != 0))))
+  emc_2206183 <- .fetch_autores_camara(2206183, "EMC")
   expect_equal(tibble::tibble(
     id_autor = c(204371, 204534),
     nome = c("Felipe Rigoni", "Tabata Amaral"),
@@ -160,6 +174,30 @@ test_that("fetch_autores_camara()",{
     uri = c("https://dadosabertos.camara.leg.br/api/v2/deputados/204371",
             "https://dadosabertos.camara.leg.br/api/v2/deputados/204534")
     ), emc_2206183)
+})
+
+test_that(".scrap_senado_relacionadas_ids_from_website()", {
+  pls_ids <- c(96123, 91341, 112563, 104930, 90919)
+
+  df_pls_ids_relacionadas <- purrr::map_df(pls_ids, ~.scrap_senado_relacionadas_ids_from_website(.x))
+
+  expect_true(is.data.frame(df_pls_ids_relacionadas))
+
+  expect_true(nrow(df_pls_ids_relacionadas) > 0)
+
+  pl_104930 <- .scrap_senado_relacionadas_ids_from_website(104930)
+
+  expect_true(nrow(pl_104930) == 5)
+
+  pl_127753 <- .scrap_senado_relacionadas_ids_from_website(127753)
+  expect_equal(pl_127753, tibble::tibble(
+    url_relacionada = c("https://www25.senado.leg.br/web/atividade/materias/-/materia/127452",
+                        "https://www25.senado.leg.br/web/atividade/materias/-/materia/127754",
+                        "https://www25.senado.leg.br/web/atividade/materias/-/materia/127756"),
+    id_relacionada = c("127452", "127754", "127756")))
+
+  pl_135060 <- .scrap_senado_relacionadas_ids_from_website(135060)
+  expect_true(nrow(pl_135060) == 0)
 })
 
 test_that("fetch_autores_senado()", {
@@ -171,6 +209,19 @@ test_that("fetch_autores()", {
   expect_true(is.character(fetch_autores(91341, "invalid")))
   expect_true(is.character(fetch_autores(257161, "invalid")))
   expect_true(is.data.frame(fetch_autores(91341, "senado")))
-  expect_true(is.data.frame(fetch_autores(257161, "camara")))
-})
 
+  pl_257161 <- fetch_autores(257161, "camara", "PL")
+  expect_true(nrow(pl_257161) == 15)
+
+  pl_532814 <- fetch_autores(532814, "camara", "PL")
+  expect_equal(pl_532814, tibble::tibble(
+    id_autor = 160567,
+    nome = "Nelson Marchezan Junior",
+    cod_tipo = as.integer(10000),
+    tipo = "Deputado",
+    uri = "https://dadosabertos.camara.leg.br/api/v2/deputados/160567"
+  ))
+
+  pl_91341 <- fetch_autores(91341, "senado", "")
+  expect_true(nrow(pl_91341) == 1)
+})
