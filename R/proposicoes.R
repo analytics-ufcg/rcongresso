@@ -476,12 +476,24 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @description Return the document's data
 #' @param id_prop proposition's ID
 #' @param filter_texto_materia Bool flag to filter the initial texts
+#' @param casa senado ou congresso
 #' @return dataframe 
-#' @rdname scrap_senado_documentos
+#' @rdname scrap_senado_congresso_documentos
 #' @export
-scrap_senado_documentos <- function(id_prop, filter_texto_materia = F) {
+scrap_senado_congresso_documentos <- function(id_prop, filter_texto_materia = F, casa) {
+  if (tolower(casa) == 'senado') {
+    documentos_df <-
+      .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))
+  }else if (tolower(casa) == 'congresso') {
+    documentos_df <-
+      .get_from_url(paste0(.CONGRESSO_WEBSITE_LINK, .MATERIA_CONGRESSO_PATH, id_prop))
+  }else {
+    warning("Casa igual a congresso ou senado")
+    return(tibble::tibble())
+  }
+  
   documentos_df <-
-    .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop)) %>%
+    documentos_df %>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
     rvest::html_nodes('#conteudoProjeto') %>% 
@@ -497,7 +509,7 @@ scrap_senado_documentos <- function(id_prop, filter_texto_materia = F) {
       documentos_df %>% 
       dplyr::filter(!stringr::str_detect(
         .remove_special_character(identificacao), 
-        "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario"))
+        "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario|Texto final"))
   }
   
   documentos_df %>% 
@@ -505,7 +517,7 @@ scrap_senado_documentos <- function(id_prop, filter_texto_materia = F) {
     .coerce_types(.COLNAMES_SCRAP)
 }
 
-#' @title Auxiliar function for .scrap_senado_documentos
+#' @title Auxiliar function for scrap_senado_congresso_documentos
 #' @description Get the data from a list
 #' @param lista_com_documentos list containing document data
 .get_documento <- function(lista_com_documentos) {
