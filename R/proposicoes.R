@@ -477,7 +477,7 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @param id_prop proposition's ID
 #' @param filter_texto_materia Bool flag to filter the initial texts
 #' @param casa senado ou congresso
-#' @return dataframe 
+#' @return dataframe
 #' @rdname scrap_senado_congresso_documentos
 #' @export
 scrap_senado_congresso_documentos <- function(id_prop, filter_texto_materia = F, casa) {
@@ -491,29 +491,30 @@ scrap_senado_congresso_documentos <- function(id_prop, filter_texto_materia = F,
     warning("Casa igual a congresso ou senado")
     return(tibble::tibble())
   }
-  
+
   documentos_df <-
     documentos_df %>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
-    rvest::html_nodes('#conteudoProjeto') %>% 
-    rvest::html_nodes('#documentos') %>% 
-    rvest::html_nodes('.tab-content') %>% 
-    rvest::html_nodes('dl')  %>% 
-    purrr::map_df(.get_documento) %>% 
-    unique() %>% 
-    .rename_documentos_senado()
-  
+    rvest::html_nodes('#conteudoProjeto') %>%
+    rvest::html_nodes('#documentos') %>%
+    rvest::html_nodes('.tab-content') %>%
+    rvest::html_nodes('dl')  %>%
+    purrr::map_df(.get_documento) %>%
+    unique() %>%
+    .rename_documentos_senado() %>%
+    dplyr::mutate(id_principal = id_prop)
+
   if (filter_texto_materia) {
     documentos_df <-
-      documentos_df %>% 
+      documentos_df %>%
       dplyr::filter(!stringr::str_detect(
-        .remove_special_character(identificacao), 
+        .remove_special_character(identificacao),
         "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario|Texto final"))
   }
-  
-  documentos_df %>% 
-    .assert_dataframe_completo(.COLNAMES_SCRAP) %>% 
+
+  documentos_df %>%
+    .assert_dataframe_completo(.COLNAMES_SCRAP) %>%
     .coerce_types(.COLNAMES_SCRAP)
 }
 
@@ -521,19 +522,19 @@ scrap_senado_congresso_documentos <- function(id_prop, filter_texto_materia = F,
 #' @description Get the data from a list
 #' @param lista_com_documentos list containing document data
 .get_documento <- function(lista_com_documentos) {
-  colunas <- 
-    lista_com_documentos %>% 
-    xml2::xml_find_all("dt") %>% 
-    xml2::xml_text() %>% 
+  colunas <-
+    lista_com_documentos %>%
+    xml2::xml_find_all("dt") %>%
+    xml2::xml_text() %>%
     stringr::str_replace(':', '')
-  conteudo <- 
-    lista_com_documentos %>% 
-    xml2::xml_find_all("dd") %>% 
+  conteudo <-
+    lista_com_documentos %>%
+    xml2::xml_find_all("dd") %>%
     xml2::xml_text()
   conteudo <- as.data.frame(t(conteudo))
   names(conteudo) <- colunas
-  conteudo %>% 
-    tibble::as_tibble() 
+  conteudo %>%
+    tibble::as_tibble()
 }
 
 # .fetch_relacionadas_senado <- function(id_prop) {
