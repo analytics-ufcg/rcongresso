@@ -503,7 +503,8 @@ scrap_senado_congresso_documentos <- function(id_prop, filter_texto_materia = F,
     purrr::map_df(.get_documento) %>%
     unique() %>%
     .rename_documentos_senado() %>%
-    dplyr::mutate(id_principal = id_prop)
+    dplyr::mutate(id_principal = id_prop,
+                  casa = 'senado') 
 
   if (filter_texto_materia) {
     documentos_df <-
