@@ -475,12 +475,12 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @title Scraps data from documents of a bill from website
 #' @description Return the document's data
 #' @param id_prop proposition's ID
-#' @param filter_texto_materia Bool flag to filter the initial texts
 #' @param casa senado ou congresso
+#' @param filter_texto_materia Bool flag to filter the initial texts
 #' @return dataframe
 #' @rdname scrap_senado_congresso_documentos
 #' @export
-scrap_senado_congresso_documentos <- function(id_prop, filter_texto_materia = F, casa) {
+scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materia = F) {
   if (tolower(casa) == 'senado') {
     documentos_df <-
       .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))

@@ -11,9 +11,9 @@ deferimento <<- fetch_deferimento(c("102343", "109173", "115853"))
 relacionadas_91341 <<- .fetch_relacionadas_senado(91341)
 relacionadas_58276 <<- .fetch_relacionadas_senado(58276)
 relacionadas_120143 <<- .fetch_relacionadas_senado(120143)
-documentos_completos_115926 <<- scrap_senado_congresso_documentos(115926, F, 'senado')
-documentos_filtrados_115926 <<- scrap_senado_congresso_documentos(115926, T, 'senado')
-documentos_completos_135061 <<- scrap_senado_congresso_documentos(135061, F, 'congresso')
+documentos_completos_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', F)
+documentos_filtrados_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', T)
+documentos_completos_135061 <<- scrap_senado_congresso_documentos(135061, 'congresso', F)
 
 # Constantes
 PEC241_ID <- 2088351
@@ -58,7 +58,7 @@ test_that("scrap_senado_congresso_documentos()", {
   expect_true(all(sapply(documentos_filtrados_115926, class) %in% .COLNAMES_SCRAP))
   expect_true(all(sapply(documentos_completos_135061, class) %in% .COLNAMES_SCRAP))
   
-  testthat::expect_warning(scrap_senado_congresso_documentos(135061, F, 'asdd'), "Casa igual a congresso ou senado")
+  testthat::expect_warning(scrap_senado_congresso_documentos(135061, 'asdd', F), "Casa igual a congresso ou senado")
 })
 
 test_that("fetch_proposicao_camara()", {

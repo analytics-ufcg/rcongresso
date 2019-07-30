@@ -4,14 +4,14 @@
 \alias{scrap_senado_congresso_documentos}
 \title{Scraps data from documents of a bill from website}
 \usage{
-scrap_senado_congresso_documentos(id_prop, filter_texto_materia = F, casa)
+scrap_senado_congresso_documentos(id_prop, casa, filter_texto_materia = F)
 }
 \arguments{
 \item{id_prop}{proposition's ID}
 
-\item{filter_texto_materia}{Bool flag to filter the initial texts}
-
 \item{casa}{senado ou congresso}
+
+\item{filter_texto_materia}{Bool flag to filter the initial texts}
 }
 \value{
 dataframe
