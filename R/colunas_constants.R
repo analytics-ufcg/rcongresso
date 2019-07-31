@@ -90,7 +90,7 @@
                             "ano"="integer","ementa"="character")
 
 .COLNAMES_SCRAP <- c("identificacao"="character", "autor"="character", "data"="character",  "descricao_ementa"="character",
-                     "local"="character","acao_legislativa"="character")
+                     "local"="character","acao_legislativa"="character", "id_principal"="character", "casa"="character")
 
 .COLNAMES_RELACIONADAS_SENADO <- c("ano_materia"="character", "apelido_materia"="character", "assunto_especifico"="character", "assunto_geral"="character",
                                    "autor_nome"="character", "codigo_assunto_especifico"="character", "codigo_assunto_geral"="character", "codigo_materia"="character",
