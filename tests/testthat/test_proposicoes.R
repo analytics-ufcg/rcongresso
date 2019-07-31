@@ -80,7 +80,7 @@ test_that("scrap_senado_congresso_documentos()", {
   testthat::expect_warning(scrap_senado_congresso_documentos(135061, NA, F), "Casa deve ser: congresso ou senado.")
   testthat::expect_warning(scrap_senado_congresso_documentos(135061, 'asdd', NA), "filter_texto_materia deve ser: T ou F.")
   testthat::expect_equal(documentos_completo_41703, documentos_completo_41703_gabarito)
-  testthat::expect_equal(documentos_filtrado_41703, documentos_filtrados_41703_gabarito %>% tail(2))
+  testthat::expect_equal(documentos_filtrado_41703, documentos_completo_41703_gabarito %>% tail(2))
 })
 
 test_that("fetch_proposicao_camara()", {
