@@ -481,14 +481,19 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @rdname scrap_senado_congresso_documentos
 #' @export
 scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materia = F) {
-  if (tolower(casa) == 'senado') {
+  if (is.na(filter_texto_materia)) {
+    warning("filter_texto_materia deve ser: T ou F.")
+    return(tibble::tibble())
+  }
+  
+  if (!is.na(casa) & tolower(casa) == 'senado') {
     documentos_df <-
       .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))
-  }else if (tolower(casa) == 'congresso') {
+  }else if (!is.na(casa) & tolower(casa) == 'congresso') {
     documentos_df <-
       .get_from_url(paste0(.CONGRESSO_WEBSITE_LINK, .MATERIA_CONGRESSO_PATH, id_prop))
   }else {
-    warning("Casa igual a congresso ou senado")
+    warning("Casa deve ser: congresso ou senado.")
     return(tibble::tibble())
   }
 
@@ -516,7 +521,8 @@ scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materi
 
   documentos_df %>%
     .assert_dataframe_completo(.COLNAMES_SCRAP) %>%
-    .coerce_types(.COLNAMES_SCRAP)
+    .coerce_types(.COLNAMES_SCRAP) %>% 
+    tibble::as_tibble()
 }
 
 #' @title Auxiliar function for scrap_senado_congresso_documentos
