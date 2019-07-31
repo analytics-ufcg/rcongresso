@@ -14,11 +14,15 @@ relacionadas_120143 <<- .fetch_relacionadas_senado(120143)
 documentos_completos_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', F)
 documentos_filtrados_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', T)
 documentos_completos_135061 <<- scrap_senado_congresso_documentos(135061, 'congresso', F)
-documentos_filtrados_41703 <<- 
+documentos_completo_41703 <<- 
   scrap_senado_congresso_documentos(41703, 'senado', F) %>% 
   dplyr::mutate(acao_legislativa = trimws(acao_legislativa,which = "b"),
                 identificacao = trimws(identificacao,which = "b"))
-documentos_filtrados_41703_gabarito <<- tibble::tibble(acao_legislativa = c(NA, "A Comissão aprova a Emenda n° 1-CAS (Substitutivo), com a Subemenda n° 1 - CAS. Anexo Parecer da emenda, lista de votação nominal, redação final e ofício ao Presidente do Senado. (fls. nº 26 a 36). À SSCLSF.", 
+documentos_filtrado_41703 <<- 
+ scrap_senado_congresso_documentos(41703, 'senado', T) %>% 
+  dplyr::mutate(acao_legislativa = trimws(acao_legislativa,which = "b"),
+                identificacao = trimws(identificacao,which = "b"))
+documentos_completo_41703_gabarito <<- tibble::tibble(acao_legislativa = c(NA, "A Comissão aprova a Emenda n° 1-CAS (Substitutivo), com a Subemenda n° 1 - CAS. Anexo Parecer da emenda, lista de votação nominal, redação final e ofício ao Presidente do Senado. (fls. nº 26 a 36). À SSCLSF.", 
 "Juntados aos autos do processo o original de manifestação do Ofício 03-54/2019, da Câmara Municipal de Mairinque - SP, e a cópia da carta-resposta encaminhada pelo Secretário-Geral da Mesa, Luiz Fernando Bandeira de Mello. (fls. 54/57)"),
                                                       autor = c("Senador Blairo Maggi (S/Partido/MT)", NA, "Cidadão Cidadão"),
                                                       casa = c("senado", "senado", "senado"),
@@ -75,7 +79,8 @@ test_that("scrap_senado_congresso_documentos()", {
   testthat::expect_warning(scrap_senado_congresso_documentos(135061, 'asdd', F), "Casa deve ser: congresso ou senado.")
   testthat::expect_warning(scrap_senado_congresso_documentos(135061, NA, F), "Casa deve ser: congresso ou senado.")
   testthat::expect_warning(scrap_senado_congresso_documentos(135061, 'asdd', NA), "filter_texto_materia deve ser: T ou F.")
-  testthat::expect_equal(documentos_filtrados_41703, documentos_filtrados_41703_gabarito)
+  testthat::expect_equal(documentos_completo_41703, documentos_completo_41703_gabarito)
+  testthat::expect_equal(documentos_filtrado_41703, documentos_filtrados_41703_gabarito %>% tail(2))
 })
 
 test_that("fetch_proposicao_camara()", {
