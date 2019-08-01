@@ -472,6 +472,78 @@ fetch_ids_relacionadas <- function(id, casa) {
   return(relacionadas_ids)
 }
 
+#' @title Scraps data from documents of a bill from website
+#' @description Return the document's data
+#' @param id_prop proposition's ID
+#' @param casa senado ou congresso
+#' @param filter_texto_materia Bool flag to filter the initial texts
+#' @return dataframe
+#' @rdname scrap_senado_congresso_documentos
+#' @export
+scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materia = F) {
+  if (is.na(filter_texto_materia)) {
+    warning("filter_texto_materia deve ser: T ou F.")
+    return(tibble::tibble())
+  }
+  
+  if (!is.na(casa) & tolower(casa) == 'senado') {
+    documentos_df <-
+      .get_from_url(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))
+  }else if (!is.na(casa) & tolower(casa) == 'congresso') {
+    documentos_df <-
+      .get_from_url(paste0(.CONGRESSO_WEBSITE_LINK, .MATERIA_CONGRESSO_PATH, id_prop))
+  }else {
+    warning("Casa deve ser: congresso ou senado.")
+    return(tibble::tibble())
+  }
+
+  documentos_df <-
+    documentos_df %>%
+    httr::content('text', encoding = 'utf-8') %>%
+    xml2::read_html()  %>%
+    rvest::html_nodes('#conteudoProjeto') %>%
+    rvest::html_nodes('#documentos') %>%
+    rvest::html_nodes('.tab-content') %>%
+    rvest::html_nodes('dl')  %>%
+    purrr::map_df(.get_documento) %>%
+    unique() %>%
+    .rename_documentos_senado() %>%
+    dplyr::mutate(id_principal = id_prop,
+                  casa = 'senado') 
+
+  if (filter_texto_materia) {
+    documentos_df <-
+      documentos_df %>%
+      dplyr::filter(!stringr::str_detect(
+        .remove_special_character(identificacao),
+        "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario|Texto final"))
+  }
+
+  documentos_df %>%
+    .assert_dataframe_completo(.COLNAMES_SCRAP) %>%
+    .coerce_types(.COLNAMES_SCRAP) %>% 
+    tibble::as_tibble()
+}
+
+#' @title Auxiliar function for scrap_senado_congresso_documentos
+#' @description Get the data from a list
+#' @param lista_com_documentos list containing document data
+.get_documento <- function(lista_com_documentos) {
+  colunas <-
+    lista_com_documentos %>%
+    xml2::xml_find_all("dt") %>%
+    xml2::xml_text() %>%
+    stringr::str_replace(':', '')
+  conteudo <-
+    lista_com_documentos %>%
+    xml2::xml_find_all("dd") %>%
+    xml2::xml_text()
+  conteudo <- as.data.frame(t(conteudo))
+  names(conteudo) <- colunas
+  conteudo %>%
+    tibble::as_tibble()
+}
+
 # .fetch_relacionadas_senado <- function(id_prop) {
 #   relacionadas_textos <- fetch_textos_proposicao(id_prop)
 #   relacionadas_prop <- fetch_proposicao_senado(id_prop)

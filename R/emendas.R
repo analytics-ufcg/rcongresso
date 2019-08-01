@@ -52,14 +52,12 @@ fetch_emendas_senado <- function(bill_id) {
     magrittr::extract2("Emendas") %>%
     magrittr::extract2("Emenda") 
   
-  if ('Decisao' %in% names(emendas_df)) {
-    decisao_emendas <-
-      .generate_dataframe(emendas_df$Decisao) 
-    emendas_df$Decisao <- NULL
+  if ('Decisao' %in% names(emendas_df) | 'Decisoes.Decisao' %in% names(emendas_df)) {
+    emendas_df$Decisoes.Decisao <- NULL
     emendas_df <- 
       emendas_df %>%
-      purrr::map_df( ~ .) %>% .rename_df_columns() %>% 
-      dplyr::bind_cols(decisao_emendas)
+      purrr::map_df( ~ .) %>% 
+      .rename_df_columns() 
   }else {
     colunas_que_mudam_decisao = c("Decisao.Descricao", "Decisao.Data", "Decisao.LocalDeliberacao.CodigoLocal", "Decisao.LocalDeliberacao.SiglaLocal", "Decisao.LocalDeliberacao.NomeLocal")
     if (all(colunas_que_mudam_decisao %in% names(emendas_df))) {
@@ -82,7 +80,8 @@ fetch_emendas_senado <- function(bill_id) {
       data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), names(.COLNAMES_EMENDAS_SENADO)
       )
 
-  } else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
+  }
+  else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
     texto <- .generate_dataframe(emendas_df$textos_emenda) 
 
     autoria <- .generate_dataframe(emendas_df$autoria_emenda)
@@ -125,11 +124,12 @@ fetch_emendas_senado <- function(bill_id) {
         dplyr::select(-"autoria_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
     }
 
-  } else {
-    if ("subemendas_submenda" %in% names(emendas_df)) {
+  }
+  else {
+    if (any(stringr::str_detect(names(emendas_df), "subemendas_subemenda"))) {
       emendas_df <-
         emendas_df %>% 
-        dplyr::select(-subemendas_submenda)
+        dplyr::select(-dplyr::matches("subemendas_subemenda"))
     }
     
     emendas_df <- emendas_df %>%
