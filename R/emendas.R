@@ -43,36 +43,120 @@ fetch_emendas <- function(id, casa, sigla=NULL, numero=NULL, ano=NULL) {
 fetch_emendas_senado <- function(bill_id) {
   path <- paste0(.SENADO_PATH, .EMENDAS_SENADO_PATH, bill_id)
 
-  json_emendas <- .senado_api(path = path, asList = TRUE)
+  json_emendas <- .senado_api(path = path, asList = T)
 
   emendas_df <- 
     json_emendas %>%
     magrittr::extract2("EmendaMateria") %>%
     magrittr::extract2("Materia") %>%
     magrittr::extract2("Emendas") %>%
-    magrittr::extract2("Emenda") 
+    magrittr::extract2("Emenda") %>% 
+    tibble::as_tibble() 
+  
+  test <- recursively_unnest(emendas_df)
+  
+  # textos_emendas <-
+  #   emendas_df$TextosEmenda %>% 
+  #   purrr::map_df(~ .) %>% 
+  #   dplyr::distinct()
+  # 
+  # autoria_emendas <-
+  #   emendas_df$AutoriaEmenda %>% 
+  #   purrr::map_df(~ .) %>% 
+  #   dplyr::distinct()
+  
+  recursively_unnest <- function(df) {
+    cols <- sapply(df, class)
+    cols_type_list <- cols %in% 'list'
+    names_cols <- cols[cols_type_list]
+    
+    list_cols <- tibble::tibble()
+    other_cols <- tibble::tibble()
+    
+    if (length(names_cols) > 0) {
+      list_columns_names <- names(names_cols)
+      other_columns_names <- setdiff(names(df), list_columns_names)
+      # if (length(list_columns_names) == 1){
+        # df_bacana <- magrittr::extract2(df, list_columns_names)
+        # list_cols <- purrr::map_df(df_bacana, recursively_unnest) %>% dplyr::bind_cols()
+      # } else {
+        list_cols <- purrr::map(df[list_columns_names], recursively_unnest) %>% dplyr::bind_cols()
+        
+      # }
+      other_cols <- magrittr::extract(df, other_columns_names) %>% 
+        as.data.frame()
+    } else {
+      other_cols <- df %>% as.data.frame()
+    }
+    
+    if (nrow(other_cols) > 0) {
+      output <- dplyr::bind_cols(other_cols,list_cols)  
+    } else {
+      output <- dplyr::bind_cols(list_cols,other_cols)
+    }
+    
+    output <- output %>% 
+      dplyr::distinct()
+  }
+    
+  
+  
+  
+  
+  ##################################3
+  
+  
+  
+  
+  teste <-
+    json_emendas %>% 
+    jsonlite::fromJSON() %>% 
+    as_tibble()
+  
+  ans <- map_df(emendas_df, ~as.data.frame(.x), .id = "id")
+  
+  cols <- sapply(emendas_df, class)
+  cols_type_list <- cols %in% 'list'
+  names_cols <- cols[cols_type_list]
+  columns <- names(names_cols)
+  
+  lista <- emendas_df %>% select(TextosEmenda.TextoEmenda)
+  dd  <-  as.data.frame(matrix(unlist(lista ), nrow=length(unlist(lista[1]))))
+  a <- lista %>%
+    map(as.data.frame) %>%
+    bind_rows()
+  emendas_df_unlist <- SOfun::col_flatten(emendas_df, cols = columns)
+  emendas_df_unlist <- emendas_df_unlist %>% dplyr::select(-columns)
+  
+  
+  
+  
+  
+  
+  
+  ###########################################
   
   if ('Decisao' %in% names(emendas_df) | 'Decisoes.Decisao' %in% names(emendas_df)) {
     emendas_df$Decisoes.Decisao <- NULL
-    emendas_df <- 
+    emendas_df <-
       emendas_df %>%
-      purrr::map_df( ~ .) %>% 
-      .rename_df_columns() 
+      purrr::map_df( ~ .) %>%
+      .rename_df_columns()
   }else {
     colunas_que_mudam_decisao = c("Decisao.Descricao", "Decisao.Data", "Decisao.LocalDeliberacao.CodigoLocal", "Decisao.LocalDeliberacao.SiglaLocal", "Decisao.LocalDeliberacao.NomeLocal")
     if (all(colunas_que_mudam_decisao %in% names(emendas_df))) {
       emendas_df <-
-        emendas_df %>% 
-        dplyr::select(-colunas_que_mudam_decisao) %>% 
+        emendas_df %>%
+        dplyr::select(-colunas_que_mudam_decisao) %>%
         unique()
     }
-    emendas_df <- 
+    emendas_df <-
       emendas_df %>%
       purrr::map_df( ~ .) %>%
-      .rename_df_columns() %>% 
+      .rename_df_columns() %>%
       unique()
   }
-  
+
   num_emendas = nrow(emendas_df)
 
   if (num_emendas == 0) {
@@ -82,7 +166,7 @@ fetch_emendas_senado <- function(bill_id) {
 
   }
   else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
-    texto <- .generate_dataframe(emendas_df$textos_emenda) 
+    texto <- .generate_dataframe(emendas_df$textos_emenda)
 
     autoria <- .generate_dataframe(emendas_df$autoria_emenda)
 
@@ -96,10 +180,10 @@ fetch_emendas_senado <- function(bill_id) {
         )
 
     if ("tipo_documento" %in% names(texto)) {
-      texto <- 
+      texto <-
         texto %>%
         dplyr::select("tipo_documento", "url_texto")
-      
+
       emendas_df <- emendas_df %>%
         dplyr::mutate("autor" = autoria$nome_autor,
                       "partido" = autoria$partido,
@@ -111,7 +195,7 @@ fetch_emendas_senado <- function(bill_id) {
     }else {
       if ("subemendas_submenda" %in% names(emendas_df)) {
         emendas_df <-
-          emendas_df %>% 
+          emendas_df %>%
           dplyr::select(-subemendas_submenda)
       }
       emendas_df <- emendas_df %>%
@@ -128,10 +212,10 @@ fetch_emendas_senado <- function(bill_id) {
   else {
     if (any(stringr::str_detect(names(emendas_df), "subemendas_subemenda"))) {
       emendas_df <-
-        emendas_df %>% 
+        emendas_df %>%
         dplyr::select(-dplyr::matches("subemendas_subemenda"))
     }
-    
+
     emendas_df <- emendas_df %>%
       tidyr::unnest() %>%
       plyr::rename(
@@ -155,15 +239,17 @@ fetch_emendas_senado <- function(bill_id) {
 
   if (!("tipo_documento" %in% names(emendas_df))) {
     emendas_df <-
-      emendas_df %>% 
+      emendas_df %>%
       dplyr::mutate(tipo_documento = "")
   }
   if (!("inteiro_teor" %in% names(emendas_df))) {
     emendas_df <-
-      emendas_df %>% 
+      emendas_df %>%
       dplyr::mutate(inteiro_teor = "")
   }
-  emendas_df %>%
+ 
+  
+   emendas_df %>%
     dplyr::mutate("autor" = paste0(autor, " ", partido),
                   "numero" = as.integer(numero),
                   "tipo_documento" = as.character(tipo_documento),
@@ -171,7 +257,7 @@ fetch_emendas_senado <- function(bill_id) {
     dplyr::select(-dplyr::starts_with("autoria_emenda"),
                   -dplyr::starts_with("textos_emenda"),
                   -dplyr::starts_with("uf")) %>%
-    tibble::as_tibble() %>% 
+    tibble::as_tibble() %>%
     dplyr::filter(!is.na(numero))
 }
 
