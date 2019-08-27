@@ -343,3 +343,7 @@
                                             "numero_materia"="character", "ano_materia"="character", "descricao_objetivo_processo"="character",
                                             "descricao_identificacao_materia"="character", "indicador_tramitando"="character", "data_hora"="character", "sequencia"="character",
                                             "evento"="character")
+
+.COLNAMES_FRENTES <- c("id_frente"="integer", "titulo_frente"="character", "id_legislatura"="integer", "telefone"="character", "situacao"="character",
+                       "url_documento"="character", "id_coordenador"="integer", "nome_coordenador"="character", "partido_coordenador"="character",
+                       "uf_coordenador"="character", "id_legislatura_coordenador"="integer", "url_coordenador"="character")
