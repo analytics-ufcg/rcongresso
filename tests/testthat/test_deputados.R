@@ -4,6 +4,7 @@ context("Deputados")
 dep_info <<- fetch_deputado(siglaUf = "RR", siglaSexo = "M")
 dep_info_por_id <<- fetch_deputado(178957)
 dep_gastos <<- fetch_despesas_deputado(178957)
+dep_frentes <<- fetch_frentes_deputado(160511)
 dep_partido_estado <<- extract_partido_estado_autor("https://dadosabertos.camara.leg.br/api/v2/deputados/178957")
 all_deputados_ids_vazio <<- tibble::tibble()
 fetch_deputados_parametro_invalido <<- 11
@@ -34,12 +35,14 @@ test_that("Is dataframe", {
   expect_true(is.data.frame(dep_info))
   expect_true(is.data.frame(dep_info_por_id))
   expect_true(is.data.frame(dep_gastos))
+  expect_true(is.data.frame(dep_frentes))
 })
 
 test_that("Not Empty", {
   expect_true(nrow(dep_info) != 0)
   expect_true(nrow(dep_info_por_id) != 0)
   expect_true(nrow(dep_gastos) != 0)
+  expect_true(nrow(dep_frentes) != 0)
 })
 
 test_that("fetch_deputado() usando ID", {
@@ -52,6 +55,10 @@ test_that("fetch_deputado() usando queries", {
 
 test_that("fetch_despesas_deputado()", {
   expect_true(all(sapply(dep_gastos, class) %in% .COLNAMES_DEP_GASTOS))
+})
+
+test_that("fetch_frentes_deputado()", {
+  expect_true(all(sapply(dep_frentes, class) %in% .COLNAMES_DEPUTADO_FRENTES))
 })
 
 test_that("ID do deputado", {expect_equal(dep_info_por_id$id, ABEL_MESQUITA_ID)})
