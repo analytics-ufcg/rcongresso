@@ -1,4 +1,4 @@
-#' @title Fetches info about frente
+#' @title Fetches info about frente of Câmara
 #' @description Fetches a dataframe containing information about the frentes of the Câmara
 #' @param id_frente Frente ID
 #' @return A dataframe containing details about the frente
@@ -45,3 +45,20 @@ fetch_frentes_camara <- function(id_frente) {
     .coerce_types(.COLNAMES_FRENTES)
 
 }
+
+#' @title Fetches info about members of frente
+#' @description Fetches a dataframe containing information about the members frentes of the Câmara
+#' @param id_frente Frente ID
+#' @return A dataframe containing details about the members frente
+#' @examples
+#' fetch_membros_frentes_camara(54012)
+#' @export
+fetch_membros_frentes_camara <- function(id_frente) {
+  membros_data <- .camara_api(paste0(.FRENTES_PATH, id_frente,"/membros"))
+  membros <- membros_data %>%
+    dplyr::mutate(id_frente = id_frente) %>%
+    rename_table_to_underscore() %>%
+    .assert_dataframe_completo(.COLNAMES_FRENTES_MEMBROS) %>%
+    .coerce_types(.COLNAMES_FRENTES_MEMBROS)
+}
+
