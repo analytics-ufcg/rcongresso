@@ -8,6 +8,8 @@ fetch_membros_frentes(id_frente, casa)
 }
 \arguments{
 \item{id_frente}{Frente ID}
+
+\item{casa}{Camara ou senado}
 }
 \value{
 A dataframe containing details about the members frente

@@ -1,6 +1,7 @@
 #' @title Fetches info about frente
 #' @description Fetches a dataframe containing information about the frentes
 #' @param id_frente Frente ID
+#' @param casa Camara ou senado
 #' @return A dataframe containing details about the frente
 #' @examples
 #' fetch_frentes(54012, "camara")
@@ -67,6 +68,7 @@ fetch_frentes <- function(id_frente, casa) {
 #' @title Fetches info about members of frente
 #' @description Fetches a dataframe containing information about the members frentes
 #' @param id_frente Frente ID
+#' @param casa Camara ou senado
 #' @return A dataframe containing details about the members frente
 #' @examples
 #' fetch_membros_frentes_camara(54012, "camara")
