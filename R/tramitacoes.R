@@ -22,6 +22,8 @@ fetch_tramitacao <- function(id_prop, casa) {
 #' @title Fetches the tramitation of a proposition in the Chamber of Deputies
 #' @description Returns the tramitation of a proposition by its id.
 #' @param id_prop Proposition's ID
+#' @param data_inicio initial date format AAAA-MM-DD 
+#' @param data_fim end date format AAAA-MM-DD 
 #' @return Dataframe containing all the tramitation.
 #' @examples
 #' tramitacao_pec241 <- fetch_tramitacao_camara(2088351)
@@ -29,13 +31,18 @@ fetch_tramitacao <- function(id_prop, casa) {
 #'   \code{\link[rcongresso]{fetch_id_proposicao_camara}}
 #' @rdname fetch_tramitacao_camara
 #' @export
-fetch_tramitacao_camara <- function(id_prop){
+fetch_tramitacao_camara <- function(id_prop, data_inicio = NA, data_fim = NA){
+  query <- NULL 
+  if (!is.na(data_inicio) & !is.na(data_fim)) {
+    query <- list(dataInicio = data_inicio, dataFim = data_fim)
+  }
+  
   unique(id_prop) %>%
     as.integer %>%
     tibble::tibble(id_prop = .) %>%
     dplyr::mutate(path = paste0(.CAMARA_PROPOSICOES_PATH, "/", id_prop, "/tramitacoes")) %>%
     dplyr::group_by(id_prop, path) %>%
-      dplyr::do(.camara_api(.$path)) %>%
+      dplyr::do(.camara_api(.$path, query = query)) %>%
     dplyr::ungroup() %>%
     dplyr::select(-path) %>%
     .assert_dataframe_completo(.COLNAMES_TRAMITACOES_CAMARA) %>%
