@@ -24,5 +24,7 @@ Dataframe with informations about emendas of a proposição from Chamber of depu
 Fetchs a dataframe with emendas's data of a proposição from Chamber of deputies or Senate
 }
 \examples{
+\dontrun{
 fetch_emendas(91341,'senado')
+}
 }
