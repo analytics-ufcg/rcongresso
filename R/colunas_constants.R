@@ -360,3 +360,5 @@
 .COLNAMES_FRENTES_MEMBROS <- c("id"="integer", "uri"="character", "nome"="character", "sigla_partido"="character", "uri_partido"="character",
                                "sigla_uf"="character", "id_legislatura"="integer", "url_foto"="character", "email"="character",
                                "titulo"="character", "cod_titulo"="character", "data_inicio"="character", "data_fim"="character", "id_frente"="integer")
+
+.COLNAMES_DEPUTADO_FRENTES <- c("id_frente"="integer", "uri"="character", "titulo"="character", "id_legislatura"="integer", "id_deputado"="integer")

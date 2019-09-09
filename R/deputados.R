@@ -142,6 +142,36 @@ fetch_ids_deputados <- function(legislatura_base = .LEGISLATURA_INICIAL) {
   ids_dep
 }
 
+
+#' @title Fetches all fronts from deputy
+#' @description Fetches all fronts from a deputy from the given legislature
+#' @param id_dep Deputy's ID
+#' @param legislatura_base Fronts legislature
+#' @return Dataframe containing all fronts from a deputy
+#' @rdname fetch_frentes_deputado
+#' @export
+fetch_frentes_deputado <- function(id_dep, legislatura_base = .LEGISLATURA_ATUAL) {
+
+  frentes <- tibble::tibble()
+  frentes <- .camara_api(paste0(.DEPUTADOS_PATH, "/", id_dep, "/frentes"))
+
+  if (nrow(frentes) == 0) {
+    warning("ID inválido ou deputado não faz parte de nenhuma frente.")
+  } else {
+    frentes <- frentes %>%
+      dplyr::mutate(id_deputado = id_dep) %>%
+      dplyr::mutate(id_deputado = as.integer(id_deputado)) %>%
+      dplyr::rename(id_frente = id) %>%
+      .rename_df_columns() %>%
+      .assert_dataframe_completo(.COLNAMES_DEPUTADO_FRENTES) %>%
+      .coerce_types(.COLNAMES_DEPUTADO_FRENTES) %>%
+      dplyr::filter(id_legislatura == legislatura_base)
+
+  }
+
+  frentes
+}
+
 .get_id <- function(uri) {
   return(tail(unlist(strsplit(uri, "/")), 1))
 }
