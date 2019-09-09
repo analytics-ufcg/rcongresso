@@ -8,7 +8,9 @@
 #' @param ano Proposition year
 #' @return Dataframe with informations about emendas of a proposição from Chamber of deputies or Senate
 #' @examples
+#' \dontrun{
 #' fetch_emendas(91341,'senado')
+#' }
 #' @rdname fetch_emendas
 #' @export
 fetch_emendas <- function(id, casa, sigla=NULL, numero=NULL, ano=NULL) {
