@@ -32,6 +32,7 @@
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
 .PAUTAS_CAMARA <- "/api/v2/eventos/"
 .URL_TABELA_DEP <- "/arquivos/deputados/csv/deputados.csv"
+.FRENTES_PATH <- "/api/v2/frentes/"
 
 # Path site Câmara
 .APENSADAS_CAMARA_PATH <- "/SitCamaraWS/Proposicoes.asmx/ObterProposicaoPorID"
