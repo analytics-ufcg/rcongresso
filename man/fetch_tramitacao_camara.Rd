@@ -4,10 +4,14 @@
 \alias{fetch_tramitacao_camara}
 \title{Fetches the tramitation of a proposition in the Chamber of Deputies}
 \usage{
-fetch_tramitacao_camara(id_prop)
+fetch_tramitacao_camara(id_prop, data_inicio = NA, data_fim = NA)
 }
 \arguments{
 \item{id_prop}{Proposition's ID}
+
+\item{data_inicio}{initial date format AAAA-MM-DD}
+
+\item{data_fim}{end date format AAAA-MM-DD}
 }
 \value{
 Dataframe containing all the tramitation.
