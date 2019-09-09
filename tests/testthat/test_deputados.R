@@ -59,6 +59,7 @@ test_that("fetch_despesas_deputado()", {
 
 test_that("fetch_frentes_deputado()", {
   expect_true(all(sapply(dep_frentes, class) %in% .COLNAMES_DEPUTADO_FRENTES))
+  expect_warning(fetch_frentes_deputado(1), "ID inválido ou deputado não faz parte de nenhuma frente.")
 })
 
 test_that("ID do deputado", {expect_equal(dep_info_por_id$id, ABEL_MESQUITA_ID)})
