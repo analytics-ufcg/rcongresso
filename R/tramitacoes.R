@@ -53,17 +53,23 @@ fetch_tramitacao_camara <- function(id_prop, data_inicio = NA, data_fim = NA){
 #' @title Fetches the tramitation of a proposition in the Senate
 #' @description Returns the tramitation of a proposition by its id.
 #' @param id_prop Proposition's ID
+#' @param data_ref Ref's date format YYYYMMDD
 #' @return Dataframe containing all the tramitation.
 #' @examples
 #' tramitacao_pls229 <- fetch_tramitacao_senado(91341)
 #' @rdname fetch_tramitacao_senado
 #' @export
-fetch_tramitacao_senado <- function(id_prop){
+fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
+  query <- NULL 
+  if (!is.na(data_ref)) {
+    query <- list(dataref = data_ref)
+  }
+  
   url <-
     paste0(.SENADO_TRAMITACAO_PROPOSICAO_PATH,
            id_prop)
 
-  json_tramitacao <- .senado_api(url, asList = T)
+  json_tramitacao <- .senado_api(url, asList = T, query = query)
 
   tramitacao_data <-
     json_tramitacao %>%
