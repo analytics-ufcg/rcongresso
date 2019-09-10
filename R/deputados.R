@@ -156,7 +156,7 @@ fetch_frentes_deputado <- function(id_dep, legislatura_base = .LEGISLATURA_ATUAL
   frentes <- .camara_api(paste0(.DEPUTADOS_PATH, "/", id_dep, "/frentes"))
 
   if (nrow(frentes) == 0) {
-    warning("ID inválido ou deputado não faz parte de nenhuma frente.")
+    warning("ID invalido ou deputado nao faz parte de nenhuma frente.")
   } else {
     frentes <- frentes %>%
       dplyr::mutate(id_deputado = id_dep) %>%

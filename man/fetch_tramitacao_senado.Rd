@@ -4,10 +4,12 @@
 \alias{fetch_tramitacao_senado}
 \title{Fetches the tramitation of a proposition in the Senate}
 \usage{
-fetch_tramitacao_senado(id_prop)
+fetch_tramitacao_senado(id_prop, data_ref = NA)
 }
 \arguments{
 \item{id_prop}{Proposition's ID}
+
+\item{data_ref}{Ref's date format YYYYMMDD}
 }
 \value{
 Dataframe containing all the tramitation.

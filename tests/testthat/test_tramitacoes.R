@@ -19,7 +19,7 @@ test_that("fetch_tramitacao_senado()", {
 })
 
 test_that("fetch_tramitacao_senado() with date", {
-  expect_true(nrow(pec06_sem_data_referencia) > pec06_com_data_referencia)
+  expect_true(nrow(pec06_sem_data_referencia) > nrow(pec06_com_data_referencia))
 })
 
 test_that("fetch_related_requerimentos_camara()", {	
