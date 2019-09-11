@@ -18,5 +18,5 @@ A dataframe containing details about the members frente
 Fetches a dataframe containing information about the members frentes
 }
 \examples{
-fetch_membros_frentes_camara(54012, "camara")
+fetch_membros_frentes(54012, "camara")
 }

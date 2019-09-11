@@ -71,7 +71,7 @@ fetch_frentes <- function(id_frente, casa) {
 #' @param casa Camara ou senado
 #' @return A dataframe containing details about the members frente
 #' @examples
-#' fetch_membros_frentes_camara(54012, "camara")
+#' fetch_membros_frentes(54012, "camara")
 #' @export
 fetch_membros_frentes <- function(id_frente, casa) {
   frente <- tibble::as_tibble()
