@@ -22,8 +22,8 @@ fetch_tramitacao <- function(id_prop, casa) {
 #' @title Fetches the tramitation of a proposition in the Chamber of Deputies
 #' @description Returns the tramitation of a proposition by its id.
 #' @param id_prop Proposition's ID
-#' @param data_inicio initial date format AAAA-MM-DD 
-#' @param data_fim end date format AAAA-MM-DD 
+#' @param data_inicio initial date format AAAA-MM-DD
+#' @param data_fim end date format AAAA-MM-DD
 #' @return Dataframe containing all the tramitation.
 #' @examples
 #' tramitacao_pec241 <- fetch_tramitacao_camara(2088351)
@@ -32,11 +32,11 @@ fetch_tramitacao <- function(id_prop, casa) {
 #' @rdname fetch_tramitacao_camara
 #' @export
 fetch_tramitacao_camara <- function(id_prop, data_inicio = NA, data_fim = NA){
-  query <- NULL 
+  query <- NULL
   if (!is.na(data_inicio) & !is.na(data_fim)) {
     query <- list(dataInicio = data_inicio, dataFim = data_fim)
   }
-  
+
   unique(id_prop) %>%
     as.integer %>%
     tibble::tibble(id_prop = .) %>%
@@ -60,11 +60,11 @@ fetch_tramitacao_camara <- function(id_prop, data_inicio = NA, data_fim = NA){
 #' @rdname fetch_tramitacao_senado
 #' @export
 fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
-  query <- NULL 
+  query <- NULL
   if (!is.na(data_ref)) {
     query <- list(dataref = data_ref)
   }
-  
+
   url <-
     paste0(.SENADO_TRAMITACAO_PROPOSICAO_PATH,
            id_prop)
@@ -78,19 +78,19 @@ fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
   tramitacao_ids <-
     tramitacao_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
   tramitacao_actual_situation <-
     tramitacao_data %>%
     magrittr::extract2("SituacaoAtual") %>%
     magrittr::extract2("Autuacoes") %>%
     magrittr::extract2("Autuacao") %>%
     magrittr::extract2("Situacao") %>%
-    tibble::as.tibble()
+    tibble::as_tibble()
   proposicao_tramitacoes_df <-
     tramitacao_data %>%
     magrittr::extract2("Tramitacoes") %>%
     magrittr::extract2("Tramitacao") %>%
-    tibble::as.tibble() %>%
+    tibble::as_tibble() %>%
     tibble::add_column(!!!tramitacao_ids)
 
   proposicao_tramitacoes_df <-

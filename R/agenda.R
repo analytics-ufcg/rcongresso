@@ -127,7 +127,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest() %>%
-          dplyr::mutate(data = lubridate::dmy_hm(paste(data, hora))) %>% 
+          dplyr::mutate(data = lubridate::dmy_hm(paste(data, hora))) %>%
           dplyr::select(c(data, nome, id_proposicao, local))
       }else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
@@ -136,18 +136,18 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     }else {
       agenda <-
         agenda %>%
-        dplyr::filter(partes_parte_tipo == "Deliberativa") 
+        dplyr::filter(partes_parte_tipo == "Deliberativa")
 
       if (nrow(agenda) != 0) {
         agenda <-
           agenda %>%
           dplyr::mutate(id_proposicao = purrr::map(partes_parte_itens_item, ~ .$Codigo)) %>%
-          dplyr::mutate(nome = purrr::map(partes_parte_itens_item, ~ .$Nome)) %>% 
+          dplyr::mutate(nome = purrr::map(partes_parte_itens_item, ~ .$Nome)) %>%
           dplyr::select(data, hora, id_proposicao, nome, titulo_da_reuniao) %>%
           tidyr::unnest() %>%
           dplyr::rowwise() %>%
           dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::mutate(data =  lubridate::dmy_hm(paste(data, hora))) %>% 
+          dplyr::mutate(data =  lubridate::dmy_hm(paste(data, hora))) %>%
           dplyr::select(c(data, nome, id_proposicao, local))
       }else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
@@ -237,7 +237,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     dplyr::rowwise() %>%
     dplyr::do(fetch_pauta_camara(
       .$id, .$dataHoraInicio, .$dataHoraFim, .$sigla, .$nome) %>%
-        tibble::as.tibble()) %>%
+        tibble::as_tibble()) %>%
     unique() %>%
     .assert_dataframe_completo(.COLNAMES_AGENDA_CAMARA) %>%
     .coerce_types(.COLNAMES_AGENDA_CAMARA)
@@ -261,7 +261,7 @@ fetch_pauta_camara <- function(id, hora_inicio, hora_fim, sigla_orgao, nome_orga
   json_proposicao <- .camara_api(url)
 
   json_proposicao %>%
-    tibble::as.tibble() %>%
+    tibble::as_tibble() %>%
     dplyr::mutate(hora_inicio = hora_inicio,
                   hora_fim = hora_fim,
                   sigla_orgao = sigla_orgao,
