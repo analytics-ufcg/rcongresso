@@ -258,7 +258,7 @@ fetch_deferimento <- function(proposicao_id) {
       resultados <- c('')
 
     resultados %>%
-      tibble::as.tibble() %>%
+      tibble::as_tibble() %>%
       dplyr::mutate(proposicao_id = proposicao_id) %>%
       fuzzyjoin::regex_left_join(regexes, by = c(value = "regex")) %>%
       tidyr::fill(deferimento) %>%

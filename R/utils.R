@@ -271,7 +271,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   }
   else{
     .verifica_parametros_entrada(parametros) %>%
-      tibble::as.tibble() %>%
+      tibble::as_tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
         .camara_api(API_path, ., asList)
@@ -322,7 +322,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 
   if((query$itens < .MAX_ITENS) || (query$itens %% .MAX_ITENS == 0)){
     query %>%
-      tibble::as.tibble() %>%
+      tibble::as_tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
         .camara_api(API_path, .)
@@ -334,13 +334,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     query$itens <- .MAX_ITENS
 
     query %>%
-      tibble::as.tibble() %>%
+      tibble::as_tibble() %>%
       dplyr::rowwise() %>%
       dplyr::do(
         .camara_api(API_path, .)
       ) %>%
       dplyr::bind_rows(req_ultima_pagina %>%
-                         tibble::as.tibble() %>%
+                         tibble::as_tibble() %>%
                          dplyr::rowwise() %>%
                          dplyr::do(
                            .camara_api(API_path, .)
@@ -431,11 +431,11 @@ rename_table_to_underscore <- function(df) {
     .to_underscore() %>%
     stringr::str_replace(
       "/| ",
-      "_") %>% 
+      "_") %>%
     .remove_special_character()
-  
+
   names(documentos_df) <- new_names
-  
+
   documentos_df
 }
 
