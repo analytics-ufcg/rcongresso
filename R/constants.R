@@ -53,7 +53,7 @@
 .ORGAOS_SENADO_PATH <- "/dadosabertos/comissao/"
 .DEFERIMENTO_SENADO_PATH <- "/dadosabertos/materia/movimentacoes/"
 .AGENDA_SENADO_PATH <- "/dadosabertos/plenario/agenda/mes/"
-.AGENDA_SENADO_COMISSOES <- "/dadosabertos/agenda/"
+.AGENDA_SENADO_COMISSOES <- "/dadosabertos/agendareuniao/"
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
 .SENADO_TEXTOS_MATERIA <- "dadosabertos/materia/textos/"
 .SENADORES_PATH <- "dadosabertos/senador/lista/legislatura/"
