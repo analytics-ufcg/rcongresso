@@ -87,8 +87,7 @@ fetch_agenda_senado <- function(initial_date) {
     paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date), "/detalhe")
   json_proposicao <- .senado_api(url, asList = T)
 
-  json_proposicao$Reunioes$Reuniao %>%
-    tibble::as_tibble() %>%
+  agenda_senado <- json_proposicao$AgendaReuniaoDetalhe$Reunioes$Reuniao %>%
     rename_table_to_underscore() %>%
     dplyr::filter(situacao != 'Cancelada')
 }
