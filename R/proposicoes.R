@@ -183,7 +183,6 @@ fetch_proposicao_senado <- function(id = NULL) {
     magrittr::extract2("Autoria") %>%
     magrittr::extract2("Autor") %>%
     tibble::as_tibble() %>% 
-    dplyr::rowwise() %>% 
     dplyr::transmute(
       autor = paste(
         paste(NomeAutor,
