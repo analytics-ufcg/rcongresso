@@ -50,7 +50,7 @@
                             "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
                             "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
                             "uriPropPosterior"="character", "uriPropPrincipal"="character","uriUltimoRelator"="character",
-                            "statusProposicao.uriUltimoRelator"="character"
+                            "statusProposicao.uriUltimoRelator"="character", "statusProposicao.ambito"="character"
                             )
 
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
