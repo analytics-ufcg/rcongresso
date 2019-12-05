@@ -98,7 +98,8 @@ fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
 
   proposicao_tramitacoes_df <-
     .rename_tramitacao_df(proposicao_tramitacoes_df) %>%
-    dplyr::rename(data_hora = data_tramitacao, sequencia = numero_ordem_tramitacao)
+    dplyr::rename(data_hora = data_tramitacao, sequencia = numero_ordem_tramitacao)%>%
+    dplyr::mutate(sequencia = as.integer(sequencia))
 
   proposicao_tramitacoes_df
 }

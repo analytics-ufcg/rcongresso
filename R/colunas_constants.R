@@ -105,9 +105,9 @@
 
 .COLNAMES_TRAMITACOES_CAMARA <- c("id_prop"="integer","dataHora"="character","descricaoSituacao"="character","descricaoTramitacao"="character",
                            "despacho"="character","codSituacao"="integer","codTipoTramitacao"="character","regime"="character",
-                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character", "uriUltimoRelator" = "character")
+                           "sequencia"="integer","siglaOrgao"="character","uriOrgao"="character","url"="character", "uriUltimoRelator" = "character", "ambito"="character")
 
-.COLNAMES_TRAMITACOES_SENADO <- c("codigo_tramitacao"="character","numero_autuacao"="character","data_hora"="character","sequencia"="character",
+.COLNAMES_TRAMITACOES_SENADO <- c("codigo_tramitacao"="character","numero_autuacao"="character","data_hora"="character","sequencia"="integer",
                            "data_recebimento"="character","origem_tramitacao_local_codigo_local"="character","origem_tramitacao_local_tipo_local"="character",
                            "origem_tramitacao_local_sigla_casa_local"="character","origem_tramitacao_local_nome_casa_local"="character",
                            "origem_tramitacao_local_sigla_local"="character","origem_tramitacao_local_nome_local"="character",
@@ -344,13 +344,13 @@
                                             "descricao_identificacao_materia"="character", "indicador_tramitando"="character", "data_hora"="character", "sequencia"="character",
                                             "evento"="character")
 
-.COLNAMES_DOCUMENTOS_SENADO <- c("codigo_texto"="character", "descricao_tipo_texto"="character", "tipo_documento"="character",                            
-                                 "formato_texto"="character", "data_texto"="character", "url_texto"="character",                                 
-                                 "descricao_texto"="character", "autoria_texto"="character", "numero_emenda"="character",                             
-                                 "identificacao_comissao_codigo_comissao"="character", "identificacao_comissao_sigla_comissao"="character", "identificacao_comissao_nome_comissao"="character", 
-                                 "identificacao_comissao_sigla_casa_comissao"="character", "identificacao_comissao_nome_casa_comissao"="character", "codigo_materia"="character",                            
+.COLNAMES_DOCUMENTOS_SENADO <- c("codigo_texto"="character", "descricao_tipo_texto"="character", "tipo_documento"="character",
+                                 "formato_texto"="character", "data_texto"="character", "url_texto"="character",
+                                 "descricao_texto"="character", "autoria_texto"="character", "numero_emenda"="character",
+                                 "identificacao_comissao_codigo_comissao"="character", "identificacao_comissao_sigla_comissao"="character", "identificacao_comissao_nome_comissao"="character",
+                                 "identificacao_comissao_sigla_casa_comissao"="character", "identificacao_comissao_nome_casa_comissao"="character", "codigo_materia"="character",
                                  "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character", "sigla_subtipo_materia"="character",
-                                 "descricao_subtipo_materia"="character", "numero_materia"="character", "ano_materia"="character",                               
+                                 "descricao_subtipo_materia"="character", "numero_materia"="character", "ano_materia"="character",
                                  "descricao_objetivo_processo"="character", "descricao_identificacao_materia"="character", "indicador_tramitando"="character")
 
 .COLNAMES_FRENTES <- c("id_frente"="integer", "titulo_frente"="character", "id_legislatura"="integer", "telefone"="character", "situacao"="character",
