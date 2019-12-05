@@ -245,7 +245,7 @@ fetch_proposicao_senado <- function(id = NULL) {
       !!!proposicao_general_assunto,
       !!!proposicao_source,
       !!!proposicao_situacao,
-      autor_nome = dplyr::if_else(nrow(proposicao_author) > 1, paste0(proposicao_author[[1]] %>% head(1), " e outros"),proposicao_author[[1]] %>% head(1)),
+      autor_nome = proposicao_author[[1]] %>% tail(1),
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
     )
