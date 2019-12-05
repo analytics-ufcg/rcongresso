@@ -220,9 +220,9 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 #' @title Auxiliar function for fetch_emendas_camara
 #' @description Return dataframe with data of an emenda
 .fetch_emendas_camara_auxiliar <- function(id) {
-  rcongresso::fetch_proposicao(id, 'camara') %>%
+ rcongresso::fetch_proposicao(id, 'camara') %>%
     dplyr::mutate(autor = rcongresso::scrap_autores_from_website(.$id), casa = "camara") %>%
-    dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, ementa))
+    dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, statusProposicao.url))
 }
 
 #' @title Generates a dataframe from a column with a linked list
