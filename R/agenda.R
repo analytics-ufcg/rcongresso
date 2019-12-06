@@ -16,7 +16,13 @@ fetch_agenda_senado <- function(initial_date) {
   }
 
   agenda <-
-    json_proposicao$AgendaPlenario$Sessoes$Sessao %>%
+    json_proposicao$AgendaPlenario$Sessoes$Sessao
+
+  if (is.null(agenda)) {
+    return(list(agenda = tibble::as_tibble(), materias = tibble::as_tibble(), oradores = tibble::as_tibble()))
+  }
+  agenda <-
+    agenda %>%
     rename_table_to_underscore() %>%
     tibble::as_tibble()
 
@@ -87,10 +93,17 @@ fetch_agenda_senado <- function(initial_date) {
     paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date), "/detalhe")
   json_proposicao <- .senado_api(url, asList = T)
 
-  json_proposicao$Reunioes$Reuniao %>%
-    tibble::as_tibble() %>%
-    rename_table_to_underscore() %>%
-    dplyr::filter(situacao != 'Cancelada')
+  agenda_senado <- json_proposicao$AgendaReuniaoDetalhe$Reunioes$Reuniao
+
+  if (!is.null(agenda_senado)) {
+    agenda_senado <- agenda_senado %>%
+      rename_table_to_underscore() %>%
+      dplyr::filter(situacao != 'Cancelada')
+  } else {
+    agenda_senado <- tibble::as_tibble()
+  }
+
+  agenda_senado
 }
 
 #' @title Comissions schedule Senate
@@ -128,7 +141,8 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest() %>%
           dplyr::mutate(data = lubridate::dmy_hm(paste(data, hora))) %>%
-          dplyr::select(c(data, nome, id_proposicao, local))
+          dplyr::select(c(data, nome, id_proposicao, local)) %>%
+          dplyr::filter(nome != "")
       }else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
       }
@@ -166,26 +180,6 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 
 }
 
-#' @title Extract proposition name
-#' @description Receive as param a list from the Senate schedule and return the propositions name that are in 'pauta'
-#' @param lista_com_nome list that has the name
-#' @return char
-.get_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
-  nome <- ""
-  if(length(lista_com_nome$Tipo) == 1) {
-    if (lista_com_nome$Tipo == "Deliberativa") {
-      nome <- paste(lista_com_nome$Itens$Item$Nome, collapse = ",")
-    }
-  }else {
-    if ("Deliberativa" %in% lista_com_nome$Tipo) {
-      if(!is.null(lista_com_nome$Itens.Item)) {
-        nome <- paste(lista_com_nome$Nome, collapse = ",")
-      }
-    }
-  }
-  nome
-}
-
 #' @title Extract the proposition id
 #' @description Receive as param a list from the Senate schedule and return the propositions ids that are in 'pauta'
 #' @param lista_com_id list that has the id
@@ -194,16 +188,48 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
   id <- ""
   if(length(lista_com_id$Tipo) == 1 ) {
     if (lista_com_id$Tipo == "Deliberativa") {
-      id <- paste(lista_com_id$Itens$Item$Codigo, collapse = ",")
+      if (!is.null(lista_com_id$Itens.Item)) {
+        id <- purrr::map_chr(lista_com_id$Itens.Item, ~ paste(.$Codigo, collapse = ","))
+      }else {
+        id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
+      }
     }
   }else {
     if ("Deliberativa" %in% lista_com_id$Tipo) {
       if(!is.null(lista_com_id$Itens.Item)) {
-        paste(lista_com_id$Itens.Item$Codigo, collapse = ",")
+        id <- purrr::map_chr(lista_com_id$Itens.Item, ~ paste(.$Codigo, collapse = ","))
+      }else {
+        id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
       }
     }
   }
-  id
+  paste(id, collapse = ",")
+}
+
+#' @title Extract proposition name
+#' @description Receive as param a list from the Senate schedule and return the propositions name that are in 'pauta'
+#' @param lista_com_nome list that has the name
+#' @return char
+.get_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
+  nome <- ""
+  if(length(lista_com_nome$Tipo) == 1 ) {
+    if (lista_com_nome$Tipo == "Deliberativa") {
+      if (!is.null(lista_com_nome$Itens.Item)) {
+        nome <- purrr::map_chr(lista_com_nome$Itens.Item, ~ paste(.$Nome, collapse = ","))
+      }else {
+        nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(.$Nome, collapse = ","))
+      }
+    }
+  }else {
+    if ("Deliberativa" %in% lista_com_nome$Tipo) {
+      if(!is.null(lista_com_nome$Itens.Item)) {
+        nome <- purrr::map_chr(lista_com_nome$Itens.Item, ~ paste(.$Nome, collapse = ","))
+      }else {
+        nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(.$Nome, collapse = ","))
+      }
+    }
+  }
+  paste(nome, collapse = ",")
 }
 
 #' @title Get the schedule of Deputies' Chamber
