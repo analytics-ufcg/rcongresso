@@ -25,7 +25,8 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
-  final_timeout <- timeout*2.05
+  final_timeout <- 3^(tentativa)
+  cat("\nTimeout:", timeout, "Tentativa:", tentativa, "Final Timeout:", final_timeout)
   Sys.sleep(final_timeout)
   .get_from_api(api_base, path, query, final_timeout, tentativa)
 }
@@ -66,34 +67,44 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp
 }
 
-.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
+.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 2, tentativa = 0){
   ua <- httr::user_agent(.RCONGRESSO_LINK)
   api_url <- httr::modify_url(api_base, path = path, query = query)
-
+  
   resp <- .get_from_cache(api_url)
 
   if (is.null(resp)) {
       resp_in_cache <- FALSE
-      #print(paste("URL:",api_url))
       resp <- httr::GET(api_url, ua, httr::accept_json())
       Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
   } else {
       resp_in_cache <- TRUE
   }
-
+  
   # Handle errors and retries
-  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
-     httr::status_code(resp) < .COD_ERRO_SERV){
-    if (!resp_in_cache) .put_in_cache(api_url, resp)
-    .throw_req_error(httr::status_code(resp), api_url)
-  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
+  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE){
+    cat("\n","Calling URL:",api_url," - Status Code:",httr::status_code(resp))
     if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
+      resp <- .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
     } else {
       if (!resp_in_cache) .put_in_cache(api_url, resp)
       .throw_req_error(httr::status_code(resp), api_url)
     }
   }
+
+  # Handle errors and retries
+  # if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
+  #    httr::status_code(resp) < .COD_ERRO_SERV){
+  #   if (!resp_in_cache) .put_in_cache(api_url, resp)
+  #   .throw_req_error(httr::status_code(resp), api_url)
+  # } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
+  #   if(tentativa < .MAX_TENTATIVAS_REQ){
+  #     .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
+  #   } else {
+  #     if (!resp_in_cache) .put_in_cache(api_url, resp)
+  #     .throw_req_error(httr::status_code(resp), api_url)
+  #   }
+  # }
 
   if (!resp_in_cache) .put_in_cache(api_url, resp)
 
@@ -547,4 +558,14 @@ rename_table_to_underscore <- function(df) {
   }
 
   return(F)
+}
+
+#' @title Runs a given function after a specified delay
+#' @description Runs a given function after a specified delay
+#' @param delay delay to sleep before running function
+#' @param fun function (with/out parameters or not) to be run after delay
+#' @return the return value of the function
+run_function_with_delay <- function(delay, fun) {
+  Sys.sleep(delay)
+  fun
 }
