@@ -189,7 +189,7 @@ fetch_emendas_senado <- function(bill_id) {
 #' @export
 fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
   emendas_substitutivos_redacaofinal_list <-
-    .get_from_url(base_url = .CAMARA_WEBSITE_LINK,
+    .get_from_url_with_exponential_backoff(base_url = .CAMARA_WEBSITE_LINK,
                   path = .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH,
                   query = paste0('tipo=', sigla, '&numero=', numero, '&ano=', ano))$content %>%
     rawToChar() %>%

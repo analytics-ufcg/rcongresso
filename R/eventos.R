@@ -6,7 +6,7 @@
 #' fetch_eventos_camara(2121442)
 #' @export
 fetch_eventos_camara <- function(prop_id) {
-    .get_from_url(base_url=.CAMARA_WEBSITE_LINK,
+  .get_from_url_with_exponential_backoff(base_url=.CAMARA_WEBSITE_LINK,
                   path=.EVENTOS_PROPOSICAO_CAMARA_PATH,
                   query=paste0('idProposicao=', 2121442))$content %>%
       xml2::read_html() %>%

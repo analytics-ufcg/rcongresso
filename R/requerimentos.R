@@ -12,7 +12,7 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
   if(nrow(reqs) == 0)
     return(tibble::tibble())
 
-  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao(.x, 'camara')) %>%
+  reqs_data <- purrr::map_df(reqs$id, ~ fetch_proposicao(.x, .CAMARA)) %>%
     dplyr::mutate(id_req = id,
                   id_prop = prop_id,
                   casa = .CAMARA) %>% #Adding proposition number to final dataframe
@@ -34,7 +34,7 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
       '^Arquivado'
     )
 
-    reqs_trams <- fetch_tramitacao(reqs_data$id_req, .CAMARA)
+    reqs_trams <- purrr::map_df(reqs_data$id_req, ~ fetch_tramitacao(.x, .CAMARA))
 
     related_reqs <-
       reqs_trams %>%

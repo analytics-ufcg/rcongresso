@@ -64,7 +64,7 @@ fetch_sessoes_senado <- function(id_prop) {
 #' @export
 fetch_sessoes_camara <- function(id_prop) {
   
-  sessoes <- .get_from_url(base_url = .CAMARA_WEBSITE_LINK, 
+  sessoes <- .get_from_url_with_exponential_backoff(base_url = .CAMARA_WEBSITE_LINK, 
                                path = .CAMARA_SESSOES_PATH, 
                                query = paste0("idProposicao=", id_prop)) %>%
     xml2::read_html() %>%
