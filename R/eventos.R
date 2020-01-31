@@ -8,7 +8,7 @@
 fetch_eventos_camara <- function(prop_id) {
   .get_from_url_with_exponential_backoff(base_url=.CAMARA_WEBSITE_LINK,
                   path=.EVENTOS_PROPOSICAO_CAMARA_PATH,
-                  query=paste0('idProposicao=', 2121442))$content %>%
+                  query=paste0('idProposicao=', prop_id))$content %>%
       xml2::read_html() %>%
       rvest::html_nodes(xpath = '//*[@id="content"]/table') %>%
       rvest::html_table() %>%
