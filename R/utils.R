@@ -57,6 +57,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   }
   
   if ((status_code >= .COD_ERRO_CLIENTE)) {
+    cat("\n","Could not fetch from:",url," - Status Code:",status_code)
     .throw_req_error(status_code, url)
   }
   
