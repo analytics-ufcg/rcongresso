@@ -63,7 +63,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   
   if ((status_code >= .COD_ERRO_CLIENTE)) {
     cat("\n","Could not fetch from:",url," - Status Code:",status_code)
-    #.throw_req_error(status_code, url)
+    .throw_req_error(status_code, url)
   }
   
   if (!resp_in_cache) .put_in_cache(url, resp)
@@ -81,8 +81,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp <- .get_with_exponential_backoff_cached(api_base, path, query, accept_json=TRUE)
   
   if (httr::http_type(resp) != "application/json") {
-    warning(.ERRO_RETORNO_JSON, call. = FALSE)
-    resp <- NULL
+    stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
 
   return(resp)
