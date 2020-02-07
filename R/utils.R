@@ -71,13 +71,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   resp
 }
 
-
-.get_from_url_with_exponential_backoff <- function(base_url=NULL, path=NULL, query=NULL) {
-  resp <- .get_with_exponential_backoff_cached(base_url, path, query)
-  return(resp)
-}
-
-.get_from_api_with_exponential_backoff <- function(api_base=NULL, path=NULL, query=NULL){
+.get_from_api_with_exponential_backoff_cached <- function(api_base=NULL, path=NULL, query=NULL){
   resp <- .get_with_exponential_backoff_cached(api_base, path, query, accept_json=TRUE)
   
   if (httr::http_type(resp) != "application/json") {
@@ -88,7 +82,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_hrefs <- function(path=NULL, query=NULL) {
-  resp <- .get_from_api_with_exponential_backoff(.CAMARA_API_LINK, path, query)
+  resp <- .get_from_api_with_exponential_backoff_cached(.CAMARA_API_LINK, path, query)
   .get_json(resp)$links
 }
 
@@ -98,7 +92,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api_with_exponential_backoff(.CAMARA_API_LINK, path, query)
+  resp <- .get_from_api_with_exponential_backoff_cached(.CAMARA_API_LINK, path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
@@ -115,7 +109,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .senado_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api_with_exponential_backoff(.SENADO_API_LINK, path, query)
+  resp <- .get_from_api_with_exponential_backoff_cached(.SENADO_API_LINK, path, query)
   obtained_data <- .get_json(resp)
 
   if(!is.data.frame(obtained_data) && !asList){
