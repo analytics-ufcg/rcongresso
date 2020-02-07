@@ -16,9 +16,9 @@ relacionadas_120143 <<- .fetch_relacionadas_senado(120143)
 PEC241_ID <- 2088351
 TIPO_PROP_PEC <- 136
 TIPO_PROP_PL <- 139
+TAM_DF_5REQ <- 5
 TAM_DF_10REQ <- 10
-TAM_DF_100REQ <- 100
-TAM_DF_386REQ <- 386
+TAM_DF_15REQ <- 15
 TAM_DF_DEFAULT <- 15
 
 
@@ -102,14 +102,14 @@ test_that("Numero PEC241", {expect_equal(pec_241$numero, 241)})
 test_that("Ano PEC241", {expect_equal(pec_241$ano, 2016)})
 
 # Testa tipos de proposições
-r <- compare::compareEqual(fetch_tipo_proposicao(TIPO_PROP_PL)$sigla, "PL")
-test_that("Tipo de proposição", {expect_true(r$result)})
+r <- testthat::compare(fetch_tipo_proposicao(TIPO_PROP_PL)$sigla, "PL")
+test_that("Tipo de proposição", {expect_true(r$equal)})
 
 # Testa quantidade de itens por requisição
 test_that("Quantidade de itens por requisição",{
+  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 5))[1], TAM_DF_5REQ)
   expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 10))[1], TAM_DF_10REQ)
-  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 100))[1], TAM_DF_100REQ)
-  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 386))[1], TAM_DF_386REQ)
+  expect_equal(dim(fetch_proposicao_camara(dataInicio = "2007-01-01", dataFim = "2017-01-01", itens = 15))[1], TAM_DF_15REQ)
 })
 
 test_that("Quantidade default por requisição, atualmente 15",{
@@ -164,7 +164,6 @@ test_that(".fetch_autores_camara()",{
     dplyr::bind_rows(tibble::tibble(prop_ids = emr_ids, sigla_tipo = "EMR")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emc_ids, sigla_tipo = "EMC")) %>%
     dplyr::bind_rows(tibble::tibble(prop_ids = emp_ids, sigla_tipo = "EMP"))
-  expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ is.data.frame(.fetch_autores_camara(.x, .y))))))
   expect_true(all(as.logical(purrr::pmap(proposicoes_df, ~ nrow(.fetch_autores_camara(.x, .y)) != 0))))
   emc_2206183 <- .fetch_autores_camara(2206183, "EMC")
   expect_equal(tibble::tibble(

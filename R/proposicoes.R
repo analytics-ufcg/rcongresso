@@ -423,7 +423,7 @@ fetch_ids_relacionadas <- function(id, casa) {
 #' @return dataframe containing related propositions ids
 .scrap_senado_relacionadas_ids_from_website <- function(id_prop) {
   relacionadas_urls <-
-    .get_from_url_with_exponential_backoff(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop)) %>%
+    .get_with_exponential_backoff_cached(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop)) %>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
     rvest::html_nodes('#conteudoProjeto') %>%
@@ -460,10 +460,10 @@ scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materi
   
   if (!is.na(casa) & tolower(casa) == 'senado') {
     documentos_df <-
-      .get_from_url_with_exponential_backoff(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))
+      .get_with_exponential_backoff_cached(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))
   }else if (!is.na(casa) & tolower(casa) == 'congresso') {
     documentos_df <-
-      .get_from_url_with_exponential_backoff(paste0(.CONGRESSO_WEBSITE_LINK, .MATERIA_CONGRESSO_PATH, id_prop))
+      .get_with_exponential_backoff_cached(paste0(.CONGRESSO_WEBSITE_LINK, .MATERIA_CONGRESSO_PATH, id_prop))
   }else {
     warning("Casa deve ser: congresso ou senado.")
     return(tibble::tibble())
@@ -739,7 +739,7 @@ fetch_autores <- function(proposicao_id = NULL, casa, sigla_tipo = "") {
 #' @export
 scrap_autores_from_website <- function(id_prop) {
   autores_prop_text <-
-    .get_from_url_with_exponential_backoff(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_prop))%>%
+    .get_with_exponential_backoff_cached(paste0(.CAMARA_WEBSITE_LINK_2, .AUTORES_CAMARA_PATH, "?idProposicao=", id_prop))%>%
     httr::content('text', encoding = 'utf-8') %>%
     xml2::read_html()  %>%
     rvest::html_nodes('#content') %>%
@@ -770,7 +770,7 @@ scrap_autores_from_website <- function(id_prop) {
 #' fetch_apensadas_camara(2121442)
 #' @export
 fetch_apensadas_camara <- function(prop_id) {
-  .get_from_url_with_exponential_backoff(.CAMARA_WEBSITE_LINK, .APENSADAS_CAMARA_PATH, paste0('idProp=', prop_id)) %>%
+  .get_with_exponential_backoff_cached(.CAMARA_WEBSITE_LINK, .APENSADAS_CAMARA_PATH, paste0('idProp=', prop_id)) %>%
     xml2::read_xml() %>%
     xml2::xml_find_all('//apensadas/proposicao/codProposicao') %>%
     xml2::xml_text()
