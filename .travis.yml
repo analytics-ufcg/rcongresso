@@ -12,6 +12,7 @@ r_packages:
   - covr
   - readr
   - ggplot2
+  - devtools
 
 install:
 - R -e 'devtools::install_deps(dep = T)'
