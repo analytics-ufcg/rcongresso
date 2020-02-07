@@ -29,7 +29,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   stop(sprintf(.MENSAGEM_ERRO_REQ, error_code, api_url), call. = FALSE)
 }
 
-.get_with_exponential_backoff_cached <- function(base_url, path, query, 
+.get_with_exponential_backoff_cached <- function(base_url=NULL, path=NULL, query=NULL, 
                                                  base_sleep_time=.POWER_BASE_SLEEP_TIME, 
                                                  max_attempts=.MAX_TENTATIVAS_REQ, 
                                                  accept_json=FALSE) {
