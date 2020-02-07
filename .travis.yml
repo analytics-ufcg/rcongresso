@@ -13,5 +13,12 @@ r_packages:
   - readr
   - ggplot2
 
+install:
+- R -e 'devtools::install_deps(dep = T)'
+
+script:
+- travis_wait 20 R CMD build .
+- travis_wait 20 R CMD check *tar.gz
+
 after_success:
   - Rscript -e 'library(covr); codecov()'
