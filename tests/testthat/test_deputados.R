@@ -3,7 +3,7 @@ context("Deputados")
 # Setup
 dep_info <<- fetch_deputado(siglaUf = "RR", siglaSexo = "M")
 dep_info_por_id <<- fetch_deputado(178957)
-dep_gastos <<- fetch_despesas_deputado(178957)
+dep_gastos <<- fetch_despesas_deputado(178912)
 dep_frentes <<- fetch_frentes_deputado(160511)
 dep_partido_estado <<- extract_partido_estado_autor("https://dadosabertos.camara.leg.br/api/v2/deputados/178957")
 all_deputados_ids_vazio <<- tibble::tibble()
@@ -23,7 +23,7 @@ ABEL_MESQUITA_PARTIDO <- "DEM"
 TAM_DF_DEFAULT <- c(15, 8)
 #TAM_DF_DEP_ATIVOS <- c(513, 8)
 
-all_deputados_ids <- fetch_ids_deputados() %>% dplyr::sample_n(100)
+all_deputados_ids <- fetch_ids_deputados() %>% dplyr::sample_n(15)
 
 
 
