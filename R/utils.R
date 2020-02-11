@@ -29,15 +29,22 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   stop(sprintf(.MENSAGEM_ERRO_REQ, error_code, api_url), call. = FALSE)
 }
 
-.get_with_exponential_backoff_cached <- function(base_url=NULL, path=NULL, query=NULL, 
+.get_with_exponential_backoff_cached <- function(base_url, path=NULL, query=NULL, 
                                                  base_sleep_time=.POWER_BASE_SLEEP_TIME, 
                                                  max_attempts=.MAX_TENTATIVAS_REQ, 
                                                  accept_json=FALSE) {
-  url <- httr::modify_url(base_url, path = path, query = query)
   num_tries <- 0
   status_code = 1000
   resp_in_cache = FALSE
   resp <- NULL
+  
+  if (is.null(base_url) || base_url == '') {
+    warning("URL deve ser não-nula e não-vazia.")
+    return(resp)
+  }
+  
+  url <- httr::modify_url(base_url, path = path, query = query)
+  
   
   while((!resp_in_cache) && 
         ((status_code >= .COD_ERRO_CLIENTE) && (num_tries < max_attempts))) {
@@ -62,7 +69,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   }
   
   if ((status_code >= .COD_ERRO_CLIENTE)) {
-    cat("\n","Could not fetch from:",url," - Status Code:",status_code)
+    warning("\n","Could not fetch from:",url," - Status Code:",status_code)
     .throw_req_error(status_code, url)
   }
   
