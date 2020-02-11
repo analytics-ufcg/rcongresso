@@ -67,7 +67,7 @@ fetch_despesas_deputado <- function(id = NULL, idLegislatura = NULL, ano = NULL,
 #' @export
 extract_partido_estado_autor <- function(uri) {
   if (!is.na(uri)) {
-    resp <- .get_from_api(uri, NULL, NULL)
+    resp <- .get_from_api_with_exponential_backoff_cached(uri, NULL, NULL)
     autor <- .get_json(resp)$dados
 
     autor_uf <-

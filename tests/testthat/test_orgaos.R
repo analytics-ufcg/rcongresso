@@ -21,7 +21,7 @@ test <- function(){
   })
 
   test_that("Have many rows", {
-    expect_true(nrow(orgaos_camara) >= 5000)
+    expect_true(nrow(orgaos_camara) >= 2000)
   })
 
   test_that("Is dataframe", {

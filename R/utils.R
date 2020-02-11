@@ -4,8 +4,13 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @param response The HTTP response
 #' @return The json
 .get_json <- function(response){
-  httr::content(response, as = "text") %>%
-    jsonlite::fromJSON(flatten = TRUE)
+  json_response <- tibble::tibble()
+  if (!is.null(response)) {
+    json_response <- httr::content(response, as = "text") %>%
+      jsonlite::fromJSON(flatten = TRUE)  
+  }
+  
+  return(json_response)
 }
 
 .req_succeeded <- function(status_code) {
@@ -24,79 +29,58 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   stop(sprintf(.MENSAGEM_ERRO_REQ, error_code, api_url), call. = FALSE)
 }
 
-.use_backoff_exponencial <- function(api_base=NULL, path = NULL, query=NULL, timeout = 0, tentativa = 0){
-  final_timeout <- timeout*2.05
-  Sys.sleep(final_timeout)
-  .get_from_api(api_base, path, query, final_timeout, tentativa)
-}
-
-.get_from_url <- function(base_url=NULL, path=NULL, query=NULL, timeout = 1){
-  url <- httr::modify_url(base_url, path = path, query = query)
-
-  resp <- .get_from_url_with_exponential_backoff(url, timeout)
-
-  resp
-}
-
-.get_from_url_with_exponential_backoff <- function(url=NULL, timeout = 1, ...) {
-  tries <- 0
-  final_timeout <- timeout
-  status_code = -1
-
-  while(!.req_succeeded(status_code) && (tries < .MAX_TENTATIVAS_REQ)) {
-    #print(paste("URL:",url))
-    resp <- httr::GET(url, ...)
-    status_code = httr::status_code(resp)
-    Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
-
-    if(.is_client_error(status_code)){
-      .throw_req_error(status_code, url)
-    } else if(.is_server_error(status_code)) {
-      Sys.sleep(final_timeout)
-      final_timeout <- final_timeout*2.05
-    }
-
-    tries <- tries + 1
+.get_with_exponential_backoff_cached <- function(base_url, path=NULL, query=NULL, 
+                                                 base_sleep_time=.POWER_BASE_SLEEP_TIME, 
+                                                 max_attempts=.MAX_TENTATIVAS_REQ, 
+                                                 accept_json=FALSE) {
+  num_tries <- 0
+  status_code = 1000
+  resp_in_cache = FALSE
+  resp <- NULL
+  
+  if (is.null(base_url) || base_url == '') {
+    warning("URL deve ser não-nula e não-vazia.")
+    return(resp)
   }
-
-  if (tries >= .MAX_TENTATIVAS_REQ) {
+  
+  url <- httr::modify_url(base_url, path = path, query = query)
+  
+  
+  while((!resp_in_cache) && 
+        ((status_code >= .COD_ERRO_CLIENTE) && (num_tries < max_attempts))) {
+    if (num_tries > 0) {
+      cat("\n","Error on Calling URL:",url," - Status Code:",status_code)
+      sleep_time <- base_sleep_time^(num_tries)  
+      Sys.sleep(sleep_time)
+    }
+    
+    resp <- .get_from_cache(api_url)
+    
+    if (is.null(resp)) {
+      if (accept_json) resp <- httr::GET(url, httr::accept_json())
+      else resp <- httr::GET(url)
+      Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
+      status_code <- httr::status_code(resp)
+      num_tries <- num_tries + 1
+    } else {
+      resp_in_cache <- TRUE
+      status_code <- 200
+    }
+  }
+  
+  if ((status_code >= .COD_ERRO_CLIENTE)) {
+    warning("\n","Could not fetch from:",url," - Status Code:",status_code)
     .throw_req_error(status_code, url)
   }
-
+  
+  if (!resp_in_cache) .put_in_cache(url, resp)
+  
   resp
 }
 
-.get_from_api <- function(api_base=NULL, path=NULL, query=NULL, timeout = 1, tentativa = 0){
-  ua <- httr::user_agent(.RCONGRESSO_LINK)
-  api_url <- httr::modify_url(api_base, path = path, query = query)
-
-  resp <- .get_from_cache(api_url)
-
-  if (is.null(resp)) {
-      resp_in_cache <- FALSE
-      #print(paste("URL:",api_url))
-      resp <- httr::GET(api_url, ua, httr::accept_json())
-      Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
-  } else {
-      resp_in_cache <- TRUE
-  }
-
-  # Handle errors and retries
-  if(httr::status_code(resp) >= .COD_ERRO_CLIENTE &&
-     httr::status_code(resp) < .COD_ERRO_SERV){
-    if (!resp_in_cache) .put_in_cache(api_url, resp)
-    .throw_req_error(httr::status_code(resp), api_url)
-  } else if(httr::status_code(resp) >= .COD_ERRO_SERV) {
-    if(tentativa < .MAX_TENTATIVAS_REQ){
-      .use_backoff_exponencial(api_base, path, query, timeout, tentativa+1)
-    } else {
-      if (!resp_in_cache) .put_in_cache(api_url, resp)
-      .throw_req_error(httr::status_code(resp), api_url)
-    }
-  }
-
-  if (!resp_in_cache) .put_in_cache(api_url, resp)
-
+.get_from_api_with_exponential_backoff_cached <- function(api_base=NULL, path=NULL, query=NULL){
+  resp <- .get_with_exponential_backoff_cached(api_base, path, query, accept_json=TRUE)
+  
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
@@ -105,7 +89,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 }
 
 .get_hrefs <- function(path=NULL, query=NULL) {
-  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
+  resp <- .get_from_api_with_exponential_backoff_cached(.CAMARA_API_LINK, path, query)
   .get_json(resp)$links
 }
 
@@ -115,7 +99,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .camara_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(.CAMARA_API_LINK, path, query)
+  resp <- .get_from_api_with_exponential_backoff_cached(.CAMARA_API_LINK, path, query)
   obtained_data <- .get_json(resp)$dados
 
   if(!is.data.frame(obtained_data) && !asList){
@@ -132,7 +116,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 #' @export
 .senado_api <- function(path=NULL, query=NULL, asList = FALSE){
 
-  resp <- .get_from_api(.SENADO_API_LINK, path, query)
+  resp <- .get_from_api_with_exponential_backoff_cached(.SENADO_API_LINK, path, query)
   obtained_data <- .get_json(resp)
 
   if(!is.data.frame(obtained_data) && !asList){
@@ -547,4 +531,14 @@ rename_table_to_underscore <- function(df) {
   }
 
   return(F)
+}
+
+#' @title Runs a given function after a specified delay
+#' @description Runs a given function after a specified delay
+#' @param delay delay to sleep before running function
+#' @param fun function (with/out parameters or not) to be run after delay
+#' @return the return value of the function
+run_function_with_delay <- function(delay, fun) {
+  Sys.sleep(delay)
+  fun
 }
