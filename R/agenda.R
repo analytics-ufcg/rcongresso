@@ -273,7 +273,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     json_proposicao %>%
     dplyr::filter(situacao != 'Cancelada' &
                     !(iconv(c(descricaoTipo), from="UTF-8", to="ASCII//TRANSLIT") %in% descricoes_inuteis)) %>%
-    tidyr::unnest()
+    tidyr::unnest(cols=c(orgaos), names_repair=tidyr::tidyr_legacy)
 
   agenda %>%
     dplyr::rowwise() %>%
