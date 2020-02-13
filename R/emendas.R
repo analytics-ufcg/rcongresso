@@ -52,14 +52,27 @@ fetch_emendas_senado <- function(bill_id) {
     magrittr::extract2("EmendaMateria") %>%
     magrittr::extract2("Materia") %>%
     magrittr::extract2("Emendas") %>%
-    magrittr::extract2("Emenda") 
+    magrittr::extract2("Emenda")
+  
+  if ('TextosEmenda.TextoEmenda' %in% names(emendas_df)) {
+    emendas_df <- 
+      emendas_df %>% 
+      tidyr::unnest(cols = c(TextosEmenda.TextoEmenda))
+  }
+  
+  if ('AutoriaEmenda.Autor' %in% names(emendas_df)) {
+    emendas_df <- 
+      emendas_df %>% 
+      tidyr::unnest(cols = c(AutoriaEmenda.Autor))
+  }
   
   if ('Decisao' %in% names(emendas_df) | 'Decisoes.Decisao' %in% names(emendas_df)) {
     emendas_df$Decisoes.Decisao <- NULL
     emendas_df <- 
       emendas_df %>%
       purrr::map_df( ~ .) %>% 
-      .rename_df_columns() 
+      .rename_df_columns() %>% 
+      unique()
   }else {
     colunas_que_mudam_decisao = c("Decisao.Descricao", "Decisao.Data", "Decisao.LocalDeliberacao.CodigoLocal", "Decisao.LocalDeliberacao.SiglaLocal", "Decisao.LocalDeliberacao.NomeLocal")
     if (all(colunas_que_mudam_decisao %in% names(emendas_df))) {
@@ -82,8 +95,7 @@ fetch_emendas_senado <- function(bill_id) {
       data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), names(.COLNAMES_EMENDAS_SENADO)
       )
 
-  }
-  else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
+  } else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
     texto <- .generate_dataframe(emendas_df$textos_emenda) 
 
     autoria <- .generate_dataframe(emendas_df$autoria_emenda)
@@ -110,7 +122,7 @@ fetch_emendas_senado <- function(bill_id) {
                       "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
                       "casa" = 'senado') %>%
         dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
-    }else {
+    } else {
       if ("subemendas_submenda" %in% names(emendas_df)) {
         emendas_df <-
           emendas_df %>% 
@@ -126,8 +138,7 @@ fetch_emendas_senado <- function(bill_id) {
         dplyr::select(-"autoria_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
     }
 
-  }
-  else {
+  } else {
     if (any(stringr::str_detect(names(emendas_df), "subemendas_subemenda"))) {
       emendas_df <-
         emendas_df %>% 
@@ -135,19 +146,16 @@ fetch_emendas_senado <- function(bill_id) {
     }
     
     emendas_df <- emendas_df %>%
-      tidyr::unnest() %>%
-      plyr::rename(
-        replace = c(
-          numero_emenda = "numero",
-          colegiado_apresentacao = "local",
-          autoria_emenda_autor_nome_autor = "autor",
-          textos_emenda_texto_emenda_url_texto = "inteiro_teor",
-          textos_emenda_texto_emenda_tipo_documento = "tipo_documento",
-          autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar = "partido",
-          autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar = "uf",
-          autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar = "id_autor"),
-        warn_missing = FALSE
-      ) %>%
+      tidyr::unnest(cols = c()) %>%
+      dplyr::rename(
+          numero = numero_emenda,
+          local = colegiado_apresentacao,
+          autor = nome_autor,
+          inteiro_teor = url_texto,
+          tipo_documento = tipo_documento,
+          partido = identificacao_parlamentar_sigla_partido_parlamentar,
+          uf = identificacao_parlamentar_uf_parlamentar,
+          id_autor = identificacao_parlamentar_codigo_parlamentar) %>%
       dplyr::mutate(
         "partido" = paste0(partido, "/", uf),
         "casa" = "senado"
@@ -160,6 +168,13 @@ fetch_emendas_senado <- function(bill_id) {
       emendas_df %>% 
       dplyr::mutate(tipo_documento = "")
   }
+  
+  if ("url_texto" %in% names(emendas_df)) {
+    emendas_df <-
+      emendas_df %>% 
+      dplyr::rename(inteiro_teor = url_texto)
+  }
+  
   if (!("inteiro_teor" %in% names(emendas_df))) {
     emendas_df <-
       emendas_df %>% 
