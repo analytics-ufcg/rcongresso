@@ -53,10 +53,16 @@ fetch_emendas_senado <- function(bill_id) {
     magrittr::extract2("Materia") %>%
     magrittr::extract2("Emendas") %>%
     magrittr::extract2("Emenda") %>% 
-    preprocess_emendas_senado()
+    parse_emendas_senado()
 }
 
-preprocess_emendas_senado <- function(emendas_raw_df) {
+#' @title Returns emendas of a proposição from Senado
+#' @description Fetchs a dataframe with emendas's data of a proposição from Senado.
+#' @param bill_id Proposição's ID from senado.
+#' @return Dataframe with informations about emendas of a proposição from Senado.
+#' @rdname fetch_emendas_senado
+#' @export
+.parse_emendas_senado <- function(emendas_raw_df) {
   colunas_que_mudam_decisao = c("Decisao.Descricao", 
                                 "Decisao.Data", 
                                 "Decisao.LocalDeliberacao.CodigoLocal", 
@@ -79,8 +85,11 @@ preprocess_emendas_senado <- function(emendas_raw_df) {
   }
   
   if ('Subemendas.Subemenda' %in% names(emendas_df)) {
-    subemendas_df <- preprocess_emendas_senado(emendas_df$Subemendas.Subemenda)
-    emendas_df$Subemendas.Subemenda <- NULL
+    subemendas_df <- parse_emendas_senado(emendas_df$Subemendas.Subemenda %>% purrr::map_df( ~ .))
+    emendas_df <-
+      emendas_df %>% 
+      dplyr::select(-Subemendas.Subemenda) %>% 
+      unique()
   }
   
   if ('Decisao' %in% names(emendas_df) | 'Decisoes.Decisao' %in% names(emendas_df)) {
