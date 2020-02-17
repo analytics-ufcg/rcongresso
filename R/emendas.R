@@ -53,15 +53,13 @@ fetch_emendas_senado <- function(bill_id) {
     magrittr::extract2("Materia") %>%
     magrittr::extract2("Emendas") %>%
     magrittr::extract2("Emenda") %>% 
-    parse_emendas_senado()
+    .parse_emendas_senado()
 }
 
-#' @title Returns emendas of a proposição from Senado
-#' @description Fetchs a dataframe with emendas's data of a proposição from Senado.
-#' @param bill_id Proposição's ID from senado.
-#' @return Dataframe with informations about emendas of a proposição from Senado.
-#' @rdname fetch_emendas_senado
-#' @export
+#' @title Parses emendas json data received from Senado API
+#' @description Parses emendas's data of a proposição from Senado.
+#' @param emendas_raw_df Dataframe with raw data about the emendas of a proposição.
+#' @return Dataframe with structured information about emendas of a proposição from Senado.
 .parse_emendas_senado <- function(emendas_raw_df) {
   colunas_que_mudam_decisao = c("Decisao.Descricao", 
                                 "Decisao.Data", 
@@ -85,14 +83,22 @@ fetch_emendas_senado <- function(bill_id) {
   }
   
   if ('Subemendas.Subemenda' %in% names(emendas_df)) {
-    subemendas_df <- parse_emendas_senado(emendas_df$Subemendas.Subemenda %>% purrr::map_df( ~ .))
+    subemendas_df <- .parse_emendas_senado(emendas_df$Subemendas.Subemenda %>% purrr::map_df( ~ .))
     emendas_df <-
       emendas_df %>% 
       dplyr::select(-Subemendas.Subemenda) %>% 
       unique()
   }
   
+  if (sum(stringr::str_ends(names(emendas_df),'Decisao')) > 0) {
+    decisao_column <- names(emendas_df)[stringr::str_ends(names(emendas_df),'Decisao')]
+    emendas_df <- 
+      emendas_df %>% 
+      tidyr::unnest(cols = all_of(decisao_column))
+  }
+  
   if ('Decisao' %in% names(emendas_df) | 'Decisoes.Decisao' %in% names(emendas_df)) {
+    
     emendas_df$Decisoes.Decisao <- NULL
   } else if (all(colunas_que_mudam_decisao %in% names(emendas_df))) {
       emendas_df <-
