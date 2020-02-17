@@ -222,7 +222,7 @@ fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
 .fetch_emendas_camara_auxiliar <- function(id) {
  rcongresso::fetch_proposicao(id, 'camara') %>%
     dplyr::mutate(autor = rcongresso::scrap_autores_from_website(.$id), casa = "camara") %>%
-    dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, statusProposicao.url))
+    dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, urlInteiroTeor))
 }
 
 #' @title Generates a dataframe from a column with a linked list
