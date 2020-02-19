@@ -542,3 +542,19 @@ run_function_with_delay <- function(delay, fun) {
   Sys.sleep(delay)
   fun
 }
+
+#' @title Unnests a nested column from a dataframe
+#' @description Unnests a nested column from a dataframe
+#' @param base_df base dataframe from which nested column will be unnested
+#' @param base_columns base columns to keep after dataframe is unnested
+#' @param nested_column colum to be unnested
+#' @return the dataframe with both the base and unnested column columns
+.unnest_df_column <- function(base_df, base_columns, nested_column) {
+  unnested_column_df <- base_df %>% 
+    dplyr::select_at(c(base_columns, nested_column)) %>% 
+    tidyr::unnest(cols = all_of(nested_column)) %>% 
+    dplyr::distinct() %>% 
+    dplyr::group_by_at(base_columns) %>% 
+    dplyr::summarise_each(~ paste(., collapse = ";")) %>% 
+    dplyr::ungroup()  
+}
