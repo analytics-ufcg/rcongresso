@@ -139,7 +139,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::select(c(data, hora, nome, id_proposicao, local)) %>%
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
-          tidyr::unnest() %>%
+          tidyr::unnest(cols = c(nome, id_proposicao)) %>%
           dplyr::mutate(data = lubridate::dmy_hm(paste(data, hora))) %>%
           dplyr::select(c(data, nome, id_proposicao, local)) %>%
           dplyr::filter(nome != "")
@@ -186,22 +186,17 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @return char
 .get_id_proposicao_agenda_senado_comissoes <- function(lista_com_id){
   id <- ""
-  if(length(lista_com_id$Tipo) == 1 ) {
-    if (lista_com_id$Tipo == "Deliberativa") {
-      if (!is.null(lista_com_id$Itens.Item)) {
-        id <- purrr::map_chr(lista_com_id$Itens.Item, ~ paste(.$Codigo, collapse = ","))
-      }else {
-        id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
-      }
-    }
-  }else {
-    if ("Deliberativa" %in% lista_com_id$Tipo) {
-      if(!is.null(lista_com_id$Itens.Item)) {
-        id <- purrr::map_chr(lista_com_id$Itens.Item, ~ paste(.$Codigo, collapse = ","))
-      }else {
-        id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
-      }
-    }
+  if(((length(lista_com_id$Tipo) == 1) & (lista_com_id$Tipo == "Deliberativa")) |
+     ((length(lista_com_id$Tipo) > 1) & ("Deliberativa" %in% lista_com_id$Tipo))) {
+        if (!is.null(lista_com_id$Itens.Item)) {
+          id <- purrr::map_chr(lista_com_id$Itens.Item, ~ paste(.$Codigo, collapse = ","))
+        } else {
+          if ((!is.na(lista_com_id$Itens) && ("Codigo" %in% names(lista_com_id$Itens)))) {
+            id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
+          } else {
+            id <- purrr::map_chr(lista_com_id$Itens, ~ paste(NA, collapse = ","))  
+          }
+        }
   }
   paste(id, collapse = ",")
 }
@@ -212,22 +207,17 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @return char
 .get_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
   nome <- ""
-  if(length(lista_com_nome$Tipo) == 1 ) {
-    if (lista_com_nome$Tipo == "Deliberativa") {
-      if (!is.null(lista_com_nome$Itens.Item)) {
-        nome <- purrr::map_chr(lista_com_nome$Itens.Item, ~ paste(.$Nome, collapse = ","))
-      }else {
-        nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(.$Nome, collapse = ","))
-      }
-    }
-  }else {
-    if ("Deliberativa" %in% lista_com_nome$Tipo) {
-      if(!is.null(lista_com_nome$Itens.Item)) {
-        nome <- purrr::map_chr(lista_com_nome$Itens.Item, ~ paste(.$Nome, collapse = ","))
-      }else {
-        nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(.$Nome, collapse = ","))
-      }
-    }
+  if(((length(lista_com_nome$Tipo) == 1) & (lista_com_nome$Tipo == "Deliberativa")) |
+     ((length(lista_com_nome$Tipo) > 1) & ("Deliberativa" %in% lista_com_nome$Tipo))) {
+        if (!is.null(lista_com_nome$Itens.Item)) {
+          nome <- purrr::map_chr(lista_com_nome$Itens.Item, ~ paste(.$Nome, collapse = ","))
+        } else {
+          if ((!is.na(lista_com_nome$Itens) && ("Nome" %in% names(lista_com_nome$Itens)))) {
+            nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(.$Nome, collapse = ","))
+          } else {
+            nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(NA, collapse = ","))
+          }
+        }
   }
   paste(nome, collapse = ",")
 }
@@ -257,7 +247,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
     json_proposicao %>%
     dplyr::filter(situacao != 'Cancelada' &
                     !(iconv(c(descricaoTipo), from="UTF-8", to="ASCII//TRANSLIT") %in% descricoes_inuteis)) %>%
-    tidyr::unnest()
+    tidyr::unnest(cols=c(orgaos), names_repair=tidyr::tidyr_legacy)
 
   agenda %>%
     dplyr::rowwise() %>%
