@@ -66,10 +66,11 @@ fetch_emendas_senado <- function(bill_id) {
   base_emendas_cols <- c("CodigoEmenda", "NumeroEmenda", "DataApresentacao", 
                          "ColegiadoApresentacao", "DescricaoTurno", "DescricaoTipoEmenda")
 
-  if (is.null(emendas_raw_df) | (nrow(emendas_df) == 0)) {
+  if (is.null(emendas_raw_df) || (nrow(emendas_raw_df) == 0)) {
     emendas_full <- stats::setNames(
-      data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), 
-      names(.COLNAMES_EMENDAS_SENADO))
+        data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), 
+        names(.COLNAMES_EMENDAS_SENADO)) %>% 
+      tibble::as.tibble()
     return(emendas_full)
   }
     
