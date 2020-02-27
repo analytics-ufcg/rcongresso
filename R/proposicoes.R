@@ -708,6 +708,7 @@ fetch_autores <- function(proposicao_id = NULL, casa, sigla_tipo = "") {
 #' @examples
 #' \dontrun{
 #' .fetch_autores_camara(2121442)
+#' }
 .fetch_autores_camara <- function (proposicao_id = NULL, sigla_tipo = "" ) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autores_info <- .camara_api(autor_uri) %>%
