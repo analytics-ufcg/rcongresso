@@ -6,7 +6,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
 .get_json <- function(response){
   json_response <- tibble::tibble()
   if (!is.null(response)) {
-    json_response <- httr::content(response, as = "text") %>%
+    json_response <- httr::content(response, as = "text", encoding="UTF-8") %>%
       jsonlite::fromJSON(flatten = TRUE)  
   }
   

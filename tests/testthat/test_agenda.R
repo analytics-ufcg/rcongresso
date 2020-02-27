@@ -14,6 +14,8 @@ setup <- function(){
   agenda_comissoes_senado_1 <<- fetch_agenda_senado_comissoes("2019-01-10", "2019-01-17")
   agenda_comissoes_senado_2 <<- fetch_agenda_senado_comissoes("2018-08-13", "2018-08-17")
   agenda_comissoes_senado_3 <<- fetch_agenda_senado_comissoes("2018-10-22", "2018-10-26")
+  agenda_comissoes_senado_4 <<- fetch_agenda_senado_comissoes("2020-01-27", "2020-01-31")
+  agenda_comissoes_senado_5 <<- fetch_agenda_senado_comissoes("2020-02-03", "2020-02-07")
 
   return(TRUE)
 }
@@ -55,6 +57,9 @@ test <- function(){
     expect_true(is.data.frame(agenda_comissoes_senado_1))
     expect_true(is.data.frame(agenda_comissoes_senado_2))
     expect_true(is.data.frame(agenda_comissoes_senado_3))
+    expect_true(is.data.frame(agenda_comissoes_senado_4))
+    expect_true(is.data.frame(agenda_comissoes_senado_5))
+    expect_true(nrow(agenda_comissoes_senado_4) == 0)
   })
 
   test_that("fetch_agenda_camara()", {
@@ -65,6 +70,7 @@ test <- function(){
 
   test_that("Have many rows", {
     expect_true(nrow(agenda_comissoes_senado) >= 100)
+    expect_true(nrow(agenda_comissoes_senado_5) > 50)
   })
 
 }
