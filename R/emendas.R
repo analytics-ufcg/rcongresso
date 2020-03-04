@@ -47,134 +47,97 @@ fetch_emendas_senado <- function(bill_id) {
 
   json_emendas <- .senado_api(path = path, asList = TRUE)
 
-  emendas_df <- 
+  emendas_raw_df <- 
     json_emendas %>%
     magrittr::extract2("EmendaMateria") %>%
     magrittr::extract2("Materia") %>%
     magrittr::extract2("Emendas") %>%
-    magrittr::extract2("Emenda") 
+    magrittr::extract2("Emenda")
   
-  if ('Decisao' %in% names(emendas_df) | 'Decisoes.Decisao' %in% names(emendas_df)) {
-    emendas_df$Decisoes.Decisao <- NULL
-    emendas_df <- 
-      emendas_df %>%
-      purrr::map_df( ~ .) %>% 
-      .rename_df_columns() 
-  }else {
-    colunas_que_mudam_decisao = c("Decisao.Descricao", "Decisao.Data", "Decisao.LocalDeliberacao.CodigoLocal", "Decisao.LocalDeliberacao.SiglaLocal", "Decisao.LocalDeliberacao.NomeLocal")
-    if (all(colunas_que_mudam_decisao %in% names(emendas_df))) {
-      emendas_df <-
-        emendas_df %>% 
-        dplyr::select(-colunas_que_mudam_decisao) %>% 
-        unique()
-    }
-    emendas_df <- 
-      emendas_df %>%
-      purrr::map_df( ~ .) %>%
-      .rename_df_columns() %>% 
-      unique()
+  parsed_emendas <- emendas_raw_df %>% 
+    .parse_emendas_senado()
+}
+
+#' @title Parses emendas json data received from Senado API
+#' @description Parses emendas's data of a proposição from Senado.
+#' @param emendas_raw_df Dataframe with raw data about the emendas of a proposição.
+#' @return Dataframe with structured information about emendas of a proposição from Senado.
+.parse_emendas_senado <- function(emendas_raw_df) {
+  base_emendas_cols <- c("CodigoEmenda", "NumeroEmenda", "DataApresentacao", 
+                         "ColegiadoApresentacao", "DescricaoTurno", "DescricaoTipoEmenda")
+
+  if (is.null(emendas_raw_df) || (nrow(emendas_raw_df) == 0)) {
+    emendas_full <- stats::setNames(
+        data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), 
+        names(.COLNAMES_EMENDAS_SENADO)) %>% 
+      tibble::as.tibble()
+    return(emendas_full)
   }
-  
-  num_emendas = nrow(emendas_df)
-
-  if (num_emendas == 0) {
-    emendas_df <- stats::setNames(
-      data.frame(matrix(ncol = length(.COLNAMES_EMENDAS_SENADO), nrow = 0)), names(.COLNAMES_EMENDAS_SENADO)
-      )
-
-  }
-  else if (num_emendas == 1 & !("subemendas_submenda" %in% names(emendas_df))) {
-    texto <- .generate_dataframe(emendas_df$textos_emenda) 
-
-    autoria <- .generate_dataframe(emendas_df$autoria_emenda)
-
-    autoria <- autoria %>%
-      dplyr::mutate(
-        partido = paste0(
-          autoria$identificacao_parlamentar_sigla_partido_parlamentar,
-          "/",
-          autoria$identificacao_parlamentar_uf_parlamentar
-          )
-        )
-
-    if ("tipo_documento" %in% names(texto)) {
-      texto <- 
-        texto %>%
-        dplyr::select("tipo_documento", "url_texto")
-      
-      emendas_df <- emendas_df %>%
-        dplyr::mutate("autor" = autoria$nome_autor,
-                      "partido" = autoria$partido,
-                      "tipo_documento" = texto$tipo_documento,
-                      "inteiro_teor" = texto$url_texto,
-                      "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
-                      "casa" = 'senado') %>%
-        dplyr::select(-"autoria_emenda", -"textos_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
-    }else {
-      if ("subemendas_submenda" %in% names(emendas_df)) {
-        emendas_df <-
-          emendas_df %>% 
-          dplyr::select(-subemendas_submenda)
-      }
-      emendas_df <- emendas_df %>%
-        dplyr::mutate("autor" = autoria$nome_autor,
-                      "partido" = autoria$partido,
-                      "tipo_documento" = "",
-                      "inteiro_teor" = "",
-                      "id_autor" = autoria$identificacao_parlamentar_codigo_parlamentar,
-                      "casa" = 'senado') %>%
-        dplyr::select(-"autoria_emenda", numero = "numero_emenda", local = "colegiado_apresentacao")
-    }
-
-  }
-  else {
-    if (any(stringr::str_detect(names(emendas_df), "subemendas_subemenda"))) {
-      emendas_df <-
-        emendas_df %>% 
-        dplyr::select(-dplyr::matches("subemendas_subemenda"))
-    }
     
-    emendas_df <- emendas_df %>%
-      tidyr::unnest() %>%
-      plyr::rename(
-        replace = c(
-          numero_emenda = "numero",
-          colegiado_apresentacao = "local",
-          autoria_emenda_autor_nome_autor = "autor",
-          textos_emenda_texto_emenda_url_texto = "inteiro_teor",
-          textos_emenda_texto_emenda_tipo_documento = "tipo_documento",
-          autoria_emenda_autor_identificacao_parlamentar_sigla_partido_parlamentar = "partido",
-          autoria_emenda_autor_identificacao_parlamentar_uf_parlamentar = "uf",
-          autoria_emenda_autor_identificacao_parlamentar_codigo_parlamentar = "id_autor"),
-        warn_missing = FALSE
-      ) %>%
-      dplyr::mutate(
-        "partido" = paste0(partido, "/", uf),
-        "casa" = "senado"
-      )
-
+  emendas_df <- emendas_raw_df
+  subemendas_df <- tibble::tibble()
+  textos_emendas <- emendas_df %>% dplyr::select_at(base_emendas_cols)
+  autoria_emendas <- emendas_df %>% dplyr::select_at(base_emendas_cols)
+  decisao_emendas <- emendas_df %>% dplyr::select_at(base_emendas_cols)
+  
+  if ('TextosEmenda.TextoEmenda' %in% names(emendas_df)) {
+    textos_emendas <- .unnest_df_column(emendas_df,base_emendas_cols,'TextosEmenda.TextoEmenda')
+    emendas_df <- emendas_df %>% dplyr::select(-TextosEmenda.TextoEmenda)
   }
-
-  if (!("tipo_documento" %in% names(emendas_df))) {
-    emendas_df <-
-      emendas_df %>% 
-      dplyr::mutate(tipo_documento = "")
+  
+  if ('AutoriaEmenda.Autor' %in% names(emendas_df)) {
+    autoria_emendas <- .unnest_df_column(emendas_df,base_emendas_cols,'AutoriaEmenda.Autor')
+    emendas_df <- emendas_df %>% dplyr::select(-AutoriaEmenda.Autor)
   }
-  if (!("inteiro_teor" %in% names(emendas_df))) {
-    emendas_df <-
-      emendas_df %>% 
-      dplyr::mutate(inteiro_teor = "")
+  
+  if (sum(stringr::str_ends(names(emendas_df),'Decisao')) > 0) {
+    decisao_column <- names(emendas_df)[stringr::str_ends(names(emendas_df),'Decisao')]
+    decisao_emendas <-.unnest_df_column(emendas_df,base_emendas_cols,decisao_column)
+    emendas_df <- emendas_df %>% dplyr::select(-all_of(decisao_column))
   }
-  emendas_df %>%
-    dplyr::mutate("autor" = paste0(autor, " ", partido),
-                  "numero" = as.integer(numero),
-                  "tipo_documento" = as.character(tipo_documento),
-                  "inteiro_teor" = as.character(inteiro_teor)) %>%
+  
+  
+  if ('Subemendas.Subemenda' %in% names(emendas_df)) {
+    subemendas_df <- .parse_emendas_senado(emendas_df$Subemendas.Subemenda %>% purrr::map_df( ~ .))
+    emendas_df <- emendas_df %>% dplyr::select(-Subemendas.Subemenda)
+  }
+  
+  emendas_full <-
+    emendas_df %>% 
+    dplyr::select_at(base_emendas_cols) %>% 
+    dplyr::left_join(textos_emendas, by=base_emendas_cols) %>% 
+    dplyr::left_join(autoria_emendas, by=base_emendas_cols) %>% 
+    dplyr::left_join(decisao_emendas, by=base_emendas_cols) %>% 
+    .rename_df_columns() %>% 
+    dplyr::distinct()
+  
+  num_emendas = nrow(emendas_full)
+  
+  parsed_emendas <- emendas_full %>%
+    tidyr::unnest(cols = c()) %>%
+    dplyr::rename(numero = numero_emenda,
+                  local = colegiado_apresentacao,
+                  autor = nome_autor,
+                  inteiro_teor = url_texto,
+                  partido = identificacao_parlamentar_sigla_partido_parlamentar,
+                  uf = identificacao_parlamentar_uf_parlamentar,
+                  id_autor = identificacao_parlamentar_codigo_parlamentar) %>%
+    dplyr::mutate(partido = paste0(partido, "/", uf)) %>% 
+    dplyr::mutate(casa = "senado",
+                  autor = paste0(autor, " ", partido),
+                  numero = suppressWarnings(ifelse(is.na(as.integer(numero)),0,as.integer(numero))),
+                  tipo_documento = as.character(tipo_documento),
+                  inteiro_teor = as.character(inteiro_teor)) %>%
     dplyr::select(-dplyr::starts_with("autoria_emenda"),
                   -dplyr::starts_with("textos_emenda"),
                   -dplyr::starts_with("uf")) %>%
     tibble::as_tibble() %>% 
-    dplyr::filter(!is.na(numero))
+    dplyr::bind_rows(subemendas_df) %>% 
+    dplyr::arrange(codigo_emenda, numero, data_apresentacao) %>% 
+    dplyr::group_by(codigo_emenda, numero, descricao_tipo_emenda, data_apresentacao, local, descricao_turno) %>% 
+    dplyr::arrange({if ('decisao_data' %in% names(.)) decisao_data else data_apresentacao}) %>% 
+    dplyr::filter(dplyr::row_number() == dplyr::n()) %>% 
+    dplyr::ungroup()
 }
 
 #' @title Fetches proposition's emendas
