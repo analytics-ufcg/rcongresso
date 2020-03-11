@@ -182,8 +182,8 @@ fetch_proposicao_senado <- function(id = NULL) {
     proposicao_data %>%
     magrittr::extract2("Autoria") %>%
     magrittr::extract2("Autor") %>%
-    tibble::as_tibble() %>% 
-    dplyr::rowwise() %>% 
+    tibble::as_tibble() %>%
+    dplyr::rowwise() %>%
     dplyr::transmute(
       autor = paste(
         paste(NomeAutor,
@@ -273,7 +273,7 @@ fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
     warning("filter_texto_materia deve ser: T ou F.")
     return(tibble::tibble())
   }
-  
+
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
 
   if (is.null(proposicao_data$Textos)) {
@@ -294,13 +294,13 @@ fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
     proposicao_complete <-
       proposicao_texto %>%
       tibble::add_column(
-        !!!proposicao_ids) %>% 
-      dplyr::mutate(casa = 'senado') %>% 
-      .rename_df_columns() %>% 
+        !!!proposicao_ids) %>%
+      dplyr::mutate(casa = 'senado') %>%
+      .rename_df_columns() %>%
       unique()
 
   }
-  
+
   if (filter_texto_materia) {
     proposicao_complete <-
       proposicao_complete %>%
@@ -308,7 +308,7 @@ fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
         .remove_special_character(descricao_texto),
         "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario|Texto final"))
   }
-  
+
   return(proposicao_complete %>% .assert_dataframe_completo(.COLNAMES_DOCUMENTOS_SENADO) %>% .coerce_types(.COLNAMES_DOCUMENTOS_SENADO))
 }
 
@@ -457,7 +457,7 @@ scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materi
     warning("filter_texto_materia deve ser: T ou F.")
     return(tibble::tibble())
   }
-  
+
   if (!is.na(casa) & tolower(casa) == 'senado') {
     documentos_df <-
       .get_with_exponential_backoff_cached(paste0(.SENADO_WEBSITE_LINK, .MATERIA_SENADO_PATH, id_prop))
@@ -481,7 +481,7 @@ scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materi
     unique() %>%
     .rename_documentos_senado() %>%
     dplyr::mutate(id_principal = id_prop,
-                  casa = 'senado') 
+                  casa = 'senado')
 
   if (filter_texto_materia) {
     documentos_df <-
@@ -493,7 +493,7 @@ scrap_senado_congresso_documentos <- function(id_prop, casa, filter_texto_materi
 
   documentos_df %>%
     .assert_dataframe_completo(.COLNAMES_SCRAP) %>%
-    .coerce_types(.COLNAMES_SCRAP) %>% 
+    .coerce_types(.COLNAMES_SCRAP) %>%
     tibble::as_tibble()
 }
 
@@ -748,7 +748,11 @@ scrap_autores_from_website <- function(id_prop) {
     rvest::html_text()
   Sys.sleep(.DEF_SCRAP_SLEEP_TIME)
 
-  paste0(autores_prop_text[3:length(autores_prop_text)], collapse = ", ")
+  autores <- autores_prop_text[3:length(autores_prop_text)] %>%
+    trimws(which = c("both")) %>%
+    unique()
+
+  paste0(autores, collapse = ", ")
 }
 
 
