@@ -69,7 +69,7 @@ test <- function(){
   })
 
   test_that("Have many rows", {
-    expect_true(nrow(agenda_comissoes_senado) > 50)
+    expect_true(nrow(agenda_comissoes_senado_5) > 50)
   })
 
 }
