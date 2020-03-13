@@ -48,6 +48,10 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   
   while((!resp_in_cache) && 
         ((status_code >= .COD_ERRO_CLIENTE) && (num_tries < max_attempts))) {
+    if (status_code == .COD_ERRO_NOT_FOUND) {
+      break
+    }
+    
     if (num_tries > 0) {
       cat("\n","Error on Calling URL:",url," - Status Code:",status_code)
       sleep_time <- base_sleep_time^(num_tries)  
