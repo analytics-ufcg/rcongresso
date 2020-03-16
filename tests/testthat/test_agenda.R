@@ -52,7 +52,6 @@ test <- function(){
     expect_true(is.data.frame(agenda_senado))
     expect_true(is.data.frame(materias_senado))
     expect_true(is.data.frame(oradores_senado))
-    expect_true(is.data.frame(agenda_comissoes_senado))
     expect_true(is.data.frame(agenda_comissoes_senado_1))
     expect_true(is.data.frame(agenda_comissoes_senado_2))
     expect_true(is.data.frame(agenda_comissoes_senado_3))
