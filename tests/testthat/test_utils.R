@@ -27,12 +27,12 @@ test_that(".coerce_types", {
 })
 
 test_that(".get_with_exponential_backoff_cached returns NULL with warning when base_URL is null", {
-  expect_null(.get_with_exponential_backoff_cached(base_url=NULL))
+  suppressWarnings(expect_null(.get_with_exponential_backoff_cached(base_url=NULL)))
   expect_warning(.get_with_exponential_backoff_cached(base_url=NULL))
 })
 
 test_that(".get_with_exponential_backoff_cached returns NULL with warning when base_URL is empty", {
-  expect_null(.get_with_exponential_backoff_cached(base_url=''))
+  suppressWarnings(expect_null(.get_with_exponential_backoff_cached(base_url='')))
   expect_warning(.get_with_exponential_backoff_cached(base_url=''))
 })
 
@@ -75,4 +75,22 @@ test_that(".unnest_df_column returns correct result", {
   expect_true(nrow(decisao_emendas) == nrow(emendas_raw_df))
   
   expect_equal(stringr::str_count(decisao_emendas$Descricao, ';'), as.integer(c(3,3)))
+})
+
+test_that(".get_with_exponential_backoff_cached does not apply exponential backoff when response code is 404", {
+  start_time <- Sys.time()
+  tryCatch({
+    .get_with_exponential_backoff_cached(base_url="https://dadosabertos.camara.leg.br",
+                                         path='/api/v2/proposicoes/-1',
+                                         base_sleep_time=1,
+                                         max_attempts=1)
+  }, warning = function(w) {
+  }, error = function(e) {
+  }, finally = {
+    end_time <- Sys.time()  
+  })
+  
+  elapsed_time <- end_time - start_time
+  
+  expect_true(elapsed_time < 3)
 })
