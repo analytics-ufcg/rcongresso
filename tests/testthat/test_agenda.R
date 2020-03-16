@@ -10,7 +10,6 @@ setup <- function(){
   agenda_senado <<- lista_agenda_senado$agenda
   materias_senado <<- lista_agenda_senado$materias
   oradores_senado <<- lista_agenda_senado$oradores
-  agenda_comissoes_senado <<- fetch_agenda_senado_comissoes("2016-05-01", "2016-05-25")
   agenda_comissoes_senado_1 <<- fetch_agenda_senado_comissoes("2019-01-10", "2019-01-17")
   agenda_comissoes_senado_2 <<- fetch_agenda_senado_comissoes("2018-08-13", "2018-08-17")
   agenda_comissoes_senado_3 <<- fetch_agenda_senado_comissoes("2018-10-22", "2018-10-26")
