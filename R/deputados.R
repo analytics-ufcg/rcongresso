@@ -153,8 +153,14 @@ fetch_ids_deputados_by_leg <- function(legislatura = .LEGISLATURA_ATUAL) {
   path <- paste0(.DEPUTADOS_PATH, "?idLegislatura=", legislatura)
 
   ids_dep <-
-    .camara_api(path) %>%
-    dplyr::distinct(id)
+    .camara_api(path)
+
+  if(nrow(ids_dep) == 0) {
+    warning("Não há dados para esta legislatura")
+  } else {
+    ids_dep <- ids_dep %>%
+      dplyr::distinct(id)
+  }
 
   ids_dep
 }

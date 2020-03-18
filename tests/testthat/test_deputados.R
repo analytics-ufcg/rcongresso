@@ -29,6 +29,11 @@ all_deputados_ids <- fetch_ids_deputados() %>% dplyr::sample_n(15)
 
 all_deputados <- fetch_all_deputados(all_deputados_ids)
 
+
+all_deputados_ids_leg <- fetch_ids_deputados_by_leg() %>% dplyr::sample_n(15)
+
+all_deputados_leg <- fetch_all_deputados(all_deputados_ids_leg)
+
 # Testes
 # Os nomes das colunas e os tipos estão definidos em colunas_constants.R
 test_that("Is dataframe", {
@@ -80,6 +85,12 @@ test_that("fetch_all_deputados()", {
   expect_true(nrow(fetch_all_deputados(fetch_deputados_parametro_invalido)) == 0)
   expect_true(nrow(fetch_all_deputados(all_deputados_ids_vazio)) == 0)
   expect_true(all(all_deputados$ultimo_status_id_legislatura >= 40))
+})
+
+test_that("fetch_ids_deputados_by_leg()", {
+  expect_true(all(sapply(all_deputados_leg, class) %in% .COLNAMES_DEP_INFO_ID))
+  expect_warning(fetch_ids_deputados_by_leg(0), "Não há dados para esta legislatura")
+  expect_true(all(all_deputados_leg$ultimo_status_id_legislatura >= 56))
 })
 
 
