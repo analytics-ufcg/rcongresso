@@ -3,7 +3,6 @@
 \docType{package}
 \name{rcongresso}
 \alias{rcongresso}
-\alias{rcongresso-package}
 \title{rcongresso: R Package to access Brazil's national congress data based on its RESTful API.}
 \description{
 The package wraps API endpoints for propositions, deputies, votings and votes.

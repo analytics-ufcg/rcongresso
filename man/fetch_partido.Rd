@@ -4,9 +4,15 @@
 \alias{fetch_partido}
 \title{Fetches parties from API using a query.}
 \usage{
-fetch_partido(id = NULL, sigla = NULL, dataInicio = NULL,
-  dataFim = NULL, idLegislatura = NULL, itens = NULL,
-  ordenarPor = NULL)
+fetch_partido(
+  id = NULL,
+  sigla = NULL,
+  dataInicio = NULL,
+  dataFim = NULL,
+  idLegislatura = NULL,
+  itens = NULL,
+  ordenarPor = NULL
+)
 }
 \arguments{
 \item{id}{Party's ID}

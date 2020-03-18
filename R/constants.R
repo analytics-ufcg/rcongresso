@@ -57,6 +57,7 @@
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
 .SENADO_TEXTOS_MATERIA <- "dadosabertos/materia/textos/"
 .SENADORES_PATH <- "dadosabertos/senador/lista/legislatura/"
+.SENADOR_PATH <- "dadosabertos/senador/"
 .SENADO_PROPOSICAO_PATH_SIGLA <- "dadosabertos/materia/pesquisa/lista"
 
 # Link do repositório do rcongresso
