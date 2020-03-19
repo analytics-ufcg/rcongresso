@@ -98,3 +98,20 @@ fetch_all_senadores <- function(ids_sen) {
 
   senadores
 }
+
+#' @title Fetches senators in office ids
+#' @description Fetches the ids of the senators in office
+#' @return Dataframe containing if of the senators in office
+#' @rdname fetch_ids_senadores_em_exercicio
+#' @export
+fetch_ids_senadores_em_exercicio <- function() {
+  senator_data <- .senado_api(paste0(.SENADORES_LISTA_PATH, "atual"), asList = TRUE)
+  senator_data <- senator_data$ListaParlamentarEmExercicio$Parlamentares
+
+  senators <-
+    senator_data %>%
+    magrittr::extract2("Parlamentar") %>%
+    dplyr::distinct(id = IdentificacaoParlamentar.CodigoParlamentar)
+
+  senators
+}

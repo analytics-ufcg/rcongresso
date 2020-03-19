@@ -49,3 +49,7 @@ test_that("fetch_senadores(legis_inicial, legis_final)", {
 test_that("fetch_senadores(legis_inicial, legis_final)", {
   expect_error(fetch_senadores(-1, -1))
 })
+
+test_that("fetch_ids_senadores_em_exercicio()", {
+  expect_true(nrow(fetch_ids_senadores_em_exercicio()) == 81)
+})
