@@ -7,9 +7,9 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   json_response <- tibble::tibble()
   if (!is.null(response)) {
     json_response <- httr::content(response, as = "text", encoding="UTF-8") %>%
-      jsonlite::fromJSON(flatten = TRUE)  
+      jsonlite::fromJSON(flatten = TRUE)
   }
-  
+
   return(json_response)
 }
 
@@ -29,37 +29,37 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   stop(sprintf(.MENSAGEM_ERRO_REQ, error_code, api_url), call. = FALSE)
 }
 
-.get_with_exponential_backoff_cached <- function(base_url, path=NULL, query=NULL, 
-                                                 base_sleep_time=.POWER_BASE_SLEEP_TIME, 
-                                                 max_attempts=.MAX_TENTATIVAS_REQ, 
+.get_with_exponential_backoff_cached <- function(base_url, path=NULL, query=NULL,
+                                                 base_sleep_time=.POWER_BASE_SLEEP_TIME,
+                                                 max_attempts=.MAX_TENTATIVAS_REQ,
                                                  accept_json=FALSE) {
   num_tries <- 0
   status_code = 1000
   resp_in_cache = FALSE
   resp <- NULL
-  
+
   if (is.null(base_url) || base_url == '') {
     warning("URL deve ser não-nula e não-vazia.")
     return(resp)
   }
-  
+
   url <- httr::modify_url(base_url, path = path, query = query)
-  
-  
-  while((!resp_in_cache) && 
+
+
+  while((!resp_in_cache) &&
         ((status_code >= .COD_ERRO_CLIENTE) && (num_tries < max_attempts))) {
     if (status_code == .COD_ERRO_NOT_FOUND) {
       break
     }
-    
+
     if (num_tries > 0) {
       cat("\n","Error on Calling URL:",url," - Status Code:",status_code)
-      sleep_time <- base_sleep_time^(num_tries)  
+      sleep_time <- base_sleep_time^(num_tries)
       Sys.sleep(sleep_time)
     }
-    
+
     resp <- .get_from_cache(api_url)
-    
+
     if (is.null(resp)) {
       if (accept_json) resp <- httr::GET(url, httr::accept_json())
       else resp <- httr::GET(url)
@@ -71,20 +71,20 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
       status_code <- 200
     }
   }
-  
+
   if ((status_code >= .COD_ERRO_CLIENTE)) {
     warning("\n","Could not fetch from:",url," - Status Code:",status_code)
     .throw_req_error(status_code, url)
   }
-  
+
   if (!resp_in_cache) .put_in_cache(url, resp)
-  
+
   resp
 }
 
 .get_from_api_with_exponential_backoff_cached <- function(api_base=NULL, path=NULL, query=NULL){
   resp <- .get_with_exponential_backoff_cached(api_base, path, query, accept_json=TRUE)
-  
+
   if (httr::http_type(resp) != "application/json") {
     stop(.ERRO_RETORNO_JSON, call. = FALSE)
   }
@@ -554,11 +554,48 @@ run_function_with_delay <- function(delay, fun) {
 #' @param nested_column colum to be unnested
 #' @return the dataframe with both the base and unnested column columns
 .unnest_df_column <- function(base_df, base_columns, nested_column) {
-  unnested_column_df <- base_df %>% 
-    dplyr::select_at(c(base_columns, nested_column)) %>% 
-    tidyr::unnest(cols = all_of(nested_column)) %>% 
-    dplyr::distinct() %>% 
-    dplyr::group_by_at(base_columns) %>% 
-    dplyr::summarise_each(~ paste(., collapse = ";")) %>% 
-    dplyr::ungroup()  
+  unnested_column_df <- base_df %>%
+    dplyr::select_at(c(base_columns, nested_column)) %>%
+    tidyr::unnest(cols = all_of(nested_column)) %>%
+    dplyr::distinct() %>%
+    dplyr::group_by_at(base_columns) %>%
+    dplyr::summarise_each(~ paste(., collapse = ";")) %>%
+    dplyr::ungroup()
+}
+
+#' @title Create a dataframe from list
+#' @description Create a dataframe with senator's info
+#' @param senator_data base list from which selected column will be returned
+#' @return the dataframe with the senator's indo
+.create_senator_dataframe <- function(senator_data) {
+  if ("UltimoMandato" %in% names(senator_data)) {
+    ufs <- senator_data$UltimoMandato$UfParlamentar
+    uf <- ufs[length(ufs)]
+    situacoes <- senator_data$UltimoMandato$DescricaoParticipacao
+    situacao <- situacoes[length(situacoes)]
+  } else if ("MandatoAtual" %in% names(senator_data)) {
+    uf <- senator_data$MandatoAtual$UfParlamentar
+    situacao <- senator_data$MandatoAtual$DescricaoParticipacao
+  } else {
+    uf <- NA
+    situacao <- NA
+  }
+
+  if ("SiglaPartidoParlamentar" %in% names(senator_data$IdentificacaoParlamentar)) {
+    partido <- senator_data$IdentificacaoParlamentar$SiglaPartidoParlamentar
+  } else {
+    partido <- NA
+  }
+
+  df <- tibble::tibble(
+    id_parlamentar = senator_data$IdentificacaoParlamentar$CodigoParlamentar,
+    nome_eleitoral = senator_data$IdentificacaoParlamentar$NomeParlamentar,
+    nome_completo = senator_data$IdentificacaoParlamentar$NomeCompletoParlamentar,
+    genero = senator_data$IdentificacaoParlamentar$SexoParlamentar
+  ) %>%
+    dplyr::mutate(casa = 'senado',
+                  partido = partido,
+                  uf = uf,
+                  situacao = situacao)
+  df
 }
