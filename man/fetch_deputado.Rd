@@ -4,9 +4,16 @@
 \alias{fetch_deputado}
 \title{Retrieves details about a deputy}
 \usage{
-fetch_deputado(id = NULL, nome = NULL, idLegislatura = NULL,
-  siglaUf = NULL, siglaPartido = NULL, siglaSexo = NULL,
-  itens = NULL, ordenarPor = NULL)
+fetch_deputado(
+  id = NULL,
+  nome = NULL,
+  idLegislatura = NULL,
+  siglaUf = NULL,
+  siglaPartido = NULL,
+  siglaSexo = NULL,
+  itens = NULL,
+  ordenarPor = NULL
+)
 }
 \arguments{
 \item{id}{Deputy's ID}

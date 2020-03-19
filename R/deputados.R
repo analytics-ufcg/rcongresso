@@ -142,6 +142,28 @@ fetch_ids_deputados <- function(legislatura_base = .LEGISLATURA_INICIAL) {
   ids_dep
 }
 
+#' @title Fetches all deputys IDsfrom a given legislature
+#' @description Fetches all deputys IDs from a given legislature
+#' @param legislatura_id Legislature's id
+#' @return Dataframe containing all deputys IDs
+#' @rdname fetch_ids_deputados_by_leg
+#' @export
+fetch_ids_deputados_by_leg <- function(legislatura = .LEGISLATURA_ATUAL) {
+
+  path <- paste0(.DEPUTADOS_PATH, "?idLegislatura=", legislatura)
+
+  ids_dep <-
+    .camara_api(path)
+
+  if(nrow(ids_dep) == 0) {
+    warning("Não há dados para esta legislatura")
+  } else {
+    ids_dep <- ids_dep %>%
+      dplyr::distinct(id)
+  }
+
+  ids_dep
+}
 
 #' @title Fetches all fronts from deputy
 #' @description Fetches all fronts from a deputy from the given legislature

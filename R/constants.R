@@ -56,7 +56,9 @@
 .AGENDA_SENADO_COMISSOES <- "/dadosabertos/agendareuniao/"
 .SENADO_VOTACOES_PATH <- "/dadosabertos/materia/votacoes/"
 .SENADO_TEXTOS_MATERIA <- "dadosabertos/materia/textos/"
-.SENADORES_PATH <- "dadosabertos/senador/lista/legislatura/"
+.SENADORES_LISTA_PATH <- "dadosabertos/senador/lista/"
+.SENADORES_PATH <- paste0(.SENADORES_LISTA_PATH , "legislatura/")
+.SENADOR_PATH <- "dadosabertos/senador/"
 .SENADO_PROPOSICAO_PATH_SIGLA <- "dadosabertos/materia/pesquisa/lista"
 
 # Link do repositório do rcongresso

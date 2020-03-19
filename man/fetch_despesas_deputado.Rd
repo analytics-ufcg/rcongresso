@@ -4,8 +4,14 @@
 \alias{fetch_despesas_deputado}
 \title{Fetches expenditures from deputy}
 \usage{
-fetch_despesas_deputado(id = NULL, idLegislatura = NULL, ano = NULL,
-  mes = NULL, cnpjCpfFornecedor = NULL, itens = NULL)
+fetch_despesas_deputado(
+  id = NULL,
+  idLegislatura = NULL,
+  ano = NULL,
+  mes = NULL,
+  cnpjCpfFornecedor = NULL,
+  itens = NULL
+)
 }
 \arguments{
 \item{id}{Deputy's ID. Mandatory field}

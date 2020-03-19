@@ -11,12 +11,12 @@ fetch_senadores <- function(legis_initial, legis_final) {
   senator_data <- .senado_api(paste0(.SENADORES_PATH, legis_initial, "/", legis_final), asList = TRUE)
   senator_data <- senator_data$ListaParlamentarLegislatura$Parlamentares
 
-  senator_ids <-
+  senators <-
     senator_data %>%
     magrittr::extract2("Parlamentar")
 
   legislatura <-
-    senator_ids %>%
+    senators %>%
     dplyr::mutate(casa = 'senado')
 
   legislatura <- legislatura %>%
@@ -29,4 +29,89 @@ fetch_senadores <- function(legis_initial, legis_final) {
                   casa = casa) %>%
     .assert_dataframe_completo(.COLNAMES_LEGISLATURA_SENADORES) %>%
     .coerce_types(.COLNAMES_LEGISLATURA_SENADORES)
+
+  legislatura
+}
+
+#' @title Fetches senators id
+#' @description Returns its id.
+#' @param legis_initial Initial legisture
+#' @param legis_final Final legisture
+#' @return Dataframe containing the senators id.
+#' @examples
+#' senators <- fetch_ids_senadores(40, 56)
+#' @rdname fetch_ids_senadores
+#' @export
+fetch_ids_senadores <- function(legis_initial, legis_final) {
+  senator_data <- .senado_api(paste0(.SENADORES_PATH, legis_initial, "/", legis_final), asList = TRUE)
+  senator_data <- senator_data$ListaParlamentarLegislatura$Parlamentares
+
+  senators <-
+    senator_data %>%
+    magrittr::extract2("Parlamentar") %>%
+    dplyr::distinct(id = IdentificacaoParlamentar.CodigoParlamentar)
+
+  senators
+}
+
+#' @title Fetches senator's info
+#' @description Returns its info, as name, gender, uf, situation, etc.
+#' @param id Senator's id
+#' @return Dataframe containing the senator's info.
+#' @examples
+#' senator <- fetch_senador(5573)
+#' @rdname fetch_senador
+#' @export
+fetch_senador <- function(id = NULL) {
+
+  if (is.null(id)) {
+    warning("O parâmetro id deve ser passado.")
+  } else {
+    senator_data <- .senado_api(paste0(.SENADOR_PATH, id), asList = TRUE)
+    senator_data <- senator_data$DetalheParlamentar$Parlamentar
+
+    senator <- .create_senator_dataframe(senator_data) %>%
+    .assert_dataframe_completo(.COLNAMES_SENADORES_INFO) %>%
+    .coerce_types(.COLNAMES_SENADORES_INFO)
+
+    senator
+  }
+
+}
+
+#' @title Fetches details abaout all senators
+#' @description Fetches details about senators from a given list
+#' @param ids_dep Dataframe containing all senators IDs
+#' @return Dataframe containing details about the senators
+#' @rdname fetch_all_senadores
+#' @export
+fetch_all_senadores <- function(ids_sen) {
+  senadores <- tibble::tibble()
+
+  if (is.null(dim(ids_sen)) | !is.data.frame(ids_sen) ) {
+    warning("Objeto deve ser um dataframe nao-nulo")
+  } else if (nrow(ids_sen) == 0) {
+    warning("Dataframe vazio")
+  } else {
+    senadores <- purrr::map_df(ids_sen$id, ~ fetch_senador(.x))
+  }
+
+  senadores
+}
+
+#' @title Fetches senators in office ids
+#' @description Fetches the ids of the senators in office
+#' @return Dataframe containing if of the senators in office
+#' @rdname fetch_ids_senadores_em_exercicio
+#' @export
+fetch_ids_senadores_em_exercicio <- function() {
+  senator_data <- .senado_api(paste0(.SENADORES_LISTA_PATH, "atual"), asList = TRUE)
+  senator_data <- senator_data$ListaParlamentarEmExercicio$Parlamentares
+
+  senators <-
+    senator_data %>%
+    magrittr::extract2("Parlamentar") %>%
+    dplyr::distinct(id = IdentificacaoParlamentar.CodigoParlamentar)
+
+  senators
 }
