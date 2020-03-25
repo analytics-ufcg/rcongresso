@@ -13,12 +13,7 @@
 fetch_emendas <- function(id, casa) {
   casa <- tolower(casa)
   if (casa == 'camara') {
-    if(is.null(sigla) & is.null(numero) & is.null(ano)) {
-      print("Para retornar as emendas da camara, faz-se necessarios a sigla, o numero e o ano")
-      return()
-    } else {
-      emendas <- fetch_emendas_camara(id)
-    }
+    emendas <- fetch_emendas_camara(id)
   } else if (casa == 'senado') {
     emendas <- fetch_emendas_senado(id)
   } else {
@@ -155,7 +150,7 @@ fetch_emendas_camara <- function(id_prop) {
     rcongresso::rename_table_to_underscore()
   
   #Obtém os autores das emendas 
-  autores_emendas <-purrr::map_df(emendas$id, ~ rcongresso::fetch_autores(.x, .CAMARA) %>% dplyr::mutate(id=.x)) 
+  autores_emendas <-purrr::map_df(dados_emendas$id, ~ rcongresso::fetch_autores(.x, .CAMARA) %>% dplyr::mutate(id=.x)) 
   
   #Obtém metadados dos autores das emendas 
   autores_emendas_data <- purrr::map2_df(autores_emendas$id_autor, autores_emendas$id,
