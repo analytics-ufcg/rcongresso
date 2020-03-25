@@ -146,14 +146,18 @@ fetch_emendas_senado <- function(bill_id) {
 #' @rdname fetch_emendas_camara
 #' @export
 fetch_emendas_camara <- function(id_prop) {
+  #Obtém documentos relacionados, filtrando apenas emendas
   emendas_relacionadas <- rcongresso::fetch_relacionadas(.CAMARA, id_prop) %>% 
     dplyr::filter(siglaTipo %in% .TIPOS_EMENDAS)
   
+  #Obtém metadados dos documentos das emendas
   dados_emendas <- purrr::map_df(emendas_relacionadas$id, ~ rcongresso::fetch_proposicao(.x, 'camara')) %>% 
     rcongresso::rename_table_to_underscore()
   
+  #Obtém os autores das emendas 
   autores_emendas <-purrr::map_df(emendas$id, ~ rcongresso::fetch_autores(.x, .CAMARA) %>% dplyr::mutate(id=.x)) 
   
+  #Obtém metadados dos autores das emendas 
   autores_emendas_data <- purrr::map2_df(autores_emendas$id_autor, autores_emendas$id,
                                          ~ rcongresso::fetch_deputado(.x) %>% 
                                            dplyr::select(nome = ultimoStatus.nome, 
@@ -161,11 +165,13 @@ fetch_emendas_camara <- function(id_prop) {
                                                          uf = ultimoStatus.siglaUf) %>% 
                                            dplyr::mutate(id=.y))
   
+  #Junta dados dos autores das emendas para encaixar no dataframe final
   collapsed_autores <- autores_emendas_data %>% 
     dplyr::mutate(nome_partido_uf = paste0(nome, " ", partido, "/", uf)) %>% 
     dplyr::group_by(id) %>%
     dplyr::summarise(autor = paste(nome_partido_uf, collapse = ', '))
   
+  #Monta dataframe final das emendas com todos os dados necessários à aplicação
   full_emendas_df <- dados_emendas %>% 
     dplyr::inner_join(collapsed_autores, by='id') %>% 
     dplyr::mutate(casa = 'camara') %>% 
