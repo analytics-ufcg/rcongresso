@@ -3,9 +3,6 @@
 #' @description Fetchs a dataframe with emendas's data of a proposição from Chamber of deputies or Senate
 #' @param id Proposição's ID from congress
 #' @param casa senado or camara
-#' @param sigla Proposition type (i.e., PEC, PL, PDC)
-#' @param numero Proposition number
-#' @param ano Proposition year
 #' @return Dataframe with informations about emendas of a proposição from Chamber of deputies or Senate
 #' @examples
 #' \dontrun{
@@ -13,14 +10,14 @@
 #' }
 #' @rdname fetch_emendas
 #' @export
-fetch_emendas <- function(id, casa, sigla=NULL, numero=NULL, ano=NULL) {
+fetch_emendas <- function(id, casa) {
   casa <- tolower(casa)
   if (casa == 'camara') {
     if(is.null(sigla) & is.null(numero) & is.null(ano)) {
       print("Para retornar as emendas da camara, faz-se necessarios a sigla, o numero e o ano")
       return()
     } else {
-      emendas <- fetch_emendas_camara(sigla, numero, ano)
+      emendas <- fetch_emendas_camara(id)
     }
   } else if (casa == 'senado') {
     emendas <- fetch_emendas_senado(id)
@@ -142,50 +139,44 @@ fetch_emendas_senado <- function(bill_id) {
 
 #' @title Fetches proposition's emendas
 #' @description Fetches a dataframe containing the emendas of the proposition
-#' @param sigla Proposition type (i.e., PEC, PL, PDC)
-#' @param numero Proposition number
-#' @param ano Proposition year
+#' @param id Proposição's ID from Câmara
 #' @return A dataframe containing details about the emendas of the proposition
 #' @examples
-#' fetch_emendas_camara('pl', 6726, 2016)
+#' fetch_emendas_camara(2121442, 'pl', 6726, 2016)
 #' @rdname fetch_emendas_camara
 #' @export
-fetch_emendas_camara <- function(sigla=NULL, numero=NULL, ano=NULL) {
-  emendas_substitutivos_redacaofinal_list <-
-    .get_with_exponential_backoff_cached(base_url = .CAMARA_WEBSITE_LINK,
-                  path = .EMENDAS_SUBSTITUTIVOS_REDACAOFINAL_CAMARA_PATH,
-                  query = paste0('tipo=', sigla, '&numero=', numero, '&ano=', ano))$content %>%
-    rawToChar() %>%
-    XML::xmlParse() %>%
-    XML::xmlToList()
-
-  emendas_df <-
-    emendas_substitutivos_redacaofinal_list %>%
-    magrittr::extract2('Emendas') %>%
-    purrr::map_dfr(as.list)
-
-  if(nrow(emendas_df) == 0) {
-    return(tibble::tibble(codigo_emenda = integer(), data_apresentacao = character(), numero = numeric(), local = character(),
-                          autor = character(), casa = character(), tipo_documento = character(), inteiro_teor = character()))
-  }
-
-  new_names <- c("cod_proposicao", "descricao")
-  names(emendas_df) <- new_names
-  emendas <- purrr::map_df(emendas_df$cod_proposicao, .fetch_emendas_camara_auxiliar)
-  normalizes_names <- c("codigo_emenda", "data_apresentacao", "numero", "local", "autor", "casa", "tipo_documento", "inteiro_teor")
-  names(emendas) <- normalizes_names
-
-  emendas %>%
-    dplyr::mutate(data_apresentacao = as.character(as.Date(data_apresentacao))) %>%
-    .assert_dataframe_completo(.COLNAMES_EMENDAS_CAMARA)
-}
-
-#' @title Auxiliar function for fetch_emendas_camara
-#' @description Return dataframe with data of an emenda
-.fetch_emendas_camara_auxiliar <- function(id) {
- rcongresso::fetch_proposicao(id, 'camara') %>%
-    dplyr::mutate(autor = rcongresso::scrap_autores_from_website(.$id), casa = "camara") %>%
-    dplyr::select(c(id, dataApresentacao, numero, statusProposicao.siglaOrgao, autor, casa, siglaTipo, urlInteiroTeor))
+fetch_emendas_camara <- function(id_prop) {
+  emendas_relacionadas <- rcongresso::fetch_relacionadas(.CAMARA, id_prop) %>% 
+    dplyr::filter(siglaTipo %in% .TIPOS_EMENDAS)
+  
+  dados_emendas <- purrr::map_df(emendas_relacionadas$id, ~ rcongresso::fetch_proposicao(.x, 'camara')) %>% 
+    rcongresso::rename_table_to_underscore()
+  
+  autores_emendas <-purrr::map_df(emendas$id, ~ rcongresso::fetch_autores(.x, .CAMARA) %>% dplyr::mutate(id=.x)) 
+  
+  autores_emendas_data <- purrr::map2_df(autores_emendas$id_autor, autores_emendas$id,
+                                         ~ rcongresso::fetch_deputado(.x) %>% 
+                                           dplyr::select(nome = ultimoStatus.nome, 
+                                                         partido = ultimoStatus.siglaPartido,
+                                                         uf = ultimoStatus.siglaUf) %>% 
+                                           dplyr::mutate(id=.y))
+  
+  collapsed_autores <- autores_emendas_data %>% 
+    dplyr::mutate(nome_partido_uf = paste0(nome, " ", partido, "/", uf)) %>% 
+    dplyr::group_by(id) %>%
+    dplyr::summarise(autor = paste(nome_partido_uf, collapse = ', '))
+  
+  full_emendas_df <- dados_emendas %>% 
+    dplyr::inner_join(collapsed_autores, by='id') %>% 
+    dplyr::mutate(casa = 'camara') %>% 
+    dplyr::select(codigo_emenda = id, 
+                  data_apresentacao, 
+                  numero, 
+                  local = status_proposicao_sigla_orgao,
+                  autor,
+                  casa,
+                  tipo_documento = sigla_tipo, 
+                  inteiro_teor = url_inteiro_teor)
 }
 
 #' @title Generates a dataframe from a column with a linked list
