@@ -268,7 +268,7 @@ fetch_proposicao_senado <- function(id = NULL) {
 #' textos_pls229 <- fetch_textos_proposicao_senado(91341)
 #' @rdname fetch_textos_proposicao_senado
 #' @export
-fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
+fetch_textos_proposicao_senado <- function(id) {
   if (is.na(filter_texto_materia)) {
     warning("filter_texto_materia deve ser: T ou F.")
     return(tibble::tibble())
