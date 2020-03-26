@@ -301,14 +301,6 @@ fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
 
   }
 
-  if (filter_texto_materia) {
-    proposicao_complete <-
-      proposicao_complete %>%
-      dplyr::filter(!stringr::str_detect(
-        .remove_special_character(descricao_texto),
-        "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario|Texto final"))
-  }
-
   return(proposicao_complete %>% .assert_dataframe_completo(.COLNAMES_DOCUMENTOS_SENADO) %>% .coerce_types(.COLNAMES_DOCUMENTOS_SENADO))
 }
 
