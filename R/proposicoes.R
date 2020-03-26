@@ -262,18 +262,12 @@ fetch_proposicao_senado <- function(id = NULL) {
 #' @title Fetches the documents of a proposition
 #' @description Returns the proposition's documents info.
 #' @param id Proposition's ID
-#' @param filter_texto_materia If you want the proposition texts or not
 #' @return Dataframe containing all the info about the proposition's documents
 #' @examples
 #' textos_pls229 <- fetch_textos_proposicao_senado(91341)
 #' @rdname fetch_textos_proposicao_senado
 #' @export
 fetch_textos_proposicao_senado <- function(id) {
-  if (is.na(filter_texto_materia)) {
-    warning("filter_texto_materia deve ser: T ou F.")
-    return(tibble::tibble())
-  }
-
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
 
   if (is.null(proposicao_data$Textos)) {

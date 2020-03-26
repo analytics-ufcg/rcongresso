@@ -3,15 +3,15 @@ context("Proposições")
 documentos_endpoint_completos_115926 <<- fetch_textos_proposicao_senado(115926)
 documentos_endpoint_completos_135061 <<- fetch_textos_proposicao_senado(135061)
 
-documentos_scrap_completos_115926 <<- scrap_senado_congresso_documentos(115926, 'senado')
-documentos_scrap_filtrados_115926 <<- scrap_senado_congresso_documentos(115926, 'senado')
-documentos_scrap_completos_135061 <<- scrap_senado_congresso_documentos(135061, 'congresso')
+documentos_scrap_completos_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', F)
+documentos_scrap_filtrados_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', T)
+documentos_scrap_completos_135061 <<- scrap_senado_congresso_documentos(135061, 'congresso', F)
 documentos_scrap_completo_41703 <<- 
-  scrap_senado_congresso_documentos(41703, 'senado') %>% 
+  scrap_senado_congresso_documentos(41703, 'senado', F) %>% 
   dplyr::mutate(acao_legislativa = trimws(acao_legislativa,which = "b"),
                 identificacao = trimws(identificacao,which = "b"))
 documentos_scrap_filtrado_41703 <<- 
-  scrap_senado_congresso_documentos(41703, 'senado') %>% 
+  scrap_senado_congresso_documentos(41703, 'senado', T) %>% 
   dplyr::mutate(acao_legislativa = trimws(acao_legislativa,which = "b"),
                 identificacao = trimws(identificacao,which = "b"))
 documentos_scrap_completo_41703_gabarito <<- tibble::tibble(acao_legislativa = c(NA, "A Comissão aprova a Emenda n° 1-CAS (Substitutivo), com a Subemenda n° 1 - CAS. Anexo Parecer da emenda, lista de votação nominal, redação final e ofício ao Presidente do Senado. (fls. nº 26 a 36). À SSCLSF.", 
@@ -33,8 +33,6 @@ test_that("fetch_textos_proposicao_senado()", {
   
   expect_true(all(sapply(documentos_endpoint_completos_115926, class) %in% .COLNAMES_DOCUMENTOS_SENADO))
   expect_true(all(sapply(documentos_endpoint_completos_135061, class) %in% .COLNAMES_DOCUMENTOS_SENADO))
-  
-  testthat::expect_warning(fetch_textos_proposicao_senado(135061, NA), "filter_texto_materia deve ser: T ou F.")
 })
 
 test_that("scrap_senado_congresso_documentos()", {
