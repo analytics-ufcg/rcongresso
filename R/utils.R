@@ -178,7 +178,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
         dplyr::mutate_all(.funs = ~ .replace_na(.))
       
       x <- x %>% 
-        dplyr::bind_cols(diff_df)
+        cbind(diff_df)
     }
     
     x
