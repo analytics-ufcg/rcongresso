@@ -166,11 +166,34 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     if (length(nao_esperadas) & warning) {
       .print_warning_and_list("Unexpected columns:", nao_esperadas)
     }
-
-    x[colnames_y[indexes]] <- ifelse(types_y[indexes] == "character", NA_character_, NA_real_)
-
+    
+    if (any(indexes)) {
+      df_y <- y %>%
+        t() %>%
+        as.data.frame()
+      
+      diff_df <- df_y[colnames_y[indexes]]
+      
+      diff_df <- diff_df %>%
+        dplyr::mutate_all(.funs = ~ .replace_na(.))
+      
+      x <- x %>% 
+        cbind(diff_df)
+    }
+    
     x
   } else tibble::tibble()
+}
+
+#' Given a column with its type as value, replace this value 
+#' by the corresponding NA type.
+#' @param x A column with a type (string) as value
+.replace_na <- function(x) {
+  if (x == "character") {
+    x = as.character(NA)
+  } else {
+    x = as.numeric(NA)
+  }
 }
 
 #' Garantees that the dataframe obj has all the correct types passed by types.
