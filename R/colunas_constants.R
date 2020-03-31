@@ -46,15 +46,14 @@
 
 .COLNAMES_PROPOSICAO_POR_ID_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                             "numero"="numeric","ano"="numeric","ementa"="character","dataApresentacao"="character",
-                            "descricaoTipo"="character", "ementaDetalhada"="character", "keywords"="character",
-                             "urlInteiroTeor"="character", "statusProposicao.codSituacao"="character",
-                            "statusProposicao.dataHora"="character", "statusProposicao.descricaoSituacao"="character",
-                            "statusProposicao.sequencia"="numeric","statusProposicao.siglaOrgao"="character",
-                            "statusProposicao.uriOrgao"="character","statusProposicao.regime"="character",
-                            "statusProposicao.descricaoTramitacao"="character","statusProposicao.codTipoTramitacao"="integer",
-                            "statusProposicao.despacho"="character","statusProposicao.url"="character","uriAutores"="character",
-                            "uriPropPosterior"="character", "uriPropPrincipal"="character","uriUltimoRelator"="character",
-                            "statusProposicao.uriUltimoRelator"="character", "statusProposicao.ambito"="character"
+                            "uriOrgaoNumerador"="character", "statusProposicao.dataHora"="character", "statusProposicao.sequencia"="numeric",
+                            "statusProposicao.siglaOrgao"="character", "statusProposicao.uriOrgao"="character", 
+                            "statusProposicao.uriUltimoRelator"="character", "statusProposicao.regime"="character", 
+                            "statusProposicao.descricaoTramitacao"="character", "statusProposicao.codTipoTramitacao"="integer",
+                            "statusProposicao.descricaoSituacao"="character", "statusProposicao.codSituacao"="integer", 
+                            "statusProposicao.despacho"="character", "statusProposicao.ambito"="character",
+                            "uriAutores"="character", "descricaoTipo"="character", "ementaDetalhada"="character", 
+                            "keywords"="character", "uriPropPosterior"="character", "urlInteiroTeor"="character"
                             )
 
 .COLNAMES_PROPOSICAO_SENADO <- c("ementa_materia"="character", "explicacao_ementa_materia"="character", "apelido_materia"="character", "indicador_complementar"="character",
