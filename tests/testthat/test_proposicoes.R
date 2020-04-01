@@ -41,6 +41,12 @@ test_that("Not Empty", {
   expect_true(nrow(deferimento) != 0)
 })
 
+test_that("fetch_proposicao", {
+  expect_true(all(sapply(fetch_proposicao(pec_241_id,'camara'), class) %in% .COLNAMES_PROPOSICAO_POR_ID_CAMARA))
+  expect_true(all(sapply(fetch_proposicao(1489,'senado'), class) %in% .COLNAMES_PROPOSICAO_SENADO))
+  expect_equal(fetch_proposicao(1489,'ABC'), "Parametro 'casa' nao identificado.")
+})
+
 
 test_that("fetch_proposicao_camara()", {
   expect_true(all(sapply(pec_241, class) %in% .COLNAMES_PROPOSICAO_CAMARA))
