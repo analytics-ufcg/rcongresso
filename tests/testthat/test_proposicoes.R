@@ -174,9 +174,9 @@ test_that(".fetch_autores_camara()",{
 })
 
 test_that(".extract_id_autor_from_uri() works as expected",{
-  expect_equal(.extract_id_autor_from_uri(""),-1)
   expect_equal(.extract_id_autor_from_uri(NA),-1)
-  expect_equal(.extract_id_autor_from_uri("NA"),-1)
+  expect_equal(.extract_id_autor_from_uri(""),-1)
+  expect_equal(expect_warning(.extract_id_autor_from_uri("NA")),-1)
   expect_equal(.extract_id_autor_from_uri("NA/123"),123)
   expect_equal(.extract_id_autor_from_uri("https://dadosabertos.camara.leg.br/api/v2/deputados/204371"),204371)
 })
