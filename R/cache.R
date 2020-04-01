@@ -54,9 +54,9 @@ setup_cache <- function (name) {
     }
 
     if (is.null(value)) {
-        print(c("Not in cache", .cache_file_path))
+        cat("\nNot in cache")
     } else {
-        print(c("In cache", .cache_file_path))
+        cat("\nIn cache")
     }
     return(value)
 }
