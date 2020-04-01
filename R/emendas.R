@@ -137,7 +137,7 @@ fetch_emendas_senado <- function(bill_id) {
 #' @param id Proposição's ID from Câmara
 #' @return A dataframe containing details about the emendas of the proposition
 #' @examples
-#' fetch_emendas_camara(2121442, 'pl', 6726, 2016)
+#' fetch_emendas_camara(2121442)
 #' @rdname fetch_emendas_camara
 #' @export
 fetch_emendas_camara <- function(id_prop) {
