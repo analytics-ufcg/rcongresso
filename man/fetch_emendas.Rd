@@ -4,18 +4,12 @@
 \alias{fetch_emendas}
 \title{Returns emendas of a proposição from Chamber of deputies or Senate}
 \usage{
-fetch_emendas(id, casa, sigla = NULL, numero = NULL, ano = NULL)
+fetch_emendas(id, casa)
 }
 \arguments{
 \item{id}{Proposição's ID from congress}
 
 \item{casa}{senado or camara}
-
-\item{sigla}{Proposition type (i.e., PEC, PL, PDC)}
-
-\item{numero}{Proposition number}
-
-\item{ano}{Proposition year}
 }
 \value{
 Dataframe with informations about emendas of a proposição from Chamber of deputies or Senate

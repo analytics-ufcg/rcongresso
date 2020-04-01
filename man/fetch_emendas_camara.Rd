@@ -4,14 +4,10 @@
 \alias{fetch_emendas_camara}
 \title{Fetches proposition's emendas}
 \usage{
-fetch_emendas_camara(sigla = NULL, numero = NULL, ano = NULL)
+fetch_emendas_camara(id_prop)
 }
 \arguments{
-\item{sigla}{Proposition type (i.e., PEC, PL, PDC)}
-
-\item{numero}{Proposition number}
-
-\item{ano}{Proposition year}
+\item{id}{Proposição's ID from Câmara}
 }
 \value{
 A dataframe containing details about the emendas of the proposition
@@ -20,5 +16,5 @@ A dataframe containing details about the emendas of the proposition
 Fetches a dataframe containing the emendas of the proposition
 }
 \examples{
-fetch_emendas_camara('pl', 6726, 2016)
+fetch_emendas_camara(2121442)
 }
