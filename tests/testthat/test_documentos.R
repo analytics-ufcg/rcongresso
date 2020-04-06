@@ -1,8 +1,7 @@
 context("Proposições")
 
-documentos_endpoint_completos_115926 <<- fetch_textos_proposicao_senado(115926, F)
-documentos_endpoint_filtrados_115926 <<- fetch_textos_proposicao_senado(115926, T)
-documentos_endpoint_completos_135061 <<- fetch_textos_proposicao_senado(135061, F)
+documentos_endpoint_completos_115926 <<- fetch_textos_proposicao_senado(115926)
+documentos_endpoint_completos_135061 <<- fetch_textos_proposicao_senado(135061)
 
 documentos_scrap_completos_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', F)
 documentos_scrap_filtrados_115926 <<- scrap_senado_congresso_documentos(115926, 'senado', T)
@@ -27,19 +26,13 @@ documentos_scrap_completo_41703_gabarito <<- tibble::tibble(acao_legislativa = c
                                                             local = c(NA, "Comissão de Assuntos Sociais", "Plenário do Senado Federal")) 
 test_that("fetch_textos_proposicao_senado()", {
   expect_true(is.data.frame(documentos_endpoint_completos_115926))
-  expect_true(is.data.frame(documentos_endpoint_filtrados_115926))
   expect_true(is.data.frame(documentos_endpoint_completos_135061))
   
   expect_true(nrow(documentos_endpoint_completos_115926) != 0)
-  expect_true(nrow(documentos_endpoint_filtrados_115926) != 0)
   expect_true(nrow(documentos_endpoint_completos_135061) != 0)
-  expect_true(nrow(documentos_endpoint_filtrados_115926) < nrow(documentos_endpoint_completos_115926))
   
   expect_true(all(sapply(documentos_endpoint_completos_115926, class) %in% .COLNAMES_DOCUMENTOS_SENADO))
-  expect_true(all(sapply(documentos_endpoint_filtrados_115926, class) %in% .COLNAMES_DOCUMENTOS_SENADO))
   expect_true(all(sapply(documentos_endpoint_completos_135061, class) %in% .COLNAMES_DOCUMENTOS_SENADO))
-  
-  testthat::expect_warning(fetch_textos_proposicao_senado(135061, NA), "filter_texto_materia deve ser: T ou F.")
 })
 
 test_that("scrap_senado_congresso_documentos()", {

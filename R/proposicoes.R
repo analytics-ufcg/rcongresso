@@ -262,18 +262,12 @@ fetch_proposicao_senado <- function(id = NULL) {
 #' @title Fetches the documents of a proposition
 #' @description Returns the proposition's documents info.
 #' @param id Proposition's ID
-#' @param filter_texto_materia If you want the proposition texts or not
 #' @return Dataframe containing all the info about the proposition's documents
 #' @examples
 #' textos_pls229 <- fetch_textos_proposicao_senado(91341)
 #' @rdname fetch_textos_proposicao_senado
 #' @export
-fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
-  if (is.na(filter_texto_materia)) {
-    warning("filter_texto_materia deve ser: T ou F.")
-    return(tibble::tibble())
-  }
-
+fetch_textos_proposicao_senado <- function(id) {
   proposicao_data <- .senado_api(paste0(.SENADO_TEXTOS_MATERIA, id), asList = TRUE)$TextoMateria$Materia
 
   if (is.null(proposicao_data$Textos)) {
@@ -299,14 +293,6 @@ fetch_textos_proposicao_senado <- function(id, filter_texto_materia = T) {
       .rename_df_columns() %>%
       unique()
 
-  }
-
-  if (filter_texto_materia) {
-    proposicao_complete <-
-      proposicao_complete %>%
-      dplyr::filter(!stringr::str_detect(
-        .remove_special_character(descricao_texto),
-        "Texto inicial|Avulso inicial da materia|Redacao Final de Plenario|Texto final"))
   }
 
   return(proposicao_complete %>% .assert_dataframe_completo(.COLNAMES_DOCUMENTOS_SENADO) %>% .coerce_types(.COLNAMES_DOCUMENTOS_SENADO))
