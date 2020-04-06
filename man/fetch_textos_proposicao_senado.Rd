@@ -4,12 +4,10 @@
 \alias{fetch_textos_proposicao_senado}
 \title{Fetches the documents of a proposition}
 \usage{
-fetch_textos_proposicao_senado(id, filter_texto_materia = T)
+fetch_textos_proposicao_senado(id)
 }
 \arguments{
 \item{id}{Proposition's ID}
-
-\item{filter_texto_materia}{If you want the proposition texts or not}
 }
 \value{
 Dataframe containing all the info about the proposition's documents
