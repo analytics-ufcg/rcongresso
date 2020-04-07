@@ -179,14 +179,6 @@ test_that(".fetch_autores_camara()",{
     ), emc_2206183)
 })
 
-test_that(".extract_id_autor_from_uri() works as expected",{
-  expect_equal(.extract_id_autor_from_uri(""),-1)
-  expect_equal(.extract_id_autor_from_uri(NA),-1)
-  expect_equal(.extract_id_autor_from_uri("NA"),-1)
-  expect_equal(.extract_id_autor_from_uri("NA/123"),123)
-  expect_equal(.extract_id_autor_from_uri("https://dadosabertos.camara.leg.br/api/v2/deputados/204371"),204371)
-})
-
 test_that(".scrap_senado_relacionadas_ids_from_website()", {
   pls_ids <- c(96123, 91341, 112563, 104930, 90919)
 

@@ -86,3 +86,4 @@
 .LEGISLATURA_ATUAL <- 56
 
 .DEF_REQ_DELAY_TIME <- 3
+.TIPOS_EMENDAS <- c("EMC" , "EMP" , "EMS" , "SBE" , "EMR" , "ESB" , "EMO" , "EMD" , "EPP" , "EAG" , "ESP" , "SSP" , "SAP" , "EMA" , "EMRP" , "EMC-A" , "SBE-A" , "EMPV" , "SBR" , "ERD-A")
