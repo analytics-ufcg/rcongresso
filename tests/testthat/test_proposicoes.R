@@ -228,3 +228,12 @@ test_that("fetch_autores()", {
   pl_91341 <- fetch_autores(91341, "senado", "")
   expect_true(nrow(pl_91341) == 1)
 })
+
+test_that("fetch_temas_camara()", {
+  expect_error(fetch_temas_camara(id = -1))
+  
+  pl_2121442 <- fetch_temas_camara(2121442)
+  expect_true(is.data.frame(pl_2121442))
+  expect_true(nrow(pl_2121442) == 2)
+  expect_true("Previdência e Assistência Social" %in% pl_2121442$tema)
+})

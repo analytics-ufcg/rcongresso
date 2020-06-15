@@ -365,3 +365,5 @@
                                "titulo"="character", "cod_titulo"="character", "data_inicio"="character", "data_fim"="character", "id_frente"="integer")
 
 .COLNAMES_DEPUTADO_FRENTES <- c("id_frente"="integer", "uri"="character", "titulo"="character", "id_legislatura"="integer", "id_deputado"="integer")
+
+.COLNAMES_TEMAS_CAMARA <- c("cod_tema"="integer", "tema"="character", "relevancia"="integer")
