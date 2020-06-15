@@ -229,10 +229,11 @@ test_that("fetch_autores()", {
   expect_true(nrow(pl_91341) == 1)
 })
 
-test_that("fetch_temas_camara()", {
-  expect_error(fetch_temas_camara(id = -1))
+test_that("fetch_temas_proposicao()", {
+  expect_error(fetch_temas_proposicao(-1, "camara"))
+  expect_true(is.character(fetch_temas_proposicao(91341, "invalid")))
   
-  pl_2121442 <- fetch_temas_camara(2121442)
+  pl_2121442 <- fetch_temas_proposicao(2121442, "camara")
   expect_true(is.data.frame(pl_2121442))
   expect_true(nrow(pl_2121442) == 2)
   expect_true("Previdência e Assistência Social" %in% pl_2121442$tema)
