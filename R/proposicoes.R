@@ -793,6 +793,7 @@ fetch_temas_proposicao <- function(proposicao_id, casa) {
     .fetch_temas_camara(proposicao_id)
   } else if (casa == "senado") {
     # TODO: Implement function
+    return(tibble::tibble())
   } else {
     return("Parametro 'casa' nao identificado.")
   }
