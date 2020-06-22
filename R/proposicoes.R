@@ -766,3 +766,35 @@ fetch_apensadas_camara <- function(prop_id) {
     xml2::xml_find_all('//apensadas/proposicao/codProposicao') %>%
     xml2::xml_text()
 }
+
+#' @title Fetch the proposition's themes
+#' @description Returns a dataframe containing the themes of a proposition 
+#' @param prop_id Proposition's ID
+#' @return A dataframe containing the themes of a proposition 
+#' @examples
+#' .fetch_temas_camara(2121442)
+.fetch_temas_camara <- function(prop_id) {
+  .camara_api(paste0(.CAMARA_PROPOSICOES_PATH, "/", prop_id, .TEMAS_PATH_CAMARA)) %>% 
+    .rename_df_columns() %>%
+    .assert_dataframe_completo(.COLNAMES_TEMAS_CAMARA) %>%
+    .coerce_types(.COLNAMES_TEMAS_CAMARA)
+}
+
+#' @title Fetch the proposition's themes
+#' @description Returns a dataframe containing the themes of a proposition 
+#' @param proposicao_id Proposition's ID
+#' @param casa senado or camara
+#' @return A dataframe containing the themes of a proposition 
+#' @examples
+#' fetch_temas_proposicao(2121442, "camara")
+#' @export
+fetch_temas_proposicao <- function(proposicao_id, casa) {
+  if (casa == "camara") {
+    .fetch_temas_camara(proposicao_id)
+  } else if (casa == "senado") {
+    # TODO: Implement function
+    return(tibble::tibble())
+  } else {
+    return("Parametro 'casa' nao identificado.")
+  }
+}
