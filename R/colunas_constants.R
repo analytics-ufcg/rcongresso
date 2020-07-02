@@ -14,7 +14,7 @@
     "ultimoStatus.gabinete.sala"="character",
     "ultimoStatus.gabinete.andar"="character",
     "ultimoStatus.gabinete.telefone"="character",
-    "ultimoStatus.situacao"="numeric","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
+    "ultimoStatus.situacao"="character","ultimoStatus.condicaoEleitoral"="character","cpf"="character",
     "sexo"="character","dataNascimento"="character",
     "redeSocial1"="character",
     "redeSocial2"="character",
