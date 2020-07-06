@@ -596,7 +596,7 @@ fetch_tipo_proposicao <- function(id_tipo_prop){
 fetch_autor_camara <- function (proposicao_id = NULL) {
   autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autor_info <- .camara_api(autor_uri)
-  if(any(is.na(autor_info$uri))){
+  if(any(is.na(autor_info$uri)) | .check_autor_poder_executivo(autor_info)){
     autores <- .camara_api(autor_uri) %>%
       .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
       .coerce_types(.COLNAMES_AUTORES)
@@ -753,6 +753,22 @@ scrap_autores_from_website <- function(id_prop) {
     .fetch_using_id(.DEPUTADOS_PATH)
 }
 
+#' @title Checks whether the presidency of the republic is the author of the bill
+#' @description Checks whether the presidency of the republic is the author of the bill
+#' @param autor_info Dataframe with information about the author
+#' @return True if the presidency of the republic is the author of the proposition and FALSE otherwise
+#' @examples
+#' autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', 2213200, "/autores")
+#' autor_info <- .camara_api(autor_uri)
+#' .check_autor_poder_executivo(autor_info)
+.check_autor_poder_executivo <- function(autor_info) {
+  autor_poder_executivo <- autor_info %>%
+     dplyr::filter(stringr::str_detect(tolower(nome), .PODER_EXECUTIVO)) %>%
+    nrow()
+
+  return(autor_poder_executivo != 0)
+}
+
 #' @title Fetch the propositions appended to a proposition in the Camara
 #' @description Returns a vector containing the ids of the appended propositions
 #' @param prop_id Proposition's ID
@@ -768,23 +784,23 @@ fetch_apensadas_camara <- function(prop_id) {
 }
 
 #' @title Fetch the proposition's themes
-#' @description Returns a dataframe containing the themes of a proposition 
+#' @description Returns a dataframe containing the themes of a proposition
 #' @param prop_id Proposition's ID
-#' @return A dataframe containing the themes of a proposition 
+#' @return A dataframe containing the themes of a proposition
 #' @examples
 #' .fetch_temas_camara(2121442)
 .fetch_temas_camara <- function(prop_id) {
-  .camara_api(paste0(.CAMARA_PROPOSICOES_PATH, "/", prop_id, .TEMAS_PATH_CAMARA)) %>% 
+  .camara_api(paste0(.CAMARA_PROPOSICOES_PATH, "/", prop_id, .TEMAS_PATH_CAMARA)) %>%
     .rename_df_columns() %>%
     .assert_dataframe_completo(.COLNAMES_TEMAS_CAMARA) %>%
     .coerce_types(.COLNAMES_TEMAS_CAMARA)
 }
 
 #' @title Fetch the proposition's themes
-#' @description Returns a dataframe containing the themes of a proposition 
+#' @description Returns a dataframe containing the themes of a proposition
 #' @param proposicao_id Proposition's ID
 #' @param casa senado or camara
-#' @return A dataframe containing the themes of a proposition 
+#' @return A dataframe containing the themes of a proposition
 #' @examples
 #' fetch_temas_proposicao(2121442, "camara")
 #' @export
