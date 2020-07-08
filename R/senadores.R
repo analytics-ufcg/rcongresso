@@ -63,18 +63,23 @@ fetch_ids_senadores <- function(legis_initial, legis_final) {
 #' @rdname fetch_senador
 #' @export
 fetch_senador <- function(id = NULL) {
-
   if (is.null(id)) {
     warning("O parâmetro id deve ser passado.")
   } else {
-    senator_data <- .senado_api(paste0(.SENADOR_PATH, id), asList = TRUE)
-    senator_data <- senator_data$DetalheParlamentar$Parlamentar
-
-    senator <- .create_senator_dataframe(senator_data) %>%
-    .assert_dataframe_completo(.COLNAMES_SENADORES_INFO) %>%
-    .coerce_types(.COLNAMES_SENADORES_INFO)
-
-    senator
+    senator <- tryCatch({
+      senator_data <- .senado_api(paste0(.SENADOR_PATH, id), asList = TRUE)
+      senator_data <- senator_data$DetalheParlamentar$Parlamentar
+      
+      senator <- .create_senator_dataframe(senator_data) %>%
+        .assert_dataframe_completo(.COLNAMES_SENADORES_INFO) %>%
+        .coerce_types(.COLNAMES_SENADORES_INFO)
+      
+      return(senator)
+    }, error = function(e) {
+      return(tibble::tribble())
+    })
+    
+    return(senator)
   }
 
 }
