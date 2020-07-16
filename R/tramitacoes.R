@@ -60,7 +60,7 @@ fetch_tramitacao_camara <- function(id_prop, data_inicio = NA, data_fim = NA){
 #' @rdname fetch_tramitacao_senado
 #' @export
 fetch_tramitacao_senado <- function(id_prop, data_ref = NA) {
-    query <- NULL
+  query <- NULL
   if (!is.na(data_ref)) {
     query <- list(dataref = data_ref)
   }
