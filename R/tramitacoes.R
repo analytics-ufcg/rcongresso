@@ -59,7 +59,7 @@ fetch_tramitacao_camara <- function(id_prop, data_inicio = NA, data_fim = NA){
 #' tramitacao_pls229 <- fetch_tramitacao_senado(91341)
 #' @rdname fetch_tramitacao_senado
 #' @export
-fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
+fetch_tramitacao_senado <- function(id_prop, data_ref = NA) {
   query <- NULL
   if (!is.na(data_ref)) {
     query <- list(dataref = data_ref)
@@ -73,24 +73,19 @@ fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
 
   tramitacao_data <-
     json_tramitacao %>%
-    magrittr::extract2("MovimentacaoMateria") %>%
-    magrittr::extract2("Materia")
+    magrittr::extract2("MovimentacaoMateria") %>% 
+    magrittr::extract2("Materia") 
+  
   tramitacao_ids <-
     tramitacao_data %>%
     magrittr::extract2("IdentificacaoMateria") %>%
     tibble::as_tibble()
-  tramitacao_actual_situation <-
-    tramitacao_data %>%
-    magrittr::extract2("SituacaoAtual") %>%
-    magrittr::extract2("Autuacoes") %>%
-    magrittr::extract2("Autuacao") %>%
-    magrittr::extract2("Situacao") %>%
-    tibble::as_tibble()
+  
   proposicao_tramitacoes_df <-
-    tramitacao_data %>%
-    magrittr::extract2("Tramitacoes") %>%
-    magrittr::extract2("Tramitacao") %>%
-    tibble::as_tibble() %>%
+    (tramitacao_data %>%
+    magrittr::extract2("Autuacoes") %>%
+    magrittr::extract2("Autuacao"))$InformesLegislativos.InformeLegislativo[[1]] %>% 
+    tibble::as_tibble() %>% 
     tibble::add_column(!!!tramitacao_ids)
 
   proposicao_tramitacoes_df <-
@@ -98,8 +93,35 @@ fetch_tramitacao_senado <- function(id_prop, data_ref = NA){
 
   proposicao_tramitacoes_df <-
     .rename_tramitacao_df(proposicao_tramitacoes_df) %>%
-    dplyr::rename(data_hora = data_tramitacao, sequencia = numero_ordem_tramitacao)%>%
+    dplyr::arrange(data) %>% 
+    tibble::rowid_to_column("sequencia") %>% 
+    dplyr::rename(data_hora = data, 
+                  origem_tramitacao_local_codigo_local = local_codigo_local,
+                  origem_tramitacao_local_sigla_local = local_sigla_local,
+                  origem_tramitacao_local_nome_local = local_nome_local,
+                  origem_tramitacao_local_sigla_casa_local = local_sigla_casa_local,
+                  origem_tramitacao_local_nome_casa_local = local_nome_casa_local,
+                  texto_tramitacao = descricao)%>%
     dplyr::mutate(sequencia = as.integer(sequencia))
-
-  proposicao_tramitacoes_df
+  
+  
+  situacoes <-
+    (tramitacao_data %>%
+       magrittr::extract2("Autuacoes") %>%
+       magrittr::extract2("Autuacao"))$HistoricoSituacoes.Situacao[[1]] %>% 
+    tibble::as_tibble() %>% 
+    .rename_tramitacao_df()
+  
+  names(situacoes) <-
+    purrr::map_chr(names(situacoes), function(x) {
+      return(paste0("situacao_", x))
+    })
+  
+  if (length(situacoes) > 0) {
+    proposicao_tramitacoes_df <- 
+      proposicao_tramitacoes_df %>% 
+      dplyr::left_join(situacoes, by = c("data_hora"="situacao_data_situacao"))
+  }
+  
+  return(proposicao_tramitacoes_df)
 }
