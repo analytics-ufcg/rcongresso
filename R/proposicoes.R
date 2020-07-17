@@ -166,9 +166,7 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
   
   proposicao_complete <-
     proposicao_identificacao %>%
-    tibble::add_column(!!!proposicao_dados_basicos,
-                       !!!proposicao_autores,
-                       !!!proposicao_natureza) %>%
+    tibble::add_column(!!!proposicao_dados_basicos,!!!proposicao_autores,!!!proposicao_natureza) %>%
     .rename_df_columns() %>%
     .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
     .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
@@ -198,36 +196,76 @@ fetch_proposicao_senado <- function(id = NULL) {
     purrr::flatten() %>%
     tibble::as_tibble()
   
-  proposicao_author <-
-    proposicao_data %>%
-    magrittr::extract2("Autoria") %>%
-    magrittr::extract2("Autor") %>%
-    tibble::as_tibble() %>%
-    dplyr::rowwise() %>%
-    dplyr::transmute(autor = paste(
-      paste(
-        NomeAutor,
-        ifelse(
-          "IdentificacaoParlamentar.SiglaPartidoParlamentar" %in% names(.),
-          IdentificacaoParlamentar.SiglaPartidoParlamentar,
-          ""
-        )
-      ),
-      ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")
-    ))
+  proposicao_author <- tibble::tibble()
+  if ("Autoria" %in% names(proposicao_data)) {
+    proposicao_author <-
+      proposicao_data %>%
+      magrittr::extract2("Autoria") %>%
+      magrittr::extract2("Autor") %>%
+      tibble::as_tibble() %>%
+      dplyr::rowwise() %>%
+      dplyr::transmute(autor = paste(
+        paste(
+          NomeAutor,
+          ifelse(
+            "IdentificacaoParlamentar.SiglaPartidoParlamentar" %in% names(.),
+            IdentificacaoParlamentar.SiglaPartidoParlamentar,
+            ""
+          )
+        ),
+        ifelse("UfAutor" %in% names(.), paste("/", UfAutor), "")
+      ))
+    
+    autor_nome = dplyr::if_else(
+      nrow(proposicao_author) > 1,
+      paste0(proposicao_author[[1]] %>% head(1), " e outros"),
+      proposicao_author[[1]] %>% head(1)
+    )
+    
+    proposicao_author <- proposicao_author %>% 
+      dplyr::mutate(autor_nome = autor_nome)
+      
+  } else if ("Iniciativa" %in% names(proposicao_data)) {
+    proposicao_author <-
+      proposicao_data %>%
+      magrittr::extract2("Iniciativa")
+    
+    autor_nome = paste0(proposicao_author$SiglaTipoIniciativa, " ", proposicao_author$DescricaoIniciativa) %>% 
+      stringr::str_to_title()
+    
+    if (length(proposicao_author) > 3) { # Tem mais de um iniciador
+      autor_nome = paste0(autor_nome, " e outros")
+    }
+    
+    proposicao_author <- tibble::tribble(~ autor_nome, autor_nome)
+  }
   
   proposicao_situacao <- tibble::tibble()
   if ("SituacaoAtual" %in% names(proposicao_data)) {
     proposicao_situacao <-
-      (
-        proposicao_data %>%
-          magrittr::extract2("SituacaoAtual") %>%
-          magrittr::extract2("Autuacoes") %>%
-          magrittr::extract2("Autuacao")
-      )$Situacoes[[1]] %>%
-      tibble::as_tibble() %>%
-      dplyr::arrange(desc(`DataSituacao`)) %>%
+      proposicao_data %>%
+      magrittr::extract2("SituacaoAtual") %>%
+      magrittr::extract2("Autuacoes") %>%
+      magrittr::extract2("Autuacao") %>% 
+      dplyr::arrange(`NumeroAutuacao`) %>% # Retorna a Autuacao mais recente
       head(1)
+    
+    if ("Situacoes.Situacao" %in% names(proposicao_situacao)) {
+      proposicao_situacao_df <- proposicao_situacao$Situacoes[[1]] %>%
+        tibble::as_tibble() %>%
+        dplyr::arrange(desc(`DataSituacao`)) %>% # Retorna a Situacao mais recente
+        head(1)
+      
+      proposicao_situacao <- proposicao_situacao %>%
+        dplyr::select(-`Situacoes.Situacao`) %>%
+        tibble::add_column(!!!proposicao_situacao_df)
+      
+    }
+    names(proposicao_situacao) <-
+      purrr::map_chr(
+        names(proposicao_situacao),
+        ~ stringr::str_remove(.x, "^Situacoes\\.Situacao\\.|^LocalAdministrativo\\.")
+      )
   }
   
   proposicao_specific_assunto <-
@@ -235,10 +273,10 @@ fetch_proposicao_senado <- function(id = NULL) {
     tibble::as_tibble()
   if (nrow(proposicao_specific_assunto) == 0) {
     proposicao_specific_assunto <-
-      tibble::tribble(~ codigo_assunto_especifico,
-                      ~ assunto_especifico,
-                      0,
-                      "Nao especificado")
+      tibble::tribble( ~ codigo_assunto_especifico,
+                       ~ assunto_especifico,
+                       0,
+                       "Nao especificado")
   } else {
     proposicao_specific_assunto <-
       proposicao_specific_assunto %>%
@@ -250,10 +288,10 @@ fetch_proposicao_senado <- function(id = NULL) {
     tibble::as_tibble()
   if (nrow(proposicao_general_assunto) == 0) {
     proposicao_general_assunto <-
-      tibble::tribble(~ codigo_assunto_geral,
-                      ~ assunto_geral,
-                      0,
-                      "Nao especificado")
+      tibble::tribble( ~ codigo_assunto_geral,
+                       ~ assunto_geral,
+                       0,
+                       "Nao especificado")
   } else {
     proposicao_general_assunto <-
       proposicao_general_assunto %>%
@@ -274,22 +312,14 @@ fetch_proposicao_senado <- function(id = NULL) {
   proposicao_complete <-
     proposicao_info %>%
     tibble::add_column(
-      !!!proposicao_ids,
-      !!!proposicao_specific_assunto,
-      !!!proposicao_general_assunto,
-      !!!proposicao_source,
-      !!!proposicao_situacao,
-      autor_nome = dplyr::if_else(
-        nrow(proposicao_author) > 1,
-        paste0(proposicao_author[[1]] %>% head(1), " e outros"),
-        proposicao_author[[1]] %>% head(1)
-      ),
+      !!!proposicao_ids,!!!proposicao_specific_assunto,!!!proposicao_general_assunto,!!!proposicao_source,!!!proposicao_situacao,
+      autor_nome = proposicao_author %>% head(1) %>% dplyr::pull(autor_nome),
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
       proposicoes_apensadas = paste(anexadas, collapse = " ")
     )
   
   proposicao_complete <-
-    proposicao_complete[,!sapply(proposicao_complete, is.list)] %>%
+    proposicao_complete[, !sapply(proposicao_complete, is.list)] %>%
     rename_table_to_underscore()
   
   proposicao_complete[, names(proposicao_complete) %in% names(.COLNAMES_PROPOSICAO_SENADO)] %>%
@@ -805,7 +835,8 @@ fetch_autores <-
           !is.na(uri),
           stringr::str_split(uri, '/')[[1]] %>%
             dplyr::last() %>%
-            as.numeric(),-1
+            as.numeric(),
+          -1
         ),
         uri = dplyr::if_else(!is.na(uri), as.character(uri), "")
       ) %>%
