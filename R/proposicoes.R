@@ -685,7 +685,7 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
   autor_uri <-
     paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autor_info <- .camara_api(autor_uri)
-  if (any(is.na(autor_info$uri))) {
+  if (any(is.na(autor_info$uri)) | .check_autor_poder_executivo(autor_info)) {
     autores <- .camara_api(autor_uri) %>%
       .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
       .coerce_types(.COLNAMES_AUTORES)
@@ -899,6 +899,22 @@ scrap_autores_from_website <- function(id_prop) {
 .auxiliary_fetch_autor_camara <- function(uri) {
   strsplit(uri, '/')[[1]] %>% tail(1) %>%
     .fetch_using_id(.DEPUTADOS_PATH)
+}
+
+#' @title Checks whether the presidency of the republic is the author of the bill
+#' @description Checks whether the presidency of the republic is the author of the bill
+#' @param autor_info Dataframe with information about the author
+#' @return True if the presidency of the republic is the author of the proposition and FALSE otherwise
+#' @examples
+#' autor_uri <- paste0(.CAMARA_PROPOSICOES_PATH, '/', 2213200, "/autores")
+#' autor_info <- .camara_api(autor_uri)
+#' .check_autor_poder_executivo(autor_info)
+.check_autor_poder_executivo <- function(autor_info) {
+  autor_poder_executivo <- autor_info %>%
+     dplyr::filter(stringr::str_detect(tolower(nome), .PODER_EXECUTIVO)) %>%
+    nrow()
+
+  return(autor_poder_executivo != 0)
 }
 
 #' @title Fetch the propositions appended to a proposition in the Camara
