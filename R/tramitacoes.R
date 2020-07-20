@@ -121,6 +121,13 @@ fetch_tramitacao_senado <- function(id_prop, data_ref = NA) {
     proposicao_tramitacoes_df <- 
       proposicao_tramitacoes_df %>% 
       dplyr::left_join(situacoes, by = c("data_hora"="situacao_data_situacao"))
+  } else {
+    situacoes <- tibble::tribble(~ situacao_data_situacao, ~ situacao_codigo_situacao, 
+                                  ~ situacao_sigla_situacao, ~ situacao_descricao_situacao)
+    
+    proposicao_tramitacoes_df <- 
+      proposicao_tramitacoes_df %>% 
+      dplyr::bind_rows(situacoes)
   }
   
   return(proposicao_tramitacoes_df)
