@@ -117,59 +117,80 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
     magrittr::extract2("PesquisaBasicaMateria") %>%
     magrittr::extract2("Materias") %>%
     magrittr::extract2("Materia")
-
-  proposicao_identificacao <-
-    proposicao_infos %>%
-    magrittr::extract2("IdentificacaoMateria") %>%
-    tibble::as_tibble()
-
-  proposicao_dados_basicos <-
-    proposicao_infos %>%
-    magrittr::extract2("DadosBasicosMateria")
-
-  if ("IdentificacaoComissaoMpv" %in% names(proposicao_dados_basicos)) {
-    proposicao_dados_basicos$IdentificacaoComissaoMpv <- NULL
-  }
-
-  proposicao_dados_basicos <-
-    proposicao_dados_basicos %>%
-    tibble::as_tibble()
-
-  proposicao_natureza <- tibble::tibble()
-  if ("NaturezaMateria" %in% names(proposicao_dados_basicos)) {
+  
+  if ("IdentificacaoMateria.CodigoMateria" %in% names(proposicao_infos)) {
+    if (nrow(proposicao_infos) > 1) {
+      proposicao_infos <- proposicao_infos %>% 
+        dplyr::filter(tolower(`IdentificacaoMateria.SiglaSubtipoMateria`) == tolower(sigla)) %>% 
+        head(1)
+    }
+    
+    proposicao_complete <-
+      proposicao_infos %>%
+      .rename_senate_propositions_df_columns() %>%
+      .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
+      .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
+    
+    if (nrow(proposicao_complete) > 1) {
+      proposicao_complete <- proposicao_complete %>% 
+        tail(1)
+    }
+  } else {
+    proposicao_identificacao <-
+      proposicao_infos %>%
+      magrittr::extract2("IdentificacaoMateria") %>%
+      tibble::as_tibble()
+    
+    proposicao_dados_basicos <-
+      proposicao_infos %>%
+      magrittr::extract2("DadosBasicosMateria")
+    
+    if ("IdentificacaoComissaoMpv" %in% names(proposicao_dados_basicos)) {
+      proposicao_dados_basicos$IdentificacaoComissaoMpv <- NULL
+    }
+    
     proposicao_dados_basicos <-
       proposicao_dados_basicos %>%
-      dplyr::select(-NaturezaMateria) %>%
-      unique()
-
-    proposicao_natureza <-
-      proposicao_infos %>%
-      magrittr::extract2("DadosBasicosMateria") %>%
-      magrittr::extract2("NaturezaMateria") %>%
       tibble::as_tibble()
-  }
-
-  proposicao_autores <-
-    proposicao_infos %>%
-    magrittr::extract2("AutoresPrincipais") %>%
-    magrittr::extract2("AutorPrincipal") %>%
-    tibble::as_tibble() %>%
-    head(1)
-
-  if ("IdentificacaoParlamentar" %in% names(proposicao_autores)) {
+    
+    proposicao_natureza <- tibble::tibble()
+    if ("NaturezaMateria" %in% names(proposicao_dados_basicos)) {
+      proposicao_dados_basicos <-
+        proposicao_dados_basicos %>%
+        dplyr::select(-NaturezaMateria) %>%
+        unique()
+      
+      proposicao_natureza <-
+        proposicao_infos %>%
+        magrittr::extract2("DadosBasicosMateria") %>%
+        magrittr::extract2("NaturezaMateria") %>%
+        tibble::as_tibble()
+    }
+    
     proposicao_autores <-
-      proposicao_autores %>%
-      dplyr::select(-IdentificacaoParlamentar) %>%
-      unique() %>%
+      proposicao_infos %>%
+      magrittr::extract2("AutoresPrincipais") %>%
+      magrittr::extract2("AutorPrincipal") %>%
+      tibble::as_tibble() %>%
       head(1)
+    
+    if ("IdentificacaoParlamentar" %in% names(proposicao_autores)) {
+      proposicao_autores <-
+        proposicao_autores %>%
+        dplyr::select(-IdentificacaoParlamentar) %>%
+        unique() %>%
+        head(1)
+    }
+    
+    proposicao_complete <-
+      proposicao_identificacao %>%
+      tibble::add_column(!!!proposicao_dados_basicos,!!!proposicao_autores,!!!proposicao_natureza) %>%
+      .rename_df_columns() %>%
+      .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
+      .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
   }
-
-  proposicao_complete <-
-    proposicao_identificacao %>%
-    tibble::add_column(!!!proposicao_dados_basicos,!!!proposicao_autores,!!!proposicao_natureza) %>%
-    .rename_df_columns() %>%
-    .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
-    .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
+  
+  return(proposicao_complete)
 
 }
 

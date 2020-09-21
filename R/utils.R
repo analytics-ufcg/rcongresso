@@ -407,6 +407,21 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   df
 }
 
+#' @title Renames propositions dataframe's columns
+#' @description Renames dataframe's columns using underscore and lowercase pattern and 
+#' removing unnecessary strings from column names.
+#' @param df Dataframe
+#' @return Dataframe with renamed columns.
+.rename_senate_propositions_df_columns <- function(df) {
+  names(df) <- 
+    stringr::str_remove_all(
+      names(df),
+      "IdentificacaoMateria\\.|DadosBasicosMateria\\.|NaturezaMateria\\.|AutoresPrincipais\\.AutorPrincipal\\.|SituacaoAtual\\.Autuacoes\\.Autuacao\\.|Situacoes\\.|LocalAdministrativo\\.")
+  
+  return(df %>% .rename_df_columns())
+  
+  }
+
 #' @title Renames a vector with the pattern of underscores and lowercases
 #' @description Renames each item from vector with the pattern: split by underscore and lowercase
 #' @param x Strings vector
