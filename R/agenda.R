@@ -90,7 +90,7 @@ fetch_agenda_senado <- function(initial_date) {
 #' }
 .get_data_frame_agenda_senado <- function(initial_date, end_date) {
   url <-
-    paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date), "/detalhe")
+    paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date))
   json_proposicao <- .senado_api(url, asList = T)
 
   agenda_senado <- json_proposicao$AgendaReuniaoDetalhe$Reunioes$Reuniao
@@ -194,7 +194,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           if ((!is.na(lista_com_id$Itens) && ("Codigo" %in% names(lista_com_id$Itens)))) {
             id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
           } else {
-            id <- purrr::map_chr(lista_com_id$Itens, ~ paste(NA, collapse = ","))  
+            id <- purrr::map_chr(lista_com_id$Itens, ~ paste(NA, collapse = ","))
           }
         }
   }
