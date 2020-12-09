@@ -1,0 +1,15 @@
+{
+  "eventos": [
+    {"evento": "requerimento_redistribuicao", "regex": "^apresentação do requerimento de redistribuição"},
+    {"evento": "requerimento_apensacao", "regex": "^apresentação do requerimento de apensação"},
+    {"evento": "requerimento_urgencia_apresentado", "regex": "^apresentação do requerimento de urg.ncia"},
+    {"evento": "requerimento_urgencia_aprovado", "regex": "^aprovado o requerimento de urg.ncia|aprovado, por unanimidade, o requerimento de urg.ncia"},
+    {"evento": "requerimento_prorrogacao", "regex": "^apresentação do requerimento de prorrogação de prazo de comissão temporária"},
+    {"evento": "aprovacao_requerimento_inversao_pauta", "regex": "^.*aprovado o requerimento.*invers.o de pauta.*$"},
+    {"evento": "req_apresentacao", "regex": "^apresentacao do requerimento"},
+    {"evento": "req_deferido", "regex": "^deferido(s)* o(s)* requerimento(s)*|deferido requerimento"},
+    {"evento": "req_indeferido", "regex": "^indeferido(s)* o(s)* requerimento(s)*|indeferido req"},
+    {"evento": "req_arquivado", "regex": "^requerimento .*arquivado|^arquivado o requerimento"},
+    {"evento": "req_urgencia_unanime_verbal", "regex": "^.*proposta verbal do presidente.* aprovado.* requerimento de urg.ncia.*$"}
+  ]
+}
