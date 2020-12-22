@@ -1,3 +1,5 @@
+camara_env <- jsonlite::fromJSON(here::here("R/config/regex_camara.json"))
+
 #' @title Fetch related requerimentos in Camara
 #' @description Returns a dataframe with data from requerimentos related to a given proposition in Camara
 #' @param prop_id ID of a Proposicao
@@ -64,18 +66,7 @@ fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE
 #' @return Dataframe
 #' @export
 fetch_events_requerimento_camara <- function(req_id) {
-  regexes <-
-    tibble::tribble(
-      ~ evento,
-      ~ regex,
-      'req_apresentacao',
-      '^Apresentacao',
-      'req_indeferido',
-      '^Indefiro',
-      'req_deferido',
-      '^(Defiro)|(Aprovado)',
-      'req_arquivado',
-      '^Arquivado')
+  regexes <- camara_env$eventos
 
   req_tram <-
     fetch_tramitacao(req_id, .CAMARA) %>%
@@ -83,11 +74,13 @@ fetch_events_requerimento_camara <- function(req_id) {
 
   eventos_req <-
     req_tram %>%
-    # mark reqs_trams rows based on rege  xes
-    fuzzyjoin::regex_left_join(regexes, by = c(despacho = 'regex')) %>%
+    # mark reqs_trams rows based on regexes
+    dplyr::mutate(texto_lower = tolower(stringr::str_trim(
+      stringr::str_replace_all(despacho, '[\r\n]', '')))) %>%
+    fuzzyjoin::regex_left_join(regexes, by = c(texto_lower = "regex")) %>%
     dplyr::filter(!is.na(evento)) %>%
     dplyr::mutate(id_req = id_prop) %>%
-    dplyr::select(-regex, -id_prop) %>%
+    dplyr::select(-regex, -id_prop, -texto_lower) %>%
     dplyr::select(id_req, data_hora, evento, dplyr::everything()) %>%
     .assert_dataframe_completo(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA)  %>%
     .coerce_types(.COLNAMES_EVENTOS_REQUERIMENTOS_CAMARA, order_cols = F)
