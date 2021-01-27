@@ -276,6 +276,10 @@
                                      "descricao_objetivo_processo"="character","descricao_identificacao_materia"="character","sigla_casa_iniciadora"="character",
                                      "ementa"="character","parecer"="character","apreciacao"="character","apreciacao_papeleta"="character","ementa_papeleta"="character","cabecalho"="character",
                                      "nome_autor"="character","tipo_pauta"="character","descricao_tipo_pauta"="character","sequencia_ordem"="character","origem"="character","codigo_sessao"="character")
+.COLNAMES_AGENDA_COMISSOES_CAMARA <- c("data"="Date","sigla"="list","id_proposicao"="list","local"="character")
+.COLNAMES_AGENDA_COMISSAO_CAMARA <- c("comissao"="factor","cod_reuniao"="factor","data"="factor","hora"="factor",
+                                      "local"="factor","estado"="factor","tipo"="factor","titulo_reuniao"="factor","proposicoes"="list",
+                                      "sigla"="list","id_proposicao"="list")
 .COLNAMES_AGENDA_COMISSOES_SENADO <- c("data"="Date","sigla"="character","id_proposicao"="character","local"="character")
 
 .COLNAMES_AGENDA_CAMARA <- c("hora_inicio"="character","hora_fim"="character","sigla_orgao"="character","nome_orgao"="character","regime"="character",
@@ -286,7 +290,6 @@
 .COLNAMES_PAUTA_CAMARA <- c("regime"="character","codRegime"="integer","ordem"="integer","uriProposicaoRelacionada"="character","situacaoItem"="character","uriVotacao"="character",
                             "proposicao_.id"="integer","proposicao_.uri"="character","proposicao_.siglaTipo"="character","proposicao_.codTipo"="integer","proposicao_.numero"="integer",
                             "proposicao_.ano"="integer","proposicao_.ementa"="character","hora_inicio"="character","hora_fim"="character","sigla_orgao"="character","nome_orgao"="character")
-
 # Órgãos
 # Endpoint: {/api/v2/orgaos/{id}}
 .COLNAMES_ORGAO <- c(
@@ -299,7 +302,7 @@
     "nome"="character", "codTipoOrgao"="integer", "tipoOrgao"="character",
     "dataInicio"="character", "dataInstalacao"="character",
     "dataFim"="character", "descricaoSituacao"="character", "casa"="character",
-    "sala"="character", "urlWebsite"="character", "codSituacao"="integer"
+    "sala"="character", "urlWebsite"="character", "codSituacao"="integer", "idOrgao"="character"
 )
 
 # Comissões

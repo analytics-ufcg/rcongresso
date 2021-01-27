@@ -5,6 +5,7 @@
 # Link default da API
 .CAMARA_API_LINK <- "https://dadosabertos.camara.leg.br"
 .SENADO_API_LINK <- "http://legis.senado.leg.br"
+.CAMARA_API_LINK_V1 <- "http://www.camara.leg.br/SitCamaraWS"
 
 # Links Alternativos
 .CAMARA_WEBSITE_LINK <- "http://www.camara.gov.br"
@@ -30,6 +31,7 @@
 .ORGAOS_CAMARA_PATH <- "/api/v2/orgaos"
 .AGENDA_CAMARA_PATH <- "/api/v2/eventos"
 .ORGAOS_FILE_CAMARA_PATH <- "/arquivos/orgaos/json/orgaos.json"
+.ORGAOS_SCHEDULE_CAMARA <- "/Orgaos.asmx/ObterPauta?IDOrgao="
 .PAUTAS_CAMARA <- "/api/v2/eventos/"
 .URL_TABELA_DEP <- "/arquivos/deputados/csv/deputados.csv"
 .FRENTES_PATH <- "/api/v2/frentes/"
