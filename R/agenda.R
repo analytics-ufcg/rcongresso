@@ -93,7 +93,7 @@ fetch_agenda_senado <- function(initial_date) {
     paste0(.AGENDA_SENADO_COMISSOES, gsub('-','', initial_date), "/", gsub('-','', end_date))
   json_proposicao <- .senado_api(url, asList = T)
 
-  agenda_senado <- json_proposicao$AgendaReuniaoDetalhe$Reunioes$Reuniao
+  agenda_senado <- json_proposicao$AgendaReuniao$reunioes$reuniao
 
   if (!is.null(agenda_senado)) {
     agenda_senado <- agenda_senado %>%
@@ -119,31 +119,37 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
   tipos_inuteis <- c('Outros eventos', 'Reuniao de Subcomissao')
 
   agenda <-
-    .get_data_frame_agenda_senado(initial_date, end_date) %>%
-    dplyr::filter(!(iconv(c(tipo), from="UTF-8", to="ASCII//TRANSLIT") %in% tipos_inuteis)) %>%
-    unique()
+    .get_data_frame_agenda_senado(initial_date, end_date)
+
+  if ("tipo_descricao" %in% names(agenda)) {
+    agenda <- agenda %>%
+      dplyr::filter(!(iconv(c(tipo_descricao), from="UTF-8", to="ASCII//TRANSLIT") %in% tipos_inuteis))
+  }
+
+  agenda <- agenda %>%
+    dplyr::distinct()
 
   if (nrow(agenda) != 0) {
-    if ("partes_parte" %in% names(agenda)) {
+    if ("partes" %in% names(agenda)) {
       agenda <-
         agenda %>%
-        dplyr::mutate(id_proposicao = purrr::map(partes_parte, ~ .get_id_proposicao_agenda_senado_comissoes(.))) %>%
-        dplyr::mutate(nome = purrr::map(partes_parte, ~ .get_nome_proposicao_agenda_senado_comissoes(.))) %>%
+        dplyr::mutate(id_proposicao = purrr::map(partes, ~ .get_id_proposicao_agenda_senado_comissoes(.))) %>%
+        dplyr::mutate(nome = purrr::map(partes, ~ .get_nome_proposicao_agenda_senado_comissoes(.))) %>%
         dplyr::filter(id_proposicao != "")
 
       if (nrow(agenda) != 0) {
         agenda <-
           agenda %>%
           dplyr::rowwise() %>%
-          dplyr::mutate(local = strsplit(titulo_da_reuniao, ",")[[1]][[1]]) %>%
-          dplyr::select(c(data, hora, nome, id_proposicao, local)) %>%
+          dplyr::mutate(local = strsplit(descricao, ",")[[1]][[1]]) %>%
+          dplyr::select(c(data_inicio, nome, id_proposicao, local)) %>%
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
           tidyr::unnest(cols = c(nome, id_proposicao)) %>%
-          dplyr::mutate(data = lubridate::dmy_hm(paste(data, hora))) %>%
+          dplyr::mutate(data = lubridate::ymd_hms(data_inicio, tz = "America/Sao_Paulo")) %>%
           dplyr::select(c(data, nome, id_proposicao, local)) %>%
           dplyr::filter(nome != "")
-      }else {
+      } else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
       }
 
@@ -186,15 +192,16 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @return char
 .get_id_proposicao_agenda_senado_comissoes <- function(lista_com_id){
   id <- ""
-  if(((length(lista_com_id$Tipo) == 1) & (lista_com_id$Tipo == "Deliberativa")) |
-     ((length(lista_com_id$Tipo) > 1) & ("Deliberativa" %in% lista_com_id$Tipo))) {
-        if (!is.null(lista_com_id$Itens.Item)) {
-          id <- purrr::map_chr(lista_com_id$Itens.Item, ~ paste(.$Codigo, collapse = ","))
+
+  if("Deliberativa" %in% (lista_com_id %>% dplyr::pull(descricaoTipo))) {
+        if (!is.null(lista_com_id$itens.item)) {
+          id <- purrr::map_chr(lista_com_id$itens.item, ~ paste(.$doma.codigoMateria, collapse = ","))
         } else {
-          if ((!is.na(lista_com_id$Itens) && ("Codigo" %in% names(lista_com_id$Itens)))) {
-            id <- purrr::map_chr(lista_com_id$Itens, ~ paste(.$Codigo, collapse = ","))
+          itens <- lista_com_id$itens[[1]]
+          if (!is.null(itens) && nrow(itens) > 0 && ("doma.codigoMateria" %in% names(itens))) {
+            id <- purrr::map_chr(lista_com_id$itens, ~ paste(.$doma.codigoMateria, collapse = ","))
           } else {
-            id <- purrr::map_chr(lista_com_id$Itens, ~ paste(NA, collapse = ","))
+            id <- purrr::map_chr(lista_com_id$itens, ~ paste(NA, collapse = ","))
           }
         }
   }
@@ -207,15 +214,15 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
 #' @return char
 .get_nome_proposicao_agenda_senado_comissoes <- function(lista_com_nome){
   nome <- ""
-  if(((length(lista_com_nome$Tipo) == 1) & (lista_com_nome$Tipo == "Deliberativa")) |
-     ((length(lista_com_nome$Tipo) > 1) & ("Deliberativa" %in% lista_com_nome$Tipo))) {
-        if (!is.null(lista_com_nome$Itens.Item)) {
-          nome <- purrr::map_chr(lista_com_nome$Itens.Item, ~ paste(.$Nome, collapse = ","))
+  if("Deliberativa" %in% (lista_com_nome %>% dplyr::pull(descricaoTipo))) {
+        if (!is.null(lista_com_nome$itens.item)) {
+          nome <- purrr::map_chr(lista_com_nome$itens.item, ~ paste(.$nome, collapse = ","))
         } else {
-          if ((!is.na(lista_com_nome$Itens) && ("Nome" %in% names(lista_com_nome$Itens)))) {
-            nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(.$Nome, collapse = ","))
+          itens <- lista_com_nome$itens[[1]]
+          if (!is.null(itens) && nrow(itens) > 0 && ("nome" %in% names(itens))) {
+            nome <- purrr::map_chr(lista_com_nome$itens, ~ paste(.$nome, collapse = ","))
           } else {
-            nome <- purrr::map_chr(lista_com_nome$Itens, ~ paste(NA, collapse = ","))
+            nome <- purrr::map_chr(lista_com_nome$itens, ~ paste(NA, collapse = ","))
           }
         }
   }
