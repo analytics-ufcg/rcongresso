@@ -7,7 +7,12 @@ camara_env <- jsonlite::fromJSON(here::here("R/config/regex_camara.json"))
 #' @return Dataframe
 #' @export
 fetch_related_requerimentos_camara <- function(prop_id, mark_deferimento = FALSE) {
-  reqs <- fetch_relacionadas("camara",prop_id) %>%
+  reqs <- fetch_relacionadas("camara",prop_id)
+
+  if(nrow(reqs) == 0)
+    return(tibble::tibble())
+
+  reqs <- reqs %>%
     dplyr::filter(siglaTipo == "REQ") %>%
     dplyr::distinct()
 
