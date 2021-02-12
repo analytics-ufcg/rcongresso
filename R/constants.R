@@ -90,3 +90,4 @@
 .TIPOS_EMENDAS <- c("EMC" , "EMP" , "EMS" , "SBE" , "EMR" , "ESB" , "EMO" , "EMD" , "EPP" , "EAG" , "ESP" , "SSP" , "SAP" , "EMA" , "EMRP" , "EMC-A" , "SBE-A" , "EMPV" , "SBR" , "ERD-A")
 
 .PODER_EXECUTIVO <- "poder executivo"
+.SENADO_FEDERAL <- "senado federal"
