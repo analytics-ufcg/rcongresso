@@ -91,4 +91,4 @@
 
 .PODER_EXECUTIVO <- "poder executivo"
 .SENADO_FEDERAL <- "senado federal"
-.COMISSAO_LEGISLACAO_PARTICIPATIVA <- "comissão de legislação participativa"
+.COMISSAO <- "comissão"
