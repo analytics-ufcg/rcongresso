@@ -117,22 +117,22 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
     magrittr::extract2("PesquisaBasicaMateria") %>%
     magrittr::extract2("Materias") %>%
     magrittr::extract2("Materia")
-  
+
   if ("IdentificacaoMateria.CodigoMateria" %in% names(proposicao_infos)) {
     if (nrow(proposicao_infos) > 1) {
-      proposicao_infos <- proposicao_infos %>% 
-        dplyr::filter(tolower(`IdentificacaoMateria.SiglaSubtipoMateria`) == tolower(sigla)) %>% 
+      proposicao_infos <- proposicao_infos %>%
+        dplyr::filter(tolower(`IdentificacaoMateria.SiglaSubtipoMateria`) == tolower(sigla)) %>%
         head(1)
     }
-    
+
     proposicao_complete <-
       proposicao_infos %>%
       .rename_senate_propositions_df_columns() %>%
       .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
-    
+
     if (nrow(proposicao_complete) > 1) {
-      proposicao_complete <- proposicao_complete %>% 
+      proposicao_complete <- proposicao_complete %>%
         tail(1)
     }
   } else {
@@ -140,40 +140,40 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
       proposicao_infos %>%
       magrittr::extract2("IdentificacaoMateria") %>%
       tibble::as_tibble()
-    
+
     proposicao_dados_basicos <-
       proposicao_infos %>%
       magrittr::extract2("DadosBasicosMateria")
-    
+
     if ("IdentificacaoComissaoMpv" %in% names(proposicao_dados_basicos)) {
       proposicao_dados_basicos$IdentificacaoComissaoMpv <- NULL
     }
-    
+
     proposicao_dados_basicos <-
       proposicao_dados_basicos %>%
       tibble::as_tibble()
-    
+
     proposicao_natureza <- tibble::tibble()
     if ("NaturezaMateria" %in% names(proposicao_dados_basicos)) {
       proposicao_dados_basicos <-
         proposicao_dados_basicos %>%
         dplyr::select(-NaturezaMateria) %>%
         unique()
-      
+
       proposicao_natureza <-
         proposicao_infos %>%
         magrittr::extract2("DadosBasicosMateria") %>%
         magrittr::extract2("NaturezaMateria") %>%
         tibble::as_tibble()
     }
-    
+
     proposicao_autores <-
       proposicao_infos %>%
       magrittr::extract2("AutoresPrincipais") %>%
       magrittr::extract2("AutorPrincipal") %>%
       tibble::as_tibble() %>%
       head(1)
-    
+
     if ("IdentificacaoParlamentar" %in% names(proposicao_autores)) {
       proposicao_autores <-
         proposicao_autores %>%
@@ -181,7 +181,7 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
         unique() %>%
         head(1)
     }
-    
+
     proposicao_complete <-
       proposicao_identificacao %>%
       tibble::add_column(!!!proposicao_dados_basicos,!!!proposicao_autores,!!!proposicao_natureza) %>%
@@ -189,7 +189,7 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
       .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
   }
-  
+
   return(proposicao_complete)
 
 }
@@ -286,6 +286,12 @@ fetch_proposicao_senado <- function(id = NULL) {
         tibble::add_column(!!!proposicao_situacao_df)
 
     }
+    if ("LocalAdministrativo.DataLocal" %in% names(proposicao_situacao) &&
+        !"Situacoes.Situacao.DataSituacao" %in% names(proposicao_situacao)) {
+      proposicao_situacao <- proposicao_situacao %>%
+        dplyr::mutate(Situacoes.Situacao.DataSituacao = LocalAdministrativo.DataLocal)
+    }
+
     names(proposicao_situacao) <-
       purrr::map_chr(
         names(proposicao_situacao),
@@ -710,12 +716,12 @@ fetch_autor_camara <- function (proposicao_id = NULL) {
   autor_uri <-
     paste0(.CAMARA_PROPOSICOES_PATH, '/', proposicao_id, "/autores")
   autor_info <- .camara_api(autor_uri)
-  
+
   if (any(is.na(autor_info$uri)) |
       .check_autor_poder_executivo(autor_info) |
       .check_autor_senado_federal(autor_info) |
       .check_autor_comissao(autor_info)) {
-    
+
     autores <- .camara_api(autor_uri) %>%
       .assert_dataframe_completo(.COLNAMES_AUTORES) %>%
       .coerce_types(.COLNAMES_AUTORES)
@@ -959,7 +965,7 @@ scrap_autores_from_website <- function(id_prop) {
   autor_senado_federal <- autor_info %>%
     dplyr::filter(stringr::str_detect(tolower(nome), .SENADO_FEDERAL)) %>%
     nrow()
-  
+
   return(autor_senado_federal != 0)
 }
 
@@ -975,7 +981,7 @@ scrap_autores_from_website <- function(id_prop) {
   autor_comissao <- autor_info %>%
     dplyr::filter(stringr::str_detect(tolower(nome), .COMISSAO)) %>%
     nrow()
-  
+
   return(autor_comissao != 0)
 }
 
