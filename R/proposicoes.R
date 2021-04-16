@@ -340,14 +340,31 @@ fetch_proposicao_senado <- function(id = NULL) {
   relacionadas <-
     proposicao_data$MateriasRelacionadas$MateriaRelacionada$IdentificacaoMateria.CodigoMateria
 
+  materia_principal <- proposicao_data %>%
+    magrittr::extract2("MateriasAnexadas") %>%
+    magrittr::extract2("MateriaPrincipal")
+
+  if (!is.null(materia_principal)) {
+    materia_principal <- materia_principal %>%
+      magrittr::extract2("IdentificacaoMateria") %>%
+      tibble::as_tibble() %>%
+      dplyr::mutate(uri_prop_principal = paste0("https://legis.senado.leg.br/dadosabertos/materia/",
+                                                CodigoMateria)) %>%
+      dplyr::pull(uri_prop_principal)
+  }
+
   proposicao_complete <-
     proposicao_info %>%
     tibble::add_column(
       !!!proposicao_ids,!!!proposicao_specific_assunto,!!!proposicao_general_assunto,!!!proposicao_source,!!!proposicao_situacao,
       autor_nome = proposicao_author %>% head(1) %>% dplyr::pull(autor_nome),
       proposicoes_relacionadas = paste(relacionadas, collapse = " "),
-      proposicoes_apensadas = paste(anexadas, collapse = " ")
-    )
+      proposicoes_apensadas = paste(anexadas, collapse = " "),
+      uri_prop_principal = paste(materia_principal, collapse = ";")
+    ) %>%
+    dplyr::mutate(uri_prop_principal = dplyr::if_else(uri_prop_principal == "",
+                                                      NA_character_,
+                                                      uri_prop_principal))
 
   proposicao_complete <-
     proposicao_complete[, !sapply(proposicao_complete, is.list)] %>%
