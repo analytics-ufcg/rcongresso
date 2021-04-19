@@ -345,9 +345,17 @@ fetch_proposicao_senado <- function(id = NULL) {
     magrittr::extract2("MateriaPrincipal")
 
   if (!is.null(materia_principal)) {
+    if (is.data.frame(materia_principal)) {
+      materia_principal <- materia_principal %>%
+        dplyr::distinct(IdentificacaoMateria.CodigoMateria) %>%
+        dplyr::select(CodigoMateria = IdentificacaoMateria.CodigoMateria) %>%
+        tibble::as_tibble()
+    } else {
+      materia_principal <- materia_principal %>%
+        magrittr::extract2("IdentificacaoMateria") %>%
+        tibble::as_tibble()
+    }
     materia_principal <- materia_principal %>%
-      magrittr::extract2("IdentificacaoMateria") %>%
-      tibble::as_tibble() %>%
       dplyr::mutate(uri_prop_principal = paste0("https://legis.senado.leg.br/dadosabertos/materia/",
                                                 CodigoMateria)) %>%
       dplyr::pull(uri_prop_principal)
