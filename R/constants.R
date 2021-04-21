@@ -4,7 +4,7 @@
 
 # Link default da API
 .CAMARA_API_LINK <- "https://dadosabertos.camara.leg.br"
-.SENADO_API_LINK <- "http://legis.senado.leg.br"
+.SENADO_API_LINK <- "https://legis.senado.leg.br"
 
 # Links Alternativos
 .CAMARA_WEBSITE_LINK <- "http://www.camara.gov.br"

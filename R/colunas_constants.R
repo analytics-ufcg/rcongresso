@@ -47,12 +47,12 @@
 .COLNAMES_PROPOSICAO_POR_ID_CAMARA <- c("id"="integer","uri"="character","siglaTipo"="character","codTipo"="integer",
                             "numero"="numeric","ano"="numeric","ementa"="character","dataApresentacao"="character",
                             "uriOrgaoNumerador"="character", "statusProposicao.dataHora"="character", "statusProposicao.sequencia"="numeric",
-                            "statusProposicao.siglaOrgao"="character", "statusProposicao.uriOrgao"="character", 
-                            "statusProposicao.uriUltimoRelator"="character", "statusProposicao.regime"="character", 
+                            "statusProposicao.siglaOrgao"="character", "statusProposicao.uriOrgao"="character",
+                            "statusProposicao.uriUltimoRelator"="character", "statusProposicao.regime"="character",
                             "statusProposicao.descricaoTramitacao"="character", "statusProposicao.codTipoTramitacao"="integer",
-                            "statusProposicao.descricaoSituacao"="character", "statusProposicao.codSituacao"="integer", 
+                            "statusProposicao.descricaoSituacao"="character", "statusProposicao.codSituacao"="integer",
                             "statusProposicao.despacho"="character", "statusProposicao.ambito"="character",
-                            "uriAutores"="character", "descricaoTipo"="character", "ementaDetalhada"="character", 
+                            "uriAutores"="character", "descricaoTipo"="character", "ementaDetalhada"="character",
                             "keywords"="character", "uriPropPosterior"="character", "urlInteiroTeor"="character"
                             )
 
@@ -66,7 +66,7 @@
                                  "proposicoes_apensadas"="character", "codigo_natureza"="integer", "nome_natureza"="character", "descricao_natureza"="character",
                                  "autor_nome"="character", "numero_autuacao"="integer", "data_situacao"="character",  "codigo_situacao"="integer", "sigla_situacao"="character",
                                  "descricao_situacao"="character", "data_local"="character", "codigo_local"="integer", "tipo_local"="character", "sigla_casa_local"="character",
-                                 "nome_casa_local"="character", "sigla_local"="character", "nome_local"="character")
+                                 "nome_casa_local"="character", "sigla_local"="character", "nome_local"="character", "uri_prop_principal"="character")
 
 .COLNAMES_PROPOSICAO_SENADO_SIGLA <- c("codigo_materia"="character", "sigla_casa_identificacao_materia"="character", "nome_casa_identificacao_materia"="character",
                                        "sigla_subtipo_materia"="character", "descricao_subtipo_materia"="character", "numero_materia"="character", "ano_materia"="character",
