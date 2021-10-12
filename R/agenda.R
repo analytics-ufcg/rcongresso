@@ -127,7 +127,7 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
   }
 
   agenda <- agenda %>%
-    dplyr::distinct()
+    dplyr::distinct(codigo, .keep_all = TRUE)
 
   if (nrow(agenda) != 0) {
     if ("partes" %in% names(agenda)) {
@@ -145,9 +145,11 @@ fetch_agenda_senado_comissoes <- function(initial_date, end_date) {
           dplyr::select(c(data_inicio, nome, id_proposicao, local)) %>%
           dplyr::mutate(id_proposicao = strsplit(as.character(id_proposicao), ",")) %>%
           dplyr::mutate(nome = strsplit(as.character(nome), ",")) %>%
-          tidyr::unnest(cols = c(nome, id_proposicao)) %>%
+          tidyr::unnest(cols = c(nome)) %>%
+          tidyr::unnest(cols = c(id_proposicao)) %>%
           dplyr::mutate(data = lubridate::ymd_hms(data_inicio, tz = "America/Sao_Paulo")) %>%
-          dplyr::select(c(data, nome, id_proposicao, local)) %>%
+          dplyr::select(data, nome, id_proposicao, local) %>%
+          dplyr::distinct(data, nome, id_proposicao, local) %>%
           dplyr::filter(nome != "")
       } else {
         return(tibble::tibble(data = double(), sigla = character(), id_proposicao = character(), local = character()))
