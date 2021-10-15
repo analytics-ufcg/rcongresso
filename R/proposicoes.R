@@ -260,6 +260,8 @@ fetch_proposicao_senado <- function(id = NULL) {
     }
 
     proposicao_author <- tibble::tribble(~ autor_nome, autor_nome)
+  } else {
+    proposicao_author <- tibble::tribble(~ autor_nome, proposicao_info$Autor)
   }
 
   proposicao_situacao <- tibble::tibble()
