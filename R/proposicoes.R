@@ -116,18 +116,19 @@ fetch_proposicao_senado_sigla <- function(sigla, numero, ano) {
     proposicao_data %>%
     magrittr::extract2("PesquisaBasicaMateria") %>%
     magrittr::extract2("Materias") %>%
-    magrittr::extract2("Materia")
+    magrittr::extract2("Materia") %>% 
+    dplyr::as_tibble()
 
-  if ("IdentificacaoMateria.CodigoMateria" %in% names(proposicao_infos)) {
+  if ("Codigo" %in% names(proposicao_infos)) {
     if (nrow(proposicao_infos) > 1) {
       proposicao_infos <- proposicao_infos %>%
-        dplyr::filter(tolower(`IdentificacaoMateria.SiglaSubtipoMateria`) == tolower(sigla)) %>%
+        dplyr::filter(tolower(`Sigla`) == tolower(sigla)) %>%
         head(1)
     }
 
     proposicao_complete <-
       proposicao_infos %>%
-      .rename_senate_propositions_df_columns() %>%
+      .rename_senate_propositions_by_siglas_df_columns() %>% 
       .assert_dataframe_completo(.COLNAMES_PROPOSICAO_SENADO_SIGLA) %>%
       .coerce_types(.COLNAMES_PROPOSICAO_SENADO_SIGLA)
 
