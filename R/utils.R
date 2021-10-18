@@ -422,6 +422,27 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   
   }
 
+#' @title Selects propositions by sigla dataframe's columns
+#' @description Selects dataframe's columns renaming specific columns,
+#  using underscore and lowercase pattern and 
+#' removing unnecessary strings from column names.
+#' @param df Dataframe
+#' @return Dataframe with renamed columns.
+.rename_senate_propositions_by_siglas_df_columns <- function(df) {
+  df <- df %>%
+    dplyr::select(
+      codigo_materia = Codigo,
+      sigla_subtipo_materia = Sigla,
+      numero_materia = Numero,
+      ano_materia = Ano,
+      ementa_materia = Ementa,
+      data_apresentacao = Data,
+      nome_autor = Autor,
+      descricao_identificacao_materia = DescricaoIdentificacao
+    )
+  return(df %>% .rename_senate_propositions_df_columns())
+  
+}
 #' @title Renames a vector with the pattern of underscores and lowercases
 #' @description Renames each item from vector with the pattern: split by underscore and lowercase
 #' @param x Strings vector
