@@ -37,6 +37,7 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
   status_code = 1000
   resp_in_cache = FALSE
   resp <- NULL
+  error_msg <- ''
 
   if (is.null(base_url) || base_url == '') {
     warning("URL deve ser não-nula e não-vazia.")
@@ -53,23 +54,35 @@ if (getRversion() >= "2.15.1")  utils::globalVariables(".")
     }
 
     if (num_tries > 0) {
-      cat("\n","Error on Calling URL:",url," - Status Code:",status_code)
+      cat("\nError on Calling URL:", url, 
+          " - Status Code:", status_code, 
+          " - Attempt no.", num_tries + 1)
+      if (error_msg != '') cat("\nDetailed Error:",error_msg,"\n")
       sleep_time <- base_sleep_time^(num_tries)
       Sys.sleep(sleep_time)
     }
-
-    resp <- .get_from_cache(api_url)
-
-    if (is.null(resp)) {
-      if (accept_json) resp <- httr::GET(url, httr::accept_json())
-      else resp <- httr::GET(url)
-      Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
-      status_code <- httr::status_code(resp)
+    
+    error_msg <- tryCatch({
+      resp <- .get_from_cache(url)
+    
+      if (is.null(resp)) {
+        if (accept_json) resp <- httr::GET(url, httr::accept_json())
+        else resp <- httr::GET(url)
+        Sys.sleep(.DEF_POST_REQ_SLEEP_TIME)
+        status_code <- httr::status_code(resp)
+      } else {
+        resp_in_cache <- TRUE
+        status_code <- 200
+      }  
+      
+    }, warning = function(w) {
+      message("\n","Warning while fetching: ", url)
+      warning(w)
+    }, error = function(e) {
+      return(e$message)
+    }, finally = {
       num_tries <- num_tries + 1
-    } else {
-      resp_in_cache <- TRUE
-      status_code <- 200
-    }
+    })
   }
 
   if ((status_code >= .COD_ERRO_CLIENTE)) {
